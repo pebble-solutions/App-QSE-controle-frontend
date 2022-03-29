@@ -1,0 +1,6 @@
+[submodule "src/components/pebble-ui"]
+	path = src/components/pebble-ui
+	url = git@github.com:cairnmanagement/pebble-ui.git
+[submodule "src/js/app"]
+	path = src/js/app
+	url = git@github.com:cairnmanagement/appjs.git

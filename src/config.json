@@ -1,0 +1,30 @@
+{
+    "name": "sample",
+    "cfg": {
+        "module": "sample",
+        "moduleLabel": "Sample module",
+        "aside": true,
+        "app_mode": "default"
+    },
+    "cfgMenu": {
+        "href": null
+    },
+    "cfgSlots": {
+        "menu": true,
+        "list": true,
+        "core": true,
+        "header": true
+    },
+    "api": {
+        "baseURL": "http://local.fe.tld/api/",
+        "elements": "sample"
+    },
+    "firebaseConfig": {
+        "apiKey": "AIzaSyAm-yEHEBuXt_2frDrNrH2o3mT0Ffj_4v0",
+        "authDomain": "ace-charter-310713.firebaseapp.com",
+        "projectId": "ace-charter-310713",
+        "storageBucket": "ace-charter-310713.appspot.com",
+        "messagingSenderId": "914156232758",
+        "appId": "1:914156232758:web:b493274bf256cabb68f897"
+    }
+}
