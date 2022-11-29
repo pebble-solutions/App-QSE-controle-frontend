@@ -27,6 +27,14 @@ const routes = [
       {
         path: 'informations',
         component: () => import('../views/ElementInformations.vue')
+      },
+      {
+        path: 'bloc/:bloc',
+        component: () => import('../views/Bloc.vue')
+      },
+      {
+        path: '',
+        component: () => import('../views/Contexte.vue')
       }
     ]
   }

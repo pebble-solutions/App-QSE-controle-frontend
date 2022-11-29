@@ -1,8 +1,8 @@
 {
-    "name": "sample",
+    "name": "appKNapi",
     "cfg": {
-        "module": "sample",
-        "moduleLabel": "Sample module",
+        "module": "KN",
+        "moduleLabel": "moduleKN",
         "aside": true,
         "app_mode": "default"
     },
@@ -17,7 +17,7 @@
     },
     "api": {
         "baseURL": "http://local.fe.tld/api/",
-        "elements": "sample"
+        "elements": "informationGroupe"
     },
     "firebaseConfig": {
         "apiKey": "AIzaSyAm-yEHEBuXt_2frDrNrH2o3mT0Ffj_4v0",

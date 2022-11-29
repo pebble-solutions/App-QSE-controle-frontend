@@ -12,11 +12,19 @@ export default createStore({
 		},
 		elements: [],
 		openedElement: null,
-		tmpElement: null
+		tmpElement: null,
+		blocs:[],
+		lignes:[]
 	},
 	getters: {
 		activeStructure(state) {
 			return state.structures.find(e => e.id === state.activeStructureId);
+		},
+		openedElementBlocs (state) {
+			return state.blocs.filter(e => e.information__groupe_id === state.openedElement.id);
+		},
+		opendeElementLignes (state) {
+			return state.lignes.filter(e => e.information__groupe_id === state.openedElement.id);
 		}
 	},
 	mutations: {
@@ -132,7 +140,29 @@ export default createStore({
 		 */
 		tmpElement(state, data) {
 			state.tmpElement = data;
+		},
+		
+		/** Met à jour les données stockées au niveau du state avec un tableau d'informations
+		 * */
+
+		updateData(state, options) {
+
+			options.data.forEach((element) => {
+			
+				let elFound = state[options.key].find(e => e.id === element.id);
+				if (elFound) {
+
+					for (let k in element) {
+				
+						elFound[k] = element[k];
+					}
+				}
+				else {
+					state[options.key].push(element);
+				}
+			});
 		}
+	
 	},
 	actions: {
 		/**
@@ -212,6 +242,22 @@ export default createStore({
 		logout(context) {
 			context.commit('setLogin', null);
 			context.commit('setStructures', []);
+		},
+		/*
+		@param (object) context l'instance VueX
+		@
+		*/
+		refreshLignes (context, payload){
+			context.commit ('updateData', {
+				key:'lignes',
+				data: payload
+			});
+		},
+		refreshBlocs (context, payload){
+			context.commit ('updateData', {
+				key:'blocs',
+				data: payload
+			});
 		}
 	},
 	modules: {

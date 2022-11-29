@@ -17,7 +17,7 @@
 				<router-link :to="'/element/'+openedElement.id+'/properties'" custom v-slot="{ navigate, href }">
 					<a class="btn btn-dark me-2" :href="href" @click="navigate">
 						<i class="bi bi-file-earmark me-1"></i>
-						{{openedElement.name}}
+						{{openedElement.groupe}}
 					</a>
 				</router-link>
 
@@ -31,6 +31,9 @@
 								<a class="dropdown-item" :href="href" @click="navigate">Informations</a>
 							</router-link>
 						</li>
+							<li>
+							<button class="droptown-item" @click="chargerType(openedElement.type_id)">Charger le type</button>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -39,14 +42,14 @@
 
 		<template v-slot:menu>
 			<AppMenu>
-				<AppMenuItem href="/" look="dark" icon="bi bi-house">Home</AppMenuItem>
+				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
 				<AppMenuItem href="/about" look="dark" icon="bi bi-app">About</AppMenuItem>
 			</AppMenu>
 		</template>
 
 		<template v-slot:list>
 			<AppMenu>
-				<AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.name}}</AppMenuItem>
+				<AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.groupe}}</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -121,6 +124,17 @@ export default {
 			})
 			.catch(this.$app.catchError);
 		},
+chargerType(){
+		this.$app.apiGet('/sample/GET/'+this.openedElement.id,{
+				api_hierarchy: 1
+			})
+		.then((sampleOb) => {
+			this.$store.dispatch ('refreshOpened',sampleOb);
+		})
+		.catch(this.$app.catcherror);
+		
+		
+},
 
 		...mapActions(['closeElement'])
 	},
