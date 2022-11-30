@@ -14,7 +14,6 @@
                             <li v-for="blocItem in openedElementBlocs" :key="blocItem.id">
                                 <router-link :to="'/element/'+openedElement.id+'/bloc/'+blocItem.id" custom v-slot="{ navigate, href }">
                                     <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
-                                        
                                         {{blocItem.bloc}}
                                         <i class="bi bi-check2" v-if="$route.params.bloc == blocItem.id"></i>
                                     </a>

@@ -19,40 +19,42 @@
                 <div v-else>Y'a plus après</div>
             </div>
         </div>
-
-            <!--<p>{{bloc.indication}}</p>-->
         <hr>
             <div class="accordion accordion-flush" :id="'accordion-'+bloc.id">
                 <div class="accordion-item" v-for="ligne in lignes" :key="ligne.id">
                     <h3 class="accordion-header" :id="'heading_'+ ligne.id">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse_'+ ligne.id"
                             aria-expanded="true" :aria-controls="'collapse_'+ ligne.id">
-                            {{ligne.ligne}}
+                            {{ligne.ligne}} 
                             <!--<badge class="badge bg-secondary float-end">Obligatoire</badge>-->
                         </button>
                     </h3>
                     <div :id="'collapse_'+ ligne.id" class="accordion-collapse collapse" :aria-labelledby="'heading_' + ligne.id" data-bs-parent="#accordion">
-                        
-                        <div class="accordion-body">               
-                            <div>{{ligne.indication}}</div>
+                        <div class="accordion-body">  
+                            <ItemAnswer
+                            :id="ligne.id">
+                                
+
+                            </ItemAnswer>
+                            <!-- <div v-if="ligne.indication">{{ligne.indication}}</div>
                             <div class="row">
                                 <div class="col d-grid">
-                                    <button type="button" class="btn btn-success">S</button>
+                                    <button @click="record([ligne.id, 's'])" type="button"  class="btn btn-success">S</button>
                                 </div>
                                 <div class="col d-grid">
-                                    <button type="button" class="btn btn-primary">A</button>
+                                    <button @click="record([ligne.id, 'a'])" type="button" class="btn btn-primary">A</button>
                                 </div>
                                 <div class="col d-grid">
-                                    <button type="button" class="btn btn-warning">M</button>
+                                    <button @click="record([ligne.id, 'm'])" type="button" class="btn btn-warning">M</button>
                                 </div>
                                 <div class="col d-grid">
-                                    <button type="button" class="btn btn-danger">I</button>
+                                    <button @click="record([ligne.id, 'i'])" type="button" class="btn btn-danger">I</button>
                                 </div>
                             </div>                            
                             <div class="mt-3">
                                 <label :for="'commentaire-ligne-'+ligne.id" class="form-label d-none">Commentaire</label>
-                                <input type="text" class="form-control" :id="'commentaire-ligne-'+ligne.id" placeholder="Votre commentaire">
-                            </div>
+                                <input  @blur="recordC()" type="text" class="form-control" :id="'commentaire-ligne-'+ligne.id" placeholder="Votre commentaire" v-model="comment">
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -63,15 +65,19 @@
 
 <script>
 
-import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex';
+import ItemAnswer from '../components/ItemAnswer.vue';
 
 export default {
 
     data() {
         return {
-            bloc_id: null
+            bloc_id: null,
+            comment: null,
         }
     },
+
+    components: {ItemAnswer},
 
     computed: {
         ...mapGetters(['openedElementBlocs', 'opendeElementLignes']),
@@ -99,7 +105,15 @@ export default {
             let selfIndex = this.openedElementBlocs.findIndex(e => e.id = this.bloc_id);
             let bloc = this.openedElementBlocs[selfIndex+i];
             return bloc;
+        },
+        record(options) {
+            console.log(options);
+        }, 
+        recordC() {
+            console.log(this.comment, 'commentaire');
+
         }
+
     },
 
     beforeRouteUpdate(to) {

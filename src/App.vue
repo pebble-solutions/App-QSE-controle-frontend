@@ -114,7 +114,7 @@ export default {
 		 * @param {String} action 'update' (défaut), 'replace', 'remove'
 		 */
 		listElements(params, action) {
-			action = typeof action === 'undefined' ? 'update' : action;
+			action = typeof action === 'undefined' ? 'replace' : action;
 			this.$app.listElements(this, params)
 			.then((data) => {
 				this.$store.dispatch('refreshElements', {
@@ -124,14 +124,14 @@ export default {
 			})
 			.catch(this.$app.catchError);
 		},
-chargerType(){
-		this.$app.apiGet('/sample/GET/'+this.openedElement.id,{
-				api_hierarchy: 1
+		chargerType(){
+			this.$app.apiGet('/sample/GET/'+this.openedElement.id,{
+					api_hierarchy: 1
+				})
+			.then((sampleOb) => {
+				this.$store.dispatch ('refreshOpened',sampleOb);
 			})
-		.then((sampleOb) => {
-			this.$store.dispatch ('refreshOpened',sampleOb);
-		})
-		.catch(this.$app.catcherror);
+			.catch(this.$app.catcherror);
 		
 		
 },
@@ -158,9 +158,12 @@ chargerType(){
 	},
 
 	mounted() {
-		if (this.isConnectedUser) {
-			this.listElements();
-		}
+		this.$app.addEventListener('structureChanged', () => {
+			this.$router.push('/');
+			if (this.isConnectedUser) {
+				this.listElements();
+			}
+		});
 	}
 
 }

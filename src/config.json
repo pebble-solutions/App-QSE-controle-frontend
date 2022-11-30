@@ -1,10 +1,16 @@
 {
-    "name": "appKNapi",
+    "env": "dev",
+    "name": "kn",
     "cfg": {
-        "module": "KN",
-        "moduleLabel": "moduleKN",
+        "module": "kn",
+        "moduleLabel": "KN",
         "aside": true,
-        "app_mode": "default"
+        "app_mode": "default",
+        "ppp": "private"
+    },
+    "domains": {
+        "prod": "pebble.solutions",
+        "dev": "localhost"
     },
     "cfgMenu": {
         "href": null
@@ -16,15 +22,36 @@
         "header": true
     },
     "api": {
-        "baseURL": "http://local.fe.tld/api/",
-        "elements": "informationGroupe"
+        "elements": "informationGroupe",
+        "prod": {
+            "pas": true,
+            "authServer": "auth.pebble.solutions",
+            "tls": true
+        },
+        "dev": {
+            "pas": true,
+            "authServer": "127.0.0.1:3333",
+            "tls": false
+        }
     },
     "firebaseConfig": {
-        "apiKey": "AIzaSyAm-yEHEBuXt_2frDrNrH2o3mT0Ffj_4v0",
-        "authDomain": "ace-charter-310713.firebaseapp.com",
-        "projectId": "ace-charter-310713",
-        "storageBucket": "ace-charter-310713.appspot.com",
-        "messagingSenderId": "914156232758",
-        "appId": "1:914156232758:web:b493274bf256cabb68f897"
+        "prod":{
+            "apiKey": "AIzaSyAm-yEHEBuXt_2frDrNrH2o3mT0Ffj_4v0",
+            "authDomain": "ace-charter-310713.firebaseapp.com",
+            "databaseURL": "https://ace-charter-310713-default-rtdb.europe-west1.firebasedatabase.app",
+            "projectId": "ace-charter-310713",
+            "storageBucket": "ace-charter-310713.appspot.com",
+            "messagingSenderId": "914156232758",
+            "appId": "1:914156232758:web:575ea7a83880159d68f897"
+        },
+        "dev":{
+            "apiKey": "AIzaSyAzwQE4rI03KgtFYEN2zkXhqUA1-agVQsA",
+            "authDomain": "pebble-test.firebaseapp.com",
+            "projectId": "pebble-test",
+            "storageBucket": "pebble-test.appspot.com",
+            "messagingSenderId": "985626064716",
+            "appId": "1:985626064716:web:bf84170ea960953e97c1e9"
+        }
     }
+
 }

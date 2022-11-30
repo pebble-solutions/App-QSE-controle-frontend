@@ -14,7 +14,8 @@ export default createStore({
 		openedElement: null,
 		tmpElement: null,
 		blocs:[],
-		lignes:[]
+		lignes:[],
+		items:[],
 	},
 	getters: {
 		activeStructure(state) {
