@@ -51,7 +51,17 @@
 		<template v-slot:list>
 				<AppMenu v-if="($route.name == 'collecte' && collectes || $route.name == 'collecteKN' && collectes) ">
 					<!-- || $route.path == 'collecte'+coll.id -->
-					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >{{col.id}}-{{col.cible__structure__personnel_id}}-{{getGroupNameFromId(col.information__groupe_id)}}</AppMenuItem>
+					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
+						<div class="d-flex align-items-center justify-content-between">
+							Kn n°{{col.id}}
+							<span class="badge text-bg-secondary">{{getGroupNameFromId(col.information__groupe_id)}}</span>
+						</div>
+
+						<div>
+							<i class="bi bi-person-badge-fill"></i>
+							{{getPersonnelNameFromId(col.cible__structure__personnel_id)}}
+						</div>
+					</AppMenuItem>
 				</AppMenu>
 				<AppMenu v-else>
 					<AppMenuItem :href="'/formulaire/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.id}} {{form.groupe}}</AppMenuItem>
@@ -63,10 +73,10 @@
 				<router-view/>
 			</div>
 		</template>
-
 	</AppWrapper>
-	
 </template>
+
+
 
 <script>
 
@@ -94,12 +104,11 @@ export default {
 	},
 
 	computed: {
-		...mapState(['openedElement','collectes','formulaires'])
+		...mapState(['openedElement','collectes','formulaires', 'listActifs'])
 	},
 
 	methods: {
-
-		...mapActions(['refreshCollectes', 'refreshFormulaires']),
+		...mapActions(['refreshCollectes', 'refreshFormulaires', 'refreshListActifs']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -157,24 +166,57 @@ export default {
 				.finally(() => this.pending[pending] = false)
 		},
 
+		/**
+		 * Charge le personnel actifs
+		 */
+		loadAgent() {
+            this.pending.loadAgent = true;
+            this.$app.apiGet('structurePersonnel/GET/list', {
+                actif:true
+            })
+                .then((data) => {
+                    this.refreshListActifs(data);
+                })
+                .catch(this.$app.catchError)
+                .finally(this.pending.loadAgent = false);
+        },
 
+		/**
+		 * Récupere le nom du groupe d'information de la collect via un id de
+		 * 
+		 * @param {number} groupInformationId l'id du group information de la collecte
+		 * 
+		 * @return {string}
+		 */
 		getGroupNameFromId(groupInformationId) {
-			console.log(groupInformationId,'idinfo');
-
 			let groupInformation = this.formulaires.find(e => e.id == groupInformationId);
+
 			if (groupInformation) {
 				return groupInformation.groupe;
-			} else { return 'group inexistant'}
+			} else { 
+				return 'group inexistant';
+			}
+		},
 
+		/**
+		 * Récupère le nom d'un personnel actif via un id
+		 * 
+		 * @param {number} personnelId l'id d'un personnel actif
+		 * 
+		 * @return {string}
+		 */
+		getPersonnelNameFromId(personnelId) {
+			let personnelName = this.listActifs.find(personnel => personnel.id == personnelId);
 
+			if (personnelName) {
+				return personnelName.cache_nom;
+			} else {
+				return 'Personnel inexsitant'
+			}
 		}
 	},
 
-	components: {
-		AppWrapper,
-		AppMenu,
-		AppMenuItem
-	},
+	components: {AppWrapper, AppMenu, AppMenuItem},
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
@@ -182,6 +224,7 @@ export default {
 			if (this.isConnectedUser) {
 				this.loadCollectes();
 				this.loadFormulaires();
+				this.loadAgent();
 			}
 		});
 	}
