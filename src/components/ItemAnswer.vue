@@ -1,27 +1,35 @@
 <template>
     <div>
+        
         <div class="row">
             <div class="col d-grid">
-                <button @click="recordSami('s')" type="button"  class="btn btn-success">S</button>
+                <button @click="recordSami('s')" type="button"  class="btn btn-outline-success">S</button>
+                <span v-if="itemResponse.question == 's'">OK</span>
             </div>
             <div class="col d-grid">
-                <button @click="recordSami('a')" type="button" class="btn btn-primary">A</button>
+                <button @click="recordSami('a')" type="button" class="btn btn-outline-primary">A</button>
             </div>
             <div class="col d-grid">
-                <button @click="recordSami('m')" type="button" class="btn btn-warning">M</button>
+                <button @click="recordSami('m')" type="button" class="btn btn-outline-warning">M</button>
             </div>
             <div class="col d-grid">
-                <button @click="recordSami('i')" type="button" class="btn btn-danger">I</button>
+                <button @click="recordSami('i')" type="button" class="btn btn-outline-danger">I</button>
             </div>
-        </div>                            
+        </div>
+        <div v-if="itemResponse.comment">{{itemResponse.comment}}</div>
+
         <div class="mt-3">
             <label  class="form-label d-none">Commentaire</label>
             <input @blur="recordC(id)"  type="text" class="form-control"  placeholder="Votre commentaire" v-model="comment">
         </div>
+        <div>
+            {{}}
+        </div>
+        {{itemResponse.question}}{{itemResponse.comment}}{{itemResponse.reponse}}
     </div>
 </template>
 <script>
-import {mapState } from 'vuex';
+import {mapState, mapActions} from 'vuex';
 
 export default {
     props: {
@@ -40,30 +48,34 @@ export default {
                 commentaire: '',
                 // practice:'',
                 // obligatory:'',
-            }
+            },
+            blocResponse: [],
+            
                 
                 
 
         }
     },
     computed: {
-        ...mapState(['openedElement'])
+        ...mapState(['openedElement', 'responses']),
     },
 
     methods: {
+
+        ...mapActions(['refreshResponse']),
         /**
-         * enregistre le commentaire de l'item dans le store
+         * enregistre le commentaire de l'item
          */
         recordC(id) {
             console.log(this.comment, 'commentaire', id);
             this.itemResponse.question = id;
-            this.itemResponse.commentaire = this.comment
-            console.log(this.itemResponse, 'itemResponse')
-
+            this.itemResponse.commentaire = this.comment;
+            this.refreshResponse(this.itemResponse);
+            console.log('comment', this.itemResponse);
         },
 
         /**
-         * enregistre le sami de l'item dans le store
+         * enregistre le sami de l'item 
          * @param {string} options s,a,m,i
          */
         recordSami(sami) {
@@ -71,7 +83,9 @@ export default {
             this.itemResponse.question = this.id;
             this.itemResponse.reponse = sami;
             console.log(this.itemResponse, 'itemResponse')
-
+            this.refreshResponse(this.itemResponse);
+            console.log('resp', this.itemResponse);
+            
         }, 
 
 

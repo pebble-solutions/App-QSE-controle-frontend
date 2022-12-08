@@ -1,23 +1,24 @@
 <template>
     <div class="card my-3" v-if="bloc">
         <div  class="card-header">
-            <h2 class="card-title d-flex justify-content-center">{{bloc.bloc}}</h2>
-            <p class="badge bg-light text-dark d-flex justify-content-center display-6">items : 0/23</p>
+            <h2 class="card-title d-flex justify-content-start">{{bloc.bloc}}</h2>
+            <p class="d-flex justify-content-start">Questions :  0 / {{lignes?.length}}</p>
             <div class="d-flex justify-content-between">
-                <router-link :to="'/element/'+$route.params.id+'/bloc/'+prevBloc.id" custom v-slot="{ navigate, href }" v-if="prevBloc">
-                    <a class="btn btn-secondary" :href="href" @click="navigate">
-                        {{prevBloc.bloc}}
+                <router-link :to="'/collecte/'+$route.params.id+'/bloc/'+prevBloc.id" custom v-slot="{ navigate, href }" v-if="prevBloc">
+                    <a class="btn btn-outline-primary mx-1" :href="href" @click="navigate">
+                        <i class="bi bi-box-arrow-left"></i> {{prevBloc.bloc}} 
                     </a>
                 </router-link>
-                <div class ="btn btn-secondary" v-else>Y'a rien avant</div>
+                <div v-else></div>
 
-                <router-link :to="'/element/'+$route.params.id+'/bloc/'+nextBloc.id" custom v-slot="{ navigate, href }" v-if="nextBloc">
-                    <a class="btn btn-secondary" :href="href" @click="navigate">
-                        {{nextBloc.bloc}}
+                <router-link :to="'/collecte/'+$route.params.id+'/bloc/'+nextBloc.id" custom v-slot="{ navigate, href }" v-if="nextBloc">
+                    <a class="btn btn-outline-primary mx-1" :href="href" @click="navigate">
+                        {{nextBloc.bloc}} <i class="bi bi-box-arrow-right"></i>
                     </a>
                 </router-link>
-                <div v-else>Y'a plus après</div>
+                <div v-else></div>
             </div>
+            
         </div>
         <hr>
             <div class="accordion accordion-flush" :id="'accordion-'+bloc.id">
@@ -25,47 +26,28 @@
                     <h3 class="accordion-header" :id="'heading_'+ ligne.id">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse_'+ ligne.id"
                             aria-expanded="true" :aria-controls="'collapse_'+ ligne.id">
-                            {{ligne.ligne}} 
+                            {{ligne.ligne}}
                             <!--<badge class="badge bg-secondary float-end">Obligatoire</badge>-->
                         </button>
                     </h3>
-                    <div :id="'collapse_'+ ligne.id" class="accordion-collapse collapse" :aria-labelledby="'heading_' + ligne.id" data-bs-parent="#accordion">
+                    <div :id="'collapse_'+ ligne.id" class="accordion-collapse collapse" :aria-labelledby="'heading_' + ligne.id" :data-bs-parent="'#accordion-'+bloc.id">
                         <div class="accordion-body">  
                             <ItemAnswer
                             :id="ligne.id">
-                                
-
                             </ItemAnswer>
-                            <!-- <div v-if="ligne.indication">{{ligne.indication}}</div>
-                            <div class="row">
-                                <div class="col d-grid">
-                                    <button @click="record([ligne.id, 's'])" type="button"  class="btn btn-success">S</button>
-                                </div>
-                                <div class="col d-grid">
-                                    <button @click="record([ligne.id, 'a'])" type="button" class="btn btn-primary">A</button>
-                                </div>
-                                <div class="col d-grid">
-                                    <button @click="record([ligne.id, 'm'])" type="button" class="btn btn-warning">M</button>
-                                </div>
-                                <div class="col d-grid">
-                                    <button @click="record([ligne.id, 'i'])" type="button" class="btn btn-danger">I</button>
-                                </div>
-                            </div>                            
-                            <div class="mt-3">
-                                <label :for="'commentaire-ligne-'+ligne.id" class="form-label d-none">Commentaire</label>
-                                <input  @blur="recordC()" type="text" class="form-control" :id="'commentaire-ligne-'+ligne.id" placeholder="Votre commentaire" v-model="comment">
-                            </div> -->
                         </div>
                     </div>
                 </div>
         </div>                  
     </div>
 
+    <div v-else>What Else</div>
+
 </template>
 
 <script>
 
-import {mapGetters} from 'vuex';
+import {mapState} from 'vuex';
 import ItemAnswer from '../components/ItemAnswer.vue';
 
 export default {
@@ -73,25 +55,33 @@ export default {
     data() {
         return {
             bloc_id: null,
-            comment: null,
+            comment: null
         }
     },
 
     components: {ItemAnswer},
 
     computed: {
-        ...mapGetters(['openedElementBlocs', 'opendeElementLignes']),
+        ...mapState(['collecte']),
 
         bloc() {
-            return this.openedElementBlocs.find(e => e.id == this.bloc_id);
+            return this.formulaire.blocs.find(e => e.id == this.bloc_id);
+
+            
         },
 
 
         lignes() {
-            return this.opendeElementLignes.filter(e => e.information__bloc_id == this.bloc_id);
+            return this.formulaire.questions.filter(e => e.information__bloc_id == this.bloc_id);
+        },
+
+        formulaire() {
+            console.log(this.collecte.formulaire, 'formulaire')
+            return this.collecte.formulaire;
         },
 
         nextBloc() {
+            console.log(this.findBloc(+1), this.findBloc(+1).bloc, 'nextBloc')
             return this.findBloc(+1);
         },
 
@@ -102,15 +92,16 @@ export default {
 
     methods: {
         findBloc(i) {
-            let selfIndex = this.openedElementBlocs.findIndex(e => e.id = this.bloc_id);
-            let bloc = this.openedElementBlocs[selfIndex+i];
+            let selfIndex = this.formulaire.blocs.findIndex(e => e.id == this.bloc_id);
+            let bloc = this.formulaire.blocs[selfIndex+i];
+            console.log(bloc, this.bloc_id, this.bloc_id.bloc, 'find bloc');
             return bloc;
         },
         record(options) {
-            console.log(options);
+            console.log(options, 'enregistrement options');
         }, 
         recordC() {
-            console.log(this.comment, 'commentaire');
+            console.log(this.comment, 'enregistrement commentaire');
 
         }
 

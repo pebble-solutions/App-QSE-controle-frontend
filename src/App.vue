@@ -14,7 +14,7 @@
 						<i class="bi bi-arrow-left"></i>
 					</a>
 				</router-link>
-				<router-link :to="'/element/'+openedElement.id+'/properties'" custom v-slot="{ navigate, href }">
+				<router-link :to="'/formulaire/'+openedElement.id+'/properties'" custom v-slot="{ navigate, href }">
 					<a class="btn btn-dark me-2" :href="href" @click="navigate">
 						<i class="bi bi-file-earmark me-1"></i>
 						{{openedElement.groupe}}
@@ -27,7 +27,7 @@
 					</button>
 					<ul class="dropdown-menu" aria-labelledby="fileDdMenu">
 						<li>
-							<router-link :to="'/element/'+openedElement.id+'/informations'" custom v-slot="{ navigate, href }">
+							<router-link :to="'/formulaire/'+openedElement.id+'/informations'" custom v-slot="{ navigate, href }">
 								<a class="dropdown-item" :href="href" @click="navigate">Informations</a>
 							</router-link>
 						</li>
@@ -43,18 +43,24 @@
 		<template v-slot:menu>
 			<AppMenu>
 				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
-				<AppMenuItem href="/about" look="dark" icon="bi bi-app">About</AppMenuItem>
+
+				<AppMenuItem href="/gestion" look="dark" icon="bi bi-house">gestion KN</AppMenuItem>
+				<AppMenuItem href="/collecte" look="dark" icon="bi bi-app">réalisation KN</AppMenuItem>
 			</AppMenu>
 		</template>
 
 		<template v-slot:list>
-			<AppMenu>
-				<AppMenuItem :href="'/element/'+el.id" icon="bi bi-file-earmark" v-for="el in elements" :key="el.id">{{el.groupe}}</AppMenuItem>
-			</AppMenu>
+				<AppMenu v-if="($route.name == 'collecte' && collectes || $route.name == 'collecteKN' && collectes) ">
+					<!-- || $route.path == 'collecte'+coll.id -->
+					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >{{col.id}}-{{col.cible__structure__personnel_id}}-{{getGroupNameFromId(col.information__groupe_id)}}</AppMenuItem>
+				</AppMenu>
+				<AppMenu v-else>
+					<AppMenuItem :href="'/formulaire/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.id}} {{form.groupe}}</AppMenuItem>
+				</AppMenu>
 		</template>
 
 		<template v-slot:core>
-			<div class="px-2 bg-light">
+			<div class="px-2 bg-light" v-if="isConnectedUser">
 				<router-view/>
 			</div>
 		</template>
@@ -81,17 +87,21 @@ export default {
 			cfgSlots: CONFIG.cfgSlots,
 			appController: null,
 			pending: {
-				elements: true
+				formulaires: true,
+				collectes: true
 			},
-			isConnectedUser: false
+			isConnectedUser: false,
 		}
 	},
 
 	computed: {
-		...mapState(['elements', 'openedElement'])
+		...mapState(['openedElement','collectes','formulaires'])
 	},
 
 	methods: {
+
+		...mapActions(['refreshCollectes', 'refreshFormulaires']),
+
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
 		 * @param {Object} user Un objet LocalUser
@@ -108,46 +118,56 @@ export default {
 		},
 
 		/**
-		 * Envoie une requête pour lister les éléments et les stocke dans le store
+		 * Charge les collectes depuis le serveur et les stock dans le store
 		 * 
-		 * @param {Object} params Paramètre passés en GET dans l'URL
-		 * @param {String} action 'update' (défaut), 'replace', 'remove'
+		 * @return {Promise<object>}
 		 */
-		listElements(params, action) {
-			action = typeof action === 'undefined' ? 'replace' : action;
-			this.$app.listElements(this, params)
-			.then((data) => {
-				this.$store.dispatch('refreshElements', {
-					action,
-					elements: data
-				});
-			})
-			.catch(this.$app.catchError);
+		loadCollectes() {
+			return this.loadRessources('collecte');
 		},
-		chargerType(){
-			this.$app.apiGet('/sample/GET/'+this.openedElement.id,{
-					api_hierarchy: 1
-				})
-			.then((sampleOb) => {
-				this.$store.dispatch ('refreshOpened',sampleOb);
-			})
-			.catch(this.$app.catcherror);
-		
-		
-},
 
-		...mapActions(['closeElement'])
-	},
-
-	watch: {
 		/**
-		 * Observe l'état de connexion de l'utilisateur. Si l'utilisateur se connecte,
-		 * les éléments sont chargés depuis l'API
+		 * Charge l'ensemble des formulaires depuis le serveur et les stock dans le store
+		 * 
+		 * @return {Promise<object>}
 		 */
-		isConnectedUser(val) {
-			if (val) {
-				this.listElements();
-			}
+		loadFormulaires() {
+			return this.loadRessources('formulaire')
+		},
+
+		/**
+		 * Charge une ressrouce depuis le serveur vers le store.
+		 * 
+		 * @param {string} ressourceName Le nom de la ressource à charger dans le store ('collecte', 'formulaire')
+		 * 
+		 * @return {Promise<object>}
+		 */
+		loadRessources(ressourceName) {
+			let route = 'data/GET/'+ressourceName;
+			let pending = ressourceName+'s';
+			let refreshMethod = 'refresh'+ressourceName.charAt(0).toUpperCase() + ressourceName.slice(1)+'s';
+
+			this.pending[pending] = true;
+
+			return this.$app.apiGet(route)
+				.then(data => {
+					this[refreshMethod](data);
+					return data;
+				})
+				.catch(this.$app.catchError)
+				.finally(() => this.pending[pending] = false)
+		},
+
+
+		getGroupNameFromId(groupInformationId) {
+			console.log(groupInformationId,'idinfo');
+
+			let groupInformation = this.formulaires.find(e => e.id == groupInformationId);
+			if (groupInformation) {
+				return groupInformation.groupe;
+			} else { return 'group inexistant'}
+
+
 		}
 	},
 
@@ -161,7 +181,8 @@ export default {
 		this.$app.addEventListener('structureChanged', () => {
 			this.$router.push('/');
 			if (this.isConnectedUser) {
-				this.listElements();
+				this.loadCollectes();
+				this.loadFormulaires();
 			}
 		});
 	}

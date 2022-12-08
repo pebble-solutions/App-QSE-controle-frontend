@@ -10,12 +10,15 @@ export default createStore({
 				THEME_COLOR: 'black'
 			}
 		},
-		elements: [],
 		openedElement: null,
 		tmpElement: null,
 		blocs:[],
 		lignes:[],
-		items:[],
+		responses:[],
+		formulaires: [],
+		listActifs: [],
+		collectes: [],
+		collecte: null
 	},
 	getters: {
 		activeStructure(state) {
@@ -36,84 +39,6 @@ export default createStore({
 		 */
 		mkgConfig(state, payload) {
 			state.mkg.config = payload;
-		},
-
-		
-		/**
-		 * Charge un objet dans openedElement
-		 * @param {Object} state Le state de l'instance VueX
-		 * @param {Integer} id L'ID de l'élément à charger
-		 */
-		open(state, id) {
-			state.openedElement = id;
-		},
-
-
-		/**
-		 * Ferme l'élément ouvert
-		 * @param {Object} state Le state de l'instance VueX
-		 */
-		close(state) {
-			state.openedElement = null;
-		},
-
-		/**
-		 * Remplace la liste des éléments chargés avec une nouvelle liste
-		 * @param {Object} state		Le state de l'instance VueX
-		 * @param {Array} elements		La nouvelle liste d'éléments
-		 */
-		replaceElements(state, elements) {
-			state.elements = elements;
-		},
-
-		/**
-		 * Rafraichie la liste des éléments chargés à partir d'une autre liste.
-		 * - si un élément existe dans state et dans elements, il est actualisé avec le nouveau
-		 * - si un élément est dans elements mais pas dans state, il est ajouté
-		 * @param {Object} state		Le state de l'instance VueX
-		 * @param {Array} elements		La nouvelle liste d'éléments
-		 */
-		updateElements(state, elements) {
-			elements.forEach(element => {
-				let stateEl = state.elements.find(e => e.id === element.id);
-
-				// Mise à jour d'un élément existant
-				if (stateEl) {
-					for (let key in element) {
-						stateEl[key] = element[key];
-					}
-				}
-				// Ajout d'un élément existant
-				else {
-					state.elements.push(element);
-				}
-			});
-		},
-
-		/**
-		 * Retire des éléments de la liste des éléments chargés
-		 * @param {Object} state Le state de l'instance vueX
-		 * @param {Array} elements Les ID des éléments à retirer
-		 */
-		removeElements(state, elements) {
-			elements.forEach(id => {
-				let index = state.elements.findIndex(e => e.id === id);
-
-				if (index !== -1) {
-					state.elements.splice(index, 1);
-				}
-			});
-		},
-
-		/**
-		 * Met à jour les données de l'élément chargé
-		 * @param {Object} state Le state de l'instance vueX
-		 * @param {Object} data Liste clé valeur des infos à mettre à jour
-		 */
-		updateOpened(state, data) {
-			for (let key in data) {
-				state.openedElement[key] = data[key];
-			}
 		},
 
 		/**
@@ -162,61 +87,84 @@ export default createStore({
 					state[options.key].push(element);
 				}
 			});
+		},
+		/**
+		 * Met à jour les réponses  dans le store.
+		 * 
+		 * @param {object} state State de VueX
+		 * @param {object} responses Informations à mettre à jour
+		 */
+		setResponses(state, responses) {
+			let respIndex = state.responses.findIndex(e => e.question == responses.question);
+			console.log(respIndex);
+
+			if (respIndex == -1){
+				state.responses.push(responses);
+			}
+			else {
+				state.responses[respIndex] = responses;
+			}
+		},
+		/**
+		 * Enregistre les formulaires chargés dans le store
+		 * @param {Object} state State de VueX
+		 * @param {Array} forms tableau des formulaires
+		 */
+		setFormulaires(state, forms) {
+			state.formulaires = forms;
+		},
+
+		/**
+		 * Enregistre la liste des personnels actifs dans le store
+		 * @param {Object} state State de Vuex
+		 * @param {Array} data Liste des personnels actifs
+		 */
+		setListActifs(state, data) {
+			state.listActifs = data;
+		},
+
+		/**
+		 * Enregistre la liste des collectes crées dans le store
+		 * @param {Object} state State de Vuex
+		 * @param {Array} data Liste des collectes
+		 */
+		setCollectes (state , data) {
+			state.collectes = data;
+		},
+
+		/**
+		 * Charge une ressource dans openedElement
+		 * 
+		 * @param {object} state State de vueX
+		 * @param {object} options 
+		 * - ressource {string} Le nom de la table de ressources
+		 * - id {number} L'ID cible de la ressource
+		 */
+		openedElement(state, options) {
+			let ressource = options.ressource;
+			let id = options.id ?? null;
+
+			if (!id) {
+				state.openedElement = null;
+			}
+			else {
+				let data = state[ressource].find(e => e.id == id);
+				state.openedElement = data;
+			}
+		},
+
+		/**
+		 * Charge une collecte dans le store
+		 * 
+		 * @param {object} state Le state vueX
+		 * @param {object} collecte La collecte à charger
+		 */
+		collecte(state, collecte) {
+			state.collecte = collecte;
 		}
 	
 	},
 	actions: {
-		/**
-		 * Charge un élément depuis le store via son ID
-		 * @param {Object} context Instance VueX
-		 * @param {Integer} elementId Id de l'élément à charger depuis les éléments existants ou depuis l'API
-		 */
-		load(context, elementId) {
-			let el = context.state.elements.find(e => e.id == elementId);
-
-			if (el) {
-				context.commit('open', el);
-			}
-			else {
-				// Il faut générer une requête pour charger l'élément manquant
-				console.log('Not found');
-			}
-		},
-
-		/**
-		 * Ferme l'élément ouvert
-		 * @param {Object} context Instance VueX
-		 */
-		unload(context) {
-			context.commit('close');
-		},
-
-		/**
-		 * Met à jour la liste des éléments chargés
-		 * @param {Object} context L'instance VueX
-		 * @param {Object} payload Les paramètres de rafraichissement
-		 * - action			update (default), replace, remove
-		 * - elements		la liste des éléments
-		 */
-		refreshElements(context, payload) {
-			if (!('action' in payload)) {
-				payload.action = 'update';
-			}
-
-			if (payload.action == 'update') {
-				context.commit('updateElements', payload.elements);
-			}
-			else if (payload.action == 'replace') {
-				context.commit('replaceElements', payload.elements);
-			}
-			else if (payload.action == 'remove') {
-				context.commit('removeElements', payload.elements);
-			}
-			else {
-				throw new Error(`La mutation ${payload.action} n'existe pas.`);
-			}
-		},
-
 		/**
 		 * Met à jour les infos de l'élément ouvert avec des données
 		 * @param {Object} context L'instance vueX
@@ -259,6 +207,55 @@ export default createStore({
 				key:'blocs',
 				data: payload
 			});
+		},
+		refreshResponse (context,oReponse) {
+			context.commit ('setResponses', oReponse)
+		},
+
+		refreshFormulaires (context, data) {
+			context.commit ('setFormulaires', data);
+		},
+		refreshListActifs(context, data) {
+			context.commit('setListActifs', data);
+		},
+		refreshCollectes (context,data) {
+			context.commit('setCollectes', data)
+		},
+
+		/**
+		 * Charge un formulaire sur openedElement
+		 * 
+		 * @param {object} context Instance VueX
+		 * @param {number} formulaireId Id du formulaire à charger
+		 */
+		loadFormulaire(context, formulaireId) {
+			context.commit('openedElement', {
+				ressource: 'formulaires',
+				id: formulaireId
+			});
+		},
+
+		/**
+		 * Charge une collecte sur openedElement
+		 * 
+		 * @param {object} context Instance VueX
+		 * @param {number} collecteId Id du collecte à charger
+		 */
+		loadCollecte(context, collecteId) {
+			context.commit('openedElement', {
+				ressource: 'collectes',
+				id: collecteId
+			});
+		},
+
+		/**
+		 * Charge une collecte dans le store
+		 * 
+		 * @param {object} contexte L'instance vueX
+		 * @param {object} collecte La collecte à charger dans le store
+		 */
+		setCollecte(contexte, collecte) {
+			contexte.commit('collecte', collecte)
 		}
 	},
 	modules: {
