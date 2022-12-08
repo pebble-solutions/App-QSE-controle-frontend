@@ -1,8 +1,8 @@
 <template>
-  <div class="about">
-    <h1> KN programmés hello</h1>
+	<div class="about">
+		<h1> KN programmés hello</h1>
 
-    <RouterView></RouterView>
-    
-  </div>
+			<RouterView></RouterView>
+
+	</div>
 </template>

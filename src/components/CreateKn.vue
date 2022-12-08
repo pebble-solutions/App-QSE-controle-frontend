@@ -41,6 +41,7 @@ export default {
     data() {
         return {
 
+
             pending: {
                 loadForm: true,
                 loadAgent: true
@@ -87,11 +88,15 @@ export default {
         // },
         createCollecte(){
             console.log("creation en cours : ", this.collecte)
-            
-            
+                        
             this.$app.apiPost('data/POST/collecte', this.collecte)
             .then((data) => {
-                console.log (data, 'collecte crée')
+                console.log(data)
+                alert ('collecte crée', data, this.collecte.formulaire);
+                this.collecte.formulaire = null;
+                this.collecte.cible_personnel = null;
+                this.collecte.enqueteur_personnel = null,
+                this.collecte.date = null;
             })
             .catch(this.$app.catchError);
         }
