@@ -1,10 +1,10 @@
 <template>
-    <form method="post" @submit.prevent="createCollecte()">
+    <form method="post" @submit.prevent="createCollecte()" v-if="(listActifs && formulaires)">
         <div class="row g-2">
             <div class="col mb-3">
                 <label for="collecteFormulaire" class="form-label">Type de KN</label>
                 <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="collecte.formulaire">
-                    <option v-for="(form) in forms" :value="form.id" :key="form.id" >{{form.groupe}}</option>
+                    <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>
                 </select>
             </div>
         </div>
@@ -27,8 +27,6 @@
             </select>
         </div>
         <button  type="submit" class="btn btn-outline-primary">Valider</button>
-
-        {{collecte}}
     </form>
 </template>
 <script>
@@ -42,6 +40,11 @@ export default {
 
     data() {
         return {
+
+            pending: {
+                loadForm: true,
+                loadAgent: true
+            },
             collecte: {
                 formulaire: null,
                 cible_personnel: null,
@@ -53,31 +56,35 @@ export default {
     },
 
     computed: {
-        ...mapState(['openedElement', 'forms', 'listActifs'])
+        ...mapState(['openedElement', 'formulaires', 'listActifs'])
     },
 
     methods: {
 
-        ...mapActions(['refreshForms','refreshListActifs']),
+        ...mapActions(['refreshFormulaires','refreshListActifs']),
 
-        loadForm() {
-            this.$app.apiGet('data/GET/formulaire')
-                .then((data) => {
-                    console.log (data, 'formulaires');
-                    this.refreshForms(data);
-                })
-                .catch(this.$app.catchError);
-        },
-        loadAgent() {
-            this.$app.apiGet('structurePersonnel/GET/list', {
-                actif:true
-            })
-                .then((data) => {
-                    console.log (data, 'agents');
-                    this.refreshListActifs(data);
-                })
-                .catch(this.$app.catchError);
-        },
+        // loadForm() {
+        //     this.pending.loadForm = true;
+        //     this.$app.apiGet('data/GET/formulaire')
+        //         .then((data) => {
+        //             console.log (data, 'formulaires create');
+        //             this.refreshFormulaires(data);
+        //         })
+        //         .catch(this.$app.catchError)
+        //         .finally(this.pending.loadForm = false);
+        // },
+        // loadAgent() {
+        //     this.pending.loadAgent = true;
+        //     this.$app.apiGet('structurePersonnel/GET/list', {
+        //         actif:true
+        //     })
+        //         .then((data) => {
+        //             console.log (data, 'agents create');
+        //             this.refreshListActifs(data);
+        //         })
+        //         .catch(this.$app.catchError)
+        //         .finally(this.pending.loadAgent = false);
+        // },
         createCollecte(){
             console.log("creation en cours : ", this.collecte)
             
@@ -89,6 +96,10 @@ export default {
             .catch(this.$app.catchError);
         }
     },
+    // mounted() {
+    //     this.loadForm();
+    //     this.loadAgent();
+    // },
 }
 
 </script>

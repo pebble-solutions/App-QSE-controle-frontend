@@ -8,8 +8,8 @@ const routes = [
     component: Home
   },
   {
-    path: '/gestion',
-    name: 'gestion',
+    path: '/programmation',
+    name: 'programmation',
     component: () => import(/* webpackChunkName: "about" */ '../views/DriveKn.vue')
     
 

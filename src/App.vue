@@ -42,10 +42,9 @@
 
 		<template v-slot:menu>
 			<AppMenu>
-				<AppMenuItem href="/" look="dark" icon="bi bi-house">Accueil</AppMenuItem>
-
-				<AppMenuItem href="/gestion" look="dark" icon="bi bi-house">gestion KN</AppMenuItem>
-				<AppMenuItem href="/collecte" look="dark" icon="bi bi-app">réalisation KN</AppMenuItem>
+				<AppMenuItem href="/" look="dark" icon="bi bi-house">KN suivi</AppMenuItem>
+				<AppMenuItem href="/programmation" look="dark" icon="bi bi-house">KN programmation</AppMenuItem>
+				<AppMenuItem href="/collecte" look="dark" icon="bi bi-app">KN collecte</AppMenuItem>
 			</AppMenu>
 		</template>
 
