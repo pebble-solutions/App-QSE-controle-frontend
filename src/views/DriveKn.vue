@@ -39,37 +39,11 @@ export default {
     computed: {
         ...mapState(["openedElement", "formulaires", "listActifs"])
     },
+
     methods: {
         ...mapActions(["refreshFormulaires", "refreshListActifs"]),
-
-        loadForm() {
-            this.pending.loadForm = true;
-            this.$app.apiGet('data/GET/formulaire')
-                .then((data) => {
-                    console.log (data, 'formulaires');
-                    this.refreshFormulaires(data);
-                })
-                .catch(this.$app.catchError)
-                .finally(this.pending.loadForm = false);
-        },
-
-        loadAgent() {
-            this.pending.loadAgent = true;
-            this.$app.apiGet('structurePersonnel/GET/list', {
-                actif:true
-            })
-                .then((data) => {
-                    console.log (data, 'agents');
-                    this.refreshListActifs(data);
-                })
-                .catch(this.$app.catchError)
-                .finally(this.pending.loadAgent = false);
-        },
     },
-    mounted() {
-        this.loadForm();
-        this.loadAgent();
-    },
-    components: { CreateKn }
+
+    components: { CreateKn },
 }
 </script>

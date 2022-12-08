@@ -99,8 +99,6 @@ export default {
         },
         
         sendResp() {
-            console.log(this.responses, 'reponses envoyées');
-            console.log(typeof this.responses,'type')
             this.$app.apiPost('data/POST/collecte', {
                 reponses: JSON.stringify(this.responses),
                 formulaire: this.collecte.id,
