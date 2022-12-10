@@ -10,9 +10,19 @@ const routes = [
   {
     path: '/programmation',
     name: 'programmation',
-    component: () => import(/* webpackChunkName: "about" */ '../views/DriveKn.vue')
-    
-
+    component: () => import(/* webpackChunkName: "about" */ '../views/DriveKn.vue'),
+    children: [
+        {
+          path:'new',
+          name: 'CollectNew',
+          component: () => import(/* webpackChunkName: "about" */ '../views/CollectEdit.vue')
+        },
+        {
+          path:':id/edit',
+          name: 'CollectEdit',
+          component: () => import(/* webpackChunkName: "about" */ '../views/CollectEdit.vue')
+        }
+    ]
   },
   {
     path: '/collecte',
