@@ -26,12 +26,14 @@
                         <span class="me-2">KN n°{{col.id}}</span>
                         <span  v-if="!getGroupNameFromId(col.information__groupe_id)" class="me-2 text-warning">Type de KN non programmé </span>
                         <span v-else class="me-2">{{getGroupNameFromId(col.information__groupe_id)}}</span>
-                        <span class="me-2" v-if="!col.date">Date non programmée</span>
-                        <span v-else class="me-2 text-warning">{{col.date}}</span>
+                        <span class="me-2 text-warning" v-if="!col.date">Date non programmée</span>
+                        <span v-else class="me-2">{{changeFormatDateLit(col.date)}}</span>
                         <span  v-if="!getPersonnelNameFromId(col.enqueteur__structure__personnel_id)" class="me-2 text-warning">Contrôleur non programmé </span>
                         <span v-else class="me-2">Contrôleur: {{getPersonnelNameFromId(col.enqueteur__structure__personnel_id)}}</span>
                         <span  v-if="!getPersonnelNameFromId(col.cible__structure__personnel_id)" class="me-2 text-warning">Opérateur non programmé </span>
                         <span v-else class="me-2">Opérateur: {{getPersonnelNameFromId(col.cible__structure__personnel_id)}}</span>
+                        <!-- <span  v-if="!getPersonnelNameFromId(col.cible__structure__personnel_id)" class="me-2 text-warning">Opérateur non programmé </span>
+                        <span v-else class="me-2">Opérateur: {{getPersonnelNameFromId(col.cible__structure__personnel_id)}}</span> -->
                     </div>
                     <div>
                         
@@ -48,13 +50,15 @@
                 </div>
             </div>
         </div>
-        <router-view></router-view>
+        
     </div>
 </template>
 
 <script>
 
 import { mapActions, mapState } from 'vuex';
+import date from 'date-and-time';
+import fr from 'date-and-time/locale/fr';
 
 export default {
     data() {
@@ -93,27 +97,30 @@ export default {
         /**
 		 * Charge les collectes depuis le serveur et les stock dans le store
 		 * 
+         * @param {number} information__groupe_id   id du formulaire pour restreindre la recherche
+         * 
 		 * @return {Promise<object>}
 		 */
-		loadCollectes() {
-			return this.loadRessources('collecte');
+		loadCollectes(information__groupe_id) {
+			return this.loadRessources('collecte', {limite:'aucune', done:'NON', information__groupe_id});
 		},
 
         /**
 		 * Charge une ressrouce depuis le serveur vers le store.
 		 * 
 		 * @param {string} ressourceName Le nom de la ressource à charger dans le store ('collecte', 'formulaire')
-		 * 
+		 * @param {object} query    les paramètres à envoyer avec la requête
+         * 
 		 * @return {Promise<object>}
 		 */
-		loadRessources(ressourceName) {
+		loadRessources(ressourceName, query) {
 			let route = 'data/GET/'+ressourceName;
 			let pending = ressourceName+'s';
 			let refreshMethod = 'refresh'+ressourceName.charAt(0).toUpperCase() + ressourceName.slice(1)+'s';
 
 			this.pending[pending] = true;
 
-			return this.$app.apiGet(route, {limit:'aucune'})
+			return this.$app.apiGet(route, query)
 				.then(data => {
 					this[refreshMethod](data);
 					return data;
@@ -144,11 +151,24 @@ export default {
         },
         modifKn(){
             
-        }
+        },
+        /**
+		 * Modifie le format de la date entrée en paramètre et la retourne 
+		 * sous le format 01 févr. 2021
+		 * @param {string} date 
+		 */
+
+		changeFormatDateLit(el) {
+			date.locale(fr);
+			return date.format(new Date(el), 'DD MMM YYYY')
+		},
+    },
+    beforeRouteUpdate(to) {
+        this.loadCollectes(to.params.id);
     },
 
     mounted() {
-        this.loadCollectes();
+        this.loadCollectes(this.$route.params.id);
 
     },
 	

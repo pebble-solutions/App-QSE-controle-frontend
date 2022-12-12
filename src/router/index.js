@@ -10,8 +10,13 @@ const routes = [
   {
     path: '/programmation',
     name: 'programmation',
-    component: () => import(/* webpackChunkName: "about" */ '../views/DriveKn.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/Programmation.vue'),
     children: [
+        {
+          path:':id',
+          name: 'ParType',
+          component: () => import(/* webpackChunkName: "about" */ '../views/DriveKn.vue'),
+        },
         {
           path:'new',
           name: 'CollectNew',
