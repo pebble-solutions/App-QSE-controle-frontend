@@ -25,8 +25,8 @@
                 </a>
             </div>
         </div>
-
-        <div class="accordion accordion-flush" :id="'accordion-'+bloc.id" v-if="(lignes.lenght > 0)">
+        {{console(lignes)}}
+        <div class="accordion accordion-flush" :id="'accordion-'+bloc.id" v-if="(lignes.length > 0)">
             <div class="accordion-item" v-for="ligne in lignes" :key="ligne.id">
                 <ItemAnswerHeader :ligne="ligne"></ItemAnswerHeader>
                 
@@ -100,7 +100,6 @@ export default {
         findBloc(i) {
             let selfIndex = this.formulaire.blocs.findIndex(e => e.id == this.bloc_id);
             let bloc = this.formulaire.blocs[selfIndex+i];
-            console.log(bloc, this.bloc_id, this.bloc_id.bloc, 'find bloc');
             return bloc;
         },
 
@@ -117,6 +116,11 @@ export default {
                 console.log('data', data.id);
             })
             .catch(this.$app.catchError);
+        },
+
+        console(lignes) {
+            console.log(lignes);
+            console.log(lignes.length);
         }
     },
 
