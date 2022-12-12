@@ -163,7 +163,7 @@ export default {
 
 			this.pending[pending] = true;
 
-			return this.$app.apiGet(route)
+			return this.$app.apiGet(route, {limit:'aucune'})
 				.then(data => {
 					this[refreshMethod](data);
 					return data;
