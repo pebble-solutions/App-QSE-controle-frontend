@@ -15,7 +15,7 @@
 
 <script>
 
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import AppModal from '../components/pebble-ui/AppModal.vue';
 import FormCollecte from '../components/FormCollecte.vue';
 
@@ -58,6 +58,8 @@ export default {
     },
     
     methods: {
+
+        ...mapActions(['refreshCollectes']),
 
         updateCollecte(val){
             this.collecte = val;
@@ -111,6 +113,7 @@ export default {
             this.$app.apiPost('data/POST/collecte', this.collecte)
             .then((data) => {
                 console.log(data, 'collecte crée')
+                this.updateCollecte(data)
                 // this.$emit('newKn');
                 alert ('collecte crée', data, this.collecte);
                 // this.collecte.formulaire = null;
@@ -133,7 +136,8 @@ export default {
                 this.collecte.cible_personnel = coll.cible__structure__personnel_id;
                 this.collecte.enqueteur_personnel = coll.enqueteur__structure__personnel_id;
                 this.collecte.date = coll.date;
-                console.log('getcollID', coll, this.collecte);
+                console.log('getcollecte',this.collecte);
+                console.log('getColl', coll)
             }
             else{ 
                 console.log(this.collecte,'defaut')
@@ -150,6 +154,7 @@ export default {
     },
 
     components:{AppModal, FormCollecte},
+
     beforeRouteUpdate(to){
         this.getCollecte(to.params.id);
     },

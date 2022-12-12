@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="mb-3">
-            <label class="form-label" for="collectedDate">Date programmée</label>
+            <label class="form-label" for="collecteDate">Date programmée</label>
             <input type="date" class="form-control" id="collecteDate" name="date" v-model="collecte.date">
         </div>
         <div class="col mb-3">
@@ -59,7 +59,22 @@ export default {
     },
 
     computed: {
-        ...mapState(['openedElement', 'formulaires', 'listActifs','collectes'])
+        ...mapState(['openedElement', 'formulaires', 'listActifs','collectes']),
+
+        // returnCollecte() {
+        //     let collecte ={}
+
+        //     console.log('collKn', this.collkn);
+        //     console.log('collecte',this.collecte);
+        //     collecte.id = this.collkn.id;
+        //     collecte.formulaire = this.collkn.formulaire;
+        //     collecte.cible_personnel = this.collkn.cible_personnel;
+        //     collecte.enqueteur_personnel = this.collkn.enqueteur_personnel;
+        //     collecte.date = this.collkn.date;
+        //     return collecte;
+        // }
+
+        
     },
 
     emits:['edit-formulaire', 'edit-cible-personnel','edit-enqueteur-personnel','edit-date', 'update-collecte'],
@@ -126,6 +141,26 @@ export default {
                 .catch(this.$app.catchError)
                 .finally(this.pending.loadAgent = false);
         },
+        // /**
+        //  * crée une nouvelle collecte  sur le serveur
+        //  * 
+        //  */
+        // createCollecte(){
+        //     console.log("creation en cours : ", this.collecte)
+                        
+        //     this.$app.apiPost('data/POST/collecte', this.collecte)
+        //     .then((data) => {
+        //         console.log(data, 'collecte crée')
+        //         // this.$emit('newKn');
+        //         alert ('collecte crée', data, this.collecte);
+        //         // this.collecte.formulaire = null;
+        //         // this.collecte.cible_personnel = null;
+        //         // this.collecte.enqueteur_personnel = null,
+        //         // this.collecte.date = null;
+        //         this.routeToParent();
+        //     })
+        //     .catch(this.$app.catchError);
+        // }, 
         // createCollecte(){
         //     console.log("creation en cours : ", this.collecte)
                         
@@ -145,7 +180,8 @@ export default {
     mounted() {
         // this.loadForm();
         // this.loadAgent();
-        console.log(this.collkn, 'collkn');
+        console.log('collKn', this.collkn);
+        console.log('collecte',this.collecte);
         this.collecte.id = this.collkn.id
         this.collecte.formulaire = this.collkn.formulaire;
         this.collecte.cible_personnel = this.collkn.cible_personnel;

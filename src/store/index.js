@@ -106,6 +106,7 @@ export default createStore({
 				state.responses[respIndex] = responses;
 			}
 		},
+
 		/**
 		 * Enregistre les formulaires chargés dans le store
 		 * @param {Object} state State de VueX
@@ -132,6 +133,9 @@ export default createStore({
 		setCollectes (state , data) {
 			state.collectes = data;
 		},
+
+		
+
 
 		/**
 		 * Charge une ressource dans openedElement
@@ -267,6 +271,8 @@ export default createStore({
 		setCollecte(contexte, collecte) {
 			contexte.commit('collecte', collecte)
 		},
+
+		
 
 		/**
 		 * Ajout une liste de projets actifs dans le store
