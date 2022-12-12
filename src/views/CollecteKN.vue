@@ -1,14 +1,36 @@
 <template>    
     <div v-if="collecte">
+        {{collecte.groupe}}
 		<div class="card sticky-top">
-			<div class="card-header justify-content-between">
-				
+			<div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h1 class="card-title">{{collecte.groupe}}</h1>
-                    
+                    <div class="">
+                        Kn n° {{collecte.date.substr(0,4)}}-{{collecte.id}}
+                    </div>
+
+                    <div class="">
+                        <i class="bi bi-person-badge-fill"></i>
+                        {{agent}}
+                    </div>
+
+                    <div class="">
+                        {{typeKn}}
+                    </div>
+
+                    <div class="">
+                        <i class="bi bi-person-fill-check"></i>
+                        {{controleur}}
+                    </div>
+
+                    <div class="">
+                        <i class="bi bi-boxes"></i>
+                        {{projet}}
+                    </div>
+
                     <div class="dropdown" v-if="$route.params.bloc">
-                        <button class="btn btn-outline-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-list"></i>
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- <i class="bi bi-list"></i> -->
+                            Questionnaire
                         </button>
                         <ul class="dropdown-menu">
                             <li v-for="blocItem in collecte.formulaire.blocs" :key="blocItem.id">
@@ -21,24 +43,6 @@
                             </li>
                         </ul>
                     </div>
-                    <div>
-
-                        <button class="btn btn-outline-danger" @click="sendResp()">Valider</button>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <form action="">
-                        
-
-                    </form>
-                </div>
-                <div class="row">
-                    <div class="col">KN n° 21-001</div>
-                    <div class="col">Contrôleur</div>
-                    <div class="col">type KN</div>
-                    <div class="col">Rachid BARBACH</div>
-                    <div class="col">Chantier</div>
                 </div>
             </div>
             
@@ -49,21 +53,9 @@
 
         <router-view></router-view>
     </div>
-    <div v-else>Pas collecte</div>
-
 </template>
-<style lang="scss" scoped>
 
-// .accordion-button{
-//     padding: 0;
-// }
-// .btn{
-//     font-size: 0.9rem;
-// }
-
-</style>
 <script>
-
 import {mapState, mapActions} from 'vuex';
 import Intro from '../components/Intro.vue';
 
@@ -79,7 +71,68 @@ export default {
     components: { Intro },
 
     computed: {
-        ...mapState(['responses', 'collecte'])
+        ...mapState(['responses', 'collecte', 'listActifs', 'formulaires', 'projetsActif']),
+
+        /**
+		 * Récupere le nom du groupe d'information de la collect via un id de
+		 * 
+		 * @param {number} groupInformationId l'id du group information de la collecte
+		 * 
+		 * @return {string} // deja utilise dans App.vue 
+		 */
+        agent() {
+            let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.cible__structure__personnel_id);
+
+            if (controleurName) {
+                return controleurName.cache_nom;
+            } else {
+                return 'controleur inexistant'
+            }
+        },
+
+        /**
+		 * Récupere le nom du groupe d'information de la collect via un id de
+		 * 
+		 * @param {number} groupInformationId l'id du group information de la collecte
+		 * 
+		 * @return {string} // deja utilise dans App.vue 
+		 */
+        typeKn() {
+			let groupInformation = this.formulaires.find(e => e.id == this.collecte.information__groupe_id);
+
+			if (groupInformation) {
+				return groupInformation.groupe;
+			} else { 
+				return 'group inexistant';
+			}
+        },
+
+        controleur() {
+            let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.enqueteur__structure__personnel_id);
+
+            if (controleurName) {
+                return controleurName.cache_nom;
+            } else {
+                return 'controleur inexistant'
+            }
+        },
+
+        /**
+		 * Récupère le nom du projet de la collecte
+		 * 
+		 * @param {number} projetId l'id du projet de la collecte
+		 * 
+		 * @return {string}
+		 */
+		projet() {
+			let projetName = this.projetsActif.find(projet => projet.id == this.collecte.projet_id);
+
+			if (projetName) {
+				return projetName.intitule;
+			} else {
+				return 'projet inexsitant'
+			}
+		},
     },
 
     methods: {
@@ -97,18 +150,6 @@ export default {
             })
             .then(data => this.setCollecte(data)).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
-        
-        sendResp() {
-            this.$app.apiPost('data/POST/collecte', {
-                reponses: JSON.stringify(this.responses),
-                formulaire: this.collecte.id,
-                environnement:'private',
-            })
-            .then((data) => {
-                console.log('data', data.id);
-            })
-            .catch(this.$app.catchError);
-        }
     },
 
     /**

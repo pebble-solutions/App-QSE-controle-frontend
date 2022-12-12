@@ -49,17 +49,22 @@
 		</template>
 
 		<template v-slot:list>
-				<AppMenu v-if="($route.name == 'collecte' && collectes || $route.name == 'collecteKN' && collectes) ">
+				<AppMenu v-if="($route.name == 'collecte' && collectes || $route.name == 'collecteKN' && collectes || $route.name == 'collecteKnBloc' && collectes) ">
 					<!-- || $route.path == 'collecte'+coll.id -->
 					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
 						<div class="d-flex align-items-center justify-content-between">
-							Kn n°{{col.id}}
+							Kn n° {{col.date.substr(0,4)}}-{{col.id}}
 							<span class="badge text-bg-secondary">{{getGroupNameFromId(col.information__groupe_id)}}</span>
 						</div>
 
 						<div>
 							<i class="bi bi-person-badge-fill"></i>
 							{{getPersonnelNameFromId(col.cible__structure__personnel_id)}}
+						</div>
+
+						<div>
+							<i class="bi bi-boxes"></i>
+							{{getProjetName(col.projet_id)}}
 						</div>
 					</AppMenuItem>
 				</AppMenu>
@@ -97,18 +102,19 @@ export default {
 			appController: null,
 			pending: {
 				formulaires: true,
-				collectes: true
+				collectes: true,
+				projetsActifs: true
 			},
 			isConnectedUser: false,
 		}
 	},
 
 	computed: {
-		...mapState(['openedElement','collectes','formulaires', 'listActifs'])
+		...mapState(['openedElement','collectes','formulaires', 'listActifs', 'projetsActif'])
 	},
 
 	methods: {
-		...mapActions(['refreshCollectes', 'refreshFormulaires', 'refreshListActifs']),
+		...mapActions(['refreshCollectes', 'refreshFormulaires', 'refreshListActifs', 'refreshProjetsActifs']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -213,7 +219,41 @@ export default {
 			} else {
 				return 'Personnel inexsitant'
 			}
-		}
+		},
+
+		/**
+		 * Récupère le nom du projet de la collecte
+		 * 
+		 * @param {number} projetId l'id du projet de la collecte
+		 * 
+		 * @return {string}
+		 */
+		getProjetName(projetId) {
+			let projetName = this.projetsActif.find(projet => projet.id == projetId);
+
+			if (projetName) {
+				return projetName.intitule;
+			} else {
+				return 'projet inexsitant'
+			}
+		},
+
+		/**
+         * Récupère tout les projets en production
+         */
+		getAllProjetsActif() {
+            this.pending.projetsActifs = true;
+
+            let urlApi = '/projet/GET/list';
+
+            this.$app.apiGet(urlApi, {
+                in_production: true
+            }).then( (data) => {
+                this.refreshProjetsActifs(data);
+            }).catch(this.$app.catchError);
+
+            this.pending.projetsActifs = false;
+        },
 	},
 
 	components: {AppWrapper, AppMenu, AppMenuItem},
@@ -225,6 +265,7 @@ export default {
 				this.loadCollectes();
 				this.loadFormulaires();
 				this.loadAgent();
+				this.getAllProjetsActif();
 			}
 		});
 	}

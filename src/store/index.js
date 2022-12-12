@@ -18,7 +18,8 @@ export default createStore({
 		formulaires: [],
 		listActifs: [],
 		collectes: [],
-		collecte: null
+		collecte: null,
+		projetsActif: [],
 	},
 	getters: {
 		activeStructure(state) {
@@ -161,7 +162,16 @@ export default createStore({
 		 */
 		collecte(state, collecte) {
 			state.collecte = collecte;
-		}
+		},
+
+		/**
+		 * Enregistre les projets actifs
+		 * @param {Object} state Le state de vueX
+		 * @param {Array} aProjets Liste de projets actifs
+	 	 */
+		setProjetsActifs(state, aProjets) {
+			state.projetsActif = aProjets;
+		},
 	
 	},
 	actions: {
@@ -256,8 +266,18 @@ export default createStore({
 		 */
 		setCollecte(contexte, collecte) {
 			contexte.commit('collecte', collecte)
-		}
+		},
+
+		/**
+		 * Ajout une liste de projets actifs dans le store
+		 * @param {Object} context L'instance vueX
+		 * @param {Array} aProjets Liste des projets actifs
+		 */
+		refreshProjetsActifs(context, aProjets) {
+			context.commit('setProjetsActifs', aProjets);
+		},
 	},
+
 	modules: {
 	}
 })

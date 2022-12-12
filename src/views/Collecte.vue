@@ -1,7 +1,7 @@
 <template>
-    <div class="about">
-        <h1 class="text-center mt-4">KN programmés</h1>
-        {{}}
+    <div class="mt-4">
+        <!-- <h1 class="text-center mt-4">KN programmés</h1> -->
+
         <AlertMessage v-if="!knSelected">
             Choisir le KN a réaliser dans la liste de gauche.
         </AlertMessage>
@@ -16,8 +16,7 @@ import AlertMessage from '@/components/pebble-ui/AlertMessage.vue';
 export default {
     computed: {
         knSelected() {
-            console.log("knSelected", this.$route.params);
-            if (!this.$route.params) {
+            if (!this.$route.params.id) {
                 return false;
             }
 
