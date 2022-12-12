@@ -34,7 +34,8 @@ import {mapState, mapActions} from 'vuex';
 
 export default {
     props: {
-        id: Number
+        id: Number,
+        bloc_id: Number
     },
 
     data() {
@@ -47,7 +48,7 @@ export default {
                 question:'',
                 reponse: '',
                 commentaire: '',
-                bloc: this.$route.params.bloc
+                bloc: ''
                 // practice:'',
                 // obligatory:'',
             },
@@ -79,6 +80,10 @@ export default {
             this.itemResponse.reponse = sami;
             this.refreshResponse(this.itemResponse);
         }, 
+    },
+
+    mounted() {
+        this.itemResponse.bloc = this.bloc_id;
     }
 }
 </script>

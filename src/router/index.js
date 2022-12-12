@@ -42,6 +42,11 @@ const routes = [
           }
         ]
       },
+      {
+        path:':id/collecte-end',
+        name: 'CollectKnEnd',
+        component: () => import('../views/CollecteKNEnd.vue')
+      }
 
 
       // {

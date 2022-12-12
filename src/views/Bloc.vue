@@ -4,7 +4,7 @@
             <h2 class="card-title">{{bloc.bloc}}</h2>
 
             <div class="fw-light fst-italic mb-2">
-                Questions :  {{answers}} / {{lignes?.length}}
+                Questions :  {{nbAnswers}} / {{lignes?.length}}
             </div>
 
             <div class="d-flex justify-content-between">
@@ -20,21 +20,23 @@
                     </a>
                 </router-link>
 
-                <a v-else class="btn btn-success" href="">
-                    Terminer le questionnaire
-                </a>
+                <!-- <router-link v-else :to="{name: 'collecteKnEnd', params:{id:$route.params.id}}" custom v-slot="{navigate, href}">
+                    <a class="btn btn-success" :href="href" @click="navigate">
+                        Terminer le questionnaire
+                    </a>
+                </router-link> -->
+
+                <a v-else class="btn btn-success" href="">Terminer le questionnaire</a>
             </div>
         </div>
-        {{console(lignes)}}
+
         <div class="accordion accordion-flush" :id="'accordion-'+bloc.id" v-if="(lignes.length > 0)">
             <div class="accordion-item" v-for="ligne in lignes" :key="ligne.id">
                 <ItemAnswerHeader :ligne="ligne"></ItemAnswerHeader>
                 
                 <div :id="'collapse_'+ ligne.id" class="accordion-collapse collapse" :aria-labelledby="'heading_' + ligne.id" :data-bs-parent="'#accordion-'+bloc.id">
                     <div class="accordion-body">  
-                        <ItemAnswer
-                        :id="ligne.id">
-                        </ItemAnswer>
+                        <ItemAnswer :id="ligne.id" :bloc_id="bloc.id"></ItemAnswer>
                     </div>
                 </div>
             </div>
@@ -91,8 +93,9 @@ export default {
         /**
          * retourne le nombre de reponse effectué
          */
-        answers() {
-            return this.responses.length;
+        nbAnswers() {
+            let nb = this.responses.filter(resp => resp.bloc == this.$route.params.bloc);
+            return nb.length;
         },
     },
 
@@ -117,11 +120,6 @@ export default {
             })
             .catch(this.$app.catchError);
         },
-
-        console(lignes) {
-            console.log(lignes);
-            console.log(lignes.length);
-        }
     },
 
     beforeRouteUpdate(to) {
