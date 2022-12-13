@@ -4,8 +4,11 @@
             <div class="card-header d-flex align-items-center justify-content-between">
                 <h4 class="fs-5 card-title">Informations générales </h4>
 
-                <div class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
-                    {{collecte.result_var.toUpperCase()}}
+                <div>
+                    Note générale:
+                    <div class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
+                       {{collecte.result_var}}
+                    </div>
                 </div>
             </div>
 
@@ -48,11 +51,18 @@
                     <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id" data-bs-parent="#formulaireResume">
                         <div class="accordion-body">
                             <div class="list-group list-group-flush">
-                                <div class="list-group-item d-flex align-items-center justify-content-between" v-for="question in getBlocQuestions(bloc)" :key="question.id">
-                                    {{question}}
-                                    <em class="d-bloc">{{question.ligne}}</em>
-                                    <strong class="badge text-uppercase" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
-                                </div>
+                                <template v-for="question in getBlocQuestions(bloc)" :key="question.id">
+                                    <div class="list-group-item" v-if="getQuestionReponse(question)">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <em class="d-bloc">{{question.ligne}}</em>
+                                            <strong class="badge text-uppercase" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
+                                        </div>
+    
+                                        <div>
+                                            <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
+                                        </div>
+                                    </div>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -115,7 +125,7 @@ export default {
         /**
          * Retourne la liste des questions dans un bloc.
          * 
-         * @param {object} bloc Le bloc à anlyser
+         * @param {object} bloc Le bloc à analyser
          * 
          * @return {array}
          */
@@ -126,7 +136,7 @@ export default {
         /**
          * Retourne la réponse à une question
          * 
-         * @param {object} question La question à anlyser
+         * @param {object} question La question à analyser
          * 
          * @return {string|null}
          */
@@ -148,6 +158,19 @@ export default {
         },
 
         /**
+         * Retourne le commentaire de la question fournie
+         * 
+         * @param {Object} question La question à analyser
+         * 
+         * @return {string}
+         */
+        getCommentFromQestion(question) {
+            let reponse = this.reponses.find(resp => resp.question == question.id);
+
+            return reponse ? reponse.commentaire : null;
+        },
+
+        /**
          * Retourne une classe CSS par rapport à une réponse S A M I
          * 
          * @param {string} reponse S A M I
@@ -160,7 +183,7 @@ export default {
             else if (reponse == 'm') return 'text-bg-warning';
             else if (reponse == 'i') return 'text-bg-danger';
             else return 'text-bg-secondary';
-        }
+        },
     },
 
     components: {  }
