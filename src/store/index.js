@@ -108,6 +108,30 @@ export default createStore({
 		},
 
 		/**
+		 * Initialise le state responses avec une liste de reponse
+		 * @param {Object} state State de VueX
+		 * @param {Array} aResponses une liste de reponses
+		 */
+		initResponses(state, aResponses) {
+			state.responses = [];
+
+			aResponses.forEach(resp => {
+				let itemResponse = {
+					question: resp.ligne,
+					reponse: resp.data,
+					commentaire: resp.commentaire,
+					bloc: ''
+				};
+
+				let question = state.collecte.formulaire.questions.find(question => question.id == resp.ligne && question.information__groupe_id == resp.groupe);
+
+				itemResponse.bloc = question.information__bloc_id;
+
+				state.responses.push(itemResponse);
+			});
+		},
+
+		/**
 		 * Enregistre les formulaires chargés dans le store
 		 * @param {Object} state State de VueX
 		 * @param {Array} forms tableau des formulaires
@@ -118,6 +142,7 @@ export default createStore({
 
 		/**
 		 * Enregistre la liste des personnels actifs dans le store
+		 * 
 		 * @param {Object} state State de Vuex
 		 * @param {Array} data Liste des personnels actifs
 		 */
@@ -344,8 +369,6 @@ export default createStore({
 			contexte.commit('collecte', collecte)
 		},
 
-		
-
 		/**
 		 * Ajout une liste de projets actifs dans le store
 		 * @param {Object} context L'instance vueX
@@ -363,7 +386,17 @@ export default createStore({
 		openFormulaire(context, formulaire_id) {
 			let formulaire = context.state.formulaires.find(e => e.id == formulaire_id);
 			context.commit('formulaire', formulaire);
-		}
+		},
+		
+		/**
+		 * initialisation du state responses en fonction de la collecte
+		 * 
+		 * @param {Object} context L'instance vueX'
+		 * @param {Array} aResponses Liste des responses a initiliser
+		*/
+		initResp(context, aResponses) {
+			context.commit('initResponses', aResponses)
+		},
 	},
 
 	modules: {
