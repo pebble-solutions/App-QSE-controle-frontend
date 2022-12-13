@@ -45,7 +45,7 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-house">KN suivi</AppMenuItem>
 				<AppMenuItem href="/programmation" look="dark" icon="bi bi-house">KN programmation</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-app">KN collecte</AppMenuItem>
-				<AppMenuItem href="/collecte-fini" look="dark" icon="bi bi-app">KN fini</AppMenuItem>
+				<AppMenuItem href="/consultation" look="dark" icon="bi bi-app">KN fini</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -74,6 +74,9 @@
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
 				<AppMenuItem :href="'/programmation/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.groupe}}</AppMenuItem>
+			</AppMenu>
+			<AppMenu v-else-if="listMode === 'consultation'">
+				<AppMenuItem :href="'/consultation/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.groupe}}</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -128,6 +131,9 @@ export default {
 			}
 			else if (['Programmation', 'CollectesByType', 'EditCollecte'].includes(this.$route.name)) {
 				return 'programmation';
+			}
+			else if (['consultation'].includes(this.$route.name)) {
+				return 'consultation';
 			}
 			return null;
 		}

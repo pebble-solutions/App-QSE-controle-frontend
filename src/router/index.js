@@ -57,9 +57,9 @@ const routes = [
   },
 
   {
-    path: '/consulation',
+    path: '/consultation',
     name: 'consultation',
-    component: () => import("../views/CollecteEnded.vue"),
+    component: () => import("../views/Consultation.vue"),
     children: [
 
     ]
