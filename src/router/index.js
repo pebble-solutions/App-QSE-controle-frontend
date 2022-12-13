@@ -44,14 +44,15 @@ const routes = [
             path: 'bloc/:bloc',
             name: 'collecteKnBloc',
             component: () => import('../views/Bloc.vue')
+          },
+          {
+            path:'collecte-end',
+            name: 'CollectKnEnd',
+            component: () => import('../views/CollecteKNEnd.vue')
           }
         ]
-      },
-      {
-        path:':id/collecte-end',
-        name: 'CollectKnEnd',
-        component: () => import('../views/CollecteKNEnd.vue')
       }
+
 
 
       // {

@@ -1,6 +1,5 @@
 <template>    
     <div v-if="collecte">
-        {{collecte.groupe}}
 		<div class="card sticky-top">
 			<div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
@@ -45,8 +44,7 @@
                     </div>
                 </div>
             </div>
-            
-            <div v-if="!$route.params.bloc">
+            <div v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
                 <intro></intro>
             </div>
 		</div>
@@ -136,7 +134,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["setCollecte"]),
+        ...mapActions(["setCollecte", 'initResp']),
 
         /**
          * Charge une collecte depuis le serveur dans le store.
@@ -148,7 +146,13 @@ export default {
             this.$app.apiGet('data/GET/collecte/'+id, {
                 environnement: 'private'
             })
-            .then(data => this.setCollecte(data)).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+            .then((data) => {
+                this.setCollecte(data);
+
+                if(data.reponses && 0 == this.responses.length) {
+                    this.initResp(data.reponses);
+                }
+            }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
     },
 

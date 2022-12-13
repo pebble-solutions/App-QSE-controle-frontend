@@ -108,6 +108,28 @@ export default createStore({
 		},
 
 		/**
+		 * Initialise le state responses avec une liste de reponse
+		 * @param {Object} state State de VueX
+		 * @param {Array} aResponses une liste de reponses
+		 */
+		initResponses(state, aResponses) {	
+			aResponses.forEach(resp => {
+				let itemResponse = {
+					question: resp.ligne,
+					reponse: resp.data,
+					commentaire: resp.commentaire,
+					bloc: ''
+				};
+
+				let question = state.collecte.formulaire.questions.find(question => question.id == resp.ligne && question.information__groupe_id == resp.groupe);
+
+				itemResponse.bloc = question.information__bloc_id;
+
+				state.responses.push(itemResponse);
+			});
+		},
+
+		/**
 		 * Enregistre les formulaires chargés dans le store
 		 * @param {Object} state State de VueX
 		 * @param {Array} forms tableau des formulaires
@@ -272,8 +294,6 @@ export default createStore({
 			contexte.commit('collecte', collecte)
 		},
 
-		
-
 		/**
 		 * Ajout une liste de projets actifs dans le store
 		 * @param {Object} context L'instance vueX
@@ -282,6 +302,13 @@ export default createStore({
 		refreshProjetsActifs(context, aProjets) {
 			context.commit('setProjetsActifs', aProjets);
 		},
+
+		/**
+		 * demande une initialisation du state responses
+		*/
+		initResp(context, aResponses) {
+			context.commit('initResponses', aResponses)
+		}
 	},
 
 	modules: {

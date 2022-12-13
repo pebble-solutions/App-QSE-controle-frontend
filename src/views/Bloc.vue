@@ -20,13 +20,9 @@
                     </a>
                 </router-link>
 
-                <!-- <router-link v-else :to="{name: 'collecteKnEnd', params:{id:$route.params.id}}" custom v-slot="{navigate, href}">
-                    <a class="btn btn-success" :href="href" @click="navigate">
-                        Terminer le questionnaire
-                    </a>
-                </router-link> -->
-
-                <a v-else class="btn btn-success" href="">Terminer le questionnaire</a>
+                <button v-else class="btn btn-success" @click="sendResp()">
+                    Terminer le questionnaire
+                </button>
             </div>
         </div>
 
@@ -73,7 +69,6 @@ export default {
             return this.formulaire.blocs.find(e => e.id == this.bloc_id);
         },
 
-
         lignes() {
             return this.formulaire.questions.filter(e => e.information__bloc_id == this.bloc_id);
         },
@@ -110,13 +105,15 @@ export default {
          * Envoi les reponses du questionnaire a l'api
          */
         sendResp() {
-            this.$app.apiPost('data/POST/collecte', {
+            console.log(this.responses);
+            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
-                formulaire: this.collecte.id,
                 environnement:'private',
             })
             .then((data) => {
-                console.log('data', data.id);
+                console.log('data response', data);
+                /** REFRESH COLLECT ET COLLECTES */
+                this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});
             })
             .catch(this.$app.catchError);
         },
