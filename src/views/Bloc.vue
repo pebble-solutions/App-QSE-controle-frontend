@@ -114,11 +114,7 @@ export default {
                 reponses: JSON.stringify(this.responses),
                 formulaire: this.collecte.id,
                 environnement:'private',
-            })
-            .then((data) => {
-                console.log('data', data.id);
-            })
-            .catch(this.$app.catchError);
+            }).catch(this.$app.catchError);
         },
     },
 

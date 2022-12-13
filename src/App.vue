@@ -49,28 +49,28 @@
 		</template>
 
 		<template v-slot:list>
-				<AppMenu v-if="($route.name == 'collecte' && collectes || $route.name == 'collecteKN' && collectes || $route.name == 'collecteKnBloc' && collectes) ">
-					<!-- || $route.path == 'collecte'+coll.id -->
-					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
-						<div class="d-flex align-items-center justify-content-between">
-							Kn n° {{col.id}}
-							<span class="badge text-bg-secondary">{{getGroupNameFromId(col.information__groupe_id)}}</span>
-						</div>
+			<AppMenu v-if="($route.name == 'collecte' && collectes || $route.name == 'collecteKN' && collectes || $route.name == 'collecteKnBloc' && collectes) ">
+				<!-- || $route.path == 'collecte'+coll.id -->
+				<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
+					<div class="d-flex align-items-center justify-content-between">
+						Kn n° {{col.id}}
+						<span class="badge text-bg-secondary">{{getGroupNameFromId(col.information__groupe_id)}}</span>
+					</div>
 
-						<div>
-							<i class="bi bi-person-badge-fill"></i>
-							{{getPersonnelNameFromId(col.cible__structure__personnel_id)}}
-						</div>
+					<div>
+						<i class="bi bi-person-badge-fill"></i>
+						{{getPersonnelNameFromId(col.cible__structure__personnel_id)}}
+					</div>
 
-						<div>
-							<i class="bi bi-boxes"></i>
-							{{getProjetName(col.projet_id)}}
-						</div>
-					</AppMenuItem>
-				</AppMenu>
-				<AppMenu v-if="($route.name == 'programmation'|| 'parType')">
-					<AppMenuItem :href="'/programmation/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.groupe}}</AppMenuItem>
-				</AppMenu>
+					<div>
+						<i class="bi bi-boxes"></i>
+						{{getProjetName(col.projet_id)}}
+					</div>
+				</AppMenuItem>
+			</AppMenu>
+			<AppMenu v-if="($route.name == 'programmation' || 'parType')">
+				<AppMenuItem :href="'/programmation/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.groupe}}</AppMenuItem>
+			</AppMenu>
 		</template>
 
 		<template v-slot:core>
@@ -113,8 +113,14 @@ export default {
 		...mapState(['openedElement','collectes','formulaires', 'listActifs', 'projetsActif'])
 	},
 
+	watch: {
+		$route () {
+			this.$app.dispatchEvent('menuChanged', 'list');
+		}
+	},
+
 	methods: {
-		...mapActions(['refreshCollectes', 'refreshFormulaires', 'refreshListActifs', 'refreshProjetsActifs']),
+		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjetsActifs']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté

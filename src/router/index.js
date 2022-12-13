@@ -13,19 +13,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Programmation.vue'),
     children: [
         {
-          path:':id',
-          name: 'ParType',
-          component: () => import(/* webpackChunkName: "about" */ '../views/DriveKn.vue'),
-        },
+          path:'new',
+          name: 'NewCollecte',
+          component: () => import(/* webpackChunkName: "about" */ '../views/CollecteNew.vue')
+        }
+    ]
+  },
+  {
+    path:'/programmation/:id',
+    name: 'CollectesByType',
+    component: () => import(/* webpackChunkName: "about" */ '../views/ProgrammationCollectes.vue'),
+    children: [
         {
-          path:'/new',
-          name: 'CollectNew',
-          component: () => import(/* webpackChunkName: "about" */ '../views/CollectEdit.vue')
-        },
-        {
-          path:':id/edit',
-          name: 'CollectEdit',
-          component: () => import(/* webpackChunkName: "about" */ '../views/CollectEdit.vue')
+          path:':idCollecte/edit',
+          name: 'EditCollecte',
+          component: () => import(/* webpackChunkName: "about" */ '../views/CollecteEdit.vue')
         }
     ]
   },
