@@ -18,7 +18,7 @@ const routes = [
           component: () => import(/* webpackChunkName: "about" */ '../views/DriveKn.vue'),
         },
         {
-          path:'new',
+          path:'/new',
           name: 'CollectNew',
           component: () => import(/* webpackChunkName: "about" */ '../views/CollectEdit.vue')
         },

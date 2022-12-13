@@ -11,9 +11,9 @@
 
 <script>
 
-import AppModal from '@/components/pebble-ui/AppModal.vue'
+import AppModal from '@/components/pebble-ui/AppModal.vue';
 
-import {mapState} from 'vuex'
+import {mapState} from 'vuex';
 
 export default {
     computed: {

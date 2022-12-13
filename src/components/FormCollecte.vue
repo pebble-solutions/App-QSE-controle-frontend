@@ -26,8 +26,11 @@
                 <option  v-for="(controleur) in listActifs" :value="controleur.id" :key="controleur.id">{{controleur.cache_nom}}</option>
             </select>
         </div>
-        <!-- <button  type="submit" class="btn btn-outline-primary">Valider</button> -->
+        <div v-if="collecte">
+            <button @click.prevent="supprColl()" type="button" class="d-flex flex-start btn btn-outline-danger">Supprimer</button>
+        </div>
     </form>
+
 </template>
 <script>
 
@@ -60,24 +63,10 @@ export default {
 
     computed: {
         ...mapState(['openedElement', 'formulaires', 'listActifs','collectes']),
-
-        // returnCollecte() {
-        //     let collecte ={}
-
-        //     console.log('collKn', this.collkn);
-        //     console.log('collecte',this.collecte);
-        //     collecte.id = this.collkn.id;
-        //     collecte.formulaire = this.collkn.formulaire;
-        //     collecte.cible_personnel = this.collkn.cible_personnel;
-        //     collecte.enqueteur_personnel = this.collkn.enqueteur_personnel;
-        //     collecte.date = this.collkn.date;
-        //     return collecte;
-        // }
-
         
     },
 
-    emits:['edit-formulaire', 'edit-cible-personnel','edit-enqueteur-personnel','edit-date', 'update-collecte'],
+    emits:['edit-formulaire', 'edit-cible-personnel','edit-enqueteur-personnel','edit-date', 'update-collecte','suppr'],
 
     watch: {
         /**
@@ -112,12 +101,18 @@ export default {
         date(newVal) {
             this.$emit('edit-date', newVal);
         },
-
+        
     },
-
+    
     methods: {
-
+        
         ...mapActions(['refreshFormulaires','refreshListActifs']),
+        
+        supprColl() {
+            console.log(this.collecte);
+            this.$emit('suppr', this.collecte);
+        },
+
 
         loadForm() {
             this.pending.loadForm = true;
@@ -141,41 +136,7 @@ export default {
                 .catch(this.$app.catchError)
                 .finally(this.pending.loadAgent = false);
         },
-        // /**
-        //  * crée une nouvelle collecte  sur le serveur
-        //  * 
-        //  */
-        // createCollecte(){
-        //     console.log("creation en cours : ", this.collecte)
-                        
-        //     this.$app.apiPost('data/POST/collecte', this.collecte)
-        //     .then((data) => {
-        //         console.log(data, 'collecte crée')
-        //         // this.$emit('newKn');
-        //         alert ('collecte crée', data, this.collecte);
-        //         // this.collecte.formulaire = null;
-        //         // this.collecte.cible_personnel = null;
-        //         // this.collecte.enqueteur_personnel = null,
-        //         // this.collecte.date = null;
-        //         this.routeToParent();
-        //     })
-        //     .catch(this.$app.catchError);
-        // }, 
-        // createCollecte(){
-        //     console.log("creation en cours : ", this.collecte)
-                        
-        //     this.$app.apiPost('data/POST/collecte', this.collecte)
-        //     .then((data) => {
-        //         console.log(data)
-        //         this.$emit('newKn');
-        //         alert ('collecte crée', data, this.collecte.formulaire);
-        //         // this.collecte.formulaire = null;
-        //         // this.collecte.cible_personnel = null;
-        //         // this.collecte.enqueteur_personnel = null,
-        //         // this.collecte.date = null;
-        //     })
-        //     .catch(this.$app.catchError);
-        // }
+    
     },
     mounted() {
         // this.loadForm();
@@ -188,8 +149,9 @@ export default {
         this.collecte.enqueteur_personnel = this.collkn.enqueteur_personnel;
         this.collecte.date = this.collkn.date;
         
-        console.log('formacollecte', this.collecte, this.collkn)
-        this.$emit('update-collecte', this.collecte)
+        console.log('formacollecte', this.collecte, this.collkn);
+        this.$emit('update-collecte', this.collecte);
+        // this.$emit('supprColl', this.collecte)
 
     },
 }

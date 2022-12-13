@@ -53,7 +53,7 @@
 					<!-- || $route.path == 'collecte'+coll.id -->
 					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
 						<div class="d-flex align-items-center justify-content-between">
-							Kn n° {{col.date.substr(0,4)}}-{{col.id}}
+							Kn n° {{col.id}}
 							<span class="badge text-bg-secondary">{{getGroupNameFromId(col.information__groupe_id)}}</span>
 						</div>
 
