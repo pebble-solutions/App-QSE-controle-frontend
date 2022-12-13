@@ -1,6 +1,6 @@
 <template>
     
-        <AppModal size="lg" :title="title" @submit="createCollecte()" @modal-hide="routeToParent()" :submitBtn="true" :cancelBtn="true" :pending="pending.programmationKn">
+        <AppModal size="lg" :title="title" @submit="createCollecte()"  @modal-hide="routeToParent()" :submitBtn="true" :cancelBtn="true" :pending="pending.programmationKn">
             <FormCollecte
             :collkn="collecte"
             @edit-formulaire="editFormulaire"
@@ -8,6 +8,7 @@
             @edit-enqueteur-personnel="editEnqueteurPersonnel"
             @edit-date="editDate"
             @update-collecte="updateCollecte"
+            @suppr="supprCollecte"
             v-if="collecte"></FormCollecte>
         </AppModal>
     
@@ -63,7 +64,11 @@ export default {
 
         updateCollecte(val){
             this.collecte = val;
-            console.log('updatecollecte', this.collecte)
+            console.log('updatecollecte', this.collecte);
+        },
+
+        supprCollecte(val) {
+            alert('supperssion', val)
         },
 
         /**
@@ -113,13 +118,8 @@ export default {
             this.$app.apiPost('data/POST/collecte', this.collecte)
             .then((data) => {
                 console.log(data, 'collecte crée')
+                alert ('collecte crée');
                 this.updateCollecte(data)
-                // this.$emit('newKn');
-                alert ('collecte crée', data, this.collecte);
-                // this.collecte.formulaire = null;
-                // this.collecte.cible_personnel = null;
-                // this.collecte.enqueteur_personnel = null,
-                // this.collecte.date = null;
                 this.routeToParent();
             })
             .catch(this.$app.catchError);

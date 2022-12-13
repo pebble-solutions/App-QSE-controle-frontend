@@ -11,17 +11,24 @@
             
         </div> -->
         <div class="d-flex flex-row justify-content-between align-items-center">
-            <h1 >KN programmés</h1> 
+            <div class="d-flex flex-row justify-content-between align-items-center">
+            <button @click="routeToParent" class="btn btn-light">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+                <h1 >{{getGroupNameFromId($route.params.id)}}</h1> 
+            </div>
             <div>
                 <router-link :to="{name:'CollectNew'}" v-slot="{navigate,href}" custom>
-                    <a :href="href" @click="navigate" class="btn btn-outline-primary">Programmer un nouveau KN<i class="bi bi-pencil mx-2"></i></a>
+                    <a :href="href" @click="navigate" class="btn btn-outline-primary">Programmer un KN</a>
                 </router-link>
             </div>
-
         </div>
+        <h2>
+            {{collectes.length}} collecte(s) programmée(s)
+        </h2>
         <div v-for="col in collectes" :key=col.id class="list-group">
             <div class="list-group-item my-1">
-                <div class="d-flex flex-row justify-content-between">
+                <div class="d-flex flex-row justify-content-between align-items-center">
                     <div>
                         <span class="me-2">KN n°{{col.id}}</span>
                         <span  v-if="!getGroupNameFromId(col.information__groupe_id)" class="me-2 text-warning">Type de KN non programmé </span>
@@ -77,6 +84,13 @@ export default {
 
     methods: {
         ...mapActions(['refreshCollectes']),
+
+        /**
+         * retourne à la route précédente
+         */
+        routeToParent() {
+            this.$router.go(-1);
+        },
         /**
          * Récupere le nom du groupe d'information de la collect via un id de
          * 
