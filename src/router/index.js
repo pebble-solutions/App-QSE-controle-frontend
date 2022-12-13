@@ -52,25 +52,9 @@ const routes = [
           }
         ]
       }
-
-
-
-      // {
-      //   path: 'properties',
-      //   component: () => import('../views/ElementProperties.vue')
-      // },
-      // {
-      //   path: 'informations',
-      //   component: () => import('../views/ElementInformations.vue')
-      // },
-      // {
-      //   path: 'bloc/:bloc',
-      //   component: () => import('../views/Bloc.vue')
-      // },
     ]
-
-
   },
+
   {
     path: '/formulaire/:id',
     name: 'Formulaire',
@@ -92,6 +76,15 @@ const routes = [
       //   path: '',
       //   component: () => import('../views/Contexte.vue')
       // }
+    ]
+  },
+
+  {
+    path: '/collecte-fini',
+    name: 'CollectEnded',
+    component: () => import("../views/CollecteEnded.vue"),
+    children: [
+
     ]
   }
 ]

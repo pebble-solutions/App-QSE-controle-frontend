@@ -45,6 +45,7 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-house">KN suivi</AppMenuItem>
 				<AppMenuItem href="/programmation" look="dark" icon="bi bi-house">KN programmation</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-app">KN collecte</AppMenuItem>
+				<AppMenuItem href="/collecte-fini" look="dark" icon="bi bi-app">KN fini</AppMenuItem>
 			</AppMenu>
 		</template>
 
