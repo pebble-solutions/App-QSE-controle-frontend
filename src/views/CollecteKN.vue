@@ -1,32 +1,31 @@
-<template>    
-    <div v-if="collecte">
-        {{collecte.groupe}}
-		<div class="card sticky-top">
-			<div class="card-header">
+<template>
+    <div class="container py-3">
+        <div class="card"  v-if="collecte">
+            <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="">
-                        Kn n° {{collecte.date.substr(0,4)}}-{{collecte.id}}
+                        Kn n° {{collecte.id}}
                     </div>
-
+    
                     <div class="">
                         <i class="bi bi-person-badge-fill"></i>
                         {{agent}}
                     </div>
-
+    
                     <div class="">
-                        {{typeKn}}
+                        <span class="badge text-bg-secondary">{{typeKn}}</span>
                     </div>
-
+    
                     <div class="">
                         <i class="bi bi-person-fill-check"></i>
                         {{controleur}}
                     </div>
-
+    
                     <div class="">
                         <i class="bi bi-boxes"></i>
                         {{projet}}
                     </div>
-
+    
                     <div class="dropdown" v-if="$route.params.bloc">
                         <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <!-- <i class="bi bi-list"></i> -->
@@ -45,13 +44,20 @@
                     </div>
                 </div>
             </div>
-            
-            <div v-if="!$route.params.bloc">
-                <intro></intro>
-            </div>
-		</div>
-
-        <router-view></router-view>
+    
+            <div class="alert alert-success my-2" v-if="collecte.done == 'OUI'">
+                <i class="bi bi-check-circle"></i> Cette collecte terminée et non modifiable
+            </div> 
+    
+            <template v-else>
+                <div v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
+                    <intro></intro>
+                </div>
+            </template>
+    
+    
+            <router-view></router-view>
+        </div>
     </div>
 </template>
 
@@ -76,8 +82,6 @@ export default {
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
 		 * 
-		 * @param {number} groupInformationId l'id du group information de la collecte
-		 * 
 		 * @return {string} // deja utilise dans App.vue 
 		 */
         agent() {
@@ -92,8 +96,6 @@ export default {
 
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
-		 * 
-		 * @param {number} groupInformationId l'id du group information de la collecte
 		 * 
 		 * @return {string} // deja utilise dans App.vue 
 		 */
@@ -120,8 +122,6 @@ export default {
         /**
 		 * Récupère le nom du projet de la collecte
 		 * 
-		 * @param {number} projetId l'id du projet de la collecte
-		 * 
 		 * @return {string}
 		 */
 		projet() {
@@ -133,10 +133,27 @@ export default {
 				return 'projet inexsitant'
 			}
 		},
+
+        /**
+         * Récupère la collecte id via le store
+         */
+        collecteId() {
+            if (this.collecte) {
+                return this.collecte.id;
+            }
+
+            return '';
+        }
+    },
+
+    watch: {
+        collecteId() {
+            this.initResp(this.collecte.reponses);
+        }
     },
 
     methods: {
-        ...mapActions(["setCollecte"]),
+        ...mapActions(["setCollecte", 'initResp']),
 
         /**
          * Charge une collecte depuis le serveur dans le store.
@@ -148,7 +165,13 @@ export default {
             this.$app.apiGet('data/GET/collecte/'+id, {
                 environnement: 'private'
             })
-            .then(data => this.setCollecte(data)).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+            .then((data) => {
+                this.setCollecte(data);
+
+                // if(data.reponses && 0 == this.responses.length) {
+                //     this.initResp(data.reponses);
+                // }
+            }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
     },
 
@@ -156,16 +179,9 @@ export default {
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
     beforeRouteUpdate(to) {
-        this.loadCollecte(to.params.id);
-    },
-
-
-    /**
-     * Lorsqu'on quite la route active, l'élément ouvert est vidé.
-     */
-    beforeRouteLeave(from, to, next) {
-        this.loadCollecte(null);
-        next();
+        if (to.params.id) {
+            this.loadCollecte(to.params.id);
+        }
     },
 
 
