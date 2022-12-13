@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
     <div v-if="collectes">
         <div class="d-flex flex-row justify-content-between align-items-center py-3">
             <div class="d-flex flex-row justify-content-between align-items-center">
@@ -36,6 +37,11 @@
             </div>
         </div>
     </div>
+=======
+    <div>{{collectes}}</div>
+
+    <router-view></router-view>
+>>>>>>> b484460177c4fdfc5e9e743a9a4fd554648760d9
 </template>
 
 <script>
