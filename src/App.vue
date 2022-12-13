@@ -132,7 +132,7 @@ export default {
 			else if (['Programmation', 'CollectesByType', 'EditCollecte'].includes(this.$route.name)) {
 				return 'programmation';
 			}
-			else if (['consultation'].includes(this.$route.name)) {
+			else if (['consultation', 'consultationCollecte'].includes(this.$route.name)) {
 				return 'consultation';
 			}
 			return null;

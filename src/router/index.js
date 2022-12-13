@@ -55,14 +55,15 @@ const routes = [
       }
     ]
   },
-
   {
     path: '/consultation',
     name: 'consultation',
-    component: () => import("../views/Consultation.vue"),
-    children: [
-
-    ]
+    component: () => import("../views/Consultation.vue")
+  },
+  {
+    path: '/consultation/:id',
+    name: 'consultationCollecte',
+    component: () => import("../views/ConsultationCollecte.vue")
   }
   // {
   //   path: '/formulaire/:id',
