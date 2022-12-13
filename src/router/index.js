@@ -62,8 +62,15 @@ const routes = [
   },
   {
     path: '/consultation/:id',
-    name: 'consultationCollecte',
-    component: () => import("../views/ConsultationCollecte.vue")
+    name: 'consultationFormulaire',
+    component: () => import("../views/ConsultationCollecte.vue"),
+    children: [
+      {
+        path: ':idCollecte',
+        name: 'ConsultationResponses',
+        component: () => import("../views/ConsultationResponses.vue")
+      }
+    ]
   }
   // {
   //   path: '/formulaire/:id',
