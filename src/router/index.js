@@ -9,7 +9,7 @@ const routes = [
   },
   {
     path: '/programmation',
-    name: 'programmation',
+    name: 'Programmation',
     component: () => import(/* webpackChunkName: "about" */ '../views/Programmation.vue'),
     children: [
         {
@@ -36,66 +36,47 @@ const routes = [
     path: '/collecte',
     name: 'collecte', 
     component: () => import(/* webpackChunkName: "about" */ '../views/Collecte.vue'),
-    children: [
-      {
-        path:':id',
-        name:'collecteKN',
-        component: () => import(/* webpackChunkName: "about" */ '../views/CollecteKN.vue'),
-        children: [
-          {
-            path: 'bloc/:bloc',
-            name: 'collecteKnBloc',
-            component: () => import('../views/Bloc.vue')
-          },
-          {
-            path:'collecte-end',
-            name: 'CollectKnEnd',
-            component: () => import('../views/CollecteKNEnd.vue')
-          }
-        ]
-      }
-
-
-
-      // {
-      //   path: 'properties',
-      //   component: () => import('../views/ElementProperties.vue')
-      // },
-      // {
-      //   path: 'informations',
-      //   component: () => import('../views/ElementInformations.vue')
-      // },
-      // {
-      //   path: 'bloc/:bloc',
-      //   component: () => import('../views/Bloc.vue')
-      // },
-    ]
-
-
   },
   {
-    path: '/formulaire/:id',
-    name: 'Formulaire',
+    path:'/collecte/:id',
+    name:'collecteKN',
     component: () => import(/* webpackChunkName: "about" */ '../views/CollecteKN.vue'),
     children: [
       {
-        path: 'properties',
-        component: () => import('../views/ElementProperties.vue')
-      },
-      {
-        path: 'informations',
-        component: () => import('../views/ElementInformations.vue')
-      },
-      {
         path: 'bloc/:bloc',
+        name: 'collecteKnBloc',
         component: () => import('../views/Bloc.vue')
       },
-      // {
-      //   path: '',
-      //   component: () => import('../views/Contexte.vue')
-      // }
+      {
+        path:'collecte-end',
+        name: 'CollectKnEnd',
+        component: () => import('../views/CollecteKNEnd.vue')
+      }
     ]
   }
+  // {
+  //   path: '/formulaire/:id',
+  //   name: 'Formulaire',
+  //   component: () => import(/* webpackChunkName: "about" */ '../views/CollecteKN.vue'),
+  //   children: [
+  //     {
+  //       path: 'properties',
+  //       component: () => import('../views/ElementProperties.vue')
+  //     },
+  //     {
+  //       path: 'informations',
+  //       component: () => import('../views/ElementInformations.vue')
+  //     },
+  //     {
+  //       path: 'bloc/:bloc',
+  //       component: () => import('../views/Bloc.vue')
+  //     },
+  //     // {
+  //     //   path: '',
+  //     //   component: () => import('../views/Contexte.vue')
+  //     // }
+  //   ]
+  // }
 ]
 
 const router = createRouter({

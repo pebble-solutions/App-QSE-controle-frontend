@@ -1,12 +1,13 @@
 <template>
-    <div class="mt-4">
-        <!-- <h1 class="text-center mt-4">KN programmés</h1> -->
+    <div class="container py-3">
+        <h1 class="fs-3 mb-3">Passer un KN</h1>
 
-        <AlertMessage v-if="!knSelected">
-            Choisir le KN a réaliser dans la liste de gauche.
+        <AlertMessage>
+            <div class="d-flex">
+                <i class="bi bi-info-circle me-2"></i>
+                <div>Choisir le KN a réaliser dans la liste de gauche.</div>
+            </div>
         </AlertMessage>
-
-        <RouterView></RouterView>
     </div>
 </template>
 
@@ -14,16 +15,6 @@
 import AlertMessage from '@/components/pebble-ui/AlertMessage.vue';
 
 export default {
-    computed: {
-        knSelected() {
-            if (!this.$route.params.id) {
-                return false;
-            }
-
-            return true;
-        }
-    },
-
     components: {AlertMessage}
 }
 </script>

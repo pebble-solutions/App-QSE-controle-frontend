@@ -18,10 +18,10 @@
                     <tbody>
                         <tr class="text-center">
                             <td scope="row">Total: {{this.collecte.nb_reponse}}/{{this.collecte.nb_question}}</td>
-                            <td>{{stats[this.collecte.information__groupe_id].type.sami.s}}</td>
-                            <td>{{stats[this.collecte.information__groupe_id].type.sami.a}}</td>
-                            <td>{{stats[this.collecte.information__groupe_id].type.sami.m}}</td>
-                            <td>{{stats[this.collecte.information__groupe_id].type.sami.i}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.s}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.a}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.m}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.i}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -58,7 +58,8 @@
             </div>
 
             <div class="d-flex justify-content-end mt-3" @click="validationKn()">
-                <button type="button" class="btn btn-success" >
+                <button type="button" class="btn btn-success" :disabled="pending.validation">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
                     Valider
                 </button>
             </div>
@@ -67,7 +68,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 
 export default {
     data() {
@@ -77,9 +78,13 @@ export default {
                 result_type: 'sami',
                 result: '',
                 rapport: '',
-                environnement: 'private'
+                environnement: 'private',
+                done: 'OUI'
             },
-            stats: null
+            stats: null,
+            pending: {
+                validation: false
+            }
         }
     },
 
@@ -88,6 +93,8 @@ export default {
     },
 
     methods: {
+        ...mapActions(['refreshCollectes']),
+        
         /**
          * enregistre le sami de l'itemReponse
          * @param {string} options s,a,m,i
@@ -100,12 +107,12 @@ export default {
          * Envoie les données a l'api pour valider le KN
         */
         validationKn() {
+            this.pending.validation = true;
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
             .then((data) => {
-                console.log('rapport data', data);
-
+                this.refreshCollectes([data]);
                 this.$router.push({name:'collecte'});
-            }).catch(this.$app.catchError);
+            }).catch(this.$app.catchError).finally(() => this.pending.validation = false);
         },
 
         /**

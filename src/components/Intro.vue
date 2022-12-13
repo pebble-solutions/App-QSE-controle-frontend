@@ -37,9 +37,16 @@ export default {
         ...mapState(['collecte'])
     },
 
+    watch: {
+        collecte(val) {
+            this.itemResponse.commentaire = val.commentaire
+        }
+    },
+
     methods: {
         beginKn() {
             if (this.itemResponse.commentaire) {
+                this.itemResponse.environnement = 'private';
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
                 .then((data) => {
                     console.log(data);
