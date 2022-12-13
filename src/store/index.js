@@ -112,7 +112,9 @@ export default createStore({
 		 * @param {Object} state State de VueX
 		 * @param {Array} aResponses une liste de reponses
 		 */
-		initResponses(state, aResponses) {	
+		initResponses(state, aResponses) {
+			state.responses = [];
+			
 			aResponses.forEach(resp => {
 				let itemResponse = {
 					question: resp.ligne,
@@ -140,6 +142,7 @@ export default createStore({
 
 		/**
 		 * Enregistre la liste des personnels actifs dans le store
+		 * 
 		 * @param {Object} state State de Vuex
 		 * @param {Array} data Liste des personnels actifs
 		 */
@@ -149,15 +152,13 @@ export default createStore({
 
 		/**
 		 * Enregistre la liste des collectes crées dans le store
+		 * 
 		 * @param {Object} state State de Vuex
 		 * @param {Array} data Liste des collectes
 		 */
 		setCollectes (state , data) {
 			state.collectes = data;
 		},
-
-		
-
 
 		/**
 		 * Charge une ressource dans openedElement

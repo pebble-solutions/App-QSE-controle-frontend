@@ -77,7 +77,8 @@ export default {
                 result_type: '',
                 rapport: '',
                 environnement: 'private'
-            }
+            },
+            state: []
         }
     },
 
@@ -92,8 +93,6 @@ export default {
          */
          recordSami(sami) {
             this.itemResponse.result_type = sami;
-
-
         }, 
 
         /**
@@ -105,6 +104,18 @@ export default {
                 console.log('rapport adata', data);
 
                 this.$router.push({name:'collecte'});
+            }).catch(this.$app.catchError);
+        },
+
+        /**
+         * Récupère les states de la collecte
+         */
+        getCollecteState() {
+            this.$app.apiGet('data/GET/stats', {
+                environnement: 'private',
+                collecte: this.collecte.id
+            }).then((data) => {
+                console.log("return data", data);
             }).catch(this.$app.catchError);
         }
     }

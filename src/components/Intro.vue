@@ -48,7 +48,6 @@ export default {
             } else {
                 this.$router.push({name:'collecteKnBloc', params:{id: this.collecte.id, bloc: this.collecte.formulaire.blocs[0].id}});
             }
-
         }
     }
 }

@@ -131,6 +131,23 @@ export default {
 				return 'projet inexsitant'
 			}
 		},
+
+        /**
+         * Récupère la collecte id via le store
+         */
+        collecteId() {
+            if (this.collecte) {
+                return this.collecte.id;
+            }
+
+            return '';
+        }
+    },
+
+    watch: {
+        collecteId() {
+            this.initResp(this.collecte.reponses);
+        }
     },
 
     methods: {
@@ -149,9 +166,9 @@ export default {
             .then((data) => {
                 this.setCollecte(data);
 
-                if(data.reponses && 0 == this.responses.length) {
-                    this.initResp(data.reponses);
-                }
+                // if(data.reponses && 0 == this.responses.length) {
+                //     this.initResp(data.reponses);
+                // }
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
     },
