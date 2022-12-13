@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import {mapState} from 'vuex'
 
 export default {
     data() {
@@ -38,14 +38,11 @@ export default {
     },
 
     methods: {
-        ...mapActions(['refreshCollecte']),
-
         beginKn() {
             if (this.itemResponse.commentaire) {
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
                 .then((data) => {
                     console.log(data);
-                    //this.refreshCollecte(data);
                     
                     this.$router.push({name:'collecteKnBloc', params:{id: this.collecte.id, bloc: this.collecte.formulaire.blocs[0].id}});
                 }).catch(this.$app.catchError);

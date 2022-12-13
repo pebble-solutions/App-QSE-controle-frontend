@@ -97,7 +97,6 @@ export default createStore({
 		 */
 		setResponses(state, responses) {
 			let respIndex = state.responses.findIndex(e => e.question == responses.question);
-			console.log(respIndex);
 
 			if (respIndex == -1){
 				state.responses.push(responses);

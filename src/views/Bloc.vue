@@ -94,9 +94,7 @@ export default {
         },
     },
 
-    methods: {
-        //...mapActions(['refreshCollecte']),
-        
+    methods: {        
         findBloc(i) {
             let selfIndex = this.formulaire.blocs.findIndex(e => e.id == this.bloc_id);
             let bloc = this.formulaire.blocs[selfIndex+i];
@@ -113,7 +111,6 @@ export default {
                 environnement:'private',
             })
             .then((data) => {
-                //this.refreshCollecte(data);
                 console.log(data);
 
                 this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});

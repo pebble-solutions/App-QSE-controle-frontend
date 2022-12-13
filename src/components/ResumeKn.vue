@@ -3,7 +3,7 @@
         <div class="card-header">
             <h2 class="card-title">Bilan du contrôle, évaluation</h2>
 
-            <div class="from-controle">
+            <div class="from-controle" v-if="stats">
                 <table class="table table-bordered bg-light">
                     <thead>
                         <tr class="text-center text-light">
@@ -18,10 +18,10 @@
                     <tbody>
                         <tr class="text-center">
                             <td scope="row">Total: {{this.collecte.nb_reponse}}/{{this.collecte.nb_question}}</td>
-                            <td>90</td>
-                            <td>3</td>
-                            <td>0</td>
-                            <td>1</td>
+                            <td>{{stats[this.collecte.information__groupe_id].type.sami.s}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id].type.sami.a}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id].type.sami.m}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id].type.sami.i}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import {mapState} from 'vuex';
 
 export default {
     data() {
@@ -79,7 +79,7 @@ export default {
                 rapport: '',
                 environnement: 'private'
             },
-            state: []
+            stats: null
         }
     },
 
@@ -88,8 +88,6 @@ export default {
     },
 
     methods: {
-        ...mapActions(['refreshCollecte']),
-
         /**
          * enregistre le sami de l'itemReponse
          * @param {string} options s,a,m,i
@@ -104,7 +102,7 @@ export default {
         validationKn() {
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
             .then((data) => {
-                console.log('rapport adata', data);
+                console.log('rapport data', data);
 
                 this.$router.push({name:'collecte'});
             }).catch(this.$app.catchError);
@@ -119,7 +117,7 @@ export default {
                 collecte: this.collecte.id,
                 type: 'formulaire'
             }).then((data) => {
-                console.log('resulte state', data);
+                this.stats = data.stats;
             }).catch(this.$app.catchError);
         }
     },
