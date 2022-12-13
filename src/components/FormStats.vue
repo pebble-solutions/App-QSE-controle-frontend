@@ -15,13 +15,13 @@
 
             </div>
         </div>
-        <div class="col mb-3">
+        <!-- <div class="col mb-3">
             <label for="Type" class="form-label">Type:</label>
             <select class="form-select" id="type" name="type" v-model="requete.type">
                 <option value="cible" key="cible">Opérateur</option>
                 <option  value="'formulaire'" key="formulaire">KN</option>
             </select>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col mb-3">
                 <label for="operateur" class="form-label">Opérateur</label>
@@ -30,13 +30,13 @@
                     <option v-for="(agent) in listActifs" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
                 </select>
             </div>
-            <div class="col mb-3">
+            <!-- <div class="col mb-3">
                 <label for="kn" class="form-label">KN</label>
                 <select class="form-select" id="formulaire" name="kn" v-model="requete.formulaire" >
                     <option value="">non</option>
                     <option v-for="(form) in formulaires" :value="form.id" :key="form.id">{{form.groupe}}</option>
                 </select>
-            </div>
+            </div> -->
         </div>
         
         <div class="text-center">
@@ -57,7 +57,7 @@ export default {
                 cible_personnel: null,
                 dd: null,
                 df: null,
-                type: null, // cible ou formulaire
+                type: 'cible', // cible ou formulaire: remettre à null si on remt le choix
                 done:'OUI',
                 environnement:'private',
                 // mari:

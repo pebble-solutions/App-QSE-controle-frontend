@@ -60,7 +60,7 @@ export default {
          * 
          * @return {string}
          */
-         collectes_number_label() {
+        collectes_number_label() {
             let count = this.collectes.length;
             if (count) {
                 let s = count > 1 ? "s" : "";

@@ -992,11 +992,11 @@ export default {
             let data = GoogleCharts.api.visualization.arrayToDataTable(datatable);
 
             var options = {
-            title: 'Piechart',
-            width: '100%',
+            title: 'Répartition des réponses sur l\'ensemble des KN',
+            // width: '100%',
             is3D: true,
             pieSliceText: 'label',
-            colors: ['green', 'lime', 'orange', 'red']
+            colors: ['#198754', '#0d6efd', '#ffc107', '#dc3545']
             };
 
             let chart = new GoogleCharts.api.visualization.PieChart(div);
@@ -1011,12 +1011,12 @@ export default {
             var data2 = GoogleCharts.api.visualization.arrayToDataTable(datatable);
 
             var options2 = {
-            title: 'SAMI / Questions',
-            width: 400,
+            title: 'répartitions des réponses par questions',
+            // width: 400,
 
-            // chartArea: {width: '100%'},
+            chartArea: {width: '40%'},
             isStacked: 'percent',
-            colors: ['green', 'lime', 'orange', 'red'],
+            colors: ['#198754', '#0d6efd', '#ffc107', '#dc3545'],
             legend: { position: 'top', maxLines: 4 },
             height: 2000
             };
@@ -1031,10 +1031,10 @@ export default {
             var data3 = GoogleCharts.api.visualization.arrayToDataTable(datatable);
 
             var options3 = {
-                title: 'SAMI / Formulaire',
-                chartArea: {width: '30%'},
+                title: 'répartition des réponses par habilitation',
+                chartArea: {width: '40%'},
                 isStacked: 'percent',
-                colors: ['green', 'lime', 'orange', 'red'],
+                colors: ['#198754', '#0d6efd', '#ffc107', '#dc3545'],
                 legend: { position: 'top', maxLines: 4 }
             };
             let chart = new GoogleCharts.api.visualization.BarChart(div);
@@ -1047,10 +1047,10 @@ export default {
             var data4 = GoogleCharts.api.visualization.arrayToDataTable(datatable);
 
             var options4 = {
-                title: 'SAMI / Collecte',
-                chartArea: {width: '30%'},
+                title: 'répartition des réponses  par KN réalisés',
+                chartArea: {width: '50%'},
                 isStacked: 'percent',
-                colors: ['green', 'lime', 'orange', 'red'],
+                colors: ['#198754', '#0d6efd', '#ffc107', '#dc3545'],
                 legend: { position: 'top', maxLines: 4 }
             };
             let chart = new GoogleCharts.api.visualization.BarChart(div);
