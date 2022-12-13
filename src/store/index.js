@@ -114,7 +114,7 @@ export default createStore({
 		 */
 		initResponses(state, aResponses) {
 			state.responses = [];
-			
+
 			aResponses.forEach(resp => {
 				let itemResponse = {
 					question: resp.ligne,
@@ -305,11 +305,14 @@ export default createStore({
 		},
 
 		/**
-		 * demande une initialisation du state responses
+		 * initialisation du state responses en fonction de la collecte
+		 * 
+		 * @param {Object} context L'instance vueX'
+		 * @param {Array} aResponses Liste des responses a initiliser
 		*/
 		initResp(context, aResponses) {
 			context.commit('initResponses', aResponses)
-		}
+		},
 	},
 
 	modules: {

@@ -1,5 +1,5 @@
 <template>
-    <div class="card my-3">
+    <div class="card my-3" v-if="collecte">
         <div class="card-header">
             <h2 class="card-title">Bilan du contrôle, évaluation</h2>
 
@@ -17,7 +17,7 @@
 
                     <tbody>
                         <tr class="text-center">
-                            <td scope="row">Total: 94/100</td>
+                            <td scope="row">Total: {{this.collecte.nb_reponse}}/{{this.collecte.nb_question}}</td>
                             <td>90</td>
                             <td>3</td>
                             <td>0</td>
@@ -37,14 +37,14 @@
                         @click="recordSami(button)" 
                         type="button" class="btn" 
                         :class="{
-                            'btn-outline-danger': 'i' == button && 'i' != itemResponse.result_type,
-                            'btn-danger': 'i' == button && 'i' == itemResponse.result_type,
-                            'btn-outline-warning': 'm' == button && 'm' != itemResponse.result_type,
-                            'btn-warning': 'm' == button && 'm' == itemResponse.result_type,
-                            'btn-outline-primary': 'a' == button && 'a' != itemResponse.result_type,
-                            'btn-primary': 'a' == button && 'a' == itemResponse.result_type,
-                            'btn-outline-success': 's' == button && 's' != itemResponse.result_type,
-                            'btn-success': 's' == button && 's' == itemResponse.result_type
+                            'btn-outline-danger': 'i' == button && 'i' != itemResponse.result,
+                            'btn-danger': 'i' == button && 'i' == itemResponse.result,
+                            'btn-outline-warning': 'm' == button && 'm' != itemResponse.result,
+                            'btn-warning': 'm' == button && 'm' == itemResponse.result,
+                            'btn-outline-primary': 'a' == button && 'a' != itemResponse.result,
+                            'btn-primary': 'a' == button && 'a' == itemResponse.result,
+                            'btn-outline-success': 's' == button && 's' != itemResponse.result,
+                            'btn-success': 's' == button && 's' == itemResponse.result
                         }"
                     >
                         {{button.toUpperCase()}}
@@ -67,14 +67,15 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 
 export default {
     data() {
         return {
             buttonsSami: ['s', 'a', 'm', 'i'],
             itemResponse: {
-                result_type: '',
+                result_type: 'sami',
+                result: '',
                 rapport: '',
                 environnement: 'private'
             },
@@ -87,12 +88,14 @@ export default {
     },
 
     methods: {
+        ...mapActions(['refreshCollecte']),
+
         /**
          * enregistre le sami de l'itemReponse
          * @param {string} options s,a,m,i
          */
          recordSami(sami) {
-            this.itemResponse.result_type = sami;
+            this.itemResponse.result = sami;
         }, 
 
         /**
@@ -113,11 +116,21 @@ export default {
         getCollecteState() {
             this.$app.apiGet('data/GET/stats', {
                 environnement: 'private',
-                collecte: this.collecte.id
+                collecte: this.collecte.id,
+                type: 'formulaire'
             }).then((data) => {
-                console.log("return data", data);
+                console.log('resulte state', data);
             }).catch(this.$app.catchError);
         }
+    },
+
+    mounted() {
+        if (this.collecte) {
+            this.getCollecteState();
+            this.itemResponse.rapport = this.collecte.rapport;
+            this.itemResponse.result = this.collecte.result_var;
+        }
+
     }
 }
 </script>
