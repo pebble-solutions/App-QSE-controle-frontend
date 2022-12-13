@@ -20,7 +20,8 @@ export default createStore({
 		collectes: [],
 		collecte: null,
 		projetsActif: [],
-		formulaire: null
+		stat: null,
+		requeteStat: null,
 	},
 	getters: {
 		activeStructure(state) {
@@ -149,7 +150,22 @@ export default createStore({
 		setListActifs(state, data) {
 			state.listActifs = data;
 		},
-
+		/**
+		 * Enregistre le résultat de la stat  dans le store
+		 * @param {Object} state State de Vuex
+		 * @param {Array} data List des éléménts de la stat demandée
+		 */
+		stat (state, data) {
+			state.stat = data;
+		},
+		/**
+		 * Enregistre la requete de statistique  dans le store
+		 * @param {Object} state State de Vuex
+		 * @param {Object} data List des éléménts de la requete
+		 */
+		requeteStat (state, data) {
+			state.requeteStat = data;
+		},
 		/**
 		 * Met à jour la collection des collectes
 		 * 
@@ -331,6 +347,23 @@ export default createStore({
 				collectes: [collecte],
 				action: 'remove'
 			});
+		},
+
+		/**
+		 * enregistre dans le store les résultats de la stat demandée
+		 * @param {Object} context 
+		 * @param {Object} data 
+		 */
+		refreshStat(context,data) {
+			context.commit('stat', data)
+		},
+		/**
+		 * charge dans le store une requete de stat 
+		 * @param {Object} context 
+		 * @param {Object} data 
+		 */
+		setRequete(context,data) {
+			context.commit('requeteStat', data)
 		},
 
 		/**
