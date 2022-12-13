@@ -1,53 +1,52 @@
-<template>    
-    <div v-if="collecte">
-		<div class="card sticky-top">
-			<div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="">
-                        Kn n° {{collecte.date.substr(0,4)}}-{{collecte.id}}
-                    </div>
+<template>
+    <div class="card sticky-top"  v-if="collecte">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="">
+                    Kn n° {{collecte.id}}
+                </div>
 
-                    <div class="">
-                        <i class="bi bi-person-badge-fill"></i>
-                        {{agent}}
-                    </div>
+                <div class="">
+                    <i class="bi bi-person-badge-fill"></i>
+                    {{agent}}
+                </div>
 
-                    <div class="">
-                        {{typeKn}}
-                    </div>
+                <div class="">
+                    {{typeKn}}
+                </div>
 
-                    <div class="">
-                        <i class="bi bi-person-fill-check"></i>
-                        {{controleur}}
-                    </div>
+                <div class="">
+                    <i class="bi bi-person-fill-check"></i>
+                    {{controleur}}
+                </div>
 
-                    <div class="">
-                        <i class="bi bi-boxes"></i>
-                        {{projet}}
-                    </div>
+                <div class="">
+                    <i class="bi bi-boxes"></i>
+                    {{projet}}
+                </div>
 
-                    <div class="dropdown" v-if="$route.params.bloc">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <!-- <i class="bi bi-list"></i> -->
-                            Questionnaire
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li v-for="blocItem in collecte.formulaire.blocs" :key="blocItem.id">
-                                <router-link :to="'/collecte/'+collecte.id+'/bloc/'+blocItem.id" custom v-slot="{ navigate, href }">
-                                    <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
-                                        {{blocItem.bloc}}
-                                        <i class="bi bi-check2" v-if="$route.params.bloc == blocItem.id"></i>
-                                    </a>
-                                </router-link>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="dropdown" v-if="$route.params.bloc">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <!-- <i class="bi bi-list"></i> -->
+                        Questionnaire
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li v-for="blocItem in collecte.formulaire.blocs" :key="blocItem.id">
+                            <router-link :to="'/collecte/'+collecte.id+'/bloc/'+blocItem.id" custom v-slot="{ navigate, href }">
+                                <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
+                                    {{blocItem.bloc}}
+                                    <i class="bi bi-check2" v-if="$route.params.bloc == blocItem.id"></i>
+                                </a>
+                            </router-link>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
-                <intro></intro>
-            </div>
-		</div>
+        </div>
+
+        <div v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
+            <intro></intro>
+        </div>
 
         <router-view></router-view>
     </div>
@@ -74,8 +73,6 @@ export default {
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
 		 * 
-		 * @param {number} groupInformationId l'id du group information de la collecte
-		 * 
 		 * @return {string} // deja utilise dans App.vue 
 		 */
         agent() {
@@ -90,8 +87,6 @@ export default {
 
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
-		 * 
-		 * @param {number} groupInformationId l'id du group information de la collecte
 		 * 
 		 * @return {string} // deja utilise dans App.vue 
 		 */
@@ -117,8 +112,6 @@ export default {
 
         /**
 		 * Récupère le nom du projet de la collecte
-		 * 
-		 * @param {number} projetId l'id du projet de la collecte
 		 * 
 		 * @return {string}
 		 */
