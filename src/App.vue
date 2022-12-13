@@ -129,7 +129,7 @@ export default {
 			if (['collecte', 'collecteKN', 'collecteKnBloc', 'CollectKnEnd'].includes(this.$route.name)) {
 				return 'collecte';
 			}
-			else if (['Programmation', 'CollectesByType', 'EditCollecte'].includes(this.$route.name)) {
+			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
 				return 'programmation';
 			}
 			else if (['consultation', 'consultationFormulaire', 'ConsultationResponses'].includes(this.$route.name)) {

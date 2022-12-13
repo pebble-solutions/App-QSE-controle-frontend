@@ -1,6 +1,9 @@
 <template>
     <app-modal
-        size="lg">
+        v-if="collecte"
+        :title="('Kn n°'+collecte.id)"
+        size="lg"
+        @modal-hide="backPreviousRoute()">
         <div v-if="pending.collecte">Chargement...</div>
         <consultation-collecte-resume 
             :collecte="collecte"
@@ -19,7 +22,7 @@ export default {
         return {
             pending: {
                 collecte: true
-            }
+            },
         }
     },
 
@@ -31,6 +34,13 @@ export default {
 
     methods: {
         ...mapActions(['setCollecte']),
+
+        /**
+         * Put back the url route before the modal route
+         */
+         backPreviousRoute() {
+            this.$router.push({name:"consultationFormulaire", params: {id: this.$route.params.id}});
+        },
 
         /**
          * Charge une collecte depuis le serveur dans le store.

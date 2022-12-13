@@ -80,7 +80,6 @@ export default {
             this.setRequete(this.requete);
             this.$app.apiGet('data/GET/stats', this.requete)
             .then((data) => {
-                console.log(data);
                 this.refreshStat(data);
             })
             .catch(this.$app.catchError);

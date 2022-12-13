@@ -1,44 +1,64 @@
 <template>
     <div>
-        Reste à lister :
-        <li>Les informations du répondant</li>
-        <li>les informations du contrôleurs</li>
-        <li>Les infos générales : commentaire d'entrée, note générale de sortie</li>
-        Puis lisser la mise en page
-    </div>
-    <div>
-
         <div class="card my-2">
-            <h4 class="fs-5 card-header">Informations générales</h4>
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h4 class="fs-5 card-title">Informations générales </h4>
 
-            <div class="card-body">
-                <strong class="d-block">Commentaire général</strong>
-                <div>{{collecte.commentaire}}</div>
-
-                <strong class="d-block">Note globale</strong>
-                <div class="badge fs-5" :class="classNameFromSAMI(collecte.result_var)">{{collecte.result_var}}</div>
+                <div class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
+                    {{collecte.result_var.toUpperCase()}}
+                </div>
             </div>
-        </div>
-
-        <div v-for="bloc in blocs" :key="bloc.id" class="card my-2">
-            <h4 class="fs-5 card-header">{{bloc.bloc}}</h4>
 
             <div class="card-body">
-
-                <div class="list-group list-group-flush">
-
-                    <div class="list-group-item d-flex align-items-center justify-content-between" v-for="question in getBlocQuestions(bloc)" :key="question.id">
-                        <em class="d-bloc">{{question.ligne}}</em>
-                        <strong class="badge" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
-                    </div>
-
+                <div>
+                    <strong>Type de KN: </strong> <span class="fw-lighter">{{collecte.formulaire.groupe}}</span>
                 </div>
 
+                <div class="my-2">
+                    <strong class="d-block">Commentaire général: </strong>
+
+                    <div class="fw-lighter">
+                        {{collecte.commentaire}}
+                    </div>
+                </div>
+
+                <div>
+                    <strong class="d-block">Rapport final:</strong>
+
+                    <div class="fw-lighter">
+                        {{collecte.rapport}}
+                    </div>
+                </div>
             </div>
-            
         </div>
 
-        <pre>{{collecte}}</pre>
+        <div class="card my-2">
+            <div class="card-header">
+                <h4 class="fs-5 card-title">Formulaire</h4>
+            </div>
+
+            <div class="accordion accordion-flush" id="formulaireResume">
+                <div v-for="bloc in blocs" :key="'bloc-'+bloc.id" class="accordion-item">
+                    <h2 class="accordion-header" :id="'heading-'+bloc.id">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-'+bloc.id" aria-expanded="true" :aria-controls="'collapse-'+bloc.id">
+                            {{bloc.bloc}}
+                        </button>
+                    </h2>
+
+                    <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id" data-bs-parent="#formulaireResume">
+                        <div class="accordion-body">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex align-items-center justify-content-between" v-for="question in getBlocQuestions(bloc)" :key="question.id">
+                                    {{question}}
+                                    <em class="d-bloc">{{question.ligne}}</em>
+                                    <strong class="badge text-uppercase" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -76,6 +96,22 @@ export default {
     },
 
     methods: {
+
+        /**
+         * Si premier index de l'object return true sinon false
+         * 
+         * @param {Number} index Index de l'object box
+         * 
+         * @return {boolean}
+         */
+        getExpanded(index) {
+            if (index == 0) {
+                return true;
+            }
+
+            return false
+        },
+
         /**
          * Retourne la liste des questions dans un bloc.
          * 
