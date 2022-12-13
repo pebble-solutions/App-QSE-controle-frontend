@@ -1,54 +1,63 @@
 <template>
-    <div class="card sticky-top"  v-if="collecte">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="">
-                    Kn n° {{collecte.id}}
-                </div>
-
-                <div class="">
-                    <i class="bi bi-person-badge-fill"></i>
-                    {{agent}}
-                </div>
-
-                <div class="">
-                    {{typeKn}}
-                </div>
-
-                <div class="">
-                    <i class="bi bi-person-fill-check"></i>
-                    {{controleur}}
-                </div>
-
-                <div class="">
-                    <i class="bi bi-boxes"></i>
-                    {{projet}}
-                </div>
-
-                <div class="dropdown" v-if="$route.params.bloc">
-                    <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <!-- <i class="bi bi-list"></i> -->
-                        Questionnaire
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li v-for="blocItem in collecte.formulaire.blocs" :key="blocItem.id">
-                            <router-link :to="'/collecte/'+collecte.id+'/bloc/'+blocItem.id" custom v-slot="{ navigate, href }">
-                                <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
-                                    {{blocItem.bloc}}
-                                    <i class="bi bi-check2" v-if="$route.params.bloc == blocItem.id"></i>
-                                </a>
-                            </router-link>
-                        </li>
-                    </ul>
+    <div class="container py-3">
+        <div class="card"  v-if="collecte">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="">
+                        Kn n° {{collecte.id}}
+                    </div>
+    
+                    <div class="">
+                        <i class="bi bi-person-badge-fill"></i>
+                        {{agent}}
+                    </div>
+    
+                    <div class="">
+                        <span class="badge text-bg-secondary">{{typeKn}}</span>
+                    </div>
+    
+                    <div class="">
+                        <i class="bi bi-person-fill-check"></i>
+                        {{controleur}}
+                    </div>
+    
+                    <div class="">
+                        <i class="bi bi-boxes"></i>
+                        {{projet}}
+                    </div>
+    
+                    <div class="dropdown" v-if="$route.params.bloc">
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- <i class="bi bi-list"></i> -->
+                            Questionnaire
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li v-for="blocItem in collecte.formulaire.blocs" :key="blocItem.id">
+                                <router-link :to="'/collecte/'+collecte.id+'/bloc/'+blocItem.id" custom v-slot="{ navigate, href }">
+                                    <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
+                                        {{blocItem.bloc}}
+                                        <i class="bi bi-check2" v-if="$route.params.bloc == blocItem.id"></i>
+                                    </a>
+                                </router-link>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
+    
+            <div class="alert alert-success my-2" v-if="collecte.done == 'OUI'">
+                <i class="bi bi-check-circle"></i> Cette collecte terminée et non modifiable
+            </div> 
+    
+            <template v-else>
+                <div v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
+                    <intro></intro>
+                </div>
+            </template>
+    
+    
+            <router-view></router-view>
         </div>
-
-        <div v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
-            <intro></intro>
-        </div>
-
-        <router-view></router-view>
     </div>
 </template>
 
@@ -170,16 +179,9 @@ export default {
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
     beforeRouteUpdate(to) {
-        this.loadCollecte(to.params.id);
-    },
-
-
-    /**
-     * Lorsqu'on quite la route active, l'élément ouvert est vidé.
-     */
-    beforeRouteLeave(from, to, next) {
-        this.loadCollecte(null);
-        next();
+        if (to.params.id) {
+            this.loadCollecte(to.params.id);
+        }
     },
 
 

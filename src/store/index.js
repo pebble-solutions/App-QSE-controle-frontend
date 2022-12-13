@@ -20,6 +20,7 @@ export default createStore({
 		collectes: [],
 		collecte: null,
 		projetsActif: [],
+		formulaire: null
 	},
 	getters: {
 		activeStructure(state) {
@@ -150,14 +151,43 @@ export default createStore({
 		},
 
 		/**
-		 * Enregistre la liste des collectes crées dans le store
+		 * Met à jour la collection des collectes
 		 * 
-		 * @param {Object} state State de Vuex
-		 * @param {Array} data Liste des collectes
+		 * @param {object} state State de VueX
+		 * @param {object} collecteOptions 
+		 * - action				'set', 'refresh', 'remove'
+		 * - collectes			Liste des collectes
 		 */
-		setCollectes (state , data) {
-			state.collectes = data;
+		collectes(state, collecteOptions) {
+			let action = collecteOptions.action ?? 'set';
+			let collectes = collecteOptions.collectes;
+
+			if (action == 'refresh') {
+				collectes.forEach(collecte => {
+					let found = state.collectes.find(e => e.id == collecte.id);
+					if (found) {
+						for (const key in collecte) {
+							found[key] = collecte[key];
+						}
+					}
+					else {
+						state.collectes.push(collecte);
+					}
+				})
+			}
+			else if (action == 'remove') {
+				collectes.forEach(collecte => {
+					let index = state.collectes.findIndex(e => e.id == collecte.id);
+					if (index !== -1) {
+						state.collectes.splice(index, 1);
+					}
+				});
+			}
+			else {
+				state.collectes = collectes;
+			}
 		},
+
 
 		/**
 		 * Charge une ressource dans openedElement
@@ -198,6 +228,15 @@ export default createStore({
 		setProjetsActifs(state, aProjets) {
 			state.projetsActif = aProjets;
 		},
+
+		/**
+		 * Passe un formulaire en formulaire ouvert au niveau du state
+		 * @param {object} state Le state de VueX
+		 * @param {object} formulaire Le formulaire à charger
+		 */
+		formulaire(state, formulaire) {
+			state.formulaire = formulaire;
+		}
 	
 	},
 	actions: {
@@ -254,8 +293,44 @@ export default createStore({
 		refreshListActifs(context, data) {
 			context.commit('setListActifs', data);
 		},
-		refreshCollectes (context,data) {
-			context.commit('setCollectes', data)
+		
+		/**
+		 * Met à jours les collectes stockées au niveau du store
+		 * 
+		 * @param {object} context L'instance vueX
+		 * @param {array} collectes Une liste de collectes
+		 */
+		refreshCollectes(context, collectes) {
+			context.commit('collectes', {
+				collectes,
+				action: 'refresh'
+			});
+		},
+
+		/**
+		 * Remplace les collectes stockées dans le store
+		 * 
+		 * @param {object} context L'instance VueX
+		 * @param {array} collectes Une liste de collectes
+		 */
+		setCollectes(context, collectes) {
+			context.commit('collectes', {
+				collectes,
+				action: 'set'
+			});
+		},
+
+		/**
+		 * Retire une collecte du store.
+		 * 
+		 * @param {object} context L'instance VueX
+		 * @param {object} collecte La collecte à retirer du store
+		 */
+		removeCollecte(context, collecte) {
+			context.commit('collectes', {
+				collectes: [collecte],
+				action: 'remove'
+			});
 		},
 
 		/**
@@ -303,6 +378,16 @@ export default createStore({
 			context.commit('setProjetsActifs', aProjets);
 		},
 
+		/**
+		 * Charge un formulaire depuis la liste des formulaires stockées.
+		 * @param {object} context L'instance VueX
+		 * @param {number} formulaire_id L'ID du formulaire existant dans la liste formulaires
+		 */
+		openFormulaire(context, formulaire_id) {
+			let formulaire = context.state.formulaires.find(e => e.id == formulaire_id);
+			context.commit('formulaire', formulaire);
+		},
+		
 		/**
 		 * initialisation du state responses en fonction de la collecte
 		 * 

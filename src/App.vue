@@ -50,28 +50,31 @@
 		</template>
 
 		<template v-slot:list>
-				<AppMenu v-if="($route.name == 'collecte' && collectes || $route.name == 'collecteKN' && collectes || $route.name == 'collecteKnBloc' && collectes) ">
-					<!-- || $route.path == 'collecte'+coll.id -->
-					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
-						<div class="d-flex align-items-center justify-content-between">
-							Kn n° {{col.id}}
-							<span class="badge text-bg-secondary">{{getGroupNameFromId(col.information__groupe_id)}}</span>
-						</div>
+			<AppMenu v-if="listMode === 'collecte'">
+				<!-- || $route.path == 'collecte'+coll.id -->
+				<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
+					<div class="d-flex align-items-center justify-content-between">
+						Kn n° {{col.id}}
+						<span class="badge rounded-pill" :class="{'text-bg-secondary' : col.done == 'NON', 'text-bg-success' : col.done == 'OUI'}">
+							<i class="bi bi-check me-1" v-if="col.done == 'OUI'"></i>
+							{{getGroupNameFromId(col.information__groupe_id)}}
+						</span>
+					</div>
 
-						<div>
-							<i class="bi bi-person-badge-fill"></i>
-							{{getPersonnelNameFromId(col.cible__structure__personnel_id)}}
-						</div>
+					<div>
+						<i class="bi bi-person-badge-fill"></i>
+						{{getPersonnelNameFromId(col.cible__structure__personnel_id)}}
+					</div>
 
-						<div>
-							<i class="bi bi-boxes"></i>
-							{{getProjetName(col.projet_id)}}
-						</div>
-					</AppMenuItem>
-				</AppMenu>
-				<AppMenu v-else-if="($route.name == 'programmation'|| 'parType')">
-					<AppMenuItem :href="'/programmation/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.groupe}}</AppMenuItem>
-				</AppMenu>
+					<div v-if="col.projet_id">
+						<i class="bi bi-boxes"></i>
+						{{getProjetName(col.projet_id)}}
+					</div>
+				</AppMenuItem>
+			</AppMenu>
+			<AppMenu v-else-if="listMode === 'programmation'">
+				<AppMenuItem :href="'/programmation/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.groupe}}</AppMenuItem>
+			</AppMenu>
 		</template>
 
 		<template v-slot:core>
@@ -111,11 +114,46 @@ export default {
 	},
 
 	computed: {
-		...mapState(['openedElement','collectes','formulaires', 'listActifs', 'projetsActif'])
+		...mapState(['openedElement','collectes','formulaires', 'listActifs', 'projetsActif']),
+
+		/**
+		 * Détermine quelle liste afficher :
+		 * collecte, programmation
+		 * 
+		 * @return {string}
+		 */
+		listMode() {
+			if (['collecte', 'collecteKN', 'collecteKnBloc', 'CollectKnEnd'].includes(this.$route.name)) {
+				return 'collecte';
+			}
+			else if (['Programmation', 'CollectesByType', 'EditCollecte'].includes(this.$route.name)) {
+				return 'programmation';
+			}
+			return null;
+		}
+	},
+
+	watch: {
+		$route () {
+			this.$app.dispatchEvent('menuChanged', 'list');
+		},
+
+		/**
+		 * Analyse la liste demandée afin de charger les données sur le serveur 
+		 * 
+		 * @param {string} val Nouvelle liste demandée
+		 */
+		listMode(val) {
+			if (this.isConnectedUser) {
+				if (val == 'collecte') {
+					this.loadCollectes();
+				}
+			}
+		}
 	},
 
 	methods: {
-		...mapActions(['refreshCollectes', 'refreshFormulaires', 'refreshListActifs', 'refreshProjetsActifs']),
+		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjetsActifs', 'setCollectes']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -138,7 +176,7 @@ export default {
 		 * @return {Promise<object>}
 		 */
 		loadCollectes() {
-			return this.loadRessources('collecte');
+			return this.loadRessources('collecte', {enqueteur_login: 'self', done: 'NON'});
 		},
 
 		/**
@@ -153,18 +191,24 @@ export default {
 		/**
 		 * Charge une ressrouce depuis le serveur vers le store.
 		 * 
-		 * @param {string} ressourceName Le nom de la ressource à charger dans le store ('collecte', 'formulaire')
+		 * @param {string} ressourceName 	Le nom de la ressource à charger dans le store ('collecte', 'formulaire')
+		 * @param {object} query			Paramètres passés via GET
 		 * 
 		 * @return {Promise<object>}
 		 */
-		loadRessources(ressourceName) {
+		loadRessources(ressourceName, query) {
 			let route = 'data/GET/'+ressourceName;
 			let pending = ressourceName+'s';
 			let refreshMethod = 'refresh'+ressourceName.charAt(0).toUpperCase() + ressourceName.slice(1)+'s';
+			if (ressourceName == 'collecte') {
+				refreshMethod = 'setCollectes';
+			}
+			query = typeof query === 'undefined' ? {} : query;
+			query.limit = 'aucune';
 
 			this.pending[pending] = true;
 
-			return this.$app.apiGet(route, {limit:'aucune'})
+			return this.$app.apiGet(route, query)
 				.then(data => {
 					this[refreshMethod](data);
 					return data;
@@ -263,10 +307,9 @@ export default {
 		this.$app.addEventListener('structureChanged', () => {
 			this.$router.push('/');
 			if (this.isConnectedUser) {
-				this.loadCollectes();
 				this.loadFormulaires();
 				this.loadAgent();
-				this.getAllProjetsActif();
+				// this.getAllProjetsActif();
 			}
 		});
 	}
