@@ -1,25 +1,24 @@
 <template>
-    <div v-if="collecte">
+    <div class="my-3">
+        <h1 class="fs-3 mb-3">Consultation des KN Terminés</h1>
 
-    </div>
-
-    <div v-else class="">
-        <AlertMessage icon="bi bi-info-circle">
-            Séléctionner un KN terminé sur la liste de gauche
-        </AlertMessage>
+        <div class="alert alert-info d-flex">
+            <i class="bi bi-info-circle me-2"></i>
+            <div>
+                Utilisez cet espace pour consulter vos KN. Sélectionnez
+                un type de KN dans la liste de gauche pour consulter les enregistrements.
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import AlertMessage from '@/components/pebble-ui/AlertMessage.vue';
 
 
 export default {
     computed: {
         ...mapState(['collecte']),
     },
-
-    components: {AlertMessage}
 }
 </script>
