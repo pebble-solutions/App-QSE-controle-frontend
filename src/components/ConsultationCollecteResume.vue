@@ -8,8 +8,20 @@
     </div>
     <div>
 
+        <div class="card my-2">
+            <h4 class="fs-5 card-header">Informations générales</h4>
+
+            <div class="card-body">
+                <strong class="d-block">Commentaire général</strong>
+                <div>{{collecte.commentaire}}</div>
+
+                <strong class="d-block">Note globale</strong>
+                <div class="badge fs-5" :class="classNameFromSAMI(collecte.result_var)">{{collecte.result_var}}</div>
+            </div>
+        </div>
+
         <div v-for="bloc in blocs" :key="bloc.id" class="card my-2">
-            <h3 class="card-header">{{bloc.bloc}}</h3>
+            <h4 class="fs-5 card-header">{{bloc.bloc}}</h4>
 
             <div class="card-body">
 
@@ -96,6 +108,17 @@ export default {
          */
         getClassNameFromQuestion(question) {
             let reponse = this.getQuestionReponse(question);
+            return this.classNameFromSAMI(reponse);
+        },
+
+        /**
+         * Retourne une classe CSS par rapport à une réponse S A M I
+         * 
+         * @param {string} reponse S A M I
+         * 
+         * @return {string}
+         */
+        classNameFromSAMI(reponse) {
             if (reponse == 's') return 'text-bg-success';
             else if (reponse == 'a') return 'text-bg-primary';
             else if (reponse == 'm') return 'text-bg-warning';
