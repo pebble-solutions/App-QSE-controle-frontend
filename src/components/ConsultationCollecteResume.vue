@@ -166,7 +166,6 @@ export default {
          */
         getCommentFromQestion(question) {
             let reponse = this.reponses.find(resp => resp.question == question.id);
-
             return reponse ? reponse.commentaire : null;
         },
 
@@ -178,11 +177,13 @@ export default {
          * @return {string}
          */
         classNameFromSAMI(reponse) {
-            if (reponse == 's') return 'text-bg-success';
-            else if (reponse == 'a') return 'text-bg-primary';
-            else if (reponse == 'm') return 'text-bg-warning';
-            else if (reponse == 'i') return 'text-bg-danger';
-            else return 'text-bg-secondary';
+            if (typeof reponse === 'string') {
+                if (reponse.toLowerCase() == 's') return 'text-bg-success';
+                else if (reponse.toLowerCase() == 'a') return 'text-bg-primary';
+                else if (reponse.toLowerCase() == 'm') return 'text-bg-warning';
+                else if (reponse.toLowerCase() == 'i') return 'text-bg-danger';
+            }
+            return 'text-bg-secondary';
         },
     },
 

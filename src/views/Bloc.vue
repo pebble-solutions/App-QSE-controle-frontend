@@ -105,14 +105,11 @@ export default {
          * Envoi les reponses du questionnaire a l'api
          */
         sendResp() {
-            console.log(this.responses);
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',
             })
-            .then((data) => {
-                console.log(data);
-
+            .then(() => {
                 this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});
             })
             .catch(this.$app.catchError);

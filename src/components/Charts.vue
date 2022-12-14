@@ -57,11 +57,15 @@ export default {
 
             let stats = this.stats.type?.sami;
 
+            console.log(stats);
+
             if (stats) {
                 let lettres = ['S', 'A', 'M', 'I'];
     
                 lettres.forEach(l => {
-                    let qte = stats[l] + stats[l.toLowerCase()];
+                    let qte = 0;
+                    if (stats[l]) qte += parseInt(stats[l]);
+                    if (stats[l.toLowerCase()]) qte += parseInt(stats[l.toLowerCase()]);
                     datatable.push([l, qte]);
                 });
             }
@@ -96,7 +100,9 @@ export default {
                         let row = [collecte.intitule];
             
                         lettres.forEach(l => {
-                            let qte = sami[l] + sami[l.toLowerCase()];
+                            let qte = 0;
+                            if (sami[l]) qte += parseInt(sami[l]);
+                            if (sami[l.toLowerCase()]) qte += parseInt(sami[l.toLowerCase()]);
                             row.push(qte);
                         });
 
@@ -135,7 +141,9 @@ export default {
                         let row = [formulaire.intitule];
             
                         lettres.forEach(l => {
-                            let qte = sami[l] + sami[l.toLowerCase()];
+                            let qte = 0;
+                            if (sami[l]) qte += parseInt(sami[l]);
+                            if (sami[l.toLowerCase()]) qte += parseInt(sami[l.toLowerCase()]);
                             row.push(qte);
                         });
 
@@ -174,7 +182,9 @@ export default {
                         let row = [question.intitule];
             
                         lettres.forEach(l => {
-                            let qte = sami[l] + sami[l.toLowerCase()];
+                            let qte = 0;
+                            if (sami[l]) qte += parseInt(sami[l]);
+                            if (sami[l.toLowerCase()]) qte += parseInt(sami[l.toLowerCase()]);
                             row.push(qte);
                         });
 

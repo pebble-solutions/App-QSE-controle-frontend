@@ -48,9 +48,7 @@ export default {
             if (this.itemResponse.commentaire) {
                 this.itemResponse.environnement = 'private';
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
-                .then((data) => {
-                    console.log(data);
-                    
+                .then(() => {
                     this.$router.push({name:'collecteKnBloc', params:{id: this.collecte.id, bloc: this.collecte.formulaire.blocs[0].id}});
                 }).catch(this.$app.catchError);
             } else {
