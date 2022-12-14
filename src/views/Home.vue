@@ -1,32 +1,32 @@
 <template>
 	
-	<div>
+	<div class="py-2">
 		<FormStats></FormStats>
+	</div>
+
+	<div class="card" v-if="stats">
+		<div class="card-header">
+			<h2 class="fs-4">{{personnelNom}}</h2>
+			<div class="fs-light">du {{changeFormatDateLit(requeteStat.dd)}} au {{changeFormatDateLit(requeteStat.df)}}</div>
+		</div>
 	</div>
 
 	<charts :stats="stats" v-if="stats" />
 
-	<div>
-		<StatPersonnelCard></StatPersonnelCard>
-	</div>
-	<div>
-		<StatPersonnelGraph2></StatPersonnelGraph2>
-		<StatPersonnelGraph></StatPersonnelGraph>
-	</div>
 </template>
 
 
 <script>
-import FormStats from '../components/FormStats.vue';
-import StatPersonnelCard from '../components/StatPersonnelCard.vue';
-import StatPersonnelGraph2 from '../components/StatPersonnelGraph2.vue';
-import StatPersonnelGraph from '../components/StatPersonnelGraph.vue';
-import Charts from '../components/Charts.vue';
 import { mapState } from 'vuex';
+import FormStats from '../components/FormStats.vue';
+import Charts from '../components/Charts.vue';
+
+import date from 'date-and-time';
+import fr from 'date-and-time/locale/fr';
 
 export default {
 	computed: {
-		...mapState(['stat']),
+		...mapState(['stat', 'requeteStat', 'listActifs']),
 
 		/**
 		 * Retourne la première ligne de stats contenue dans le store
@@ -45,10 +45,36 @@ export default {
 
 
 			return stats;
+		},
+
+		/**
+		 * Retourne le nom du personnel chargé.
+		 * 
+		 * @return {string}
+		 */
+		personnelNom() {
+			if (this.stats) {
+				return this.stats.nom;
+			}
+			return "Sans nom";
 		}
 	},
 
-	components: {FormStats,StatPersonnelCard, StatPersonnelGraph, StatPersonnelGraph2, Charts},
+	components: {FormStats, Charts},
+
+	methods: {
+		/**
+		 * Modifie le format de la date entrée en paramètre et la retourne 
+		 * sous le format 01 févr. 2021
+		 * @param {string} date 
+		 */
+
+		changeFormatDateLit(el) {
+			date.locale(fr);
+			return date.format(new Date(el), 'DD MMM YYYY')
+		},
+	}
+
 
 }
 

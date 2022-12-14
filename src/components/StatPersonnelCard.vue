@@ -3,15 +3,15 @@
     </div>
     <div class="card m-2">
         <div class="card-header">
-            <div class="d-flex justify-content-between">
+            <div v-if="stat" class="d-flex justify-content-between">
                 <div>
-                    <h3>Nom</h3>
-                    <div class="fs-light">22/12/22</div>
+                    <h3>{{requeteStat.cible_personnel}}</h3>
+                    <div class="fs-light">du {{changeFormatDateLit(requeteStat.dd)}} au {{changeFormatDateLit(requeteStat.df)}}</div>
                 </div>
             </div>
         </div>
         
-        <div class="card-body">
+        <!-- <div class="card-body">
             <div  v-for="(section, index) in sections" :key="'section-'+index" class="accordion" id="'section-'+index">
                 
                 <div class="accordion-item">
@@ -37,12 +37,14 @@
 
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import date from 'date-and-time';
+import fr from 'date-and-time/locale/fr';
 export default {
 
     data(){
@@ -62,6 +64,16 @@ export default {
     },
 
     methods: {
+        /**
+		 * Modifie le format de la date entrée en paramètre et la retourne 
+		 * sous le format 01 févr. 2021
+		 * @param {string} date 
+		 */
+
+		changeFormatDateLit(el) {
+			date.locale(fr);
+			return date.format(new Date(el), 'DD MMM YYYY')
+		},
 
         searchID() {
             let req = this.requeteStat;

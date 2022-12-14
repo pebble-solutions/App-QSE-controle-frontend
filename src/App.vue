@@ -42,10 +42,10 @@
 
 		<template v-slot:menu>
 			<AppMenu>
-				<AppMenuItem href="/" look="dark" icon="bi bi-house">KN suivi</AppMenuItem>
-				<AppMenuItem href="/programmation" look="dark" icon="bi bi-house">KN programmation</AppMenuItem>
-				<AppMenuItem href="/collecte" look="dark" icon="bi bi-app">KN collecte</AppMenuItem>
-				<AppMenuItem href="/consultation" look="dark" icon="bi bi-app">KN fini</AppMenuItem>
+				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
+				<AppMenuItem href="/programmation" look="dark" icon="bi bi-calendar-event-fill">Programmation</AppMenuItem>
+				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
+				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -140,8 +140,13 @@ export default {
 	},
 
 	watch: {
-		$route () {
-			this.$app.dispatchEvent('menuChanged', 'list');
+		$route (val) {
+			if (val.name == 'Home') {
+				this.$app.dispatchEvent('menuChanged', 'menu');
+			}
+			else {
+				this.$app.dispatchEvent('menuChanged', 'list');
+			}
 		},
 
 		/**

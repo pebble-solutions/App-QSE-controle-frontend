@@ -1,31 +1,29 @@
 <template>
     <div>
-        <pre>{{stats}}</pre>
-
         <div class="card my-2">
             <div class="card-body">
-                <h3 class="fs-4">Statistique générales</h3>
+                <h3 class="fs-4">Répartition sur l'ensemble des contrôles</h3>
                 <div id="sami_piechart" style="width:100%; height:300px; position:relative;"></div>
             </div>
         </div>
 
         <div class="card my-2">
             <div class="card-body">
-                <h3 class="fs-4">Statistiques par collecte</h3>
+                <h3 class="fs-4">Répartition par contrôles réalisés</h3>
                 <div id="chart_collectes" style="width:100%; position:relative;"></div>
             </div>
         </div>
 
         <div class="card my-2">
             <div class="card-body">
-                <h3 class="fs-4">Statistiques par formulaire</h3>
+                <h3 class="fs-4">Répartition par formulaires</h3>
                 <div id="chart_formulaires" style="width:100%; position:relative;"></div>
             </div>
         </div>
 
         <div class="card my-2">
             <div class="card-body">
-                <h3 class="fs-4">Statistiques par question</h3>
+                <h3 class="fs-4">Répartition par questions</h3>
                 <div id="chart_questions" style="width:100%; position:relative;"></div>
             </div>
         </div>
@@ -37,6 +35,15 @@ export default {
 
     props: {
         stats: Object
+    },
+
+    watch: {
+        stats() {
+            this.sami_global_piechart();
+            this.chart_collectes();
+            this.chart_formulaires();
+            this.chart_questions();
+        }
     },
 
     methods: {
@@ -194,6 +201,13 @@ export default {
         window.removeEventListener("resize", this.chart_formulaires);
         window.removeEventListener("resize", this.chart_questions);
         
+    },
+
+    updated() {
+        this.sami_global_piechart();
+        this.chart_collectes();
+        this.chart_formulaires();
+        this.chart_questions();
     },
 
     mounted(){
