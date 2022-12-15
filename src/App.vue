@@ -53,23 +53,7 @@
 			<AppMenu v-if="listMode === 'collecte'">
 				<!-- || $route.path == 'collecte'+coll.id -->
 				<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
-					<div class="d-flex align-items-center justify-content-between">
-						Kn n° {{col.id}}
-						<span class="badge rounded-pill" :class="{'text-bg-secondary' : col.done == 'NON', 'text-bg-success' : col.done == 'OUI'}">
-							<i class="bi bi-check me-1" v-if="col.done == 'OUI'"></i>
-							{{getGroupNameFromId(col.information__groupe_id)}}
-						</span>
-					</div>
-
-					<div>
-						<i class="bi bi-person-badge-fill"></i>
-						{{getPersonnelNameFromId(col.cible__structure__personnel_id)}}
-					</div>
-
-					<div v-if="col.projet_id">
-						<i class="bi bi-boxes"></i>
-						{{getProjetName(col.projet_id)}}
-					</div>
+					<collecte-item :collecte="col" />
 				</AppMenuItem>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
@@ -77,6 +61,9 @@
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
 				<AppMenuItem :href="'/consultation/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.groupe}}</AppMenuItem>
+			</AppMenu>
+			<AppMenu v-else-if="listMode === 'home'">
+				<form-stats />
 			</AppMenu>
 		</template>
 
@@ -98,6 +85,8 @@ import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapActions, mapState } from 'vuex'
 
 import CONFIG from "@/config.json"
+import FormStats from './components/FormStats.vue'
+import CollecteItem from './components/CollecteItem.vue'
 
 export default {
 
@@ -135,18 +124,16 @@ export default {
 			else if (['consultation', 'consultationFormulaire', 'ConsultationResponses'].includes(this.$route.name)) {
 				return 'consultation';
 			}
+			else if (['Home'].includes(this.$route.name)) {
+				return 'home';
+			}
 			return null;
 		}
 	},
 
 	watch: {
-		$route (val) {
-			if (val.name == 'Home') {
-				this.$app.dispatchEvent('menuChanged', 'menu');
-			}
-			else {
-				this.$app.dispatchEvent('menuChanged', 'list');
-			}
+		$route () {
+			this.$app.dispatchEvent('menuChanged', 'list');
 		},
 
 		/**
@@ -244,57 +231,6 @@ export default {
         },
 
 		/**
-		 * Récupere le nom du groupe d'information de la collect via un id de
-		 * 
-		 * @param {number} groupInformationId l'id du group information de la collecte
-		 * 
-		 * @return {string}
-		 */
-		getGroupNameFromId(groupInformationId) {
-			let groupInformation = this.formulaires.find(e => e.id == groupInformationId);
-
-			if (groupInformation) {
-				return groupInformation.groupe;
-			} else { 
-				return 'group inexistant';
-			}
-		},
-
-		/**
-		 * Récupère le nom d'un personnel actif via un id
-		 * 
-		 * @param {number} personnelId l'id d'un personnel actif
-		 * 
-		 * @return {string}
-		 */
-		getPersonnelNameFromId(personnelId) {
-			let personnelName = this.listActifs.find(personnel => personnel.id == personnelId);
-
-			if (personnelName) {
-				return personnelName.cache_nom;
-			} else {
-				return 'Personnel inexsitant'
-			}
-		},
-
-		/**
-		 * Récupère le nom du projet de la collecte
-		 * 
-		 * @param {number} projetId l'id du projet de la collecte
-		 * 
-		 * @return {string}
-		 */
-		getProjetName(projetId) {
-			let projetName = this.projetsActif.find(projet => projet.id == projetId);
-
-			if (projetName) {
-				return projetName.intitule;
-			} else {
-				return 'projet inexsitant'
-			}
-		},
-
-		/**
          * Récupère tout les projets en production
          */
 		getAllProjetsActif() {
@@ -312,7 +248,7 @@ export default {
         },
 	},
 
-	components: {AppWrapper, AppMenu, AppMenuItem},
+	components: {AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem},
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
