@@ -1,5 +1,5 @@
 <template>
-    <form method="post" class="p-2" @submit.prevent="searchStats()">
+    <form method="post" class="p-2 my-2" @submit.prevent="searchStats()">
 
         <h2 class="fs-4">Statistiques</h2>
 

@@ -8,42 +8,14 @@
 		@auth-change="setLocal_user">
 
 		<template v-slot:header>
-			<div class="mx-2 d-flex align-items-center" v-if="openedElement">
-				<router-link to="/" custom v-slot="{ navigate, href }">
-					<a class="btn btn-dark me-2" :href="href" @click="navigate">
-						<i class="bi bi-arrow-left"></i>
-					</a>
-				</router-link>
-				<router-link :to="'/formulaire/'+openedElement.id+'/properties'" custom v-slot="{ navigate, href }">
-					<a class="btn btn-dark me-2" :href="href" @click="navigate">
-						<i class="bi bi-file-earmark me-1"></i>
-						{{openedElement.groupe}}
-					</a>
-				</router-link>
-
-				<div class="dropdown">
-					<button class="btn btn-dark dropdown-toggle" type="button" id="fileDdMenu" data-bs-toggle="dropdown" aria-expanded="false">
-						Fichier
-					</button>
-					<ul class="dropdown-menu" aria-labelledby="fileDdMenu">
-						<li>
-							<router-link :to="'/formulaire/'+openedElement.id+'/informations'" custom v-slot="{ navigate, href }">
-								<a class="dropdown-item" :href="href" @click="navigate">Informations</a>
-							</router-link>
-						</li>
-							<li>
-							<button class="droptown-item" @click="chargerType(openedElement.type_id)">Charger le type</button>
-						</li>
-					</ul>
-				</div>
-			</div>
+			<stats-header v-if="listMode === 'home'" />
 		</template>
 
 
 		<template v-slot:menu>
 			<AppMenu>
-				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/programmation" look="dark" icon="bi bi-calendar-event-fill">Programmation</AppMenuItem>
+				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
 			</AppMenu>
@@ -87,6 +59,7 @@ import { mapActions, mapState } from 'vuex'
 import CONFIG from "@/config.json"
 import FormStats from './components/FormStats.vue'
 import CollecteItem from './components/CollecteItem.vue'
+import StatsHeader from './components/headers/StatsHeader.vue'
 
 export default {
 
@@ -248,11 +221,11 @@ export default {
         },
 	},
 
-	components: {AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem},
+	components: {AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader},
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
-			this.$router.push('/');
+			this.$router.push('/programmation');
 			if (this.isConnectedUser) {
 				this.loadFormulaires();
 				this.loadAgent();

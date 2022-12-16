@@ -2,11 +2,24 @@
 
 	<div class="container py-2">
 
-		<template v-if="!stat">
+		<template v-if="!stats">
 			<h1 class="fs-3 mb-3">Statistiques par opérateur</h1>
-			<alert-message icon="bi-info-circle me-2">
-				Utilisez le formulaire du menu de gauche pour afficher les statistiques.
-			</alert-message>
+
+			<alert-message variant="warning" icon="bi-exclamation-circle me-2" v-if="stat">Aucun résultat pour cette recherche.</alert-message>
+
+			<div class="card my-3">
+				<div class="card-body">
+					<div class="row align-items-center">
+						<div class="col-md-6 col-lg-4 col-12">
+							<img src="../assets/chart.jpg" class="img-fluid" alt="Extraction de statistiques">
+						</div>
+						<div class="col display-6 fs-4 text-center">
+							Ici, vous pouvez consultez les statistiques de réponse par opérateur afin d'établir. Utilisez le formulaire 
+							du menu à gauche afin de sélectionner une période et un opérateur.
+						</div>
+					</div>
+				</div>
+			</div>
 		</template>
 
 		<template v-else>

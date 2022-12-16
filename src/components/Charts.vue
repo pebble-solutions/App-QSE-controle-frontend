@@ -1,32 +1,44 @@
 <template>
     <div>
-        <div class="card my-2">
-            <div class="card-body">
-                <h3 class="fs-4">Répartition sur l'ensemble des contrôles</h3>
-                <div id="sami_piechart" style="width:100%; height:300px; position:relative;"></div>
+
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h3 class="fs-4">Répartition sur l'ensemble des contrôles</h3>
+                        <div id="sami_piechart" style="width:100%; height:350px; position:relative;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h3 class="fs-4">Répartition par formulaires</h3>
+                        <div id="chart_formulaires" style="width:100%; position:relative;"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="card my-2">
-            <div class="card-body">
-                <h3 class="fs-4">Répartition par contrôles réalisés</h3>
-                <div id="chart_collectes" style="width:100%; position:relative;"></div>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h3 class="fs-4">Répartition par contrôles réalisés</h3>
+                        <div id="chart_collectes" style="width:100%; position:relative;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h3 class="fs-4">Répartition par questions</h3>
+                        <div id="chart_questions" style="width:100%; position:relative;"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="card my-2">
-            <div class="card-body">
-                <h3 class="fs-4">Répartition par formulaires</h3>
-                <div id="chart_formulaires" style="width:100%; position:relative;"></div>
-            </div>
-        </div>
-
-        <div class="card my-2">
-            <div class="card-body">
-                <h3 class="fs-4">Répartition par questions</h3>
-                <div id="chart_questions" style="width:100%; position:relative;"></div>
-            </div>
-        </div>
     </div>
 </template>
 <script>
@@ -72,7 +84,8 @@ export default {
             let data = GoogleCharts.api.visualization.arrayToDataTable(datatable);
 
             var options = {
-                colors: this.chartColors
+                colors: this.chartColors,
+                pieHole: 0.5
             };
 
             let chart = new GoogleCharts.api.visualization.PieChart(div);
