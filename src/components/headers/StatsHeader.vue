@@ -15,6 +15,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import { getPersonnelStats } from '../../js/stats';
 
 export default {
     computed: {
@@ -23,25 +24,14 @@ export default {
 
         /**
 		 * Retourne la première ligne de stats contenue dans le store
-		 * 
 		 * @return {object}
 		 */
 		stats() {
-			let stats = null;
-
-			if (this.stat) {
-				for (const key in this.stat.stats) {
-					stats = this.stat.stats[key];
-					break;
-				}
-			}
-
-			return stats;
+			return getPersonnelStats(this.stat);
 		},
 
         /**
 		 * Retourne le nom du personnel chargé.
-		 * 
 		 * @return {string}
 		 */
 		personnelNom() {

@@ -9,6 +9,7 @@
 
 		<template v-slot:header>
 			<stats-header v-if="listMode === 'home'" />
+			<programmation-header v-else-if="listMode === 'programmation'" />
 		</template>
 
 
@@ -30,33 +31,12 @@
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
 				<AppMenuItem :href="'/programmation/'+form.id"  v-for="form in formulaires" :key="form.id">
-					<div class="d-flex align-items-center justify-content-between">
-						<div class="d-flex align-items-center">
-							<div class="me-2">
-								<i class="bi bi-file-earmark me-2"></i>
-							</div>
-							<div class="justify-content-between align-items-center"  >
-								<div class="d-flex justify-content-between align-items-center">{{form.groupe}}</div>
-							</div>
-						</div>
-						<div  class="badge bg-secondary" v-if="form.nb_todo">{{form.nb_todo}}</div>
-					</div>
-					
+					<formulaire-item :num="form.nb_todo" :formulaire="form" />
 				</AppMenuItem>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
 				<AppMenuItem :href="'/consultation/'+form.id" v-for="form in formulaires" :key="form.id">
-					<div class="d-flex align-items-center justify-content-between">
-						<div class="d-flex align-items-center">
-							<div class="me-2">
-								<i class="bi bi-file-earmark-text me-2"></i>
-							</div>
-							<div class="justify-content-between align-items-center"  >
-								<div class="d-flex justify-content-between align-items-center">{{form.groupe}}</div>
-							</div>
-						</div>
-						<div  class="badge bg-secondary" v-if="form.nb_done">{{form.nb_done}}</div>
-					</div>
+					<formulaire-item :num="form.nb_done" :formulaire="form" />
 				</AppMenuItem>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
@@ -85,6 +65,8 @@ import CONFIG from "@/config.json"
 import FormStats from './components/FormStats.vue'
 import CollecteItem from './components/CollecteItem.vue'
 import StatsHeader from './components/headers/StatsHeader.vue'
+import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
+import FormulaireItem from './components/menu/FormulaireItem.vue'
 
 export default {
 
@@ -246,7 +228,7 @@ export default {
         },
 	},
 
-	components: {AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader},
+	components: {AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem},
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

@@ -1,16 +1,10 @@
 <template>
 
-    <div v-if="formulaire">
+    <div v-if="formulaire" class="container py-2">
         <div class="d-flex flex-row justify-content-between align-items-center py-3">
             <div class="d-flex flex-row justify-content-between align-items-center">
-
-                <router-link to="/programmation" v-slot="{navigate,href}" custom>
-                    <a :href="href" @click="navigate" class="btn btn-light"><i class="bi bi-arrow-left"></i></a>
-                </router-link>
-                <div class="ms-2">
-                    <h1 class="fs-3 m-0">{{formulaire.groupe}}</h1> 
-                    <div class="text-secondary">{{collectes_number_label}}</div>
-                </div>
+                <h1 class="fs-3 m-0 me-2">{{formulaire.groupe}}</h1> 
+                <div class="text-secondary">{{collectes_number_label}}</div>
             </div>
             <div>
                 <router-link :to="'/programmation/'+formulaire.id+'/0/edit'" v-slot="{navigate,href}" custom>
@@ -28,19 +22,31 @@
 
                         <strong class="me-2 text-secondary" style="width:40px">#{{col.id}}</strong>
                         <div>
-                            <span  v-if="!getGroupNameFromId(col.information__groupe_id)" class="me-2 text-warning">Type de KN non programmé </span>
-                            <span v-else class="me-2">{{getGroupNameFromId(col.information__groupe_id)}}</span>
-                            <span class="me-2 text-warning" v-if="!col.date">Date non programmée</span>
-                            <span v-else class="me-2">{{changeFormatDateLit(col.date)}}</span>
-                            <span  v-if="!getPersonnelNameFromId(col.enqueteur__structure__personnel_id)" class="me-2 text-warning">Contrôleur non programmé </span>
-                            <span v-else class="me-2">Contrôleur: {{getPersonnelNameFromId(col.enqueteur__structure__personnel_id)}}</span>
-                            <span  v-if="!getPersonnelNameFromId(col.cible__structure__personnel_id)" class="me-2 text-warning">Opérateur non programmé </span>
-                            <span v-else class="me-2">Opérateur: {{getPersonnelNameFromId(col.cible__structure__personnel_id)}}</span>
+                            <div>
+                                <div  v-if="!getPersonnelNameFromId(col.enqueteur__structure__personnel_id)" class="me-2 text-warning">Contrôleur non programmé </div>
+                                <div v-else class="d-flex align-items-center">
+                                    <span><user-image :name="getPersonnelNameFromId(col.enqueteur__structure__personnel_id)" className="me-1" size="sm" /></span>
+                                    Contrôleur: {{getPersonnelNameFromId(col.enqueteur__structure__personnel_id)}}
+                                </div>
+                                <div class="d-flex align-items-center text-secondary">
+                                    <i class="bi bi-arrow-return-right me-1 ms-2"></i>
+                                    <div v-if="!getPersonnelNameFromId(col.cible__structure__personnel_id)" class="me-2 text-warning">Opérateur non programmé </div>
+                                    <div v-else class="d-flex align-items-center fs-7">
+                                        <span><user-image :name="getPersonnelNameFromId(col.cible__structure__personnel_id)" className="me-1" size="sm" /></span>
+                                        Opérateur: {{getPersonnelNameFromId(col.cible__structure__personnel_id)}}
+                                    </div>
+                                </div>
+                            </div>
                             <!-- <span  v-if="!getPersonnelNameFromId(col.cible__structure__personnel_id)" class="me-2 text-warning">Opérateur non programmé </span>
                             <span v-else class="me-2">Opérateur: {{getPersonnelNameFromId(col.cible__structure__personnel_id)}}</span> -->
                         </div>
                     </div>
-                    <div class="btn-group">
+                    <div class="d-flex align-items-center">
+                        <div class="mb-1">
+                            <i class="bi bi-calendar-event me-2"></i>
+                            <span class="me-2 text-warning" v-if="!col.date">Date non programmée</span>
+                            <span v-else class="me-2">{{changeFormatDateLit(col.date)}}</span>
+                        </div>
                         <router-link :to="{name:'EditCollecte', params: {idCollecte:col.id} }" v-slot="{navigate,href}" custom>
                             <a :href="href" @click="navigate" class="btn btn-light"><i class="bi bi-pencil"></i></a>
                         </router-link>
@@ -59,8 +65,10 @@
 import { mapActions, mapState } from 'vuex';
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
+import UserImage from '../components/pebble-ui/UserImage.vue';
 
 export default {
+  components: { UserImage },
     data() {
         return {
             newKn: false,
@@ -171,6 +179,10 @@ export default {
             this.openFormulaire(to.params.id);
             this.loadCollectes(to.params.id);
         }
+    },
+
+    beforeUnmount() {
+
     },
 
     mounted() {

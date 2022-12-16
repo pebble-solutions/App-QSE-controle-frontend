@@ -23,8 +23,11 @@
 		</template>
 
 		<template v-else>
-			<div class="d-flex align-items-center mb-3">
-				<h1 class="fs-3 m-0 me-3">{{personnelNom}}</h1>
+			<div class="d-flex align-items-center my-3">
+				<div class="d-flex align-items-center">
+					<user-image :name="personnelNom" className="me-2" />
+					<h1 class="fs-3 m-0 me-3">{{personnelNom}}</h1>
+				</div>
 				<div class="fw-light text-secondary text-end">du {{changeFormatDateLit(requeteStat.dd)}} au {{changeFormatDateLit(requeteStat.df)}}</div>
 			</div>
 		
@@ -43,6 +46,7 @@ import Charts from '../components/Charts.vue';
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
+import UserImage from '../components/pebble-ui/UserImage.vue';
 
 export default {
 	computed: {
@@ -79,7 +83,7 @@ export default {
 		}
 	},
 
-	components: {Charts, AlertMessage},
+	components: {Charts, AlertMessage, UserImage},
 
 	methods: {
 		...mapActions(['refreshStat']),
