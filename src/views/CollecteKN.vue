@@ -90,7 +90,7 @@ export default {
             if (controleurName) {
                 return controleurName.cache_nom;
             } else {
-                return 'controleur inexistant'
+                return 'Opérateur non renseigné'
             }
         },
 
@@ -105,7 +105,7 @@ export default {
 			if (groupInformation) {
 				return groupInformation.groupe;
 			} else { 
-				return 'group inexistant';
+				return 'Type KN non renseigné';
 			}
         },
 
@@ -115,7 +115,7 @@ export default {
             if (controleurName) {
                 return controleurName.cache_nom;
             } else {
-                return 'controleur inexistant'
+                return 'Contrôleur non renseigné'
             }
         },
 

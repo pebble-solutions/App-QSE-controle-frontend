@@ -38,7 +38,7 @@ export default {
         /**
          * Put back the url route before the modal route
          */
-         backPreviousRoute() {
+        backPreviousRoute() {
             this.$router.push({name:"consultationFormulaire", params: {id: this.$route.params.id}});
         },
 
@@ -47,7 +47,7 @@ export default {
          * 
          * @param {number} id L'ID de la collecte à charger
          */
-         loadCollecte(id) {
+        loadCollecte(id) {
             this.pending.collecte = true;
             this.$app.apiGet('data/GET/collecte/'+id, {
                 environnement: 'private'
