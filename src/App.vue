@@ -29,10 +29,35 @@
 				</AppMenuItem>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
-				<AppMenuItem :href="'/programmation/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.groupe}}</AppMenuItem>
+				<AppMenuItem :href="'/programmation/'+form.id"  v-for="form in formulaires" :key="form.id">
+					<div class="d-flex align-items-center justify-content-between">
+						<div class="d-flex align-items-center">
+							<div class="me-2">
+								<i class="bi bi-file-earmark me-2"></i>
+							</div>
+							<div class="justify-content-between align-items-center"  >
+								<div class="d-flex justify-content-between align-items-center">{{form.groupe}}</div>
+							</div>
+						</div>
+						<div  class="badge bg-secondary" v-if="form.nb_todo">{{form.nb_todo}}</div>
+					</div>
+					
+				</AppMenuItem>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
-				<AppMenuItem :href="'/consultation/'+form.id" icon="bi bi-file-earmark" v-for="form in formulaires" :key="form.id">{{form.groupe}}</AppMenuItem>
+				<AppMenuItem :href="'/consultation/'+form.id" v-for="form in formulaires" :key="form.id">
+					<div class="d-flex align-items-center justify-content-between">
+						<div class="d-flex align-items-center">
+							<div class="me-2">
+								<i class="bi bi-file-earmark-text me-2"></i>
+							</div>
+							<div class="justify-content-between align-items-center"  >
+								<div class="d-flex justify-content-between align-items-center">{{form.groupe}}</div>
+							</div>
+						</div>
+						<div  class="badge bg-secondary" v-if="form.nb_done">{{form.nb_done}}</div>
+					</div>
+				</AppMenuItem>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
