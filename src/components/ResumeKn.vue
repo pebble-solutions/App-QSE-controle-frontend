@@ -99,7 +99,7 @@ export default {
          * enregistre le sami de l'itemReponse
          * @param {string} options s,a,m,i
          */
-         recordSami(sami) {
+        recordSami(sami) {
             this.itemResponse.result = sami;
         }, 
 

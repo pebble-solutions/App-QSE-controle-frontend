@@ -1,4 +1,6 @@
 <template>
+	<div class="d-flex justify-content-between"></div>
+
     <div class="d-flex align-items-center justify-content-between">
         Kn n° {{collecte.id}}
         <span class="badge rounded-pill" :class="{'text-bg-secondary' : collecte.done == 'NON', 'text-bg-success' : collecte.done == 'OUI'}">
@@ -44,7 +46,7 @@ export default {
 			if (groupInformation) {
 				return groupInformation.groupe;
 			} else { 
-				return 'group inexistant';
+				return 'formulaire non renseigné';
 			}
 		},
 
@@ -61,7 +63,7 @@ export default {
 			if (personnelName) {
 				return personnelName.cache_nom;
 			} else {
-				return 'Personnel inexsitant'
+				return 'Personnel non renseigné'
 			}
 		},
 
@@ -78,7 +80,7 @@ export default {
 			if (projetName) {
 				return projetName.intitule;
 			} else {
-				return 'projet inexsitant'
+				return 'projet non renseigné'
 			}
 		},
     }

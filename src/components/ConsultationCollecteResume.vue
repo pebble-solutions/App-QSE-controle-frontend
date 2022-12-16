@@ -7,14 +7,14 @@
                 <div>
                     Note générale:
                     <div class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
-                       {{collecte.result_var}}
+                        {{collecte.result_var}}
                     </div>
                 </div>
             </div>
 
             <div class="card-body">
                 <div>
-                    <strong>Type de KN: </strong> <span class="fw-lighter">{{collecte.formulaire.groupe}}</span>
+                    <span>Type de KN: </span> <span class="">{{collecte.formulaire.groupe}}</span>
                 </div>
 
                 <div class="my-2">
@@ -72,7 +72,7 @@
     </div>
 </template>
 
-<script>
+<script lang="js">
 
 export default {
     props: {

@@ -46,7 +46,7 @@
             </div>
     
             <div class="alert alert-success my-2" v-if="collecte.done == 'OUI'">
-                <i class="bi bi-check-circle"></i> Cette collecte terminée et non modifiable
+                <i class="bi bi-check-circle"></i> Cette collecte est terminée et non modifiable
             </div> 
     
             <template v-else>
