@@ -26,7 +26,9 @@
 			<AppMenu v-if="listMode === 'collecte'">
 				<!-- || $route.path == 'collecte'+coll.id -->
 				<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
-					<collecte-item :collecte="col" />
+					<div class="d-flex align-items-center justify-content-between">
+						<collecte-item :collecte="col" />
+					</div>
 				</AppMenuItem>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">

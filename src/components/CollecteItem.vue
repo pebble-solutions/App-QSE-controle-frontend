@@ -1,23 +1,28 @@
 <template>
-	<div class="d-flex justify-content-between"></div>
-
-    <div class="d-flex align-items-center justify-content-between">
-        Kn n° {{collecte.id}}
-        <span class="badge rounded-pill" :class="{'text-bg-secondary' : collecte.done == 'NON', 'text-bg-success' : collecte.done == 'OUI'}">
-            <i class="bi bi-check me-1" v-if="collecte.done == 'OUI'"></i>
-            {{getGroupNameFromId(collecte.information__groupe_id)}}
-        </span>
-    </div>
-
-    <div>
-        <i class="bi bi-person-badge-fill"></i>
-        {{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
-    </div>
-
-    <div v-if="collecte.projet_id">
-        <i class="bi bi-boxes"></i>
-        {{getProjetName(collecte.projet_id)}}
-    </div>
+	<div class="d-flex flex-column align-items-start">
+		<div class="d-flex justify-content-start align-items-center">
+			<div class="badge rounded-pill me-1" :class="{'text-bg-secondary' : collecte.done == 'NON', 'text-bg-success' : collecte.done == 'OUI'}">
+				KN-{{collecte.id}}
+			</div>
+			<div>
+				<i class="bi bi-person-badge-fill me-1"></i>
+			</div>
+			<div>
+				{{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
+			</div>
+		</div>
+		<div class="d-flex">
+			<div class="fw-lighter" >
+				<i class="bi bi-check me-1" v-if="collecte.done == 'OUI'"></i>
+				{{getGroupNameFromId(collecte.information__groupe_id)}}
+			</div>
+			<div v-if="collecte.projet_id">
+				<i class="bi bi-boxes"></i>
+				{{getProjetName(collecte.projet_id)}}
+			</div>
+		</div>	
+	</div>
+		
 </template>
 
 <script>

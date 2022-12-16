@@ -5,7 +5,7 @@
         <AlertMessage>
             <div class="d-flex">
                 <i class="bi bi-info-circle me-2"></i>
-                <div>Choisir le KN a réaliser dans la liste de gauche.</div>
+                <div>Choisissez le KN à réaliser dans la liste de gauche.</div>
             </div>
         </AlertMessage>
     </div>

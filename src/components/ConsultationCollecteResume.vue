@@ -1,34 +1,43 @@
 <template>
     <div>
         <div class="card my-2">
-            <div class="card-header d-flex align-items-center justify-content-between">
+            <div class="card-header d-flex align-items-baseline justify-content-between">
                 <h4 class="fs-5 card-title">Informations générales </h4>
 
                 <div>
                     Note générale:
-                    <div class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
+                    <div v-if="collecte.result_var" class="badge fs-5 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)">
                         {{collecte.result_var}}
                     </div>
+                    <div v-else class="badge fs-5 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
                 </div>
             </div>
 
             <div class="card-body">
-                <div>
-                    <span>Type de KN: </span> <span class="">{{collecte.formulaire.groupe}}</span>
+                <div class="mb-2">
+                    <strong>Type de KN:</strong><span class="fw-lighter ms-2">{{collecte.formulaire.groupe}}</span>
                 </div>
-
-                <div class="my-2">
-                    <strong class="d-block">Commentaire général: </strong>
-
-                    <div class="fw-lighter">
+                <div class="mb-2">
+                    <strong class="d-block">Contrôleur:</strong>
+                    <span class="ms-2 fw-lighter">
+                        {{collecte.enqueteur__structure__personnel_id}}
+                    </span>
+                </div>
+                <div class="mb-2">
+                    <strong class="d-block">Opérateur:</strong>
+                    <span class="ms-2 fw-lighter">
+                        {{collecte.cible__structure__personnel_id}}
+                    </span>
+                </div>
+                <div class="mb-2">
+                    <strong class="d-block">Commentaire général:</strong>
+                    <div class="ms-2 fw-lighter">
                         {{collecte.commentaire}}
                     </div>
                 </div>
-
-                <div>
+                <div class="mb-2">
                     <strong class="d-block">Rapport final:</strong>
-
-                    <div class="fw-lighter">
+                    <div class="ms-2 fw-lighter">
                         {{collecte.rapport}}
                     </div>
                 </div>
@@ -36,8 +45,14 @@
         </div>
 
         <div class="card my-2">
-            <div class="card-header">
+            <div class="card-header d-flex align-items-baseline justify-content-between">
                 <h4 class="fs-5 card-title">Formulaire</h4>
+                <div>
+                    Réponses évaluées:
+                    <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
+                        {{collecte.nb_reponse}}/ {{collecte.nb_question}}
+                    </div>
+                </div>
             </div>
 
             <div class="accordion accordion-flush" id="formulaireResume">
@@ -52,13 +67,13 @@
                         <div class="accordion-body">
                             <div class="list-group list-group-flush">
                                 <template v-for="question in getBlocQuestions(bloc)" :key="question.id">
-                                    <div class="list-group-item" v-if="getQuestionReponse(question)">
+                                    <div class="list-group-item">
+                                    <!-- <div class="list-group-item" v-if="getQuestionReponse(question)">remplacer ci-dessus si on veut afficher que les items qui ont eu ue réponse --> 
                                         <div class="d-flex align-items-center justify-content-between">
                                             <em class="d-bloc">{{question.ligne}}</em>
                                             <strong class="badge text-uppercase" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
                                         </div>
-    
-                                        <div>
+                                            <div>
                                             <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
                                         </div>
                                     </div>
