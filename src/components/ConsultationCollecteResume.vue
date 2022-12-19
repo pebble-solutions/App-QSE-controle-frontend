@@ -88,7 +88,7 @@
         </div>
 
         <div class="text-center">
-            <button type="button" class="btn btn-success" @click="$emit('updateEdit')">
+            <button type="button" class="btn btn-primary" @click="$emit('updateEdit')">
                 Modifier les informations
             </button>
         </div>
@@ -96,6 +96,7 @@
 </template>
 
 <script lang="js">
+
 import { mapState } from 'vuex';
 
 

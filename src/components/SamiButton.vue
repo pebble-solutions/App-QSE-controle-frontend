@@ -16,7 +16,7 @@
                     'btn-primary': 'a' == button && 'a' == modelValue,
 
                     'btn-outline-success': 's' == button && 's' != modelValue || !modelValue && 's' == button,
-                    'btn-success': 's' == button && 's' == newValue
+                    'btn-success': 's' == button && 's' == modelValue
                 }"
 
                 @click="updateSami(button)"
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+
 export default {
     props: {
         modelValue: String

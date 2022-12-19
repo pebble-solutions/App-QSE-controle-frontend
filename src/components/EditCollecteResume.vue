@@ -28,12 +28,13 @@
                 </div>
 
                 <div class="mb-2">
-                    <label class="form-label fw-bold">Opérateur</label>
-                    <select class="form-select" v-model="itemResponse.cible__structure__personnel_id">
+                    <div class="fw-bold">Opérateur</div>
+                    <span class="ms-2 fw-lighter">{{operateur}}</span>
+                    <!-- <select class="form-select" v-model="itemResponse.cible__structure__personnel_id">
                         <option v-for="personnel in listActifs" :key="'personnel-'+personnel.id" :value="personnel.id">
                             {{personnel.cache_nom}}
                         </option>
-                    </select>
+                    </select> -->
                 </div>
 
                 <div class="mb-2">
@@ -89,7 +90,7 @@
         </div>
 
         <div class="text-center">
-            <button tupe="button" class="btn btn-success" @click="updateCollecte()" :disabled="pending.buttonSave">
+            <button tupe="button" class="btn btn-primary" @click="updateCollecte()" :disabled="pending.buttonSave">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.buttonSave"></span>
                 Enregistrer les modifications
             </button>
@@ -178,6 +179,21 @@ export default {
          */
         controleur() {
             let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.enqueteur__structure__personnel_id);
+
+            if (controleurName) {
+                return controleurName.cache_nom;
+            } else {
+                return 'Contrôleur non renseigné'
+            }
+        },
+
+        /**
+         * Récupere le nom de l'opérateur a partir d'un id
+         * 
+         * @return {string}
+         */
+         operateur() {
+            let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.cible__structure__personnel_id);
 
             if (controleurName) {
                 return controleurName.cache_nom;
@@ -313,7 +329,7 @@ export default {
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
             .then((data) => {
                 console.log('retour edit', data);
-            }).catch(this.$app.catchError).finaly(() => this.pending.buttonSave = false);
+            }).catch(this.$app.catchError).finally(() => this.pending.buttonSave = false);
         }
     },
 
