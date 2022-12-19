@@ -17,18 +17,23 @@
                 <div class="mb-2">
                     <strong>Type de KN:</strong><span class="fw-lighter ms-2">{{collecte.formulaire.groupe}}</span>
                 </div>
-                <div class="mb-2">
-                    <strong class="d-block">Contrôleur:</strong>
-                    <span class="ms-2 fw-lighter">
-                        {{collecte.enqueteur__structure__personnel_id}}
-                    </span>
+
+                <div class="row">
+                    <div class="mb-2 col">
+                        <strong class="d-block">Contrôleur:</strong>
+                        <span class="ms-2 fw-lighter">
+                            {{controleur}}
+                        </span>
+                    </div>
+
+                    <div class="mb-2 col border-start border-dark">
+                        <strong class="d-block">Opérateur:</strong>
+                        <span class="ms-2 fw-lighter">
+                            {{opérateur}}
+                        </span>
+                    </div>
                 </div>
-                <div class="mb-2">
-                    <strong class="d-block">Opérateur:</strong>
-                    <span class="ms-2 fw-lighter">
-                        {{collecte.cible__structure__personnel_id}}
-                    </span>
-                </div>
+
                 <div class="mb-2">
                     <strong class="d-block">Commentaire général:</strong>
                     <div class="ms-2 fw-lighter">
@@ -63,31 +68,36 @@
                         </button>
                     </h2>
 
-                    <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id" data-bs-parent="#formulaireResume">
+                    <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id">
                         <div class="accordion-body">
                             <div class="list-group list-group-flush">
-                                <template v-for="question in getBlocQuestions(bloc)" :key="question.id">
-                                    <div class="list-group-item">
-                                    <!-- <div class="list-group-item" v-if="getQuestionReponse(question)">remplacer ci-dessus si on veut afficher que les items qui ont eu ue réponse --> 
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <em class="d-bloc">{{question.ligne}}</em>
-                                            <strong class="badge text-uppercase" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
-                                        </div>
-                                            <div>
-                                            <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
-                                        </div>
+                                <div class="list-group-item" v-for="question in getBlocQuestions(bloc)" :key="question.id">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <em class="d-bloc">{{question.ligne}}</em>
+                                        <strong class="badge text-uppercase" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
                                     </div>
-                                </template>
+                                        <div>
+                                        <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="text-center">
+            <button type="button" class="btn btn-success" @click="$emit('updateEdit')">
+                Modifier les informations
+            </button>
+        </div>
     </div>
 </template>
 
 <script lang="js">
+import { mapState } from 'vuex';
+
 
 export default {
     props: {
@@ -95,6 +105,7 @@ export default {
     },
 
     computed: {
+        ...mapState(['listActifs']),
         /**
          * Racourcis vers la liste des blocs
          * @return {array}
@@ -117,7 +128,37 @@ export default {
          */
         reponses() {
             return this.collecte?.reponses;
-        } 
+        },
+
+        /**
+         * Récupere le nom du controleur a partir d'un id
+         * 
+         * @return {string}
+         */
+        controleur() {
+            let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.enqueteur__structure__personnel_id);
+
+            if (controleurName) {
+                return controleurName.cache_nom;
+            } else {
+                return 'Contrôleur non renseigné'
+            }
+        },
+
+        /**
+         * Récupere le nom du controleur a partir d'un id
+         * 
+         * @return {string}
+         */
+        opérateur() {
+            let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.cible__structure__personnel_id);
+
+            if (controleurName) {
+                return controleurName.cache_nom;
+            } else {
+                return 'Opérateur non renseigné'
+            }
+        },
     },
 
     methods: {

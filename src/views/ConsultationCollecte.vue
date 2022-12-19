@@ -15,23 +15,9 @@
 
         <div class="list-group">
             <div v-for="col in collectes" :key=col.id class="list-group-item" @click="loadCollecteModal(col.id)" type="button">
-                <div class="d-flex flex-row justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <strong class="me-2 text-secondary" style="width:40px">#{{col.id}}</strong>
-                        
-                        <div>
-                            <span  v-if="!getGroupNameFromId(col.information__groupe_id)" class="me-2 text-warning">Type de KN non programmé </span>
-                            <span v-else class="me-2">{{getGroupNameFromId(col.information__groupe_id)}}</span>
-                            <span class="me-2 text-warning" v-if="!col.date">Date non programmée</span>
-                            <span v-else class="me-2">{{changeFormatDateLit(col.date)}}</span>
-                            <span  v-if="!getPersonnelNameFromId(col.enqueteur__structure__personnel_id)" class="me-2 text-warning">Contrôleur non programmé </span>
-                            <span v-else class="me-2">Contrôleur: {{getPersonnelNameFromId(col.enqueteur__structure__personnel_id)}}</span>
-                            <span  v-if="!getPersonnelNameFromId(col.cible__structure__personnel_id)" class="me-2 text-warning">Opérateur non programmé </span>
-                            <span v-else class="me-2">Opérateur: {{getPersonnelNameFromId(col.cible__structure__personnel_id)}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <collecte-headband :collecte="col" :personnels="listActifs" :editable="false"/>
+            </div> 
+
         </div>
         <router-view></router-view>
     </div>
@@ -41,6 +27,7 @@
 import { mapActions, mapState } from 'vuex';
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
+import CollecteHeadband from '../components/CollecteHeadband.vue';
 
 export default {
 
@@ -139,8 +126,10 @@ export default {
 
         loadCollecteModal(colId) {
             this.$router.push({name:'ConsultationResponses', params:{id: this.$route.params.id, idCollecte: colId}});
-        }
+        },
     },
+
+    components: { CollecteHeadband },
 
     beforeRouteUpdate(to) {
         if (this.formulaire?.id != to.params.id) {

@@ -15,43 +15,9 @@
             </div>
         </div>
 
-        <div class="list-group">
-            <div v-for="col in collectes" :key=col.id class="list-group-item">
-                <div class="d-flex flex-row justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-
-                        <strong class="me-2 text-secondary" style="width:40px">#{{col.id}}</strong>
-                        <div>
-                            <div>
-                                <div  v-if="!getPersonnelNameFromId(col.enqueteur__structure__personnel_id)" class="me-2 text-warning">Contrôleur non programmé </div>
-                                <div v-else class="d-flex align-items-center">
-                                    <span><user-image :name="getPersonnelNameFromId(col.enqueteur__structure__personnel_id)" className="me-1" size="sm" /></span>
-                                    Contrôleur: {{getPersonnelNameFromId(col.enqueteur__structure__personnel_id)}}
-                                </div>
-                                <div class="d-flex align-items-center text-secondary">
-                                    <i class="bi bi-arrow-return-right me-1 ms-2"></i>
-                                    <div v-if="!getPersonnelNameFromId(col.cible__structure__personnel_id)" class="me-2 text-warning">Opérateur non programmé </div>
-                                    <div v-else class="d-flex align-items-center fs-7">
-                                        <span><user-image :name="getPersonnelNameFromId(col.cible__structure__personnel_id)" className="me-1" size="sm" /></span>
-                                        Opérateur: {{getPersonnelNameFromId(col.cible__structure__personnel_id)}}
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- <span  v-if="!getPersonnelNameFromId(col.cible__structure__personnel_id)" class="me-2 text-warning">Opérateur non programmé </span>
-                            <span v-else class="me-2">Opérateur: {{getPersonnelNameFromId(col.cible__structure__personnel_id)}}</span> -->
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="mb-1">
-                            <i class="bi bi-calendar-event me-2"></i>
-                            <span class="me-2 text-warning" v-if="!col.date">Date non programmée</span>
-                            <span v-else class="me-2">{{changeFormatDateLit(col.date)}}</span>
-                        </div>
-                        <router-link :to="{name:'EditCollecte', params: {idCollecte:col.id} }" v-slot="{navigate,href}" custom>
-                            <a :href="href" @click="navigate" class="btn btn-light"><i class="bi bi-pencil"></i></a>
-                        </router-link>
-                    </div>
-                </div>
+        <div class="list-group" v-if="collectes">
+            <div v-for="col in collectes" :key=col.id class="list-group-item" @click="editCollecte(col.id)" type="button">
+                <collecte-headband :collecte="col" :personnels="listActifs"/>
             </div>
         </div>
 
@@ -63,12 +29,10 @@
 <script>
 
 import { mapActions, mapState } from 'vuex';
-import date from 'date-and-time';
-import fr from 'date-and-time/locale/fr';
-import UserImage from '../components/pebble-ui/UserImage.vue';
+import CollecteHeadband from '../components/CollecteHeadband.vue';
 
 export default {
-  components: { UserImage },
+  components: { CollecteHeadband },
     data() {
         return {
             newKn: false,
@@ -140,39 +104,22 @@ export default {
 				.catch(this.$app.catchError)
 				.finally(() => this.pending.collectes = false);
 		},
-    
+
         /**
-         * Récupère le nom d'un personnel actif via un id
-         * 
-         * @param {number} personnelId l'id d'un personnel actif
-         * 
-         * @return {string}
+         * ouvre une modal pour éditer la collecte
+         * @param {number} collecteId 
          */
-        getPersonnelNameFromId(personnelId) {
-            let personnelName = this.listActifs.find(personnel => personnel.id == personnelId);
-    
-            if (personnelName) {
-                return personnelName.cache_nom;
-            } else {
-                return null
-            }
+        editCollecte(collecteId) {
+            this.$router.push({name: 'EditCollecte', params: {idCollecte: collecteId}});
         },
+    
         updateKn(){
             this.newKn = false;
         },
         modifKn(){
             
         },
-        /**
-		 * Modifie le format de la date entrée en paramètre et la retourne 
-		 * sous le format 01 févr. 2021
-		 * @param {string} date 
-		 */
 
-		changeFormatDateLit(el) {
-			date.locale(fr);
-			return date.format(new Date(el), 'DD MMM YYYY')
-		}
     },
     beforeRouteUpdate(to) {
         if (this.formulaire?.id != to.params.id) {

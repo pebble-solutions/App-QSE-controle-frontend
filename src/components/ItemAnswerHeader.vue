@@ -1,5 +1,5 @@
 <template>
-  <h3 class="accordion-header" :id="'heading_'+ ligne.id">
+    <h3 class="accordion-header" :id="'heading_'+ ligne.id">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse_'+ ligne.id"
             aria-expanded="true" :aria-controls="'collapse_'+ ligne.id">
             <span>{{ligne.ligne}}</span>
