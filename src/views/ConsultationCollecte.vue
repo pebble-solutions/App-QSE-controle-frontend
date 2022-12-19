@@ -1,5 +1,5 @@
 <template>
-    <div v-if="formulaire">
+    <div v-if="formulaire" class="container">
         <div class="d-flex flex-row justify-content-between align-items-center py-3">
             <div class="d-flex flex-row justify-content-between align-items-center">
                 <router-link :to="{name:'consultation'}" v-slot="{navigate,href}" custom>
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+
 import { mapActions, mapState } from 'vuex';
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
