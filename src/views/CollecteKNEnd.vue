@@ -4,7 +4,7 @@
 
 <script>
 
-import ResumeKn from '@/components/ResumeKn.vue'
+import ResumeKn from '@/components/ResumeKn.vue';
 
 export default {
     components: {ResumeKn}

@@ -1,7 +1,26 @@
 <template>
+    
     <div class="card my-3" v-if="bloc">
         <div  class="card-header">
-            <h2 class="card-title">{{bloc.bloc}}</h2>
+            <div class="d-flex justify-content-between">
+
+                <h2 class="card-title">{{bloc.bloc}}</h2>
+                <div class="dropdown" v-if="$route.params.bloc">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li v-for="blocItem in collecte.formulaire.blocs" :key="blocItem.id">
+                            <router-link :to="'/collecte/'+collecte.id+'/bloc/'+blocItem.id" custom v-slot="{ navigate, href }">
+                                <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
+                                    {{blocItem.bloc}}
+                                    <i class="bi bi-check2" v-if="$route.params.bloc == blocItem.id"></i>
+                                </a>
+                            </router-link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
             <div class="fw-light fst-italic mb-2">
                 Questions :  {{nbAnswers}} / {{lignes?.length}}
@@ -21,7 +40,7 @@
                 </router-link>
 
                 <button v-else class="btn btn-success" @click="sendResp()">
-                    Terminer le questionnaire
+                    Évaluation générale
                 </button>
             </div>
         </div>
@@ -39,7 +58,7 @@
         </div> 
         
         <div class="d-flex justify-content-center mt-3" v-else>
-            <AlertMessage variant="warning w-50 text-center">Aucune questions renseignées</AlertMessage>
+            <AlertMessage variant="warning w-50 text-center">Aucune question renseignée </AlertMessage>
         </div>
     </div>
 

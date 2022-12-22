@@ -45,6 +45,7 @@
 import { mapState } from 'vuex';
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
+
 export default {
 
     data(){

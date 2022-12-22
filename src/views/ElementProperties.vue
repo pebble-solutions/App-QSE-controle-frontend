@@ -17,7 +17,6 @@
 <script>
 
 import AppModal from '@/components/pebble-ui/AppModal.vue';
-
 import {mapState} from 'vuex';
 
 export default {

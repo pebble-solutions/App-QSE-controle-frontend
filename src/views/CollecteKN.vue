@@ -1,35 +1,41 @@
 <template>
     <div class="container py-3">
-        <div class="card"  v-if="collecte">
-            <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="">
-                        Kn n° {{collecte.id}}
+        <div v-if="collecte">
+            <div class="">
+                <div class="d-flex flex-nowrap justify-content-between align-items-center mb-2">
+                    <div class="badge bg-secondary me-1">
+                        <span>
+                            Kn n° {{collecte.id}}
+                        </span>
                     </div>
-    
                     <div class="">
-                        <i class="bi bi-person-badge-fill"></i>
-                        {{agent}}
+                        <span class="fw-lighter">{{typeKn}}</span>
                     </div>
-    
+                </div>
+                <div class="d-flex flex-nowrap justify-content-between align-items-center">
+                    <div >
+                        <div>
+                            <i class="bi bi-person-badge-fill me-1"></i>
+                            {{agent}}
+                        </div>
+                    </div>
                     <div class="">
-                        <span class="badge text-bg-secondary">{{typeKn}}</span>
+                        <div>
+                            <i class="bi bi-person-fill-check me-1"></i>
+                            {{controleur}}
+                        </div>
                     </div>
-    
                     <div class="">
-                        <i class="bi bi-person-fill-check"></i>
-                        {{controleur}}
+                        <div>
+                            <i class="bi bi-boxes me-1"></i>
+                            {{projet}}
+                        </div>
                     </div>
-    
-                    <div class="">
-                        <i class="bi bi-boxes"></i>
-                        {{projet}}
-                    </div>
-    
-                    <div class="dropdown" v-if="$route.params.bloc">
+                </div>
+            </div>
+                    <!-- <div class="dropdown" v-if="$route.params.bloc">
                         <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <!-- <i class="bi bi-list"></i> -->
-                            Questionnaire
+                            <i class="bi bi-list"></i>
                         </button>
                         <ul class="dropdown-menu">
                             <li v-for="blocItem in collecte.formulaire.blocs" :key="blocItem.id">
@@ -41,16 +47,16 @@
                                 </router-link>
                             </li>
                         </ul>
-                    </div>
-                </div>
-            </div>
+                    </div> -->
+                <!-- </div> -->
+            <!-- </div> -->
     
             <div class="alert alert-success my-2" v-if="collecte.done == 'OUI'">
                 <i class="bi bi-check-circle"></i> Cette collecte est terminée et non modifiable
             </div> 
     
             <template v-else>
-                <div v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
+                <div class="card mt-3" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
                     <intro></intro>
                 </div>
             </template>
@@ -130,7 +136,7 @@ export default {
 			if (projetName) {
 				return projetName.intitule;
 			} else {
-				return 'projet inexsitant'
+				return 'Chantier non renseigné'
 			}
 		},
 

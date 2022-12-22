@@ -1,7 +1,7 @@
 <template>
     <div class="card my-3" v-if="collecte">
         <div class="card-header">
-            <h2 class="card-title">Bilan du contrôle, évaluation</h2>
+            <h2 class="card-title">Bilan du contrôle</h2>
 
             <div class="from-controle" v-if="stats">
                 <table class="table table-bordered bg-light">
@@ -53,7 +53,7 @@
             </div>
 
             <div>
-                <label for="rapport" class="fs-3">Votre rapport:</label>
+                <label for="rapport" class="fs-3">Vos remarques complémentaires:</label>
                 <textarea class="form-control text-muted w-100" placeholder="..." id="rapport" v-model="itemResponse.rapport"></textarea>
             </div>
 
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+
 import {mapActions, mapState} from 'vuex';
 
 export default {
