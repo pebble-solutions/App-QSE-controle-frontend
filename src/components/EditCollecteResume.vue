@@ -1,21 +1,45 @@
 <template>
     <div v-if="collecte">
         <div class="card my-2">
-            <div class="card-header d-flex align-items-baseline justify-content-between">
-                <h4 class="fs-5 card-title">Informations générales </h4>
-
-                <div class="d-flex align-items-baseline" v-if="itemResponse.result">
-                    <span class="me-1">Note générale: </span>
-                    <sami-button v-model="itemResponse.result"/>
+            <div class="card-header">
+                <div class="d-flex flex-column">
+                    <h4 class="fs-5 card-title">
+                        <span class="fw-lighter">{{collecte.formulaire.groupe}} du {{ collecte.date }}</span>
+                        <div class="d-flex align-items-baseline justify-content-start mt-2">
+                            <div v-if="itemResponse.result">
+                                <span class="me-2">Note générale:</span>
+                                <span class="badge" :class="classNameFromSAMI(itemResponse.result)">{{itemResponse.result}}</span>
+                            </div>
+                            <div v-else>
+                                <span class="me-1">Note générale:</span>
+                                <span class="badge" :class="classNameFromSAMI()">Non évaluée</span>
+                            </div>
+                        </div>
+                    </h4>
+                    <div class="d-flex justify-content-end align-items-center">
+                        <span class="me-2 text-warning">modification:</span>
+                        <sami-button v-if="itemResponse.result" v-model="itemResponse.result">{{itemResponse.result}}</sami-button>
+                        <sami-button v-else v-model="itemResponse.result"></sami-button>
+                    </div>
                 </div>
             </div>
 
             <div class="card-body" v-if="listActifs">
-                <div class="mb-2">
-                    <div class="fw-bold">Type de KN:</div>
-                    <span class="fw-lighter ms-2">{{collecte.formulaire.groupe}}</span>
-                </div>
+                <div class="row">
+                    <div class="mb-2 col">
+                        <strong class="d-block">Contrôleur:</strong>
+                        <span class="ms-2 fw-lighter">
+                            {{controleur}}
+                        </span>
+                    </div>
 
+                    <div class="mb-2 col border-start border-dark">
+                        <strong class="d-block">Opérateur:</strong>
+                        <span class="ms-2 fw-lighter">
+                            {{operateur}}
+                        </span>
+                    </div>
+                </div>
                 <div class="mb-2">
                     <!-- <label class="form-label fw-bold">Contrôleur</label>
                     <select class="form-select" v-model="itemResponse.enqueteur__structure__personnel_id">
@@ -23,13 +47,11 @@
                             {{personnel.cache_nom}} 
                         </option>
                     </select> -->
-                    <div class="fw-bold">Contrôleur:</div>
-                    <span class="ms-2 fw-lighter">{{controleur}}</span>
+            
                 </div>
 
                 <div class="mb-2">
-                    <div class="fw-bold">Opérateur</div>
-                    <span class="ms-2 fw-lighter">{{operateur}}</span>
+                
                     <!-- <select class="form-select" v-model="itemResponse.cible__structure__personnel_id">
                         <option v-for="personnel in listActifs" :key="'personnel-'+personnel.id" :value="personnel.id">
                             {{personnel.cache_nom}}
@@ -47,16 +69,17 @@
                     <textarea class="form-control d-block" v-model="itemResponse.rapport"></textarea>
                 </div>
             </div>
+            <div v-for="rep in collecte.reponses" :key="rep.id">
+                {{ rep.question}} {{ rep.data }}{{ rep.data_var }} {{rep.ligne}}
+
+            </div>
         </div>
 
         <div class="card my-2">
             <div class="card-header d-flex align-items-baseline justify-content-between">
-                <h4 class="fs-5 card-title">Formulaire</h4>
-                <div>
-                    Réponses évaluées:
-                    <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
-                        {{nbReponse}}/ {{collecte.nb_question}}
-                    </div>
+                <h4 class="fs-5 card-title">Nombre d'items évalués</h4>
+                <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
+                    {{collecte.nb_reponse}}/{{collecte.nb_question}}
                 </div>
             </div>
 
@@ -64,22 +87,31 @@
                 <div v-for="bloc in blocs" :key="'bloc-'+bloc.id" class="accordion-item">
                     <h2 class="accordion-header" :id="'heading-'+bloc.id">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-'+bloc.id" aria-expanded="true" :aria-controls="'collapse-'+bloc.id">
-                            {{bloc.bloc}}
+                            {{bloc.bloc}} {{ bloc.id }}
                         </button>
                     </h2>
-
                     <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id">
                         <div class="accordion-body">
                             <div class="list-group list-group-flush">
-                                <template v-for="reponse in itemResponse.reponses" :key="'reponse-'+reponse.question">                                    
+                                <template v-for="reponse in itemResponse.reponses" :key="'reponse-'+reponse.question">  
                                     <div class="list-group-item" v-if="bloc.id == reponse.bloc">
+
                                         <div class="d-flex align-items-center justify-content-between" v-if="reponse.reponse">
                                             <div class="fst-italic">{{quesionLigne(reponse.question)}}</div>
-
-                                            <sami-button v-model="reponse.reponse"></sami-button>
+                                            <div class="badge" :class="classNameFromSAMI(reponse.reponse)" >{{reponse.reponse}}</div>
                                         </div>
-
-                                        <textarea class="form-control d-block mt-2" v-model="reponse.commentaire" placeholder="Commentaire..."></textarea>
+                                        <div class="d-flex align-items-center justify-content-between" v-else>
+                                            <div class="fst-italic">{{quesionLigne(reponse.question)}}</div>
+                                            <div class="badge" :class="classNameFromSAMI(reponse.reponse)">Non évaluée</div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-start">
+                                            <span class="me-2 text-warning">modification:</span>
+                                            <sami-button v-model="reponse.reponse">{{reponse.reponse}}</sami-button>
+                                        </div>
+                                        <!-- <sami-button v-model="reponse.reponse"></sami-button>
+                                        <div class="fst-italic">{{quesionLigne(reponse.question)}}</div>
+                                        v-if="reponse.reponse  {{reponse.commentaire}} -->
+                                        <textarea class="form-control d-block mt-2" v-model="reponse.commentaire" placeholder=""></textarea>
                                     </div>
                                 </template>
                             </div>
@@ -94,6 +126,9 @@
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.buttonSave"></span>
                 Enregistrer les modifications
             </button>
+            <div>
+                items modifiés {{ nbReponse }}
+            </div>
         </div>
     </div>
 </template>
@@ -162,6 +197,9 @@ export default {
          */
         nbReponse() {
             let count = 0;
+            console.log(this.itemResponse.reponses, 'itemResponse.reponses');
+            console.log(this.collecte.nb_reponse,'collecte');
+            console.log(this.collecte, 'toatal')
 
             this.itemResponse.reponses?.forEach(rep => {
                 if (rep.reponse) {
@@ -192,13 +230,13 @@ export default {
          * 
          * @return {string}
          */
-         operateur() {
-            let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.cible__structure__personnel_id);
+        operateur() {
+            let operateurName = this.listActifs.find(personnel => personnel.id == this.collecte.cible__structure__personnel_id);
 
-            if (controleurName) {
-                return controleurName.cache_nom;
+            if (operateurName) {
+                return operateurName.cache_nom;
             } else {
-                return 'Contrôleur non renseigné'
+                return 'opérateur non renseigné'
             }
         },
     },
@@ -244,7 +282,16 @@ export default {
          * @return {string|null}
          */
         getQuestionReponse(question) {
+            console.log(this.reponses, 'reponses.question');
+            console.log(question.id, 'id quetion');
+            console.log(question.question, 'question');
+            
             let reponse = this.reponses.find(e => e.question == question.id);
+            if(reponse){
+                console.log(reponse.data, 'data');
+                console.log(reponse.data_var,'var');
+                console.log (reponse.question, 'reponse question')
+            }
             return reponse ? reponse.data : null;
         },
 
@@ -294,7 +341,7 @@ export default {
          * Initialise la data itemResponse en fonction de la collecte recu
          */
         initItemReponse() {
-            this.itemResponse.result = this.collecte.result_var;
+            this.itemResponse.result = this.collecte.reponses.data_var; //this.collecte.result_var
             this.itemResponse.enqueteur__structure__personnel_id = this.collecte.enqueteur__structure__personnel_id;
             this.itemResponse.cible__structure__personnel_id = this.collecte.cible__structure__personnel_id;
             this.itemResponse.commentaire = this.collecte.commentaire;

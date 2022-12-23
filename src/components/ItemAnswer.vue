@@ -23,9 +23,10 @@
 
         <div v-if="itemResponse.comment">{{itemResponse.comment}}</div>
 
-        <div class="mt-3">
+        <div class="input-group mt-3">
             <label  class="form-label d-none">Commentaire</label>
             <input @blur="recordC(id)"  type="text" class="form-control"  placeholder="Votre commentaire" v-model="comment">
+            <button type="img"><i class="bi bi-camera"></i></button>
         </div>
     </div>
 </template>

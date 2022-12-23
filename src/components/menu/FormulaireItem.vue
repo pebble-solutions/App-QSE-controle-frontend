@@ -8,7 +8,7 @@
                 <div class="d-flex justify-content-between align-items-center">{{formulaire.groupe}}</div>
             </div>
         </div>
-        <div class="badge bg-secondary" v-if="num">{{num}}</div>
+        <div class="badge bg-secondary ms-1" v-if="num">{{num}}</div>
     </div>
 </template>
 

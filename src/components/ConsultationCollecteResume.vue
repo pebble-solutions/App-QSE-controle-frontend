@@ -1,24 +1,27 @@
 <template>
     <div>
         <div class="card my-2">
-            <div class="card-header d-flex align-items-baseline justify-content-between">
-                <h4 class="fs-5 card-title">Informations générales </h4>
-
-                <div>
-                    Note générale:
-                    <div v-if="collecte.result_var" class="badge fs-5 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)">
-                        {{collecte.result_var}}
+            <div class="card-header">
+                <div class="d-flex flex-column">
+                    <h4 class="fs-5 card-title">
+                        <span class="fw-lighter me-1">{{collecte.formulaire.groupe}} du {{changeFormatDateLit(collecte.date)}}</span>
+                    </h4>
+                    <div>
+                        Note générale:
+                        <div v-if="collecte.result_var" class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
+                            {{collecte.result_var}}
+                        </div>
+                        <div v-else class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
                     </div>
-                    <div v-else class="badge fs-5 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
                 </div>
+                <div class="mb-2">
+                </div>
+            
             </div>
 
             <div class="card-body">
-                <div class="mb-2">
-                    <strong>Type de KN:</strong><span class="fw-lighter ms-2">{{collecte.formulaire.groupe}}</span>
-                </div>
 
-                <div class="row">
+                <div class="row" v-if="listActifs">
                     <div class="mb-2 col">
                         <strong class="d-block">Contrôleur:</strong>
                         <span class="ms-2 fw-lighter">
@@ -51,12 +54,9 @@
 
         <div class="card my-2">
             <div class="card-header d-flex align-items-baseline justify-content-between">
-                <h4 class="fs-5 card-title">Formulaire</h4>
-                <div>
-                    Réponses évaluées:
-                    <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
-                        {{collecte.nb_reponse}}/ {{collecte.nb_question}}
-                    </div>
+                <h4 class="fs-5 card-title">Nombre d'items évalués</h4>     
+                <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
+                    {{collecte.nb_reponse}}/ {{collecte.nb_question}}
                 </div>
             </div>
 
@@ -74,7 +74,7 @@
                                 <div class="list-group-item" v-for="question in getBlocQuestions(bloc)" :key="question.id">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <em class="d-bloc">{{question.ligne}}</em>
-                                        <strong class="badge text-uppercase" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
+                                        <strong class="badge text-uppercase ms-1" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
                                     </div>
                                         <div>
                                         <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
@@ -98,6 +98,8 @@
 <script lang="js">
 
 import { mapState } from 'vuex';
+import date from 'date-and-time';
+import fr from 'date-and-time/locale/fr';
 
 
 export default {
@@ -165,6 +167,17 @@ export default {
     methods: {
 
         /**
+		 * Modifie le format de la date entrée en paramètre et la retourne 
+		 * sous le format 01 févr. 2021
+		 * @param {string} date 
+		 */
+
+		changeFormatDateLit(el) {
+			date.locale(fr);
+			return date.format(new Date(el), 'DD MMM YYYY')
+		},
+
+        /**
          * Si premier index de l'object return true sinon false
          * 
          * @param {Number} index Index de l'object box
@@ -199,7 +212,7 @@ export default {
          */
         getQuestionReponse(question) {
             let reponse = this.reponses.find(e => e.question == question.id);
-            return reponse ? reponse.data : null;
+            return reponse ? reponse.data : null; /// pb?
         },
 
         /**
@@ -246,4 +259,5 @@ export default {
 
     components: {  }
 }
+
 </script>

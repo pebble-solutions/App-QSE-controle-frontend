@@ -12,6 +12,7 @@
 </template>
 
 <script>
+
 import { mapState } from 'vuex';
 import ProgrammationCollecteModal from '../components/ProgrammationCollecteModal.vue';
 
