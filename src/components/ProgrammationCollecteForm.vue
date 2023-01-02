@@ -3,7 +3,7 @@
         <div class="row g-2">
             <div class="col mb-3">
                 <label for="collecteFormulaire" class="form-label">Type de KN</label>
-                <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="tmpCollecte.formulaire">
+                <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="tmpCollecte.formulaire" required>
                     <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>
                 </select>
             </div>
