@@ -2,7 +2,7 @@
     <div v-if="tmpCollecte">
         <div class="row g-2">
             <div class="col mb-3">
-                <label for="collecteFormulaire" class="form-label">Type de KN</label>
+                <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
                 <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="tmpCollecte.formulaire" required>
                     <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>
                 </select>

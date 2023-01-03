@@ -73,7 +73,7 @@
                             <div class="list-group list-group-flush">
                                 <div class="list-group-item" v-for="question in getBlocQuestions(bloc)" :key="question.id">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <em class="d-bloc">{{question.ligne}}</em>
+                                        <em class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">{{question.ligne}}</em>
                                         <strong class="badge text-uppercase ms-1" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
                                     </div>
                                         <div>

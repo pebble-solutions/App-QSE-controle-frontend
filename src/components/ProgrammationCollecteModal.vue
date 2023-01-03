@@ -57,7 +57,7 @@ export default {
          * @return {string}
          */
         title() {
-            return this.collecte.id ? "Modifier un KN programmé": "Nouvelle programmation KN";
+            return this.collecte.id ? "Modifier un contrôle programmé": "Programmation d'un contrôle";
         }
     },
 
@@ -65,7 +65,7 @@ export default {
 
     methods: {
 
-        ...mapActions(['refreshCollectes', 'removeCollecte']),
+        ...mapActions(['refreshCollectes', 'removeCollecte', 'refreshNbTodoFormulaires']),
 
         /**
          * Met à jour les informations d'une collecte
@@ -95,6 +95,7 @@ export default {
             this.tmpCollecte.environnement = 'private';
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte).then(data => {
                 this.refreshCollectes([data]);
+                this.refreshNbTodoFormulaires(data.information__groupe_id);
                 this.$emit('updated', data);
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },

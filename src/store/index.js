@@ -135,10 +135,19 @@ export default createStore({
 		/**
 		 * Enregistre les formulaires chargés dans le store
 		 * @param {Object} state State de VueX
-		 * @param {Array} forms tableau des formulaires
+		 * @param {Array|number} forms tableau des formulaires ou id d'un formulaire
 		 */
 		setFormulaires(state, forms) {
-			state.formulaires = forms;
+			if (typeof forms == 'number') {
+				let find = state.formulaires.find((form) => form.id == forms);
+
+				if (find) {
+					find.nb_todo++;
+				}
+
+			} else {
+				state.formulaires = forms;
+			}
 		},
 
 		/**
@@ -293,12 +302,14 @@ export default createStore({
 				data: payload
 			});
 		},
+
 		refreshBlocs (context, payload){
 			context.commit ('updateData', {
 				key:'blocs',
 				data: payload
 			});
 		},
+
 		refreshResponse (context,oReponse) {
 			context.commit ('setResponses', oReponse)
 		},
@@ -306,6 +317,16 @@ export default createStore({
 		refreshFormulaires (context, data) {
 			context.commit ('setFormulaires', data);
 		},
+
+		/**
+		 * 
+		 * @param {Object} context L'instance de vueX
+		 * @param {number} data id du formulaire
+		 */
+		refreshNbTodoFormulaires (context, data) {
+			context.commit ('setFormulaires', data);
+		},
+
 		refreshListActifs(context, data) {
 			context.commit('setListActifs', data);
 		},
