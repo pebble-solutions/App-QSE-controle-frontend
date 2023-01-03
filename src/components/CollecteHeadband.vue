@@ -34,19 +34,20 @@
         </div>
 
         <div class="d-flex align-items-baseline">
+            <div v-if="collecte.result_var && !editable" class="badge fs-5 text-uppercase mx-2" :class="classNameFromSAMI(collecte.result_var)">
+                {{collecte.result_var}}
+            </div>
+
             <div class="mb-1">
-                <i class="bi bi-calendar-event me-2"></i>
+                <i class="bi bi-calendar-event mx-2"></i>
                 <span class="me-2 text-warning" v-if="!collecte.date">Date non programmée</span>
                 <span v-else class="me-2">{{changeFormatDateLit(collecte.date)}}</span>
             </div>
 
-			<div class="btn btn-light" v-if="editable">
+			<!-- <div class="btn btn-light" v-if="editable">
 				<i class="bi bi-pencil"></i>
-			</div>
+			</div> -->
 
-			<div v-if="collecte.result_var && !editable" class="badge fs-5 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)">
-				{{collecte.result_var}}
-            </div>
         </div>
     </div>
     

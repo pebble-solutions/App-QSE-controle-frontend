@@ -34,43 +34,37 @@
                     </div>
                 </div>
             </div>
-                    <!-- <div class="dropdown" v-if="$route.params.bloc">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-list"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li v-for="blocItem in collecte.formulaire.blocs" :key="blocItem.id">
-                                <router-link :to="'/collecte/'+collecte.id+'/bloc/'+blocItem.id" custom v-slot="{ navigate, href }">
-                                    <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
-                                        {{blocItem.bloc}}
-                                        <i class="bi bi-check2" v-if="$route.params.bloc == blocItem.id"></i>
-                                    </a>
-                                </router-link>
-                            </li>
-                        </ul>
-                    </div> -->
-                <!-- </div> -->
-            <!-- </div> -->
-    
-            <div class="alert alert-success my-2" v-if="collecte.done == 'OUI'">
-                <i class="bi bi-check-circle"></i> Cette collecte est terminée et non modifiable
-            </div> 
+
+            <div class="my-2" v-if="collecte.done == 'OUI'">
+                <alert-message icon="bi-check-circle" variant="success">Cette collecte est terminée</alert-message>
+            </div>
+
+            <template v-if="collecte.done == 'OUI'">
+                <consultation-collecte-resume :collecte="collecte"/>
+            </template>
     
             <template v-else>
                 <div class="card mt-3" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
                     <intro></intro>
                 </div>
-            </template>
-            
-            <router-view></router-view>
+            </template>    
         </div>
+        
+        <div v-else>
+            <spinner/>
+        </div>
+
+        <router-view></router-view>
     </div>
 
 </template>
 
 <script>
 import {mapState, mapActions} from 'vuex';
+import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Intro from '../components/Intro.vue';
+import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
+import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
     data() {
@@ -81,7 +75,7 @@ export default {
         }
     },
 
-    components: { Intro },
+    components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner },
 
     computed: {
         ...mapState(['responses', 'collecte', 'listActifs', 'formulaires', 'projetsActif']),

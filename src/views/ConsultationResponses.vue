@@ -5,7 +5,9 @@
         size="lg"
         @modal-hide="backPreviousRoute()"
         className='modal-dialog-scrollable'>
-        <div v-if="pending.collecte">Chargement...</div>
+        <div v-if="pending.collecte">
+            <spinner></spinner>
+        </div>
 
         <!-- <div>
             <div v-if="!edit" class="d-flex justify-content-end align-items-center">
@@ -41,6 +43,7 @@ import { mapActions, mapState } from 'vuex';
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue'
 import EditCollecteRessume from "../components/EditCollecteResume.vue"
 import AppModal from '../components/pebble-ui/AppModal.vue'
+import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
 
@@ -100,7 +103,7 @@ export default {
         }
     },
 
-    components: {AppModal, ConsultationCollecteResume, EditCollecteRessume},
+    components: {AppModal, ConsultationCollecteResume, EditCollecteRessume, Spinner},
     
     mounted() {
         this.loadCollecte(this.$route.params.idCollecte);

@@ -121,7 +121,7 @@ export default {
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
             .then((data) => {
                 this.refreshCollectes([data]);
-                this.$router.push({name:'collecte'});
+                this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
             }).catch(this.$app.catchError).finally(() => this.pending.validation = false);
         },
 

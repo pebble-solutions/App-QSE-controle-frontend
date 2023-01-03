@@ -21,11 +21,9 @@
             </div>
         </div>
 
-        <div v-if="itemResponse.comment">{{itemResponse.comment}}</div>
-
         <div class="input-group mt-3">
             <label  class="form-label d-none">Commentaire</label>
-            <textarea @blur="recordC(id)" rows="3" class="form-control"  placeholder="Votre commentaire" v-model="comment"></textarea>
+            <textarea @blur="recordC(id)" rows="3" class="form-control"  placeholder="Votre commentaire" v-model="itemResponse.commentaire"></textarea>
 
             <div class="btn btn-outline-dark d-flex align-items-center d-none">
                 <label :for="'takepicture'+itemResponse.question" >
@@ -48,7 +46,6 @@ export default {
     data() {
         return {
             response : null,
-            comment: null,
             itemResponse: {
                 question:'',
                 reponse: '',
@@ -70,7 +67,6 @@ export default {
          */
         recordC(id) {
             this.itemResponse.question = id;
-            this.itemResponse.commentaire = this.comment;
             this.refreshResponse(this.itemResponse);
         },
 
@@ -98,6 +94,8 @@ export default {
                     bloc: find.bloc
                 }
             }
+
+            console.log('itemReponses', this.itemResponse);
         }
     },
 
