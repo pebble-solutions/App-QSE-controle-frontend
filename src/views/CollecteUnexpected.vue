@@ -37,7 +37,6 @@ export default {
          * @param {object} collecte
          */
         routeToFormulaire() {
-            console.log();
             this.$router.push("/collecte/");
         },
     },

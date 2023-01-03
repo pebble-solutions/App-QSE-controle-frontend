@@ -94,7 +94,6 @@ export default {
             this.pending.saveEdition = true;
             this.edit = false;
 
-            console.log('api', this.itemResponse);
             this.pending.saveEdition = false;
         },
 

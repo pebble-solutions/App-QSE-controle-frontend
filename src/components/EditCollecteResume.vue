@@ -197,9 +197,6 @@ export default {
          */
         nbReponse() {
             let count = 0;
-            console.log(this.itemResponse.reponses, 'itemResponse.reponses');
-            console.log(this.collecte.nb_reponse,'collecte');
-            console.log(this.collecte, 'toatal')
 
             this.itemResponse.reponses?.forEach(rep => {
                 if (rep.reponse) {
@@ -258,11 +255,6 @@ export default {
             return false
         },
 
-        updateSami(payload, change) {
-            console.log(payload);
-            console.log(change)
-        },
-
         /**
          * recupere le text de la question
          * 
@@ -281,17 +273,9 @@ export default {
          * 
          * @return {string|null}
          */
-        getQuestionReponse(question) {
-            console.log(this.reponses, 'reponses.question');
-            console.log(question.id, 'id quetion');
-            console.log(question.question, 'question');
-            
+        getQuestionReponse(question) {        
             let reponse = this.reponses.find(e => e.question == question.id);
-            if(reponse){
-                console.log(reponse.data, 'data');
-                console.log(reponse.data_var,'var');
-                console.log (reponse.question, 'reponse question')
-            }
+
             return reponse ? reponse.data : null;
         },
 

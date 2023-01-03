@@ -66,19 +66,25 @@
             <div class="d-flex justify-content-end mt-3" @click="validationKn()">
                 <button type="button" class="btn btn-success" :disabled="pending.validation">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
+                    <i v-else class="bi bi-clipboard-check"></i>
                     Valider
                 </button>
             </div>
         </div>
+    </div>
+
+    <div v-else>
+        <spinner></spinner>
     </div>
 </template>
 
 <script>
 import {mapActions, mapState} from 'vuex';
 import BlocNavigation from './BlocNavigation.vue';
+import Spinner from './pebble-ui/Spinner.vue';
 
 export default {
-    components: { BlocNavigation },
+    components: { BlocNavigation, Spinner },
 
     data() {
         return {

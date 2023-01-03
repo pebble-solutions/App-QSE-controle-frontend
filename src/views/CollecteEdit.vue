@@ -40,7 +40,7 @@ export default {
             if (collecte_id != 0) {
                 this.collecte = this.collectes.find(e => e.id == collecte_id);
                 if (!this.collecte) {
-                    alert("Aucune collecte trouvée!");
+                    alert("Aucun contrôle trouvé!");
                 }
             }
             else {

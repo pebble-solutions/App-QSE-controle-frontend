@@ -1,5 +1,5 @@
 <template>
-    
+
     <div class="card my-3" v-if="bloc">
         <div  class="card-header">
             <div class="d-flex justify-content-between">
@@ -15,15 +15,21 @@
             </div>
 
             <div class="d-flex justify-content-between">
-                <button class="btn btn-secondary" v-if="prevBloc" @click="sendResp('prev')">
-                    <i class="bi bi-box-arrow-left"></i> {{ prevBloc.bloc }}
+                <button class="btn btn-secondary" v-if="prevBloc" @click="sendResp('prev')" :disabled="pending.bloc">
+                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+                    <i v-else class="bi bi-box-arrow-left"></i> 
+                    {{ prevBloc.bloc }}
                 </button>
 
-                <button class="btn btn-secondary ms-auto" v-if="nextBloc" @click="sendResp('next')">
-                    {{nextBloc.bloc}} <i class="bi bi-box-arrow-right"></i>
+                <button class="btn btn-secondary ms-auto" v-if="nextBloc" @click="sendResp('next')" :disabled="pending.bloc">
+                    {{nextBloc.bloc}} 
+                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+                    <i v-else class="bi bi-box-arrow-right"></i>
                 </button>
 
-                <button v-else class="btn btn-success" @click="sendResp('end')">
+                <button v-else class="btn btn-success" @click="sendResp('end')" :disabled="pending.bloc">
+                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+                    <i v-else class="bi bi-file-earmark-text"></i>
                     Évaluation générale
                 </button>
             </div>
@@ -46,6 +52,10 @@
         </div>
     </div>
 
+    <div v-else>
+        <spinner></spinner>
+    </div>  
+
 </template>
 
 <script>
@@ -55,16 +65,20 @@ import ItemAnswer from '../components/ItemAnswer.vue'
 import ItemAnswerHeader from '@/components/ItemAnswerHeader.vue'
 import AlertMessage from '@/components/pebble-ui/AlertMessage.vue'
 import BlocNavigation from '../components/BlocNavigation.vue';
+import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
     data() {
         return {
             bloc_id: null,
             comment: null,
+            pending: {
+                bloc: false
+            }
         }
     },
 
-    components: {ItemAnswer, ItemAnswerHeader, AlertMessage, BlocNavigation},
+    components: {ItemAnswer, ItemAnswerHeader, AlertMessage, BlocNavigation, Spinner},
 
     computed: {
         ...mapState(['collecte', 'responses']),
@@ -94,7 +108,6 @@ export default {
          */
         nbAnswers() {
             let nb = this.responses.filter(resp => resp.bloc == this.$route.params.bloc);
-            console.log()
             return nb.length;
         },
     },
@@ -120,12 +133,12 @@ export default {
          * @param {string}  action      défini la navigation entre bloc a réaliser
          */
         sendResp(action) {
+            this.pending.bloc = true
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',
             })
             .then(() => {
-
                 switch (action) {
                     case 'prev':
                         this.$router.push({name: 'collecteKnBloc', params:{id:this.collecte.id, bloc:this.prevBloc.id}});
@@ -140,7 +153,7 @@ export default {
                         break;
                 }
             })
-            .catch(this.$app.catchError);
+            .catch(this.$app.catchError).finally(this.pending.bloc = false);
         },
 
         getReponses() {

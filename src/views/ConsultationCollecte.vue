@@ -54,7 +54,7 @@ export default {
                 let label = `${count} collecte${s} terminé${s}`;
                 return label;
             }
-            return "Aucune collecte terminée";
+            return "Aucun contrôle terminé";
         }
     },
 

@@ -94,8 +94,6 @@ export default {
                     bloc: find.bloc
                 }
             }
-
-            console.log('itemReponses', this.itemResponse);
         }
     },
 

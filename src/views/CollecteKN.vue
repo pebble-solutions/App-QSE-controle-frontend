@@ -36,7 +36,7 @@
             </div>
 
             <div class="my-2" v-if="collecte.done == 'OUI'">
-                <alert-message icon="bi-check-circle" variant="success">Cette collecte est terminée</alert-message>
+                <alert-message icon="bi-check-circle" variant="success">Ce contrôle est terminé</alert-message>
             </div>
 
             <template v-if="collecte.done == 'OUI'">

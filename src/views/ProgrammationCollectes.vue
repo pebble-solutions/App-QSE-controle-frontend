@@ -63,7 +63,7 @@ export default {
                 let label = `${count} collecte${s} programmée${s}`;
                 return label;
             }
-            return "Aucune collecte programmée";
+            return "Aucun contrôle programmé";
         }
     },
 
