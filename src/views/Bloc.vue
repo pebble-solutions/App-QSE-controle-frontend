@@ -65,7 +65,6 @@
 </template>
 
 <script>
-
 import {mapState} from 'vuex';
 import ItemAnswer from '../components/ItemAnswer.vue'
 import ItemAnswerHeader from '@/components/ItemAnswerHeader.vue'

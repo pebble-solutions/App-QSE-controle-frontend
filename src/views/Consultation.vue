@@ -1,6 +1,6 @@
 <template>
     <div class="container py-3">
-        <h1 class="fs-3 mb-3">Consultation des KN Terminés</h1>
+        <h1 class="fs-3 mb-3">Consultation des contrôles réalisés</h1>
 
         <div class="alert alert-info d-flex">
             <i class="bi bi-info-circle me-2"></i>

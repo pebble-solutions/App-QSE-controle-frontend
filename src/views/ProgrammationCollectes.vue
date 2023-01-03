@@ -9,7 +9,7 @@
             <div>
                 <router-link :to="'/programmation/'+formulaire.id+'/0/edit'" v-slot="{navigate,href}" custom>
                     <a :href="href" @click="navigate" class="btn btn-primary">
-                        <i class="bi bi-plus"></i> Programmer un KN
+                        <i class="bi bi-plus"></i> Programmer un contrôle
                     </a>
                 </router-link>
             </div>
@@ -32,7 +32,7 @@ import { mapActions, mapState } from 'vuex';
 import CollecteHeadband from '../components/CollecteHeadband.vue';
 
 export default {
-  components: { CollecteHeadband },
+    components: { CollecteHeadband },
     data() {
         return {
             newKn: false,

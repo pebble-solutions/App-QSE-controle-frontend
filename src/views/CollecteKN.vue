@@ -68,6 +68,7 @@
 </template>
 
 <script>
+
 import {mapState, mapActions} from 'vuex';
 import Intro from '../components/Intro.vue';
 
