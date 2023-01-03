@@ -1,6 +1,6 @@
 <template>
     <h3 class="accordion-header" :id="'heading_'+ ligne.id">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse_'+ ligne.id"
+        <button class="accordion-button" :class="{'collapsed': collapsed == true}" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse_'+ ligne.id"
             aria-expanded="true" :aria-controls="'collapse_'+ ligne.id">
             <span>{{ligne.ligne}}</span>
 
@@ -22,29 +22,34 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
     props: {
-        ligne: Object
+        ligne: Object,
+        collapsed: {
+            type: Boolean,
+            default: true
+        }
     },
 
     computed: {
-        ...mapState(['responses']),
+        ...mapState(['responses', 'collecte']),
 
         answer() {
-            let find = this.responses.find((resp) => {
-                if (resp.question == this.ligne.id && resp.bloc == this.$route.params.bloc) {
-                    return resp.reponse;
-                }
-            });
+            let find = this.responses.find((resp) => resp.question == this.ligne.id);
 
-            if (find) {
+            if (find)
                 return find.reponse
-            } else {
-                return '';
-            }
+
+            return '';
         }
-    }
+    },
+
+    methods: {
+        ...mapActions(['refreshResponse'])
+    },
+
+
 }
 </script>

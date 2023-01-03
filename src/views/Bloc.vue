@@ -3,22 +3,10 @@
     <div class="card my-3" v-if="bloc">
         <div  class="card-header">
             <div class="d-flex justify-content-between">
+                <h2 class="card-title">{{ bloc.bloc }}</h2>
 
-                <h2 class="card-title">{{bloc.bloc}}</h2>
-                <div class="dropdown" v-if="$route.params.bloc">
-                    <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li v-for="blocItem in collecte.formulaire.blocs" :key="blocItem.id">
-                            <router-link :to="'/collecte/'+collecte.id+'/bloc/'+blocItem.id" custom v-slot="{ navigate, href }">
-                                <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
-                                    {{blocItem.bloc}}
-                                    <i class="bi bi-check2" v-if="$route.params.bloc == blocItem.id"></i>
-                                </a>
-                            </router-link>
-                        </li>
-                    </ul>
+                <div v-if="$route.params.bloc">
+                    <bloc-navigation :bloc_id="$route.params.bloc"></bloc-navigation>
                 </div>
             </div>
 
@@ -27,19 +15,15 @@
             </div>
 
             <div class="d-flex justify-content-between">
-                <router-link :to="'/collecte/'+$route.params.id+'/bloc/'+prevBloc.id" custom v-slot="{ navigate, href }" v-if="prevBloc">
-                    <a class="btn btn-secondary mx-1" :href="href" @click="navigate">
-                        <i class="bi bi-box-arrow-left"></i> {{prevBloc.bloc}} 
-                    </a>
-                </router-link>
+                <button class="btn btn-secondary" v-if="prevBloc" @click="sendResp('prev')">
+                    <i class="bi bi-box-arrow-left"></i> {{ prevBloc.bloc }}
+                </button>
 
-                <router-link :to="'/collecte/'+$route.params.id+'/bloc/'+nextBloc.id" custom v-slot="{ navigate, href }" v-if="nextBloc">
-                    <a class="btn btn-secondary mx-1 ms-auto" :href="href" @click="navigate">
-                        {{nextBloc.bloc}} <i class="bi bi-box-arrow-right"></i>
-                    </a>
-                </router-link>
+                <button class="btn btn-secondary ms-auto" v-if="nextBloc" @click="sendResp('next')">
+                    {{nextBloc.bloc}} <i class="bi bi-box-arrow-right"></i>
+                </button>
 
-                <button v-else class="btn btn-success" @click="sendResp()">
+                <button v-else class="btn btn-success" @click="sendResp('end')">
                     Évaluation générale
                 </button>
             </div>
@@ -47,9 +31,9 @@
 
         <div class="accordion accordion-flush" :id="'accordion-'+bloc.id" v-if="(lignes.length > 0)">
             <div class="accordion-item" v-for="ligne in lignes" :key="ligne.id">
-                <ItemAnswerHeader :ligne="ligne"></ItemAnswerHeader>
+                <ItemAnswerHeader :ligne="ligne" :collapsed="false"></ItemAnswerHeader>
                 
-                <div :id="'collapse_'+ ligne.id" class="accordion-collapse collapse" :aria-labelledby="'heading_' + ligne.id" :data-bs-parent="'#accordion-'+bloc.id">
+                <div :id="'collapse_'+ ligne.id" class="accordion-collapse collapse show" :aria-labelledby="'heading_' + ligne.id" :data-bs-parent="'#accordion-'+bloc.id">
                     <div class="accordion-body">  
                         <ItemAnswer :id="ligne.id" :bloc_id="bloc.id"></ItemAnswer>
                     </div>
@@ -65,10 +49,12 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
+
+import {mapActions, mapState} from 'vuex';
 import ItemAnswer from '../components/ItemAnswer.vue'
 import ItemAnswerHeader from '@/components/ItemAnswerHeader.vue'
 import AlertMessage from '@/components/pebble-ui/AlertMessage.vue'
+import BlocNavigation from '../components/BlocNavigation.vue';
 
 export default {
     data() {
@@ -78,7 +64,7 @@ export default {
         }
     },
 
-    components: {ItemAnswer, ItemAnswerHeader, AlertMessage},
+    components: {ItemAnswer, ItemAnswerHeader, AlertMessage, BlocNavigation},
 
     computed: {
         ...mapState(['collecte', 'responses']),
@@ -108,11 +94,20 @@ export default {
          */
         nbAnswers() {
             let nb = this.responses.filter(resp => resp.bloc == this.$route.params.bloc);
+            console.log()
             return nb.length;
         },
     },
 
-    methods: {        
+    methods: {
+        ...mapActions(['refreshResponse']),
+        
+        /**
+         * Récupère le bloc correspondant
+         * @param {*} i 
+         * 
+         * @return {Object}
+         */  
         findBloc(i) {
             let selfIndex = this.formulaire.blocs.findIndex(e => e.id == this.bloc_id);
             let bloc = this.formulaire.blocs[selfIndex+i];
@@ -120,18 +115,48 @@ export default {
         },
 
         /**
-         * Envoi les reponses du questionnaire a l'api
+         * Envoi les reponses du questionnaire a l'api et passe a la page suivante a fonction de l'action.
+         * 
+         * @param {string}  action      défini la navigation entre bloc a réaliser
          */
-        sendResp() {
+        sendResp(action) {
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',
             })
             .then(() => {
-                this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});
+
+                switch (action) {
+                    case 'prev':
+                        this.$router.push({name: 'collecteKnBloc', params:{id:this.collecte.id, bloc:this.prevBloc.id}});
+                        break;
+
+                    case 'next':
+                        this.$router.push({name: 'collecteKnBloc', params:{id:this.collecte.id, bloc:this.nextBloc.id}});
+                        break;
+                
+                    default:
+                        this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});
+                        break;
+                }
             })
             .catch(this.$app.catchError);
         },
+
+        getReponses() {
+            this.collecte.reponses.forEach((resp) => {
+                let itemReponse = {};
+
+                itemReponse.question = resp.ligne;
+                itemReponse.reponse = resp.data_var;
+                itemReponse.commentaire = resp.commentaire;
+
+                let findBloc = this.collecte.formulaire.questions.find((question) => question.id == resp.ligne);
+                itemReponse.bloc = findBloc.information__bloc_id;
+
+                this.refreshResponse(itemReponse);
+            })
+        }
     },
 
     beforeRouteUpdate(to) {
@@ -140,6 +165,7 @@ export default {
     
     mounted() {
         this.bloc_id = this.$route.params.bloc;
+        this.getReponses();
     }
 }
 </script>

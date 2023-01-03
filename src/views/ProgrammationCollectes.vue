@@ -1,4 +1,7 @@
 <template>
+    <div v-if="pending.collectes">
+        <Spinner></Spinner>
+    </div>
 
     <div v-if="formulaire" class="container py-2">
         <div class="d-flex flex-row justify-content-between align-items-center py-3">
@@ -30,15 +33,18 @@
 
 import { mapActions, mapState } from 'vuex';
 import CollecteHeadband from '../components/CollecteHeadband.vue';
+import Spinner from '@/components/pebble-ui/Spinner.vue'
 
 export default {
-    components: { CollecteHeadband },
+    components: { CollecteHeadband, Spinner },
+
     data() {
         return {
             newKn: false,
 
             pending: {
-                collectes: true
+                collectes: true,
+                formulaire: true
             },
         }
     },
@@ -116,20 +122,13 @@ export default {
         updateKn(){
             this.newKn = false;
         },
-        modifKn(){
-            
-        },
-
     },
+
     beforeRouteUpdate(to) {
         if (this.formulaire?.id != to.params.id) {
             this.openFormulaire(to.params.id);
             this.loadCollectes(to.params.id);
         }
-    },
-
-    beforeUnmount() {
-
     },
 
     mounted() {

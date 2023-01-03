@@ -25,8 +25,14 @@
 
         <div class="input-group mt-3">
             <label  class="form-label d-none">Commentaire</label>
-            <input @blur="recordC(id)"  type="text" class="form-control"  placeholder="Votre commentaire" v-model="comment">
-            <button type="img"><i class="bi bi-camera"></i></button>
+            <textarea @blur="recordC(id)" rows="3" class="form-control"  placeholder="Votre commentaire" v-model="comment"></textarea>
+
+            <div class="btn btn-outline-dark d-flex align-items-center d-none">
+                <label :for="'takepicture'+itemResponse.question" >
+                    <i class="bi bi-camera"></i>
+                </label>
+                <input :id="'takepicture'+itemResponse.question" type="file" class="visually-hidden"/>
+            </div>
         </div>
     </div>
 </template>
@@ -41,23 +47,19 @@ export default {
 
     data() {
         return {
-
             response : null,
             comment: null,
-
             itemResponse: {
                 question:'',
                 reponse: '',
                 commentaire: '',
                 bloc: ''
-                // practice:'',
-                // obligatory:'',
             },
             buttonsSami: ['s', 'a', 'm', 'i']
         }
     },
     computed: {
-        ...mapState(['openedElement', 'responses']),
+        ...mapState(['openedElement', 'responses', 'collecte']),
     },
 
     methods: {
@@ -80,11 +82,28 @@ export default {
             this.itemResponse.question = this.id;
             this.itemResponse.reponse = sami;
             this.refreshResponse(this.itemResponse);
-        }, 
+        },
+
+        /**
+         * Recupere la reponse a la question et l'enregistre dans itemResponse si elle existe
+         */
+        getReponse() {
+            let find = this.responses.find((resp) => resp.question == this.id);
+
+            if (find) {
+                this.itemResponse = {
+                    question: find.question,
+                    reponse: find.reponse,
+                    commentaire: find.commentaire,
+                    bloc: find.bloc
+                }
+            }
+        }
     },
 
     mounted() {
         this.itemResponse.bloc = this.bloc_id;
+        this.getReponse();
     }
 }
 </script>

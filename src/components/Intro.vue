@@ -3,16 +3,17 @@
     <div class="my-2" v-if="collecte">
         <div class="card-body">
             <div class="card-title">
-                <label for="context" class="form-label">Décrivez ici le contexte général dans lequel se déroule le contrôle:</label>
+                <label for="context" class="form-label">
+                    Décrivez ici le contexte général dans lequel se déroule le contrôle:
+                </label>
+
                 <textarea class="form-control" id="context" name="context" rows="6" placeholder="contexte..." v-model="itemResponse.commentaire"></textarea>
             </div>
 
             <div class="text-end" v-if="collecte.formulaire?.blocs?.length">
-                <!-- <router-link :to="'/collecte/'+collecte.id+'/bloc/'+collecte.formulaire.blocs[0].id" custom v-slot="{ navigate, href }">
-                    <a class="btn btn-outline-primary"  :href="href" @click="navigate">Commencer</a>
-                </router-link> -->
-
-                <button class="btn btn-outline-primary" @click="beginKn()">
+                <button class="btn btn-outline-primary" @click="beginKn()" :disabled="pending.buttonBegin">
+                    <span v-if="pending.buttonBegin" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <i v-else class="bi bi-box-arrow-in-up-right"></i>
                     Commencer
                 </button>
             </div>
@@ -30,6 +31,9 @@ export default {
             itemResponse: {
                 commentaire: null,
                 environnement: 'private'
+            },
+            pending: {
+                buttonBegin: false
             }
         }
     },
@@ -46,11 +50,13 @@ export default {
     methods: {
         beginKn() {
             if (this.itemResponse.commentaire) {
+                this.pending.buttonBegin = true;
+
                 this.itemResponse.environnement = 'private';
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
                 .then(() => {
                     this.$router.push({name:'collecteKnBloc', params:{id: this.collecte.id, bloc: this.collecte.formulaire.blocs[0].id}});
-                }).catch(this.$app.catchError);
+                }).catch(this.$app.catchError).finally(this.pending.begin = false);
             } else {
                 this.$router.push({name:'collecteKnBloc', params:{id: this.collecte.id, bloc: this.collecte.formulaire.blocs[0].id}});
             }
