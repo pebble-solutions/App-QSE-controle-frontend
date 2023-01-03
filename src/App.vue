@@ -207,11 +207,11 @@ export default {
 				structure: "toutes",
 				limit: "aucune"
             })
-                .then((data) => {
-                    this.refreshListActifs(data);
-                })
-                .catch(this.$app.catchError)
-                .finally(this.pending.loadAgent = false);
+			.then((data) => {
+				this.refreshListActifs(data);
+			})
+			.catch(this.$app.catchError)
+			.finally(this.pending.loadAgent = false);
         },
 
 		/**

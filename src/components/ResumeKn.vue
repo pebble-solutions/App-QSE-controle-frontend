@@ -1,7 +1,13 @@
 <template>
     <div class="card my-3" v-if="collecte">
         <div class="card-header">
-            <h2 class="card-title">Bilan du contrôle</h2>
+            <div class="d-flex">
+                <h2 class="card-title">Bilan du contrôle</h2>
+
+                <div class="ms-auto">
+                    <bloc-navigation></bloc-navigation>
+                </div>
+            </div>
 
             <div class="from-controle" v-if="stats">
                 <table class="table table-bordered bg-light">
@@ -70,8 +76,11 @@
 <script>
 
 import {mapActions, mapState} from 'vuex';
+import BlocNavigation from './BlocNavigation.vue';
 
 export default {
+    components: { BlocNavigation },
+
     data() {
         return {
             buttonsSami: ['s', 'a', 'm', 'i'],

@@ -1,35 +1,36 @@
 <template>
+
     <div class="container py-3">
         <div v-if="collecte">
-            <div class="">
+            <div>
                 <div class="d-flex flex-nowrap justify-content-between align-items-center mb-2">
-                    <div class="badge bg-secondary me-1">
-                        <span>
-                            Kn n° {{collecte.id}}
-                        </span>
+                    <div class="badge bg-secondary">
+                        Kn n° {{ collecte.id }}
                     </div>
-                    <div class="">
-                        <span class="fw-lighter">{{typeKn}}</span>
+
+                    <div class="badge bg-secondary">
+                        {{ collectDate }}
+                    </div>
+
+                    <div class="fw-lighter">
+                        {{ typeKn }}
                     </div>
                 </div>
+
                 <div class="d-flex flex-nowrap justify-content-between align-items-center">
-                    <div >
-                        <div>
-                            <i class="bi bi-person-badge-fill me-1"></i>
-                            {{agent}}
-                        </div>
+                    <div>
+                        <i class="bi bi-person-badge-fill me-1"></i>
+                        {{agent}}
                     </div>
-                    <div class="">
-                        <div>
-                            <i class="bi bi-person-fill-check me-1"></i>
-                            {{controleur}}
-                        </div>
+
+                    <div>
+                        <i class="bi bi-person-fill-check me-1"></i>
+                        {{controleur}}
                     </div>
-                    <div class="">
-                        <div>
-                            <i class="bi bi-boxes me-1"></i>
-                            {{projet}}
-                        </div>
+
+                    <div>
+                        <i class="bi bi-boxes me-1"></i>
+                        {{projet}}
                     </div>
                 </div>
             </div>
@@ -60,11 +61,11 @@
                     <intro></intro>
                 </div>
             </template>
-    
-    
+            
             <router-view></router-view>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -149,7 +150,15 @@ export default {
             }
 
             return '';
-        }
+        },
+
+        /**
+		 * Retourn la date de la collecte formater en d/m/Y
+		 */
+		collectDate() {
+			let date = new Date(this.collecte.date);
+			return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+		}
     },
 
     watch: {
