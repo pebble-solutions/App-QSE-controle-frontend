@@ -386,4 +386,5 @@ export default {
         this.initItemReponse();
     }
 }
+
 </script>

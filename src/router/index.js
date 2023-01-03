@@ -36,6 +36,13 @@ const routes = [
     path: '/collecte',
     name: 'collecte', 
     component: () => import(/* webpackChunkName: "about" */ '../views/Collecte.vue'),
+    children: [
+      {
+        path:'new',
+        name: 'UnexpectedCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/CollecteUnexpected.vue')
+      }
+    ]
   },
 
   {

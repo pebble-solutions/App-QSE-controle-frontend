@@ -3,7 +3,6 @@
 </template>
 
 <script>
-
 import ResumeKn from '@/components/ResumeKn.vue';
 
 export default {
