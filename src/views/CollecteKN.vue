@@ -4,29 +4,27 @@
         <div v-if="collecte">
             <div>
                 <div class="d-flex flex-nowrap justify-content-between align-items-center mb-2">
-                    <div class="badge bg-secondary">
-                        Kn n° {{ collecte.id }}
-                    </div>
-
-                    <div class="badge bg-secondary">
-                        {{ collectDate }}
-                    </div>
-
-                    <div class="fw-lighter">
-                        {{ typeKn }}
-                    </div>
-                </div>
-
-                <div class="d-flex flex-nowrap justify-content-between align-items-center">
-                    <div>
-                        <i class="bi bi-person-badge-fill me-1"></i>
+                    <div class="d-flex align-items-center">
+                        <UserImage class="me-2" :name="agent"></UserImage>
                         {{agent}}
                     </div>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-secondary me-2">programmé le {{changeFormatDateLit(collecte.date)}}</span>
+                        <span class="badge bg-warning">{{dateJour()}}</span>
+                    </div>
+                    
+                </div>
+                
+                <div class="d-flex flex-nowrap justify-content-between align-items-center">
+                    <div class="fw-lighter">
+                        <small class="me-2">#{{collecte.id}}</small>
+                        <span>{{typeKn}}</span>
+                    </div>
 
-                    <div>
+                    <!-- <div>
                         <i class="bi bi-person-fill-check me-1"></i>
                         {{controleur}}
-                    </div>
+                    </div> -->
 
                     <div>
                         <i class="bi bi-boxes me-1"></i>
@@ -66,6 +64,10 @@ import ConsultationCollecteResume from '../components/ConsultationCollecteResume
 import Intro from '../components/Intro.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import date from 'date-and-time';
+import fr from 'date-and-time/locale/fr';
+import UserImage from '../components/pebble-ui/UserImage.vue';
+
 
 export default {
     data() {
@@ -76,7 +78,7 @@ export default {
         }
     },
 
-    components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner },
+    components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner, UserImage },
 
     computed: {
         ...mapState(['responses', 'collecte', 'listActifs', 'formulaires', 'projetsActif']),
@@ -148,11 +150,11 @@ export default {
         },
 
         /**
-		 * Retourn la date de la collecte formater en d/m/Y
+		 * Retourn la date formater en d/m/Y
 		 */
 		collectDate() {
-			let date = new Date(this.collecte.date);
-			return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+			let date = new Date();
+			return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
 		}
     },
 
@@ -183,6 +185,21 @@ export default {
                 // }
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
+        /**
+		 * Modifie le format de la date entrée en paramètre et la retourne 
+		 * sous le format 01 févr. 2021
+		 * @param {string} date 
+		 */
+
+		changeFormatDateLit(el) {
+			date.locale(fr);
+			return date.format(new Date(el), 'DD MMM YYYY')
+		},
+
+        dateJour() {
+            date.locale(fr);
+            return date.format(new Date(), 'DD MMM YYYY')
+        }
     },
 
     /**

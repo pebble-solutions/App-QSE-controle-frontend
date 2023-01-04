@@ -1,39 +1,43 @@
 <template>
+	<div class="d-flex align-items-center">
 	
-	<div class="d-flex flex-column align-items-start">
-		<div class="d-flex justify-content-start align-items-center">
-			<div>
-				<i class="bi bi-person-badge-fill me-1"></i>
+			<div class="me-2">
+				<UserImage :name="getPersonnelNameFromId(collecte.cible__structure__personnel_id)"></UserImage>
 			</div>
-
-			<div>
-				{{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
+			<div class="d-flex flex-column align-content-between">
+				<div class="d-flex align-items-center">
+					<small class="fw-lighter me-2">#{{collecte.id}}</small>
+					<span class="badge bg-secondary me-2">{{changeFormatDateLit(collecte.date)}}</span>
+					<span class="badge bg-warning">3 j</span>
+				</div>
+				<div class="d-flex">
+					{{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
+				</div>
+				<div class="d-flex">
+					<div class="fw-lighter" >
+						<i class="bi bi-check me-1" v-if="collecte.done == 'OUI'"></i>
+						{{getGroupNameFromId(collecte.information__groupe_id)}}
+					</div>
+				</div>
+				<div class="d-flex" v-if="collecte.projet_id">
+					<i class="bi bi-boxes"></i>
+					{{getProjetName(collecte.projet_id)}}
+				</div>
+				<div v-else>
+					<i class="bi bi-boxes"></i>
+					Chantier non renseigné
+				</div>
 			</div>
-		</div>
-		<div class="d-flex align-items-center">
-			<div class="me-1">
-				#{{collecte.id}}
-			</div>
-			<div class="fw-lighter" >
-				<i class="bi bi-check me-1" v-if="collecte.done == 'OUI'"></i>
-				{{getGroupNameFromId(collecte.information__groupe_id)}}
-			</div>
-			
-			<div v-if="collecte.projet_id">
-				<i class="bi bi-boxes"></i>
-				{{getProjetName(collecte.projet_id)}}
-			</div>
-		</div>
-
-		<div class="badge rounded-pill text-bg-secondary">
-			{{collectDate}}
-		</div>
-	</div>
+	</div>	
 		
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import UserImage from './pebble-ui/UserImage.vue';
+import date from 'date-and-time';
+import fr from 'date-and-time/locale/fr';
+
 
 export default {
     props: {
@@ -69,6 +73,16 @@ export default {
 				return 'formulaire non renseigné';
 			}
 		},
+		/**
+		 * Modifie le format de la date entrée en paramètre et la retourne 
+		 * sous le format 01 févr. 2021
+		 * @param {string} date 
+		 */
+
+		changeFormatDateLit(el) {
+			date.locale(fr);
+			return date.format(new Date(el), 'DD MMM YYYY')
+		},
 
 		/**
 		 * Récupère le nom d'un personnel actif via un id
@@ -103,7 +117,10 @@ export default {
 				return 'projet non renseigné'
 			}
 		},
-    }
+    },
+	components: {
+		UserImage
+	}
 }
 
 </script>
