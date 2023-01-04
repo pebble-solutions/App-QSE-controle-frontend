@@ -3,17 +3,17 @@
         :collecte="collecte"
         :formulaires="formulaires"
         :personnels="listActifs"
-        @updated="routeToFormulaire" 
+        @updated="routeToParent" 
         
         />
-</template>
+    </template>
 
 <script>
 import { mapState } from 'vuex'
 import ProgrammationCollecteModal from '../components/ProgrammationCollecteModal.vue'
 
 export default {
-
+    
     data() {
         return {
             collecte: {
@@ -25,20 +25,19 @@ export default {
             }
         }
     },
-
+    
     computed: {
-        ...mapState(['formulaires', 'listActifs'])
+        ...mapState(['formulaires', 'listActifs','collectes'])
     },
 
     methods: {
         /**
-         * Affiche la liste des KN programé sur le formulaire
-         * 
-         * @param {object} collecte
+         * retourne à la route précédente
          */
-        routeToFormulaire() {
-            this.$router.push("/collecte/");
+        routeToParent() {
+            this.$router.go(-1);
         },
+        
     },
 
     components: { ProgrammationCollecteModal },

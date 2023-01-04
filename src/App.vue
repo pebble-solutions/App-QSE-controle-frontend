@@ -10,6 +10,7 @@
 		<template v-slot:header>
 			<stats-header v-if="listMode === 'home'" />
 			<programmation-header v-else-if="listMode === 'programmation'" />
+			<ControleHeader v-else-if="listMode === 'collecte'"></ControleHeader>
 		</template>
 
 
@@ -69,6 +70,7 @@ import CollecteItem from './components/CollecteItem.vue'
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue'
+import ControleHeader from './components/headers/ControleHeader.vue'
 
 export default {
 
@@ -97,7 +99,7 @@ export default {
 		 * @return {string}
 		 */
 		listMode() {
-			if (['collecte', 'collecteKN', 'collecteKnBloc', 'CollectKnEnd'].includes(this.$route.name)) {
+			if (['collecte', 'collecteKN', 'collecteKnBloc', 'CollectKnEnd','UnexpectedCollecte'].includes(this.$route.name)) {
 				return 'collecte';
 			}
 			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
@@ -232,7 +234,7 @@ export default {
         },
 	},
 
-	components: {AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem},
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader },
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

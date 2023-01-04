@@ -55,7 +55,7 @@ export default {
         },
 
         /**
-         * Affiche la liste des KN programé sur le formulaire
+         * Affiche la liste des contrôles programmés avec le formulaire
          * 
          * @param {object} collecte
          */
