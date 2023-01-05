@@ -76,6 +76,7 @@ export default {
          */
         updateCollecte(val) {
             this.tmpCollecte = val;
+            
         },
 
         /**
