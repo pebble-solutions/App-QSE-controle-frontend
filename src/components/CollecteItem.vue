@@ -169,7 +169,11 @@ export default {
 
 			if (0 == days+1){
 				this.colorBadge = 'warning';
-				return `${Math.abs(hours)}h ${Math.abs(minutes)}min`;
+				let displayHours = 24 + (hours+1);
+				let displayMinutes = 60 + (minutes);
+
+
+				return `${Math.abs(displayHours)}h ${Math.abs(displayMinutes)}min`;
 			} 
 
 			this.colorBadge = 'success';
@@ -182,6 +186,7 @@ export default {
 			return `${days+1} jour${ (days+1) > 1 || (days+1) < -1 ? "s" : ""}`;
 		}
     },
+
 	components: {
 		UserImage
 	}
