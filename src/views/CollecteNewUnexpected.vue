@@ -3,14 +3,19 @@
         :collecte="collecte"
         :formulaires="formulaires"
         :personnels="listActifs"
+
+        :readonly="['enqueteur_personnel']"
+
         @updated="routeToParent" 
-        
+
+        v-if="inited"
         />
     </template>
 
 <script>
-import { mapState } from 'vuex'
-import ProgrammationCollecteModal from '../components/ProgrammationCollecteModal.vue'
+import { mapState } from 'vuex';
+import ProgrammationCollecteModal from '../components/ProgrammationCollecteModal.vue';
+import date from 'date-and-time';
 
 export default {
     
@@ -22,12 +27,13 @@ export default {
                 date: null,
                 enqueteur_personnel: null,
                 environnement: "private"
-            }
+            },
+            inited: false
         }
     },
     
     computed: {
-        ...mapState(['formulaires', 'listActifs','collectes'])
+        ...mapState(['formulaires', 'listActifs','collectes', 'login'])
     },
 
     methods: {
@@ -43,7 +49,11 @@ export default {
     components: { ProgrammationCollecteModal },
 
     mounted() {
+        let now = new Date();
+        this.collecte.date = date.format(now, 'YYYY-MM-DD');
+        this.collecte.enqueteur_personnel = this.login.primary_personnel;
 
+        this.inited = true;
     }
 }
 

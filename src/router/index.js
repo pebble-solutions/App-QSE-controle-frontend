@@ -40,7 +40,7 @@ const routes = [
       {
         path:'new',
         name: 'UnexpectedCollecte',
-        component: () => import(/* webpackChunkName: "about" */ '../views/CollecteUnexpected.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/CollecteNewUnexpected.vue')
       }
     ]
   },
