@@ -10,7 +10,7 @@
                 <textarea class="form-control" id="context" name="context" rows="6" placeholder="contexte..." v-model="itemResponse.commentaire"></textarea>
             </div>
 
-            <div class="text-end" v-if="collecte.formulaire?.blocs?.length">
+            <div class="mt-3 text-end" v-if="collecte.formulaire?.blocs?.length">
                 <button class="btn btn-outline-primary" @click="beginKn()" :disabled="pending.buttonBegin">
                     <span v-if="pending.buttonBegin" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     <i v-else class="bi bi-box-arrow-in-up-right"></i>

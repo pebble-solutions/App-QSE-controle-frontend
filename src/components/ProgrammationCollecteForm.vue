@@ -3,25 +3,25 @@
         <div class="row g-2">
             <div class="col mb-3">
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
-                <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="tmpCollecte.formulaire" required>
+                <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="tmpCollecte.formulaire" required :disabled="isReadonly('formulaire')">
                     <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>
                 </select>
             </div>
         </div>
         <div class="mb-3">
             <label class="form-label" for="collecteDate">Date programmée</label>
-            <input type="date" class="form-control" id="collecteDate" name="date" v-model="tmpCollecte.date">
+            <input type="date" class="form-control" id="collecteDate" name="date" v-model="tmpCollecte.date" :disabled="isReadonly('date')">
         </div>
         <div class="row g-2">
             <div class="col mb-3">
                 <label for="collecteCible" class="form-label">Opérateur </label>
-                <select class="form-select" id="collecteCible" name="cible_personnel" v-model="tmpCollecte.cible_personnel">
+                <select class="form-select" id="collecteCible" name="cible_personnel" v-model="tmpCollecte.cible_personnel" :disabled="isReadonly('cible_personnel')">
                     <option v-for="(agent) in personnels" :value="agent.id" :key="agent.id" > {{agent.cache_nom}} </option>
                 </select>
             </div>
             <div class="col mb-3">
                 <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
-                <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel">
+                <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')">
                     <option  v-for="(controleur) in personnels" :value="controleur.id" :key="controleur.id">{{controleur.cache_nom}}</option>
                 </select>
             </div>
@@ -36,7 +36,8 @@ export default {
     props: {
         collecte: Object,
         personnels: Array,
-        formulaires: Array
+        formulaires: Array,
+        readonly: Array
     },
 
     data() {
@@ -69,6 +70,17 @@ export default {
         deleteCollecte() {
             this.$emit('delecte-collecte', this.collecte);
         },
+
+        /**
+         * Retourne true si le champ testé fait partie du tableau readonly
+         * 
+         * @param {string} field Le nom du champ à tester
+         * 
+         * @return {boolean}
+         */
+        isReadonly(field) {
+            return this.readonly?.includes(field);
+        }
     
     },
 

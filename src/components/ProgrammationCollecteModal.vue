@@ -16,6 +16,7 @@
                 :collecte="collecte"
                 :personnels="personnels"
                 :formulaires="formulaires"
+                :readonly="readonly"
 
                 @update-collecte="updateCollecte"
                 v-if="collecte" />
@@ -35,7 +36,8 @@ export default {
     props: {
         collecte: Object,
         personnels: Array,
-        formulaires: Array
+        formulaires: Array,
+        readonly: Array
     },
 
     data() {
@@ -74,6 +76,7 @@ export default {
          */
         updateCollecte(val) {
             this.tmpCollecte = val;
+            
         },
 
         /**

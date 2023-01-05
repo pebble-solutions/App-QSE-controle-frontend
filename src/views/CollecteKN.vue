@@ -27,10 +27,9 @@
                         {{controleur}}
                     </div> -->
 
-                    <div class="d-flex justify-content-start align-items-center">
-                        <i class="bi bi-boxes me-1"></i>
-                        {{projet}}
-                    </div>
+                    <!-- <div class="d-flex justify-content-start align-items-center">
+                        <small><i class="bi bi-boxes me-1"></i>{{projet}}</small>
+                    </div> -->
             </div>
 
             <div class="my-2" v-if="collecte.done == 'OUI'">
