@@ -123,11 +123,12 @@ export default {
         */
         validationKn() {
             this.pending.validation = true;
-            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
-            .then((data) => {
-                this.refreshCollectes([data]);
-                this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
-            }).catch(this.$app.catchError).finally(() => this.pending.validation = false);
+            confirm('Une fois le contrôle validé, vous ne pourrez plus le modifier. Confirmez-vous la validation?')
+                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
+                .then((data) => {
+                    this.refreshCollectes([data]);
+                    this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
+                }).catch(this.$app.catchError).finally(() => this.pending.validation = false);
         },
 
         /**

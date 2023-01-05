@@ -49,7 +49,8 @@
         <div class="d-flex justify-content-center mt-3" v-else>
             <AlertMessage variant="warning w-50 text-center">Aucune question renseignée </AlertMessage>
         </div>
-        <div class="d-flex justify-content-between">
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
                 <button class="btn btn-secondary" v-if="prevBloc" @click="sendResp('prev')" :disabled="pending.bloc">
                     <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
                     <i v-else class="bi bi-box-arrow-left"></i> 
@@ -68,6 +69,7 @@
                     Évaluation générale
                 </button>
             </div>
+        </div>
     </div>
 
     <div v-else>
