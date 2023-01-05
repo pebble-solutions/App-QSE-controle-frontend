@@ -19,13 +19,13 @@
 						{{getGroupNameFromId(collecte.information__groupe_id)}}
 					</div>
 				</div>
-				<div class="d-flex" v-if="collecte.projet_id">
+				<!-- <div class="d-flex" v-if="collecte.projet_id">
 					<i class="bi bi-boxes"></i>
 					{{getProjetName(collecte.projet_id)}}
 				</div>
 				<div v-else>
 					<span class="me-2"><i class="bi bi-boxes"></i></span><small>Chantier non renseigné</small>
-				</div>
+				</div> -->
 			</div>
 	</div>	
 		
