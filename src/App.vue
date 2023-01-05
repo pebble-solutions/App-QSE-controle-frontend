@@ -210,6 +210,7 @@ export default {
 				limit: "aucune"
             })
 			.then((data) => {
+				console.log(data);
 				this.refreshListActifs(data);
 			})
 			.catch(this.$app.catchError)

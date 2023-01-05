@@ -24,8 +24,7 @@
 					{{getProjetName(collecte.projet_id)}}
 				</div>
 				<div v-else>
-					<i class="bi bi-boxes"></i>
-					Chantier non renseigné
+					<span class="me-2"><i class="bi bi-boxes"></i></span><small>Chantier non renseigné</small>
 				</div>
 			</div>
 	</div>	

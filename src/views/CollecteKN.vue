@@ -28,8 +28,7 @@
                     </div> -->
 
                     <div class="d-flex justify-content-start align-items-center">
-                        <i class="bi bi-boxes me-1"></i>
-                        {{projet}}
+                        <small><i class="bi bi-boxes me-1"></i>{{projet}}</small>
                     </div>
             </div>
 
