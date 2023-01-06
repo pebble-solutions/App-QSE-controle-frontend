@@ -8,6 +8,7 @@
 
             <span v-if="answer" class="mx-2">-</span>
             <span 
+                v-if="answer"
                 class="badge"
                 :class="{
                     'bg-success' : 's' == answer,
@@ -39,6 +40,8 @@ export default {
 
         answer() {
             let find = this.responses.find((resp) => resp.question == this.ligne.id);
+
+            console.log('find', find);
 
             if (find)
                 return find.reponse

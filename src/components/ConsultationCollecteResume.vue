@@ -43,10 +43,18 @@
                         {{collecte.commentaire}}
                     </div>
                 </div>
+
                 <div class="mb-2">
                     <strong class="d-block">Rapport final:</strong>
                     <div class="ms-2 fw-lighter">
                         {{collecte.rapport}}
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <strong class="d-block">Actions correctives proposées:</strong>
+                    <div class="ms-2 fw-lighter">
+                        {{collecte.actions}}
                     </div>
                 </div>
             </div>

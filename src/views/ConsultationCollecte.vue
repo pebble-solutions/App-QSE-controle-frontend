@@ -19,6 +19,16 @@
             </div> 
 
         </div>
+        <!-- <div class="d-flex justify-content-end py-3">
+            <button @click.prevent="loadCollectes(formulaire.id)" class="btn btn-outline-primary">+ de résultats</button>
+        </div> -->
+        libellé{{ formulaire.groupe }},
+        formualaire id{{ formulaire.id }},
+        formulaire nb done{{ formulaire.nb_done }},
+        collectes longueur{{ collectes.length }},
+        
+
+        
         <router-view></router-view>
     </div>
 </template>
@@ -70,6 +80,7 @@ export default {
 		 */
 		loadCollectes(information__groupe_id) {
             this.pending.collectes = true;
+        
             return this.$app.apiGet('data/GET/collecte', {limite: 'aucune', done: 'OUI', information__groupe_id})
 				.then(data => {
 					this.setCollectes(data);
@@ -77,6 +88,23 @@ export default {
 				})
 				.catch(this.$app.catchError).finally(() => this.pending.collectes = false);
 		},
+
+        LoadFollowingCollectes(information__groupe_id) {
+            this.pending.collectes = true;
+            console.log(this.collectes.length);
+            console.log(this.formulaire.id);
+
+            let count = this.collectes.length;
+            if(count>50) {
+                return this.$app.apiGet('data/GET/collecte', { done: 'OUI', information__groupe_id})
+				.then(data => {
+                    console.log(data, 'data');
+					this.setCollectes(data);
+					return data;
+				})
+				.catch(this.$app.catchError).finally(() => this.pending.collectes = false);
+            }
+        },
 
         /**
          * Récupere le nom du groupe d'information de la collect via un id de

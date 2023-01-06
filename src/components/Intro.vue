@@ -12,9 +12,9 @@
 
             <div class="mt-3 text-end" v-if="collecte.formulaire?.blocs?.length">
                 <button class="btn btn-outline-primary" @click="beginKn()" :disabled="pending.buttonBegin">
-                    <span v-if="pending.buttonBegin" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    <i v-else class="bi bi-box-arrow-in-up-right"></i>
                     Commencer
+                    <span v-if="pending.buttonBegin" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <i v-else class="bi bi-chevron-right"></i>
                 </button>
             </div>
         </div>
