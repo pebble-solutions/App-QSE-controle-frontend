@@ -82,12 +82,9 @@ export default {
          * @param {string} options s,a,m,i
          */
         recordSami(sami) {
-            console.log('sami',sami);
-            console.log(this.itemResponse.reponse);
             if (this.itemResponse.reponse == sami) {
-                console.log('null');
                 this.itemResponse.reponse = null;
-                console.log(this.itemResponse);
+                this.refreshResponse(this.itemResponse);
             } else {
                 this.itemResponse.question = this.id;
                 this.itemResponse.reponse = sami;

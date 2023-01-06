@@ -41,8 +41,6 @@ export default {
         answer() {
             let find = this.responses.find((resp) => resp.question == this.ligne.id);
 
-            console.log('find', find);
-
             if (find)
                 return find.reponse
 
