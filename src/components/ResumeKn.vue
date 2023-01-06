@@ -63,8 +63,8 @@
                 <textarea class="form-control text-muted w-100" placeholder="..." id="rapport" v-model="itemResponse.rapport"></textarea>
             </div>
 
-            <div class="d-flex justify-content-end mt-3" @click="validationKn()">
-                <button type="button" class="btn btn-success" :disabled="pending.validation">
+            <div class="d-flex  mt-3" @click="validationKn()">
+                <button type="button" class="d-block w-100 btn btn-lg btn-success" :disabled="pending.validation">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
                     <i v-else class="bi bi-clipboard-check"></i>
                     Valider
@@ -123,11 +123,12 @@ export default {
         */
         validationKn() {
             this.pending.validation = true;
-            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
-            .then((data) => {
-                this.refreshCollectes([data]);
-                this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
-            }).catch(this.$app.catchError).finally(() => this.pending.validation = false);
+            confirm('Une fois le contrôle validé, vous ne pourrez plus le modifier. Confirmez-vous la validation?')
+                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
+                .then((data) => {
+                    this.refreshCollectes([data]);
+                    this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
+                }).catch(this.$app.catchError).finally(() => this.pending.validation = false);
         },
 
         /**

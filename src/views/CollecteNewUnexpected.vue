@@ -6,7 +6,7 @@
 
         :readonly="['enqueteur_personnel']"
 
-        @updated="routeToParent" 
+        @updated="routeToCollecte" 
 
         v-if="inited"
         />
@@ -40,8 +40,8 @@ export default {
         /**
          * retourne à la route précédente
          */
-        routeToParent() {
-            this.$router.go(-1);
+        routeToCollecte(collecte) {
+            this.$router.push('/collecte/'+collecte.id)
         },
         
     },
@@ -52,7 +52,6 @@ export default {
         let now = new Date();
         this.collecte.date = date.format(now, 'YYYY-MM-DD');
         this.collecte.enqueteur_personnel = this.login.primary_personnel;
-
         this.inited = true;
     }
 }

@@ -46,9 +46,29 @@
                 </div>
             </div>
         </div> 
-        
         <div class="d-flex justify-content-center mt-3" v-else>
             <AlertMessage variant="warning w-50 text-center">Aucune question renseignée </AlertMessage>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-secondary" v-if="prevBloc" @click="sendResp('prev')" :disabled="pending.bloc">
+                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+                    <i v-else class="bi bi-box-arrow-left"></i> 
+                    {{ prevBloc.bloc }}
+                </button>
+
+                <button class="btn btn-secondary ms-auto" v-if="nextBloc" @click="sendResp('next')" :disabled="pending.bloc">
+                    {{nextBloc.bloc}} 
+                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+                    <i v-else class="bi bi-box-arrow-right"></i>
+                </button>
+
+                <button v-else class="btn btn-success" @click="sendResp('end')" :disabled="pending.bloc">
+                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+                    <i v-else class="bi bi-file-earmark-text"></i>
+                    Évaluation générale
+                </button>
+            </div>
         </div>
     </div>
 
