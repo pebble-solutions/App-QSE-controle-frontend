@@ -29,4 +29,5 @@ export default {
         ...mapState(['collecte']),
     },
 }
+
 </script>

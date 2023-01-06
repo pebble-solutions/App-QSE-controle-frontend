@@ -34,12 +34,13 @@
                 </button>
             </div>
         </div>
-
+        
+        
         <div class="accordion accordion-flush" :id="'accordion-'+bloc.id" v-if="(lignes.length > 0)">
             <div class="accordion-item" v-for="ligne in lignes" :key="ligne.id">
                 <ItemAnswerHeader :ligne="ligne" :collapsed="false"></ItemAnswerHeader>
-                
                 <div :id="'collapse_'+ ligne.id" class="accordion-collapse collapse show" :aria-labelledby="'heading_' + ligne.id" :data-bs-parent="'#accordion-'+bloc.id">
+                    <div class="mt-2 mx-2 badge bg-warning" v-if="ligne.indication">{{ ligne.indication }}</div>
                     <div class="accordion-body">  
                         <ItemAnswer :id="ligne.id" :bloc_id="bloc.id"></ItemAnswer>
                     </div>
