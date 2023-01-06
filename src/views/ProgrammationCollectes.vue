@@ -5,7 +5,7 @@
 
     <div v-if="formulaire" class="container py-2">
         <div class="d-flex flex-row justify-content-between align-items-center py-3">
-            <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex flex-row flex-wrap justify-content-between align-items-center">
                 <h1 class="fs-3 m-0 me-2">{{formulaire.groupe}}</h1> 
                 <div class="text-secondary">{{collectes_number_label}}</div>
             </div>
@@ -33,7 +33,7 @@
 
 import { mapActions, mapState } from 'vuex';
 import CollecteHeadband from '../components/CollecteHeadband.vue';
-import Spinner from '@/components/pebble-ui/Spinner.vue'
+import Spinner from '@/components/pebble-ui/Spinner.vue';
 
 export default {
     components: { CollecteHeadband, Spinner },
