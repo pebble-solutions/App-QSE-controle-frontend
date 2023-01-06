@@ -19,13 +19,13 @@
             </div> 
 
         </div>
-        <!-- <div class="d-flex justify-content-end py-3">
+        <div v-if="btnPlus" class="d-flex justify-content-end py-3">
             <button @click.prevent="loadCollectes(formulaire.id)" class="btn btn-outline-primary">+ de résultats</button>
-        </div> -->
-        libellé{{ formulaire.groupe }},
+        </div>
+        <!-- libellé{{ formulaire.groupe }},
         formualaire id{{ formulaire.id }},
         formulaire nb done{{ formulaire.nb_done }},
-        collectes longueur{{ collectes.length }},
+        collectes longueur{{ collectes.length }}, -->
         
 
         
@@ -45,7 +45,8 @@ export default {
         return {
             pending: {
                 collectes: true
-            }
+            },
+            btnPlus: false,
         }
     },
 
@@ -61,11 +62,19 @@ export default {
             let count = this.collectes.length;
             if (count) {
                 let s = count > 1 ? "s" : "";
-                let label = `${count} collecte${s} terminé${s}`;
-                return label;
+                
+                let label = `${count} collecte${s} terminée${s}`;
+                return label, this.btnPlus;
             }
             return "Aucun contrôle terminé";
-        }
+        },
+
+        // BtnPlus() {
+            
+        //     if (count>50) {
+        //     }
+        //     returnt
+        // }
     },
 
     methods: {
