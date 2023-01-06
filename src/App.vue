@@ -8,9 +8,11 @@
 		@auth-change="setLocal_user">
 
 		<template v-slot:header>
-			<stats-header v-if="listMode === 'home'" />
-			<programmation-header v-else-if="listMode === 'programmation'" />
-			<ControleHeader v-else-if="listMode === 'collecte'"></ControleHeader>
+			<div class="d-none d-sm-block">
+				<stats-header v-if="listMode === 'home'" />
+				<programmation-header v-else-if="listMode === 'programmation'" />
+				<ControleHeader v-else-if="listMode === 'collecte'"></ControleHeader>
+			</div>
 		</template>
 
 
@@ -210,7 +212,6 @@ export default {
 				limit: "aucune"
             })
 			.then((data) => {
-				console.log(data);
 				this.refreshListActifs(data);
 			})
 			.catch(this.$app.catchError)
