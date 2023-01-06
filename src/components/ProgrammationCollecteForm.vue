@@ -8,6 +8,14 @@
                 </select>
             </div>
         </div>
+
+        <div class="col mb-3">
+            <label for="collecteEnqueteur" class="form-label">Projet</label>
+            <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.projet_id">
+                <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+            </select>
+        </div>
+
         <div class="mb-3">
             <label class="form-label" for="collecteDate">Date programmée</label>
             <input type="date" class="form-control" id="collecteDate" name="date" v-model="tmpCollecte.date" :disabled="isReadonly('date')">
@@ -31,6 +39,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 
 export default {
     props: {
@@ -44,6 +53,10 @@ export default {
         return {
             tmpCollecte: null
         }
+    },
+
+    computed: {
+        ...mapState(['projets'])
     },
 
     emits:['delete-collecte', 'update-collecte'],

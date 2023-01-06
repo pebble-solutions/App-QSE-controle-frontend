@@ -85,14 +85,15 @@ export default {
 			pending: {
 				formulaires: true,
 				collectes: true,
-				projetsActifs: true
+				projets: true,
+
 			},
 			isConnectedUser: false,
 		}
 	},
 
 	computed: {
-		...mapState(['openedElement','collectes','formulaires', 'listActifs', 'projetsActif']),
+		...mapState(['openedElement','collectes','formulaires', 'listActifs', 'projets']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -137,7 +138,7 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjetsActifs', 'setCollectes']),
+		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -170,6 +171,25 @@ export default {
 		 */
 		loadFormulaires() {
 			return this.loadRessources('formulaire')
+		},
+
+		/**
+		 * Charge l'ensemble des projets depuis le serveur et les stock dans le store
+		 */
+		loadProjets() {
+			this.pending.projets = true;
+
+			let route = 'projet/GET/list';
+			let query = {'in_production' : true}
+
+			this.$app.apiGet(route, query)
+			.then((data) => {
+				console.log(data);
+				this.refreshProjets(data);
+			})
+			.catch(this.$app.catchError)
+			.finally(() => {this.pending.projets = false});
+
 		},
 
 		/**
@@ -217,23 +237,6 @@ export default {
 			.catch(this.$app.catchError)
 			.finally(this.pending.loadAgent = false);
         },
-
-		/**
-         * Récupère tout les projets en production
-         */
-		getAllProjetsActif() {
-            this.pending.projetsActifs = true;
-
-            let urlApi = '/projet/GET/list';
-
-            this.$app.apiGet(urlApi, {
-                in_production: true
-            }).then( (data) => {
-                this.refreshProjetsActifs(data);
-            }).catch(this.$app.catchError);
-
-            this.pending.projetsActifs = false;
-        },
 	},
 
 	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader },
@@ -244,7 +247,7 @@ export default {
 			if (this.isConnectedUser) {
 				this.loadFormulaires();
 				this.loadAgent();
-				// this.getAllProjetsActif();
+				this.loadProjets();
 			}
 		});
 	}

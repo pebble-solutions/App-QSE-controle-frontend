@@ -34,8 +34,9 @@
 					{{getGroupNameFromId(collecte.information__groupe_id)}}
 				</div>
 			</div>
+
 			<!-- <div class="d-flex" v-if="collecte.projet_id">
-				<i class="bi bi-boxes"></i>
+				<i class="bi bi-boxes me-2"></i>
 				{{getProjetName(collecte.projet_id)}}
 			</div>
 
@@ -66,7 +67,7 @@ export default {
 	},
 
     computed: {
-        ...mapState(['formulaires', 'listActifs', 'projetsActif']),
+        ...mapState(['formulaires', 'listActifs', 'projets']),
 
 		/**
 		 * Retourn la date de la collecte formater en d/m/Y
@@ -132,7 +133,7 @@ export default {
 		 * @return {string}
 		 */
 		getProjetName(projetId) {
-			let projetName = this.projetsActif.find(projet => projet.id == projetId);
+			let projetName = this.projets.find(projet => projet.id == projetId);
 
 			if (projetName) {
 				return projetName.intitule;

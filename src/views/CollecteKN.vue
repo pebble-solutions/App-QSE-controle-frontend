@@ -12,6 +12,9 @@
                                 <span class="me-2">#{{collecte.id}}</span>
                                 <span>{{typeKn}}</span>
                             </div>
+                            <!-- <div class="d-flex justify-content-start align-items-center">
+                                <small><i class="bi bi-boxes me-1"></i>{{projet}}</small>
+                            </div> -->
                         </div>
                     </div>
                     <div class="d-flex align-items-center">
@@ -26,9 +29,6 @@
                         {{controleur}}
                     </div> -->
 
-                    <!-- <div class="d-flex justify-content-start align-items-center">
-                        <small><i class="bi bi-boxes me-1"></i>{{projet}}</small>
-                    </div> -->
             </div>
 
             <div class="my-2" v-if="collecte.done == 'OUI'">
@@ -79,7 +79,7 @@ export default {
     components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner, UserImage },
 
     computed: {
-        ...mapState(['responses', 'collecte', 'listActifs', 'formulaires', 'projetsActif']),
+        ...mapState(['responses', 'collecte', 'listActifs', 'formulaires', 'projets']),
 
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
@@ -127,7 +127,7 @@ export default {
 		 * @return {string}
 		 */
 		projet() {
-			let projetName = this.projetsActif.find(projet => projet.id == this.collecte.projet_id);
+			let projetName = this.projets.find(projet => projet.id == this.collecte.projet_id);
 
 			if (projetName) {
 				return projetName.intitule;
