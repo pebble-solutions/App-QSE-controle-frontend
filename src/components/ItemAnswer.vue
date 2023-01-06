@@ -6,14 +6,14 @@
                     @click="recordSami(button)" 
                     type="button" class="btn" 
                     :class="{
-                        'btn-outline-danger': 'i' == button && 'i' != itemResponse.reponse,
-                        'btn-danger': 'i' == button && 'i' == itemResponse.reponse,
-                        'btn-outline-warning': 'm' == button && 'm' != itemResponse.reponse,
-                        'btn-warning': 'm' == button && 'm' == itemResponse.reponse,
-                        'btn-outline-primary': 'a' == button && 'a' != itemResponse.reponse,
-                        'btn-primary': 'a' == button && 'a' == itemResponse.reponse,
-                        'btn-outline-success': 's' == button && 's' != itemResponse.reponse,
-                        'btn-success': 's' == button && 's' == itemResponse.reponse
+                        'btn-outline-danger': 'i' == button && 'i' != displayResponse,
+                        'btn-danger': 'i' == button && 'i' == displayResponse,
+                        'btn-outline-warning': 'm' == button && 'm' != displayResponse,
+                        'btn-warning': 'm' == button && 'm' == displayResponse,
+                        'btn-outline-primary': 'a' == button && 'a' != displayResponse,
+                        'btn-primary': 'a' == button && 'a' == displayResponse,
+                        'btn-outline-success': 's' == button && 's' != displayResponse,
+                        'btn-success': 's' == button && 's' == displayResponse
                     }"
                 >
                     {{button.toUpperCase()}}
@@ -34,6 +34,8 @@
         </div>
     </div>
 </template>
+
+
 <script>
 import {mapState, mapActions} from 'vuex';
 
@@ -57,6 +59,10 @@ export default {
     },
     computed: {
         ...mapState(['openedElement', 'responses', 'collecte']),
+
+        displayResponse() {
+            return this.itemResponse.reponse;
+        }
     },
 
     methods: {
@@ -75,9 +81,17 @@ export default {
          * @param {string} options s,a,m,i
          */
         recordSami(sami) {
-            this.itemResponse.question = this.id;
-            this.itemResponse.reponse = sami;
-            this.refreshResponse(this.itemResponse);
+            console.log('sami',sami);
+            console.log(this.itemResponse.reponse);
+            if (this.itemResponse.reponse == sami) {
+                console.log('null');
+                this.itemResponse.reponse = null;
+                console.log(this.itemResponse);
+            } else {
+                this.itemResponse.question = this.id;
+                this.itemResponse.reponse = sami;
+                this.refreshResponse(this.itemResponse);
+            }
         },
 
         /**

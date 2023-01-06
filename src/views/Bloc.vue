@@ -27,7 +27,7 @@
                     <i v-else class="bi bi-box-arrow-right"></i>
                 </button>
 
-                <button v-else class="btn btn-success" @click="sendResp('end')" :disabled="pending.bloc">
+                <button v-else class="btn btn-success ms-auto" @click="sendResp('end')" :disabled="pending.bloc">
                     <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
                     <i v-else class="bi bi-file-earmark-text"></i>
                     Évaluation générale
@@ -63,7 +63,7 @@
                     <i v-else class="bi bi-box-arrow-right"></i>
                 </button>
 
-                <button v-else class="btn btn-success" @click="sendResp('end')" :disabled="pending.bloc">
+                <button v-else class="btn btn-success ms-auto" @click="sendResp('end')" :disabled="pending.bloc">
                     <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
                     <i v-else class="bi bi-file-earmark-text"></i>
                     Évaluation générale
