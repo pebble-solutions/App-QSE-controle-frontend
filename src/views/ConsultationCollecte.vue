@@ -46,7 +46,7 @@ export default {
             pending: {
                 collectes: true
             },
-            btnPlus: false,
+            btnPlus: true,
         }
     },
 
@@ -87,12 +87,13 @@ export default {
          * 
 		 * @return {Promise<object>}
 		 */
-		loadCollectes(information__groupe_id) {
+		loadCollectes(id) {
             this.pending.collectes = true;
         
-            return this.$app.apiGet('data/GET/collecte', {limite: 'aucune', done: 'OUI', information__groupe_id})
+            return this.$app.apiGet('data/GET/collecte', {limite: 'aucune', done: 'OUI', information__groupe_id:id, start:100})
 				.then(data => {
 					this.setCollectes(data);
+                    // console.log(data);
 					return data;
 				})
 				.catch(this.$app.catchError).finally(() => this.pending.collectes = false);
