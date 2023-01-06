@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="row">
+            
             <div v-for="button in buttonsSami" :key="id+'-'+button" class="col d-grid">
                 <button 
                     @click="recordSami(button)" 
@@ -18,9 +19,9 @@
                 >
                     {{button.toUpperCase()}}
                 </button>
+                
             </div>
         </div>
-
         <div class="input-group mt-3">
             <label  class="form-label d-none">Commentaire</label>
             <textarea @blur="recordC(id)" rows="3" class="form-control"  placeholder="Votre commentaire" v-model="itemResponse.commentaire"></textarea>
