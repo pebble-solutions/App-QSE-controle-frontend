@@ -1,48 +1,48 @@
 <template>
 
 	<div class="d-flex align-items-center">
-			<div class="me-2">
-				<UserImage :name="getPersonnelNameFromId(collecte.cible__structure__personnel_id)"></UserImage>
+		<div class="me-2">
+			<UserImage :name="getPersonnelNameFromId(collecte.cible__structure__personnel_id)"></UserImage>
+		</div>
+
+		<div class="d-flex flex-column align-content-between">
+			<div class="d-flex align-items-center">
+				<small class="fw-lighter me-2">#{{collecte.id}}</small>
+				<span class="badge bg-secondary me-2">{{changeFormatDateLit(collecte.date)}}</span>
+				<span 
+					class="badge"
+					:class="{
+						'bg-danger': colorBadge == 'danger',
+						'bg-success': colorBadge == 'success',
+						'bg-warning': colorBadge == 'warning',
+					}"
+				>
+					<i v-if="colorBadge == 'danger'" class="bi bi-calendar-x-fill"></i>
+					<i v-else-if="colorBadge == 'warning'" class="bi bi-calendar-event-fill"></i>
+					<i v-else class="bi bi-calendar-check-fill"></i>
+					{{ remainingDays() }}
+				</span>
 			</div>
 
-			<div class="d-flex flex-column align-content-between">
-				<div class="d-flex align-items-center">
-					<small class="fw-lighter me-2">#{{collecte.id}}</small>
-					<span class="badge bg-secondary me-2">{{changeFormatDateLit(collecte.date)}}</span>
-					<span 
-						class="badge"
-						:class="{
-							'bg-danger': colorBadge == 'danger',
-                            'bg-success': colorBadge == 'success',
-							'bg-warning': colorBadge == 'warning',
-						}"
-					>
-						<i v-if="colorBadge == 'danger'" class="bi bi-calendar-x-fill"></i>
-						<i v-else-if="colorBadge == 'warning'" class="bi bi-calendar-event-fill"></i>
-						<i v-else class="bi bi-calendar-check-fill"></i>
-						{{ remainingDays() }}
-					</span>
-				</div>
-
-				<div class="d-flex">
-					{{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
-				</div>
-
-				<div class="d-flex">
-					<div class="fw-lighter" >
-						<i class="bi bi-check me-1" v-if="collecte.done == 'OUI'"></i>
-						{{getGroupNameFromId(collecte.information__groupe_id)}}
-					</div>
-				</div>
-				<!-- <div class="d-flex" v-if="collecte.projet_id">
-					<i class="bi bi-boxes"></i>
-					{{getProjetName(collecte.projet_id)}}
-				</div>
-
-				<div v-else>
-					<span class="me-2"><i class="bi bi-boxes"></i></span><small>Chantier non renseigné</small>
-				</div> -->
+			<div class="d-flex">
+				{{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
 			</div>
+
+			<div class="d-flex">
+				<div class="fw-lighter" >
+					<i class="bi bi-check me-1" v-if="collecte.done == 'OUI'"></i>
+					{{getGroupNameFromId(collecte.information__groupe_id)}}
+				</div>
+			</div>
+			<!-- <div class="d-flex" v-if="collecte.projet_id">
+				<i class="bi bi-boxes"></i>
+				{{getProjetName(collecte.projet_id)}}
+			</div>
+
+			<div v-else>
+				<span class="me-2"><i class="bi bi-boxes"></i></span><small>Chantier non renseigné</small>
+			</div> -->
+		</div>
 	</div>	
 		
 </template>
@@ -181,7 +181,7 @@ export default {
 			}
 
 
-			return `${days+1} jour${ (days+1) > 1 || (days+1) < -1 ? "s" : ""}`;
+			return `${days+1} J`;
 		}
     },
 

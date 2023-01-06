@@ -6,20 +6,19 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
                         <UserImage class="me-2" :name="agent"></UserImage>
-                        {{agent}}
+                        <div>
+                            {{agent}}
+                            <div class="fw-lighter">
+                                <span class="me-2">#{{collecte.id}}</span>
+                                <span>{{typeKn}}</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="d-flex align-items-center">
-                        <span class="badge bg-secondary me-2">programmé le {{changeFormatDateLit(collecte.date)}}</span>
+                        <span class="badge bg-secondary me-2">Programmé {{changeFormatDateLit(collecte.date)}}</span>
                         <!-- <span class="badge bg-warning">{{dateJour()}}</span> -->
                     </div>
                     
-                </div>
-                
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="fw-lighter">
-                        <small class="me-2">#{{collecte.id}}</small>
-                        <span>{{typeKn}}</span>
-                    </div>
                 </div>
 
                     <!-- <div>
