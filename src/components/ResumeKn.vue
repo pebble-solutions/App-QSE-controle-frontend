@@ -65,7 +65,7 @@
 
             <div class="mt-3">
                 <label for="rapport" class="fs-3 ">Actions correctives proposées:</label>
-                <textarea class="form-control text-muted w-100" placeholder="..." id="rapport"></textarea>
+                <textarea class="form-control text-muted w-100" placeholder="..." id="rapport" v-model="itemResponse.actions"></textarea>
             </div>
 
             <div class="d-flex  mt-3" @click="validationKn()">
@@ -99,7 +99,8 @@ export default {
                 result: '',
                 rapport: '',
                 environnement: 'private',
-                done: 'OUI'
+                done: 'OUI',
+                actions: ''
             },
             stats: null,
             pending: {
