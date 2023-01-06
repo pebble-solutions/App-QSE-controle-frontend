@@ -162,16 +162,17 @@ export default {
 
 			let totalMinutes = Math.round(countRemainingDays / (1000 * 60));
 			let days = Math.floor(totalMinutes / (60 * 24));
-			let hours = Math.floor(totalMinutes / 60);
-			let minutes = totalMinutes % 60;
+			// let hours = Math.floor(totalMinutes / 60);
+			// let minutes = totalMinutes % 60;
 
 			if (0 == days+1){
 				this.colorBadge = 'warning';
-				let displayHours = 24 + (hours+1);
-				let displayMinutes = 60 + (minutes);
+				// let displayHours = 24 + (hours+1);
+				// let displayMinutes = 60 + (minutes);
 
 
-				return `${Math.abs(displayHours)}h ${Math.abs(displayMinutes)}min`;
+				//return `${Math.abs(displayHours)}h ${Math.abs(displayMinutes)}min`;
+				return "Aujourd'hui"
 			} 
 
 			this.colorBadge = 'success';
