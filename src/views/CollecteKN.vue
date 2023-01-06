@@ -31,12 +31,12 @@
 
             </div>
 
-            <div class="my-2" v-if="collecte.done == 'OUI'">
-                <alert-message icon="bi-check-circle" variant="success">Ce contrôle est terminé</alert-message>
-            </div>
-
+            
             <template v-if="collecte.done == 'OUI'">
-                <consultation-collecte-resume :collecte="collecte"/>
+                <div class="my-2">
+                    <alert-message icon="bi-check-circle" variant="success">Ce contrôle est terminé</alert-message>
+                </div>
+                <consultation-collecte-resume :collecte="collecte" :readonly="true"/>
             </template>
     
             <template v-else>
