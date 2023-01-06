@@ -8,10 +8,10 @@
                     </h4>
                     <div>
                         Note générale:
-                        <div v-if="collecte.result_var" class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
+                        <div v-if="collecte.result_var && collecte.result_var != 'null'" class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
                             {{collecte.result_var}}
                         </div>
-                        <div v-else class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
+                        <div v-else class="badge text-uppercase" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
                     </div>
                 </div>
                 <div class="mb-2">
