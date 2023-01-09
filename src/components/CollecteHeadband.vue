@@ -3,10 +3,10 @@
         <strong class="me-2 text-secondary" style="width:40px">#{{collecte.id}}</strong>
 
         <div class="w-100 d-flex flex-column align-items-md-center flex-md-row-reverse justify-content-md-between">
-            <div class="text-nowrap badge bg-secondary">
+            <div class="text-nowrap badge rounded-pill" :class="{'text-bg-warning' : !collecte.date, 'text-bg-secondary' : collecte.date}">
                 <i class="bi bi-calendar-event me-2"></i>
-                <span class="me-2 text-warning" v-if="!collecte.date">Date non programmée</span>
-                <span v-else class="me-2">{{changeFormatDateLit(collecte.date)}}</span>
+                <span v-if="!collecte.date">Non programmé</span>
+                <span v-else>{{changeFormatDateLit(collecte.date)}}</span>
             </div>
 
             <div class="w-100 d-flex align-items-center justify-content-between">
@@ -49,10 +49,6 @@
                         <div class="d-flex" v-if="collecte.projet_label">
                             <i class="bi bi-boxes me-2"></i>
                             {{collecte.projet_label}}
-                        </div>
-
-                        <div v-else>
-                            <span class="me-2"><i class="bi bi-boxes"></i></span><small>Projet non renseigné</small>
                         </div>
                     </div>
                 </div>
