@@ -4,6 +4,7 @@
 		:cfg="cfg"
 		:cfg-menu="cfgMenu"
 		:cfg-slots="cfgSlots"
+		:sidebar-menu="appMenu"
 		
 		@auth-change="setLocal_user">
 
@@ -108,6 +109,32 @@ export default {
 
 			},
 			isConnectedUser: false,
+			appMenu: [
+				{
+					label: 'Programmation',
+					icon: 'bi bi-calendar-event-fill',
+					key: 'programmation',
+					href: '/programmation'
+				},
+				{
+					label: 'Statistiques',
+					icon: 'bi bi-bar-chart-line-fill',
+					key: 'stats',
+					href: '/'
+				},
+				{
+					label: 'Contrôle',
+					icon: 'bi bi-pen-fill',
+					key: 'collecte',
+					href: '/collecte'
+				},
+				{
+					label: 'Consultation',
+					icon: 'bi bi-eye-fill',
+					key: 'consultation',
+					href: '/consultation'
+				}
+			]
 		}
 	},
 
