@@ -64,7 +64,7 @@ export default {
                 let s = count > 1 ? "s" : "";
                 
                 let label = `${count} collecte${s} terminée${s}`;
-                return label, this.btnPlus;
+                return label;
             }
             return "Aucun contrôle terminé";
         },

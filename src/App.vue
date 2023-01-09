@@ -184,7 +184,6 @@ export default {
 
 			this.$app.apiGet(route, query)
 			.then((data) => {
-				console.log(data);
 				this.refreshProjets(data);
 			})
 			.catch(this.$app.catchError)
