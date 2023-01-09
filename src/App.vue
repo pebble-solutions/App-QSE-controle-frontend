@@ -57,7 +57,11 @@
 	</AppWrapper>
 </template>
 
-
+<style lang="scss">
+.fs-7 {
+	font-size: 0.75rem !important;
+}
+</style>
 
 <script>
 
