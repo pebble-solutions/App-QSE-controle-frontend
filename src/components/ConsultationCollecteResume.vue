@@ -19,6 +19,14 @@
 
             <div class="card-body">
 
+                <div>
+                    <strong class="d-block">Projet:</strong>
+                    <div class="ms-2 fw-lighter">
+                        <span v-if="collecte.projet_label">{{ collecte.projet_label }}</span>
+                        <span v-else>Projet non renseigné</span>
+                    </div>
+                </div>
+
                 <div class="row" v-if="listActifs">
                     <div class="mb-2 col">
                         <strong class="d-block">Contrôleur:</strong>
