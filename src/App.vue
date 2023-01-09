@@ -27,22 +27,36 @@
 
 		<template v-slot:list>
 			<AppMenu v-if="listMode === 'collecte'">
-				<!-- || $route.path == 'collecte'+coll.id -->
-				<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
-					<div class="d-flex align-items-center justify-content-between">
-						<collecte-item :collecte="col" />
-					</div>
-				</AppMenuItem>
+				<template v-if="pending.collectes">
+					<Spinner />
+				</template>
+				<template v-else>
+					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
+						<div class="d-flex align-items-center justify-content-between">
+							<collecte-item :collecte="col" />
+						</div>
+					</AppMenuItem>
+				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
-				<AppMenuItem :href="'/programmation/'+form.id"  v-for="form in formulaires" :key="form.id">
-					<formulaire-item :num="form.nb_todo" :formulaire="form" />
-				</AppMenuItem>
+				<template v-if="pending.formulaires">
+					<Spinner />
+				</template>
+				<template v-else>
+					<AppMenuItem :href="'/programmation/'+form.id"  v-for="form in formulaires" :key="form.id">
+						<formulaire-item :num="form.nb_todo" :formulaire="form" />
+					</AppMenuItem>
+				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
-				<AppMenuItem :href="'/consultation/'+form.id" v-for="form in formulaires" :key="form.id">
-					<formulaire-item :num="form.nb_done" :formulaire="form" />
-				</AppMenuItem>
+				<template v-if="pending.formulaires">
+					<Spinner />
+				</template>
+				<template v-else>
+					<AppMenuItem :href="'/consultation/'+form.id" v-for="form in formulaires" :key="form.id">
+						<formulaire-item :num="form.nb_done" :formulaire="form" />
+					</AppMenuItem>
+				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
@@ -77,6 +91,7 @@ import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
+import Spinner from './components/pebble-ui/Spinner.vue'
 
 export default {
 
@@ -242,7 +257,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner },
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
