@@ -59,7 +59,7 @@
 
 <style lang="scss">
 .fs-7 {
-	font-size: 0.75rem !important;
+	font-size: 0.80rem !important;
 }
 </style>
 

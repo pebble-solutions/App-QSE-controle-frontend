@@ -35,14 +35,14 @@
 				</div>
 			</div>
 
-			<!-- <div class="d-flex" v-if="collecte.projet_id">
+			<div class="d-flex fs-7 fw-light" v-if="collecte.projet_label">
 				<i class="bi bi-boxes me-2"></i>
-				{{getProjetName(collecte.projet_id)}}
+				{{collecte.projet_label}}
 			</div>
 
-			<div v-else>
-				<span class="me-2"><i class="bi bi-boxes"></i></span><small>Chantier non renseigné</small>
-			</div> -->
+			<div v-else class="fs-7 fw-light">
+				<span class="me-2"><i class="bi bi-boxes"></i></span><small>Projet non renseigné</small>
+			</div>
 		</div>
 	</div>	
 		
@@ -122,23 +122,6 @@ export default {
 				return personnelName.cache_nom;
 			} else {
 				return 'Personnel non renseigné'
-			}
-		},
-
-		/**
-		 * Récupère le nom du projet de la collecte
-		 * 
-		 * @param {number} projetId l'id du projet de la collecte
-		 * 
-		 * @return {string}
-		 */
-		getProjetName(projetId) {
-			let projetName = this.projets.find(projet => projet.id == projetId);
-
-			if (projetName) {
-				return projetName.intitule;
-			} else {
-				return 'projet non renseigné'
 			}
 		},
 

@@ -3,7 +3,7 @@
         <strong class="me-2 text-secondary" style="width:40px">#{{collecte.id}}</strong>
 
         <div class="w-100 d-flex flex-column align-items-md-center flex-md-row-reverse justify-content-md-between">
-            <div class="text-nowrap">
+            <div class="text-nowrap badge bg-secondary">
                 <i class="bi bi-calendar-event me-2"></i>
                 <span class="me-2 text-warning" v-if="!collecte.date">Date non programmée</span>
                 <span v-else class="me-2">{{changeFormatDateLit(collecte.date)}}</span>
@@ -42,6 +42,17 @@
                                 <strong class="fs-7 d-block d-md-inline text-secondary">Opérateur:</strong>
                                 {{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="fw-light fs-7">
+                        <div class="d-flex" v-if="collecte.projet_label">
+                            <i class="bi bi-boxes me-2"></i>
+                            {{collecte.projet_label}}
+                        </div>
+
+                        <div v-else>
+                            <span class="me-2"><i class="bi bi-boxes"></i></span><small>Projet non renseigné</small>
                         </div>
                     </div>
                 </div>
