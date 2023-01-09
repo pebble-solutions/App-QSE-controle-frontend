@@ -2,39 +2,40 @@
     <app-modal
         v-if="collecte"
         :title="('Kn n°'+collecte.id)"
+        :footer="false"
         size="lg"
         @modal-hide="backPreviousRoute()"
         className='modal-dialog-scrollable'>
-        <div v-if="pending.collecte">
-            <spinner></spinner>
-        </div>
+        
+        <spinner v-if="pending.collecte"></spinner>
+        <template v-else>
+            <!-- <div>
+                <div v-if="!edit" class="d-flex justify-content-end align-items-center">
+                    <button  class="btn btn-success" @click="edit = true">
+                        Modifier
+                    </button>
+                </div>
 
-        <!-- <div>
-            <div v-if="!edit" class="d-flex justify-content-end align-items-center">
-                <button  class="btn btn-success" @click="edit = true">
-                    Modifier
-                </button>
-            </div>
+                <div v-else class="d-flex justify-content-between align-items-center">
+                    <h2>Mode Edition</h2>
 
-            <div v-else class="d-flex justify-content-between align-items-center">
-                <h2>Mode Edition</h2>
+                    <button class="btn btn-primary" @click="updateCollecte()">
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </div> -->
 
-                <button class="btn btn-primary" @click="updateCollecte()">
-                    Enregistrer les modifications
-                </button>
-            </div>
-        </div> -->
+            <consultation-collecte-resume 
+                :collecte="collecte"
+                v-if="collecte && !edit" 
+                
+                @update-edit="updateEdit"/>
 
-        <consultation-collecte-resume 
-            :collecte="collecte"
-            v-if="collecte && !edit" 
-            
-            @update-edit="updateEdit"/>
-
-        <edit-collecte-ressume 
-            :collecte="collecte"
-            v-if="collecte && edit"
-        />
+            <edit-collecte-ressume 
+                :collecte="collecte"
+                v-if="collecte && edit"
+            />
+        </template>
     </app-modal>
 </template>
 
