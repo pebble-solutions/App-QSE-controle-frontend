@@ -13,9 +13,19 @@
                                 <span>{{typeKn}}</span>
                             </div>
 
-                            <div class="d-flex justify-content-start align-items-center">
-                                <small><i class="bi bi-boxes me-1"></i>{{projet}}</small>
+                            <div v-if="collecte.projet_id" class="d-flex justify-content-start align-items-center">
+                                <label for="collecteProjet" class="form-label"></label>
+                                <select class="form-select" id="collecteProjet" name="projet.intitule" v-model="collecte.projet_id">
+                                    <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}} </option>
+                                </select>
                             </div>
+                            <div v-else class="d-flex flex-column justify-content-start align-items-start">
+                                <label for="collecteProjet" class="form-label">Sélectionnez un projet:</label>
+                                <select class="form-select" id="collecteProjet" name="projet.intitule" v-model="collecte.projet_id">
+                                    <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+                                </select>
+                            </div>
+
                         </div>
                     </div>
                     

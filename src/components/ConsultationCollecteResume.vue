@@ -68,7 +68,7 @@
 
         <div class="card my-2">
             <div class="card-header d-flex align-items-baseline justify-content-between">
-                <h4 class="fs-5 card-title">Nombre d'items évalués</h4>     
+                <h4 class="fs-5 card-title">Nombre d'items évalués</h4>      BUG > différence en tre retour API et nombre de réponses affichées
                 <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
                     {{collecte.nb_reponse}}/ {{collecte.nb_question}}
                 </div>

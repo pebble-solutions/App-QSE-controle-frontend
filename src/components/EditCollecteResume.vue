@@ -69,15 +69,15 @@
                     <textarea class="form-control d-block" v-model="itemResponse.rapport"></textarea>
                 </div>
             </div>
-            <div v-for="rep in collecte.reponses" :key="rep.id">
+            <!-- <div v-for="rep in collecte.reponses" :key="rep.id">
                 {{ rep.question}} {{ rep.data }}{{ rep.data_var }} {{rep.ligne}}
 
-            </div>
+            </div> -->
         </div>
 
         <div class="card my-2">
             <div class="card-header d-flex align-items-baseline justify-content-between">
-                <h4 class="fs-5 card-title">Nombre d'items évalués</h4>
+                <h4 class="fs-5 card-title">Nombre d'items évalués </h4> BUG > items évalués affichés: '{{ nbReponse }}'
                 <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
                     {{collecte.nb_reponse}}/{{collecte.nb_question}}
                 </div>
@@ -114,21 +114,25 @@
                                         <textarea class="form-control d-block mt-2" v-model="reponse.commentaire" placeholder=""></textarea>
                                     </div>
                                 </template>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            
+        <div class="d-flex align-items-center justify-content-between">
+            <div>items modifiés: <span class="badge bg-warning">{{ nbReponse }}</span></div>
 
-        <div class="text-center">
-            <button tupe="button" class="btn btn-primary" @click="updateCollecte()" :disabled="pending.buttonSave">
+            <button tupe="button" class="btn btn-outline-warning" @click.prevent="updateCollecte()" :disabled="pending.buttonSave">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.buttonSave"></span>
                 Enregistrer les modifications
             </button>
-            <div>
-                items modifiés {{ nbReponse }}
-            </div>
+
+            <button tupe="button" class="btn btn-outline-primary" @click.prevent="cancelEdit()" :disabled="pending.buttonCancel">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.buttonCancel"></span>
+                Annulez les modifications
+            </button>
         </div>
     </div>
 </template>
@@ -147,6 +151,7 @@ export default {
         return {
             pending: {
                 buttonSave: false,
+                buttonCancel: false,
             },
             itemResponse: {
                 result_type: 'sami',
@@ -322,7 +327,7 @@ export default {
         },
 
         /**
-         * Initialise la data itemResponse en fonction de la collecte recu
+         * Initialise la data itemResponse en fonction de la collecte recue
          */
         initItemReponse() {
             this.itemResponse.result = this.collecte.reponses.data_var; //this.collecte.result_var
@@ -356,11 +361,31 @@ export default {
 
         updateCollecte() {
             this.pending.buttonSave = true;
-
+                console.log(this.collecte.id)
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
             .then((data) => {
                 console.log('retour edit', data);
             }).catch(this.$app.catchError).finally(() => this.pending.buttonSave = false);
+        },
+
+        cancelEdit(){
+            this.pending.buttonCancel = true;
+            this.itemResponse.reponses = [];
+
+            this.collecte.formulaire.questions.forEach(question => {
+                
+                let reponse = {
+                    question: question.id,
+                    reponse: this.getQuestionReponse(question),
+                    commentaire: this.getCommentFromQestion(question),
+                    bloc: question.information__bloc_id
+                }
+                this.itemResponse.reponses.push(reponse);
+            });
+
+            
+            this.pending.buttonCancel = false;
+            
         }
     },
 
