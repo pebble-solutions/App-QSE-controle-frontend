@@ -20,7 +20,7 @@
 
         </div>
         <div v-if="btnPlus" class="d-flex justify-content-end py-3">
-            <button @click.prevent="loadCollectes(formulaire.id)" class="btn btn-outline-primary">+ de résultats</button>
+            <button @click.prevent="LoadFollowingCollectes(formulaire.id)" class="btn btn-outline-primary">+ de résultats</button>
         </div>
         <!-- libellé{{ formulaire.groupe }},
         formualaire id{{ formulaire.id }},
@@ -62,9 +62,8 @@ export default {
             let count = this.collectes.length;
             if (count) {
                 let s = count > 1 ? "s" : "";
-                
-                let label = `${count} collecte${s} terminée${s}`;
-                return label, this.btnPlus;
+                let label = `${count} contrôle${s} affiché${s}`;
+                return label;
             }
             return "Aucun contrôle terminé";
         },
@@ -90,23 +89,23 @@ export default {
 		loadCollectes(id) {
             this.pending.collectes = true;
         
-            return this.$app.apiGet('data/GET/collecte', {limite: 'aucune', done: 'OUI', information__groupe_id:id, start:100})
+            return this.$app.apiGet('data/GET/collecte', {done:'OUI', information__groupe_id:id})
 				.then(data => {
 					this.setCollectes(data);
-                    // console.log(data);
 					return data;
 				})
 				.catch(this.$app.catchError).finally(() => this.pending.collectes = false);
 		},
 
-        LoadFollowingCollectes(information__groupe_id) {
+        LoadFollowingCollectes(id) {
             this.pending.collectes = true;
             console.log(this.collectes.length);
             console.log(this.formulaire.id);
 
             let count = this.collectes.length;
-            if(count>50) {
-                return this.$app.apiGet('data/GET/collecte', { done: 'OUI', information__groupe_id})
+            if(count>49) {
+                this.btnPlus = true
+                return this.$app.apiGet('data/GET/collecte', { done: 'OUI', information__groupe_id:id, start:0})
 				.then(data => {
                     console.log(data, 'data');
 					this.setCollectes(data);
@@ -114,6 +113,7 @@ export default {
 				})
 				.catch(this.$app.catchError).finally(() => this.pending.collectes = false);
             }
+            else {this.btnPlus= false}
         },
 
         /**
@@ -178,7 +178,10 @@ export default {
 
     mounted() {
         this.openFormulaire(this.$route.params.id);
-        this.loadCollectes(this.$route.params.id);
+        // this.loadCollectes(this.$route.params.id);
+        this.LoadFollowingCollectes(this.$route.params.id);
+
+
     },
 }
 
