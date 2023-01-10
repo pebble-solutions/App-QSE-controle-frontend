@@ -19,7 +19,7 @@ export default createStore({
 		listActifs: [],
 		collectes: [],
 		collecte: null,
-		projetsActif: [],
+		projets: [],
 		stat: null,
 		requeteStat: null,
 	},
@@ -250,8 +250,8 @@ export default createStore({
 		 * @param {Object} state Le state de vueX
 		 * @param {Array} aProjets Liste de projets actifs
 	 	 */
-		setProjetsActifs(state, aProjets) {
-			state.projetsActif = aProjets;
+		setProjets(state, aProjets) {
+			state.projets = aProjets;
 		},
 
 		/**
@@ -428,8 +428,8 @@ export default createStore({
 		 * @param {Object} context L'instance vueX
 		 * @param {Array} aProjets Liste des projets actifs
 		 */
-		refreshProjetsActifs(context, aProjets) {
-			context.commit('setProjetsActifs', aProjets);
+		refreshProjets(context, aProjets) {
+			context.commit('setProjets', aProjets);
 		},
 
 		/**

@@ -7,21 +7,17 @@
 
         <ul class="dropdown-menu">
             <li v-for="blocItem in blocs" :key="blocItem.id">
-                <router-link :to="'/collecte/'+collecte.id+'/bloc/'+blocItem.id" custom v-slot="{ navigate, href }">
-                    <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
-                        {{blocItem.bloc}}
-                        <i class="bi bi-check2" v-if="bloc_id == blocItem.id"></i>
-                    </a>
-                </router-link>
+                <div class="dropdown-item d-flex justify-content-between" type="button" @click="saveResp(blocItem)">
+                    {{blocItem.bloc}}
+                    <i class="bi bi-check2" v-if="bloc_id == blocItem.id"></i>
+                </div>
             </li>
 
             <li>
-                <router-link :to="{name: 'CollectKnEnd', params:{id:collecte.id}}" custom v-slot="{navigate, href}">
-                    <a class="dropdown-item d-flex justify-content-between" :href="href" @click="navigate">
-                        Évaluation générale
-                        <i class="bi bi-check2" v-if="!bloc_id"></i>
-                    </a>
-                </router-link>
+                <div class="dropdown-item d-flex justify-content-between" @click="saveResp('end')" type="button">
+                    Évaluation générale
+                    <i class="bi bi-check2" v-if="!bloc_id"></i>
+                </div>
             </li>
         </ul>
     </div>
@@ -40,6 +36,19 @@ export default {
 
         blocs() {
             return this.collecte.formulaire.blocs
+        }
+    },
+
+    methods: {
+        saveResp(options) {
+            this.$emit('update-resp');
+
+            if ('end' === options) {
+                this.$router.push({name: 'CollectKnEnd', params:{id: this.collecte.id}})
+            } else {
+                this.$router.push('/collecte/'+this.collecte.id+'/bloc/'+options.id);
+            }
+            
         }
     }
 }

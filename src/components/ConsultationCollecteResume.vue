@@ -2,24 +2,30 @@
     <div>
         <div class="card my-2">
             <div class="card-header">
-                <div class="d-flex flex-column">
+                <div class="d-flex align-items-center justify-content-between">
                     <h4 class="fs-5 card-title">
                         <span class="fw-lighter me-1">{{collecte.formulaire.groupe}} du {{changeFormatDateLit(collecte.date)}}</span>
                     </h4>
-                    <div>
-                        Note générale:
-                        <div v-if="collecte.result_var && collecte.result_var != 'null'" class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
-                            {{collecte.result_var}}
-                        </div>
-                        <div v-else class="badge text-uppercase" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
+                    <div class="text-success" v-if="collecte.date_done">Validé le {{changeFormatDateLit(collecte.date_done)}}</div>
+                </div>
+                <div>
+                    Note générale:
+                    <div v-if="collecte.result_var && collecte.result_var != 'null'" class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
+                        {{collecte.result_var}}
                     </div>
+                    <div v-else class="badge text-uppercase" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
                 </div>
-                <div class="mb-2">
-                </div>
-            
             </div>
 
             <div class="card-body">
+
+                <div>
+                    <strong class="d-block">Projet:</strong>
+                    <div class="ms-2 fw-lighter">
+                        <span v-if="collecte.projet_label">{{ collecte.projet_label }}</span>
+                        <span v-else>Projet non renseigné</span>
+                    </div>
+                </div>
 
                 <div class="row" v-if="listActifs">
                     <div class="mb-2 col">
@@ -95,7 +101,7 @@
             </div>
         </div>
 
-        <div class="text-center">
+        <div class="text-center" v-if="!readonly">
             <button type="button" class="btn btn-primary" @click="$emit('updateEdit')">
                 Modifier les informations
             </button>
@@ -112,7 +118,8 @@ import fr from 'date-and-time/locale/fr';
 
 export default {
     props: {
-        collecte: Object
+        collecte: Object,
+        readonly: Boolean
     },
 
     computed: {

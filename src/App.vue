@@ -4,6 +4,7 @@
 		:cfg="cfg"
 		:cfg-menu="cfgMenu"
 		:cfg-slots="cfgSlots"
+		:sidebar-menu="appMenu"
 		
 		@auth-change="setLocal_user">
 
@@ -27,22 +28,36 @@
 
 		<template v-slot:list>
 			<AppMenu v-if="listMode === 'collecte'">
-				<!-- || $route.path == 'collecte'+coll.id -->
-				<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
-					<div class="d-flex align-items-center justify-content-between">
-						<collecte-item :collecte="col" />
-					</div>
-				</AppMenuItem>
+				<template v-if="pending.collectes">
+					<Spinner />
+				</template>
+				<template v-else>
+					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
+						<div class="d-flex align-items-center justify-content-between">
+							<collecte-item :collecte="col" />
+						</div>
+					</AppMenuItem>
+				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
-				<AppMenuItem :href="'/programmation/'+form.id"  v-for="form in formulaires" :key="form.id">
-					<formulaire-item :num="form.nb_todo" :formulaire="form" />
-				</AppMenuItem>
+				<template v-if="pending.formulaires">
+					<Spinner />
+				</template>
+				<template v-else>
+					<AppMenuItem :href="'/programmation/'+form.id"  v-for="form in formulaires" :key="form.id">
+						<formulaire-item :num="form.nb_todo" :formulaire="form" />
+					</AppMenuItem>
+				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
-				<AppMenuItem :href="'/consultation/'+form.id" v-for="form in formulaires" :key="form.id">
-					<formulaire-item :num="form.nb_done" :formulaire="form" />
-				</AppMenuItem>
+				<template v-if="pending.formulaires">
+					<Spinner />
+				</template>
+				<template v-else>
+					<AppMenuItem :href="'/consultation/'+form.id" v-for="form in formulaires" :key="form.id">
+						<formulaire-item :num="form.nb_done" :formulaire="form" />
+					</AppMenuItem>
+				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
@@ -57,7 +72,11 @@
 	</AppWrapper>
 </template>
 
-
+<style lang="scss">
+.fs-7 {
+	font-size: 0.80rem !important;
+}
+</style>
 
 <script>
 
@@ -73,6 +92,7 @@ import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
+import Spinner from './components/pebble-ui/Spinner.vue'
 
 export default {
 
@@ -85,14 +105,41 @@ export default {
 			pending: {
 				formulaires: true,
 				collectes: true,
-				projetsActifs: true
+				projets: true,
+
 			},
 			isConnectedUser: false,
+			appMenu: [
+				{
+					label: 'Programmation',
+					icon: 'bi bi-calendar-event-fill',
+					key: 'programmation',
+					href: '/programmation'
+				},
+				{
+					label: 'Statistiques',
+					icon: 'bi bi-bar-chart-line-fill',
+					key: 'stats',
+					href: '/'
+				},
+				{
+					label: 'Contrôle',
+					icon: 'bi bi-pen-fill',
+					key: 'collecte',
+					href: '/collecte'
+				},
+				{
+					label: 'Consultation',
+					icon: 'bi bi-eye-fill',
+					key: 'consultation',
+					href: '/consultation'
+				}
+			]
 		}
 	},
 
 	computed: {
-		...mapState(['openedElement','collectes','formulaires', 'listActifs', 'projetsActif']),
+		...mapState(['openedElement','collectes','formulaires', 'listActifs', 'projets']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -137,7 +184,7 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjetsActifs', 'setCollectes']),
+		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -170,6 +217,24 @@ export default {
 		 */
 		loadFormulaires() {
 			return this.loadRessources('formulaire')
+		},
+
+		/**
+		 * Charge l'ensemble des projets depuis le serveur et les stock dans le store
+		 */
+		loadProjets() {
+			this.pending.projets = true;
+
+			let route = 'projet/GET/list';
+			let query = {'in_production' : true}
+
+			this.$app.apiGet(route, query)
+			.then((data) => {
+				this.refreshProjets(data);
+			})
+			.catch(this.$app.catchError)
+			.finally(() => {this.pending.projets = false});
+
 		},
 
 		/**
@@ -217,26 +282,9 @@ export default {
 			.catch(this.$app.catchError)
 			.finally(this.pending.loadAgent = false);
         },
-
-		/**
-         * Récupère tout les projets en production
-         */
-		getAllProjetsActif() {
-            this.pending.projetsActifs = true;
-
-            let urlApi = '/projet/GET/list';
-
-            this.$app.apiGet(urlApi, {
-                in_production: true
-            }).then( (data) => {
-                this.refreshProjetsActifs(data);
-            }).catch(this.$app.catchError);
-
-            this.pending.projetsActifs = false;
-        },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner },
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
@@ -244,7 +292,7 @@ export default {
 			if (this.isConnectedUser) {
 				this.loadFormulaires();
 				this.loadAgent();
-				// this.getAllProjetsActif();
+				this.loadProjets();
 			}
 		});
 	}

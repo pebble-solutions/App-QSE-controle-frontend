@@ -1,36 +1,37 @@
 <template>
-    <div v-if="formulaire" class="container">
-        <div class="d-flex flex-row justify-content-between align-items-center py-3">
-            <div class="d-flex flex-row justify-content-between align-items-center">
-                <router-link :to="{name:'consultation'}" v-slot="{navigate,href}" custom>
-                    <a :href="href" @click="navigate" class="btn btn-light"><i class="bi bi-arrow-left"></i></a>
-                </router-link>
-
-                <div class="ms-2">
-                    <h1 class="fs-3 m-0">{{formulaire.groupe}}</h1> 
-                    <div class="text-secondary">{{collectes_number_label}}</div>
+    <Spinner v-if="pending.collectes" />
+    <template v-else>
+        <div v-if="formulaire" class="container">
+            <div class="d-flex flex-row justify-content-between align-items-center py-3">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <router-link :to="{name:'consultation'}" v-slot="{navigate,href}" custom>
+                        <a :href="href" @click="navigate" class="btn btn-light"><i class="bi bi-arrow-left"></i></a>
+                    </router-link>
+    
+                    <div class="ms-2">
+                        <h1 class="fs-3 m-0">{{formulaire.groupe}}</h1> 
+                        <div class="text-secondary">{{collectes_number_label}}</div>
+                    </div>
                 </div>
             </div>
+    
+            <div class="list-group">
+                <div v-for="col in collectes" :key=col.id class="list-group-item" @click="loadCollecteModal(col.id)" type="button">
+                    <collecte-headband :collecte="col" :personnels="listActifs" :editable="false"/>
+                </div> 
+    
+            </div>
+            <div v-if="btnPlus" class="d-flex justify-content-end py-3">
+                <button @click.prevent="loadCollectes(formulaire.id)" class="btn btn-outline-primary">+ de résultats</button>
+            </div>
+            <!-- libellé{{ formulaire.groupe }},
+            formualaire id{{ formulaire.id }},
+            formulaire nb done{{ formulaire.nb_done }},
+            collectes longueur{{ collectes.length }}, -->
         </div>
 
-        <div class="list-group">
-            <div v-for="col in collectes" :key=col.id class="list-group-item" @click="loadCollecteModal(col.id)" type="button">
-                <collecte-headband :collecte="col" :personnels="listActifs" :editable="false"/>
-            </div> 
-
-        </div>
-        <div v-if="btnPlus" class="d-flex justify-content-end py-3">
-            <button @click.prevent="LoadFollowingCollectes(formulaire.id)" class="btn btn-outline-primary">+ de résultats</button>
-        </div>
-        <!-- libellé{{ formulaire.groupe }},
-        formualaire id{{ formulaire.id }},
-        formulaire nb done{{ formulaire.nb_done }},
-        collectes longueur{{ collectes.length }}, -->
-        
-
-        
         <router-view></router-view>
-    </div>
+    </template>
 </template>
 
 <script>
@@ -38,6 +39,7 @@ import { mapActions, mapState } from 'vuex';
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
 import CollecteHeadband from '../components/CollecteHeadband.vue';
+import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
 
@@ -62,7 +64,8 @@ export default {
             let count = this.collectes.length;
             if (count) {
                 let s = count > 1 ? "s" : "";
-                let label = `${count} contrôle${s} affiché${s}`;
+                
+                let label = `${count} collecte${s} terminée${s}`;
                 return label;
             }
             return "Aucun contrôle terminé";
@@ -167,7 +170,7 @@ export default {
         },
     },
 
-    components: { CollecteHeadband },
+    components: { CollecteHeadband, Spinner },
 
     beforeRouteUpdate(to) {
         if (this.formulaire?.id != to.params.id) {

@@ -6,7 +6,7 @@
                 <h2 class="card-title">{{ bloc.bloc }}</h2>
 
                 <div v-if="$route.params.bloc">
-                    <bloc-navigation :bloc_id="$route.params.bloc"></bloc-navigation>
+                    <bloc-navigation :bloc_id="$route.params.bloc" :update-resp="sendResp('nav')"></bloc-navigation>
                 </div>
             </div>
 
@@ -168,9 +168,12 @@ export default {
                     case 'next':
                         this.$router.push({name: 'collecteKnBloc', params:{id:this.collecte.id, bloc:this.nextBloc.id}});
                         break;
+
+                    case 'end':
+                        this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});
+                        break;
                 
                     default:
-                        this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});
                         break;
                 }
             })

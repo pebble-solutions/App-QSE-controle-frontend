@@ -1,51 +1,60 @@
 <template>
-    <div class="d-flex flex-wrap justify-content-between align-items-center">
-        <div class="d-flex w-100">
-            <div class="d-flex align-items-center">
-                <strong class="me-2 text-secondary" style="width:40px">#{{collecte.id}}</strong>
+    <div class="d-flex justify-content-between align-items-center">
+        <strong class="me-2 text-secondary" style="width:40px">#{{collecte.id}}</strong>
+
+        <div class="w-100 d-flex flex-column align-items-md-center flex-md-row-reverse justify-content-md-between">
+            <div class="text-nowrap badge rounded-pill" :class="{'text-bg-warning' : !collecte.date, 'text-bg-secondary' : collecte.date}">
+                <i class="bi bi-calendar-event me-2"></i>
+                <span v-if="!collecte.date">Non programmé</span>
+                <span v-else>{{changeFormatDateLit(collecte.date)}}</span>
             </div>
 
-            <div class="w-100 d-flex flex-column flex-md-row-reverse justify-content-md-between">
-                <div class="d-flex justify-content-between align-items-start mb-2 flex-md-row-reverse align-items-md-center">
-                    <div>
-                        <i class="bi bi-calendar-event me-2"></i>
-                        <span class="me-2 text-warning" v-if="!collecte.date">Date non programmée</span>
-                        <span v-else class="me-2">{{changeFormatDateLit(collecte.date)}}</span>
-                    </div>
-
-                    <div v-if="collecte.result_var && collecte.result_var != 'null' && !editable" class="badge fs-6 text-uppercase me-md-2" :class="classNameFromSAMI(collecte.result_var)">
-                        {{collecte.result_var}}
-                    </div>
-                </div>
-
+            <div class="w-100 d-flex align-items-center justify-content-between">
                 <div>
                     <div  v-if="!getPersonnelNameFromId(collecte.enqueteur__structure__personnel_id)" class="me-2 text-warning">
-						Contrôleur non programmé 
-					</div>
+                        Contrôleur non programmé 
+                    </div>
 
                     <div v-else class="d-flex align-items-center">
                         <span>
                             <user-image :name="getPersonnelNameFromId(collecte.enqueteur__structure__personnel_id)" className="me-1" size="sm" />
                         </span>
                         
-                        Contrôleur: {{getPersonnelNameFromId(collecte.enqueteur__structure__personnel_id)}}
+                        <div>
+                            <strong class="fs-7 d-block d-md-inline text-secondary">Contrôleur:</strong>
+                            {{getPersonnelNameFromId(collecte.enqueteur__structure__personnel_id)}}
+                        </div>
                     </div>
 
                     <div class="d-flex align-items-center text-secondary">
                         <i class="bi bi-arrow-return-right me-1 ms-2"></i>
 
                         <div v-if="!getPersonnelNameFromId(collecte.cible__structure__personnel_id)" class="me-2 text-warning">
-							Opérateur non programmé 
-						</div>
+                            Opérateur non programmé 
+                        </div>
 
-                        <div v-else class="d-flex align-items-center fs-7">
+                        <div v-else class="d-flex align-items-center">
                             <span>
-								<user-image :name="getPersonnelNameFromId(collecte.cible__structure__personnel_id)" className="me-1" size="sm" />
-							</span>
+                                <user-image :name="getPersonnelNameFromId(collecte.cible__structure__personnel_id)" className="me-1" size="sm" />
+                            </span>
 
-                            Opérateur: {{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
+                            <div>
+                                <strong class="fs-7 d-block d-md-inline text-secondary">Opérateur:</strong>
+                                {{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
+                            </div>
                         </div>
                     </div>
+
+                    <div class="fw-light fs-7">
+                        <div class="d-flex" v-if="collecte.projet_label">
+                            <i class="bi bi-boxes me-2"></i>
+                            {{collecte.projet_label}}
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="collecte.result_var && collecte.result_var != 'null' && !editable" class="badge fs-6 text-uppercase me-md-2" :class="classNameFromSAMI(collecte.result_var)">
+                    {{collecte.result_var}}
                 </div>
             </div>
         </div>

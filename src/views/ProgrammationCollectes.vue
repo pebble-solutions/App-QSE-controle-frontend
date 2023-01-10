@@ -3,30 +3,32 @@
         <Spinner></Spinner>
     </div>
 
-    <div v-if="formulaire" class="container py-2">
-        <div class="d-flex flex-row justify-content-between align-items-center py-3">
-            <div class="d-flex flex-row flex-wrap justify-content-between align-items-center">
-                <h1 class="fs-3 m-0 me-2">{{formulaire.groupe}}</h1> 
-                <div class="text-secondary">{{collectes_number_label}}</div>
+    <template v-else>
+        <div v-if="formulaire" class="container py-2">
+            <div class="d-flex flex-row justify-content-between align-items-center py-3">
+                <div class="d-flex flex-row flex-wrap justify-content-between align-items-center">
+                    <h1 class="fs-3 m-0 me-2">{{formulaire.groupe}}</h1> 
+                    <div class="text-secondary">{{collectes_number_label}}</div>
+                </div>
+                <div>
+                    <router-link :to="'/programmation/'+formulaire.id+'/0/edit'" v-slot="{navigate,href}" custom>
+                        <a :href="href" @click="navigate" class="btn btn-primary">
+                            <i class="bi bi-plus"></i> Programmer un contrôle
+                        </a>
+                    </router-link>
+                </div>
             </div>
-            <div>
-                <router-link :to="'/programmation/'+formulaire.id+'/0/edit'" v-slot="{navigate,href}" custom>
-                    <a :href="href" @click="navigate" class="btn btn-primary">
-                        <i class="bi bi-plus"></i> Programmer un contrôle
-                    </a>
-                </router-link>
-            </div>
+    
+            <div class="list-group" v-if="collectes">
+                <div v-for="col in collectes" :key=col.id class="list-group-item" @click="editCollecte(col.id)" type="button">
+                    <collecte-headband :collecte="col" :personnels="listActifs"/>
+                </div>
+            </div>            
         </div>
-
-        <div class="list-group" v-if="collectes">
-            <div v-for="col in collectes" :key=col.id class="list-group-item" @click="editCollecte(col.id)" type="button">
-                <collecte-headband :collecte="col" :personnels="listActifs"/>
-            </div>
-        </div>
-
-        <router-view></router-view>
         
-    </div>
+        <router-view></router-view>
+    </template>
+    
 </template>
 
 <script>

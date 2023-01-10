@@ -3,7 +3,7 @@
     <div class="container py-3">
         <div v-if="collecte">
             <div>
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
                         <UserImage class="me-2" :name="agent"></UserImage>
                         <div>
@@ -12,31 +12,25 @@
                                 <span class="me-2">#{{collecte.id}}</span>
                                 <span>{{typeKn}}</span>
                             </div>
+
+                            <div class="d-flex justify-content-start align-items-center">
+                                <small><i class="bi bi-boxes me-1"></i>{{projet}}</small>
+                            </div>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge bg-secondary me-2">Programmé {{changeFormatDateLit(collecte.date)}}</span>
-                        <!-- <span class="badge bg-warning">{{dateJour()}}</span> -->
-                    </div>
                     
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-secondary me-2">Programmé le {{changeFormatDateLit(collecte.date)}}</span>
+                    </div>                    
                 </div>
-
-                    <!-- <div>
-                        <i class="bi bi-person-fill-check me-1"></i>
-                        {{controleur}}
-                    </div> -->
-
-                    <!-- <div class="d-flex justify-content-start align-items-center">
-                        <small><i class="bi bi-boxes me-1"></i>{{projet}}</small>
-                    </div> -->
             </div>
 
-            <div class="my-2" v-if="collecte.done == 'OUI'">
-                <alert-message icon="bi-check-circle" variant="success">Ce contrôle est terminé</alert-message>
-            </div>
-
+            
             <template v-if="collecte.done == 'OUI'">
-                <consultation-collecte-resume :collecte="collecte"/>
+                <div class="my-2">
+                    <alert-message icon="bi-check-circle" variant="success">Ce contrôle est terminé</alert-message>
+                </div>
+                <consultation-collecte-resume :collecte="collecte" :readonly="true"/>
             </template>
     
             <template v-else>
@@ -79,7 +73,7 @@ export default {
     components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner, UserImage },
 
     computed: {
-        ...mapState(['responses', 'collecte', 'listActifs', 'formulaires', 'projetsActif']),
+        ...mapState(['responses', 'collecte', 'listActifs', 'formulaires', 'projets']),
 
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
@@ -127,12 +121,12 @@ export default {
 		 * @return {string}
 		 */
 		projet() {
-			let projetName = this.projetsActif.find(projet => projet.id == this.collecte.projet_id);
+			let projetName = this.projets.find(projet => projet.id == this.collecte.projet_id);
 
 			if (projetName) {
 				return projetName.intitule;
 			} else {
-				return 'Chantier non renseigné'
+				return 'Projet non renseigné'
 			}
 		},
 

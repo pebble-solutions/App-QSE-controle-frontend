@@ -8,18 +8,26 @@
                 </select>
             </div>
         </div>
+
+        <div class="col mb-3">
+            <label for="collecteEnqueteur" class="form-label">Projet</label>
+            <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.projet_id">
+                <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+            </select>
+        </div>
+
         <div class="mb-3">
             <label class="form-label" for="collecteDate">Date programmée</label>
             <input type="date" class="form-control" id="collecteDate" name="date" v-model="tmpCollecte.date" :disabled="isReadonly('date')">
         </div>
         <div class="row g-2">
-            <div class="col mb-3">
+            <div class="col-12 col-md-6 mb-3">
                 <label for="collecteCible" class="form-label">Opérateur </label>
                 <select class="form-select" id="collecteCible" name="cible_personnel" v-model="tmpCollecte.cible_personnel" :disabled="isReadonly('cible_personnel')">
                     <option v-for="(agent) in personnels" :value="agent.id" :key="agent.id" > {{agent.cache_nom}} </option>
                 </select>
             </div>
-            <div class="col mb-3">
+            <div class="col-12 col-md-6 mb-3">
                 <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
                 <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')">
                     <option  v-for="(controleur) in personnels" :value="controleur.id" :key="controleur.id">{{controleur.cache_nom}}</option>
@@ -31,6 +39,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 
 export default {
     props: {
@@ -44,6 +53,10 @@ export default {
         return {
             tmpCollecte: null
         }
+    },
+
+    computed: {
+        ...mapState(['projets'])
     },
 
     emits:['delete-collecte', 'update-collecte'],
