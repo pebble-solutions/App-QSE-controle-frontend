@@ -8,8 +8,12 @@
 		<div class="d-flex flex-column align-content-between">
 			<div class="d-flex align-items-center">
 				<small class="fw-lighter me-2">#{{collecte.id}}</small>
-				<span class="badge bg-secondary me-2">{{changeFormatDateLit(collecte.date)}}</span>
-				<span 
+				<span class="badge bg-warning me-2" v-if="!collecte.date || collecte.date ==='null' || collecte.date === '0000-00-00 00:00:00' || collecte.date ==='NULL'">date non renseignée</span>
+				<span v-else class="badge bg-secondary me-2">{{changeFormatDateLit(collecte.date)}}</span>
+
+				<span class="badge bg-warning me-2" v-if="!collecte.date || collecte.date=='0000-00-00 00:00:00'"></span>
+
+				<span v-else
 					class="badge"
 					:class="{
 						'bg-danger': colorBadge == 'danger',
