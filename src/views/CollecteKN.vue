@@ -50,7 +50,6 @@
 </template>
 
 <script>
-
 import {mapState, mapActions} from 'vuex';
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Intro from '../components/Intro.vue';

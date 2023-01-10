@@ -48,7 +48,7 @@ export default {
             pending: {
                 collectes: true
             },
-            btnPlus: true,
+            btnPlus: false,
         }
     },
 
@@ -181,8 +181,8 @@ export default {
 
     mounted() {
         this.openFormulaire(this.$route.params.id);
-        // this.loadCollectes(this.$route.params.id);
-        this.LoadFollowingCollectes(this.$route.params.id);
+        this.loadCollectes(this.$route.params.id);
+        // this.LoadFollowingCollectes(this.$route.params.id);
 
 
     },
