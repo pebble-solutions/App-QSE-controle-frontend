@@ -32,6 +32,7 @@
 					<Spinner />
 				</template>
 				<template v-else>
+					<alert-message class-name="m-2" v-if="noVal(collectes)">Il n'y a aucun contrôle programmé.</alert-message>
 					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
 						<div class="d-flex align-items-center justify-content-between">
 							<collecte-item :collecte="col" />
@@ -93,6 +94,7 @@ import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
 import Spinner from './components/pebble-ui/Spinner.vue'
+import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 
 export default {
 
@@ -139,7 +141,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['openedElement','collectes','formulaires', 'listActifs', 'projets']),
+		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -282,9 +284,22 @@ export default {
 			.catch(this.$app.catchError)
 			.finally(this.pending.loadAgent = false);
         },
+
+		/**
+		 * Teste si la variable passé en argument n'a pas de valeur (0, null, [], "")
+		 * 
+		 * @param {mixed} val Une valeur à tester
+		 * 
+		 * @return {boolean}
+		 */
+		noVal(val) {
+			if (!val) return true;
+			if (!val.length) return true;
+			return false;
+		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, AlertMessage },
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
