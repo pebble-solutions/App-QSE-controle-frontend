@@ -89,10 +89,10 @@ export default {
          * 
 		 * @return {Promise<object>}
 		 */
-		loadCollectes(information__groupe_id) {
+		loadCollectes(id) {
             this.pending.collectes = true;
         
-            return this.$app.apiGet('data/GET/collecte', {limite: 'aucune', done: 'OUI', information__groupe_id})
+            return this.$app.apiGet('data/GET/collecte', {done:'OUI', information__groupe_id:id})
 				.then(data => {
 					this.setCollectes(data);
 					return data;
@@ -100,14 +100,15 @@ export default {
 				.catch(this.$app.catchError).finally(() => this.pending.collectes = false);
 		},
 
-        LoadFollowingCollectes(information__groupe_id) {
+        LoadFollowingCollectes(id) {
             this.pending.collectes = true;
             console.log(this.collectes.length);
             console.log(this.formulaire.id);
 
             let count = this.collectes.length;
-            if(count>50) {
-                return this.$app.apiGet('data/GET/collecte', { done: 'OUI', information__groupe_id})
+            if(count>49) {
+                this.btnPlus = true
+                return this.$app.apiGet('data/GET/collecte', { done: 'OUI', information__groupe_id:id, start:0})
 				.then(data => {
                     console.log(data, 'data');
 					this.setCollectes(data);
@@ -115,6 +116,7 @@ export default {
 				})
 				.catch(this.$app.catchError).finally(() => this.pending.collectes = false);
             }
+            else {this.btnPlus= false}
         },
 
         /**
@@ -180,6 +182,9 @@ export default {
     mounted() {
         this.openFormulaire(this.$route.params.id);
         this.loadCollectes(this.$route.params.id);
+        // this.LoadFollowingCollectes(this.$route.params.id);
+
+
     },
 }
 

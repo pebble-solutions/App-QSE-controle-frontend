@@ -20,7 +20,8 @@
                     </div>
                     
                     <div class="d-flex align-items-center">
-                        <span class="badge bg-secondary me-2">Programmé le {{changeFormatDateLit(collecte.date)}}</span>
+                        <span class="badge bg-warning me-2" v-if="!collecte.date || collecte.date ==='null' || collecte.date === '0000-00-00 00:00:00' || collecte.date ==='NULL'">date non renseignée</span>
+                        <span v-else class="badge bg-secondary me-2">Programmé le {{changeFormatDateLit(collecte.date)}}</span>
                     </div>                    
                 </div>
             </div>
@@ -50,7 +51,6 @@
 </template>
 
 <script>
-
 import {mapState, mapActions} from 'vuex';
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Intro from '../components/Intro.vue';
@@ -202,8 +202,8 @@ export default {
             this.loadCollecte(to.params.id);
         }
     },
-
-
+    
+    
     /**
      * Lorsque l'élément est monté, on va lire l'élément à charger passé en paramètre.
      */

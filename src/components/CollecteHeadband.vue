@@ -5,7 +5,7 @@
         <div class="w-100 d-flex flex-column align-items-md-center flex-md-row-reverse justify-content-md-between">
             <div class="text-nowrap badge rounded-pill" :class="{'text-bg-warning' : !collecte.date, 'text-bg-secondary' : collecte.date}">
                 <i class="bi bi-calendar-event me-2"></i>
-                <span v-if="!collecte.date">Non programmé</span>
+                <span v-if="!collecte.date || collecte.date ==='null' || collecte.date === '0000-00-00 00:00:00' || collecte.date ==='NULL'">Non renseignée</span>
                 <span v-else>{{changeFormatDateLit(collecte.date)}}</span>
             </div>
 
@@ -50,6 +50,7 @@
                             <i class="bi bi-boxes me-2"></i>
                             {{collecte.projet_label}}
                         </div>
+                        <div v-else class="text-warning">projet non renseigné</div>
                     </div>
                 </div>
 
