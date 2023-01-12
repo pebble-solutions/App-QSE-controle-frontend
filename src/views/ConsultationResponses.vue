@@ -27,6 +27,7 @@
 
             <consultation-collecte-resume 
                 :collecte="collecte"
+                :readonly="true"
                 v-if="collecte && !edit" 
                 
                 @update-edit="updateEdit"/>
@@ -40,6 +41,7 @@
 </template>
 
 <script>
+
 import { mapActions, mapState } from 'vuex';
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue'
 import EditCollecteRessume from "../components/EditCollecteResume.vue"

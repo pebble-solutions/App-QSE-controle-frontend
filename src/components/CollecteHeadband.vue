@@ -46,11 +46,10 @@
                     </div>
 
                     <div class="fw-light fs-7">
-                        <div class="d-flex" v-if="collecte.projet_label">
+                        <div class="d-flex" v-if="collecte.projet_id">
                             <i class="bi bi-boxes me-2"></i>
-                            {{collecte.projet_label}}
+                            {{ projet_label }}
                         </div>
-                        <div v-else class="text-warning">projet non renseigné</div>
                     </div>
                 </div>
 
@@ -79,6 +78,25 @@ export default {
 			default: true,
 		}
 	},
+
+    computed: {
+        /**
+         * Retourne le libellé du projet en fonction des informations projet_id et projet_label sur la collecte.
+         * 
+         * @return {string}
+         */
+        projet_label() {
+            let c = this.collecte;
+            let label;
+            if (c.projet_id) {
+                label = c.projet_label ? c.projet_label : `Projet sans nom (#${c.projet_id})`;
+            }
+            else {
+                label = "Projet non renseigné";
+            }
+            return label;
+        }
+    },
 
 	methods: {
 		/**

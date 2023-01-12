@@ -45,11 +45,11 @@
 					<Spinner />
 				</template>
 				<template v-else>
-					<div v-for="form in formulaires" :key="form.id">
+					<template v-for="form in formulaires" :key="form.id">
 						<AppMenuItem :href="'/programmation/'+form.id" v-if="form.nb_todo" >
 							<formulaire-item :num="form.nb_todo" :formulaire="form" />
 						</AppMenuItem>
-					</div>
+					</template>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
@@ -57,12 +57,15 @@
 					<Spinner />
 				</template>
 				<template v-else>
+					<!--
+					Implémentation version 2
 					<SearchControl/>
-					<div v-for="form in formulaires" :key="form.id">
+					-->
+					<template v-for="form in formulaires" :key="form.id">
 						<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
 							<formulaire-item :num="form.nb_done" :formulaire="form" />
 						</AppMenuItem>
-					</div>
+					</template>
 					<LoadPlus/>
 				</template>
 			</AppMenu>
@@ -101,8 +104,8 @@ import FormulaireItem from './components/menu/FormulaireItem.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
 import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
-import SearchControl from './components/SearchControl.vue'
-import LoadPlus from './components/LoadPlus.vue'
+// import SearchControl from './components/SearchControl.vue'
+// import LoadPlus from './components/LoadPlus.vue'
 
 export default {
 
@@ -307,7 +310,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, AlertMessage, SearchControl, LoadPlus },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, AlertMessage },
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
