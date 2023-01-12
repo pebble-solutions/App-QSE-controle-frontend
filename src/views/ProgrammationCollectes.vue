@@ -31,7 +31,7 @@
     
 </template>
 
-<script>
+<script lang="js">
 
 import { mapActions, mapState } from 'vuex';
 import CollecteHeadband from '../components/CollecteHeadband.vue';
