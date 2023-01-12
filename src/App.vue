@@ -45,9 +45,11 @@
 					<Spinner />
 				</template>
 				<template v-else>
-					<AppMenuItem :href="'/programmation/'+form.id"  v-for="form in formulaires" :key="form.id">
-						<formulaire-item :num="form.nb_todo" :formulaire="form" />
-					</AppMenuItem>
+					<div v-for="form in formulaires" :key="form.id">
+						<AppMenuItem :href="'/programmation/'+form.id" v-if="form.nb_todo" >
+							<formulaire-item :num="form.nb_todo" :formulaire="form" />
+						</AppMenuItem>
+					</div>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
@@ -56,12 +58,12 @@
 				</template>
 				<template v-else>
 					<SearchControl/>
-					<LoadPlus/>
 					<div v-for="form in formulaires" :key="form.id">
 						<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
-								<formulaire-item :num="form.nb_done" :formulaire="form" />
+							<formulaire-item :num="form.nb_done" :formulaire="form" />
 						</AppMenuItem>
 					</div>
+					<LoadPlus/>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
