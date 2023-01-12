@@ -55,6 +55,8 @@
 					<Spinner />
 				</template>
 				<template v-else>
+					<SearchControl/>
+					<LoadPlus/>
 					<div v-for="form in formulaires" :key="form.id">
 						<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
 								<formulaire-item :num="form.nb_done" :formulaire="form" />
@@ -97,6 +99,8 @@ import FormulaireItem from './components/menu/FormulaireItem.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
 import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
+import SearchControl from './components/SearchControl.vue'
+import LoadPlus from './components/LoadPlus.vue'
 
 export default {
 
@@ -301,7 +305,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, AlertMessage },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, AlertMessage, SearchControl, LoadPlus },
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

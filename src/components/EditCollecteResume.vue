@@ -87,7 +87,7 @@
                 <div v-for="bloc in blocs" :key="'bloc-'+bloc.id" class="accordion-item">
                     <h2 class="accordion-header" :id="'heading-'+bloc.id">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-'+bloc.id" aria-expanded="true" :aria-controls="'collapse-'+bloc.id">
-                            {{bloc.bloc}} {{ bloc.id }}
+                            {{bloc.bloc}} 
                         </button>
                     </h2>
                     <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id">
@@ -373,7 +373,6 @@ export default {
             this.itemResponse.reponses = [];
 
             this.collecte.formulaire.questions.forEach(question => {
-                
                 let reponse = {
                     question: question.id,
                     reponse: this.getQuestionReponse(question),
@@ -382,10 +381,7 @@ export default {
                 }
                 this.itemResponse.reponses.push(reponse);
             });
-
-            
             this.pending.buttonCancel = false;
-            
         }
     },
 
