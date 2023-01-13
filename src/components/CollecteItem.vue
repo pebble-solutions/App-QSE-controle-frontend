@@ -44,9 +44,9 @@
 				{{collecte.projet_label}}
 			</div>
 
-			<div v-else class="fs-7 fw-light">
+			<!-- <div v-else class="fs-7 fw-light">
 				<span class="me-2"><i class="bi bi-boxes"></i></span><small>Projet non renseigné</small>
-			</div>
+			</div> -->
 		</div>
 	</div>	
 		
@@ -74,15 +74,15 @@ export default {
     computed: {
         ...mapState(['formulaires', 'listActifs', 'projets']),
 
-		/**
-		 * Retourn la date de la collecte formater en d/m/Y
-		 * 
-		 * @return {string}
-		 */
-		collectDate() {
-			let date = new Date(this.collecte.date);
-			return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
-		},
+		// /**
+		//  * Retourn la date de la collecte formater en d/m/Y
+		//  * 
+		//  * @return {string}
+		//  */
+		// collectDate() {
+		// 	let date = new Date(this.collecte.date);
+		// 	return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+		// },
     },
 
     methods: {

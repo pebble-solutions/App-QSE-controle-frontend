@@ -13,7 +13,7 @@
                     <div v-if="collecte.result_var && collecte.result_var != 'null'" class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
                         {{collecte.result_var}}
                     </div>
-                    <div v-else class="badge text-uppercase" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
+                    <div v-else class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
                 </div>
             </div>
 
@@ -68,9 +68,9 @@
 
         <div class="card my-2">
             <div class="card-header d-flex align-items-baseline justify-content-between">
-                <h4 class="fs-5 card-title">Nombre d'items évalués</h4>      BUG > différence en tre retour API et nombre de réponses affichées
+                <h4 class="fs-5 card-title">Nombre d'items évalués</h4> 
                 <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
-                    {{collecte.nb_reponse}}/ {{collecte.nb_question}}
+                {{collecte.nb_reponse}} / {{collecte.nb_question}}
                 </div>
             </div>
 
@@ -88,9 +88,9 @@
                                 <div class="list-group-item" v-for="question in getBlocQuestions(bloc)" :key="question.id">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <em class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">{{question.ligne}}</em>
-                                        <strong class="badge text-uppercase ms-1" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
+                                        <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
                                     </div>
-                                        <div>
+                                    <div>
                                         <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
                                     </div>
                                 </div>
@@ -101,8 +101,8 @@
             </div>
         </div>
 
-        <div class="text-center" v-if="!readonly">
-            <button type="button" class="btn btn-primary" @click="$emit('updateEdit')">
+        <div class="text-center my-3" v-if="!readonly">
+            <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">
                 Modifier les informations
             </button>
         </div>

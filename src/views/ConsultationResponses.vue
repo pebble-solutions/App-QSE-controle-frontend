@@ -34,12 +34,14 @@
             <edit-collecte-ressume 
                 :collecte="collecte"
                 v-if="collecte && edit"
+                @cancel-edit="updateEdit"
             />
         </template>
     </app-modal>
 </template>
 
 <script>
+
 import { mapActions, mapState } from 'vuex';
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue'
 import EditCollecteRessume from "../components/EditCollecteResume.vue"

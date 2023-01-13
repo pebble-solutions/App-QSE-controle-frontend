@@ -14,16 +14,20 @@
                             </div>
 
                             <div v-if="collecte.projet_id" class="d-flex justify-content-start align-items-center">
-                                <label for="collecteProjet" class="form-label"></label>
+                                {{collecte.projet_label}} 
+                                <button class="btn btn-light" type="button" @click.prevent="ChooseProject()"><i class="bi bi-pencil"></i></button>
+                                <!-- <label for="collecteProjet" class="form-label"></label>
                                 <select class="form-select" id="collecteProjet" name="projet.intitule" v-model="collecte.projet_id">
                                     <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}} </option>
-                                </select>
+                                </select> -->
                             </div>
-                            <div v-else class="d-flex flex-column justify-content-start align-items-start">
-                                <label for="collecteProjet" class="form-label">Sélectionnez un projet:</label>
+                            <div v-else class="d-flex justify-content-start align-items-start">
+                                <!-- <label for="collecteProjet" class="form-label">Sélectionnez un projet:</label> -->
                                 <select class="form-select" id="collecteProjet" name="projet.intitule" v-model="collecte.projet_id">
+                                    <option selected>Choisissez un projet puis valider</option>
                                     <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
                                 </select>
+                                <button class="btn btn-outline-primary" type="button" @click.prevent="ChangeProject()"><i class="bi bi-check-lg"></i></button>
                             </div>
 
                         </div>
@@ -169,6 +173,26 @@ export default {
 
     methods: {
         ...mapActions(["setCollecte", 'initResp']),
+
+        /**
+         * enregistre le nouveau projet affecté à la collecte
+         * met à jour le store
+         * 
+         * @param {number} id   l'id du projet affecté à la collecte
+         */
+        ChangeProject() {
+
+        },
+
+        /**
+         * change l'intitulé du projet en formulaire permettant de le modifier
+         * 
+         * 
+         */
+
+        ChooseProject(){
+
+        },
 
         /**
          * Charge une collecte depuis le serveur dans le store.

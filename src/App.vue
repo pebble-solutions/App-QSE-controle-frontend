@@ -32,12 +32,12 @@
 					<Spinner />
 				</template>
 				<template v-else>
-					<alert-message class-name="m-2" v-if="noVal(collectes)">Il n'y a aucun contrôle programmé.</alert-message>
 					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
 						<div class="d-flex align-items-center justify-content-between">
 							<collecte-item :collecte="col" />
 						</div>
 					</AppMenuItem>
+					<alert-message class-name="m-2" v-if="noVal(collectes)">Il n'y a aucun contrôle programmé.</alert-message>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
@@ -58,11 +58,11 @@
 				</template>
 				<template v-else>
 					<SearchControl/>
-					<div v-for="form in formulaires" :key="form.id">
+					<template v-for="form in formulaires" :key="form.id">
 						<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
 							<formulaire-item :num="form.nb_done" :formulaire="form" />
 						</AppMenuItem>
-					</div>
+					</template>
 					<LoadPlus/>
 				</template>
 			</AppMenu>
@@ -307,7 +307,8 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, AlertMessage, SearchControl, LoadPlus },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, LoadPlus },
+	
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
