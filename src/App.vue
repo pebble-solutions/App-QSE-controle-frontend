@@ -66,7 +66,10 @@
 							<formulaire-item :num="form.nb_done" :formulaire="form" />
 						</AppMenuItem>
 					</template>
+					<!--
+					À venir
 					<LoadPlus/>
+					-->
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
