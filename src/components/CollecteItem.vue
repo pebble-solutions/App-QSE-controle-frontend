@@ -24,7 +24,7 @@
 					<i v-if="colorBadge == 'danger'" class="bi bi-calendar-x-fill"></i>
 					<i v-else-if="colorBadge == 'warning'" class="bi bi-calendar-event-fill"></i>
 					<i v-else class="bi bi-calendar-check-fill"></i>
-					{{ remainingDays() }}
+					<!-- {{ remainingDays() }} -->
 				</span>
 			</div>
 

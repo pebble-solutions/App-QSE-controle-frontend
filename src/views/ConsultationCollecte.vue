@@ -35,6 +35,7 @@
 </template>
 
 <script>
+
 import { mapActions, mapState } from 'vuex';
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';

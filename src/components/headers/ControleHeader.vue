@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-3">
+    <div v-if="collecte" class="mx-3">
         <div v-if="$route.name != 'collecte' && collecte" class="d-flex align-items-center">
             <router-link to="/collecte" v-slot="{navigate,href}" custom>
                 <a :href="href" @click="navigate" class="btn btn-dark me-2"><i class="bi bi-arrow-left"></i></a>

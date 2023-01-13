@@ -3,7 +3,7 @@
     "name": "kn",
     "cfg": {
         "module": "kn",
-        "moduleLabel": "KN",
+        "moduleLabel": "Contrôle",
         "aside": true,
         "app_mode": "default",
         "ppp": "private"
