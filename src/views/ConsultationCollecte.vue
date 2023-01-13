@@ -1,7 +1,7 @@
 <template>
     <Spinner v-if="pending.collectes" />
     <template v-else>
-        <div v-if="formulaire" class="container">
+        <div v-if="formulaire" class="container py-2">
             <div class="d-flex flex-row justify-content-between align-items-center py-3">
                 <div class="d-flex flex-row justify-content-between align-items-center">
                     <router-link :to="{name:'consultation'}" v-slot="{navigate,href}" custom>

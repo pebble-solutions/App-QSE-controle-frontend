@@ -13,6 +13,13 @@
                                 <span>{{typeKn}}</span>
                             </div>
 
+                            <div class="d-flex" v-if="collecte.projet_id">
+                                <i class="bi bi-boxes me-2"></i>
+                                {{ collecte.projet_label }}
+                            </div>
+
+                            <!--
+                            Développement en cours
                             <div v-if="collecte.projet_id" class="d-flex justify-content-start align-items-center">
                                 {{collecte.projet_label}} 
                                 <button class="btn btn-light" type="button" @click.prevent="ChooseProject()"><i class="bi bi-pencil"></i></button>
@@ -29,6 +36,7 @@
                                 </select>
                                 <button class="btn btn-outline-primary" type="button" @click.prevent="ChangeProject()"><i class="bi bi-check-lg"></i></button>
                             </div>
+                            -->
 
                         </div>
                     </div>

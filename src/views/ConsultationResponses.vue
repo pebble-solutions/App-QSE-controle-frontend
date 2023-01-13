@@ -27,6 +27,7 @@
 
             <consultation-collecte-resume 
                 :collecte="collecte"
+                :readonly="true"
                 v-if="collecte && !edit" 
                 
                 @update-edit="updateEdit"/>
