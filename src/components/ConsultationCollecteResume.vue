@@ -38,7 +38,7 @@
                     <div class="mb-2 col border-start border-dark">
                         <strong class="d-block">Opérateur:</strong>
                         <span class="ms-2 fw-lighter">
-                            {{opérateur}}
+                            {{operateur}}
                         </span>
                     </div>
                 </div>
@@ -168,7 +168,7 @@ export default {
          * 
          * @return {string}
          */
-        opérateur() {
+        operateur() {
             let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.cible__structure__personnel_id);
 
             if (controleurName) {

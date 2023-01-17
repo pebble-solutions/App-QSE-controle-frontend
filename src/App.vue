@@ -189,10 +189,12 @@ export default {
 		 * 
 		 * @param {string} val Nouvelle liste demandée
 		 */
-		listMode(val) {
-			if (this.isConnectedUser) {
-				if (val == 'collecte') {
-					this.loadCollectes();
+		listMode(val, prevVal) {
+			if (val !== prevVal) {
+				if (this.isConnectedUser) {
+					if (val == 'collecte') {
+						this.loadCollectes();
+					}
 				}
 			}
 		}

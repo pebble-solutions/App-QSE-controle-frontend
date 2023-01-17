@@ -59,13 +59,13 @@
             </div>
 
             <div>
-                <label for="rapport" class="fs-5 form-label">Vos remarques complémentaires:</label>
-                <textarea class="form-control" id="rapport" v-model="itemResponse.rapport"></textarea>
+                <label for="collecte_rapport" class="fs-5 form-label">Vos remarques complémentaires:</label>
+                <textarea class="form-control" id="collecte_rapport" v-model="itemResponse.rapport"></textarea>
             </div>
 
             <div class="mt-3">
-                <label for="rapport" class="fs-5 form-label ">Actions correctives proposées:</label>
-                <textarea class="form-control" id="rapport" v-model="itemResponse.actions"></textarea>
+                <label for="collecte_action" class="fs-5 form-label ">Actions correctives proposées:</label>
+                <textarea class="form-control" id="collecte_action" v-model="itemResponse.actions"></textarea>
             </div>
 
             <div class="d-flex  mt-3" @click="validationKn()">
@@ -110,11 +110,11 @@ export default {
     },
 
     computed: {
-        ...mapState(['collecte'])
+        ...mapState(['collecte', 'responses'])
     },
 
     methods: {
-        ...mapActions(['refreshCollectes']),
+        ...mapActions(['refreshCollectes', 'refreshCollecte']),
         
         /**
          * enregistre le sami de l'itemReponse
@@ -126,16 +126,25 @@ export default {
 
         /**
          * Envoie les données a l'api pour valider le KN
-        */
+         */
         validationKn() {
             this.pending.validation = true;
 
             if (confirm('Une fois le contrôle validé, vous ne pourrez plus le modifier. Confirmez-vous la validation?')) {
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
                 .then((data) => {
-                    this.refreshCollectes([data]);
+                    return this.refreshCollectes([data]);
+                })
+                .then(() => {
+                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                        environnement: 'private'
+                    });
+                })
+                .then((collecte) => {
+                    this.refreshCollecte(collecte);
                     this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
-                }).catch(this.$app.catchError).finally(() => this.pending.validation = false);
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
             } else {
                 this.pending.validation = false;
             }

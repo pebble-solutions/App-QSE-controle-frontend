@@ -11,10 +11,10 @@
             v-if="answer"
             class="badge"
             :class="{
-                'bg-success' : 's' == answer,
-                'bg-primary' : 'a' == answer,
-                'bg-warning' : 'm' == answer,
-                'bg-danger' : 'i' == answer,
+                'bg-success' : 'S' == answer.toUpperCase(),
+                'bg-primary' : 'A' == answer.toUpperCase(),
+                'bg-warning' : 'M' == answer.toUpperCase(),
+                'bg-danger' : 'I' == answer.toUpperCase(),
             }"
             
             >{{answer.toUpperCase()}}</span>
