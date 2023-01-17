@@ -32,12 +32,12 @@
 					<Spinner />
 				</template>
 				<template v-else>
-					<alert-message class-name="m-2" v-if="noVal(collectes)">Il n'y a aucun contrôle programmé.</alert-message>
 					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
 						<div class="d-flex align-items-center justify-content-between">
 							<collecte-item :collecte="col" />
 						</div>
 					</AppMenuItem>
+					<alert-message class-name="m-2" v-if="noVal(collectes)">Il n'y a aucun contrôle programmé.</alert-message>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
@@ -57,19 +57,17 @@
 					<Spinner />
 				</template>
 				<template v-else>
-					<!--
-					Implémentation version 2
+					
+					<!-- Implémentation version 2 -->
 					<SearchControl/>
-					-->
+					
 					<template v-for="form in formulaires" :key="form.id">
 						<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
 							<formulaire-item :num="form.nb_done" :formulaire="form" />
 						</AppMenuItem>
 					</template>
-					<!--
-					À venir
 					<LoadPlus/>
-					-->
+					
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
@@ -107,8 +105,8 @@ import FormulaireItem from './components/menu/FormulaireItem.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
 import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
-// import SearchControl from './components/SearchControl.vue'
-// import LoadPlus from './components/LoadPlus.vue'
+import SearchControl from './components/SearchControl.vue'
+import LoadPlus from './components/LoadPlus.vue'
 
 export default {
 
@@ -315,7 +313,8 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, AlertMessage },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, LoadPlus },
+	
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

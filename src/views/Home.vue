@@ -41,6 +41,7 @@
 
 <script>
 
+
 import { mapActions, mapState } from 'vuex';
 import Charts from '../components/Charts.vue';
 

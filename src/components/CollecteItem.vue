@@ -12,8 +12,7 @@
 
 				<span v-if="collecte.date"
 					class="badge"
-					:class="badgeClassName"
-				>
+					:class="badgeClassName">
 					<i class="bi" :class="remaningIcon"></i>
 					{{ remaningLabel }}
 				</span>
@@ -42,8 +41,6 @@
 import { mapState } from 'vuex';
 import UserImage from './pebble-ui/UserImage.vue';
 import date from 'date-and-time';
-//import fr from 'date-and-time/locale/fr';
-
 
 export default {
     props: {

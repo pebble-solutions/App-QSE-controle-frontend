@@ -29,7 +29,6 @@
 </template>
 
 <script>
-
 export default {
     props: {
         modelValue: String
@@ -40,13 +39,14 @@ export default {
     data() {
         return {
             buttons: ["s", "a", "m", "i"],
+            
             newValue: null
         }
     },
 
     methods: {
         updateSami(sami) {
-            this.$emit('update:modelValue', sami);
+            this.$emit('update:modelValue', sami, this.changeItem);
         }
     }
 }

@@ -84,7 +84,6 @@
 </template>
 
 <script>
-
 import {mapActions, mapState} from 'vuex';
 import BlocNavigation from './BlocNavigation.vue';
 import Spinner from './pebble-ui/Spinner.vue';

@@ -35,6 +35,7 @@
             <edit-collecte-ressume 
                 :collecte="collecte"
                 v-if="collecte && edit"
+                @cancel-edit="updateEdit"
             />
         </template>
     </app-modal>

@@ -4,15 +4,15 @@
             <div class="card-header">
                 <div class="d-flex flex-column">
                     <h4 class="fs-5 card-title">
-                        <span class="fw-lighter">{{collecte.formulaire.groupe}} du {{ collecte.date }}</span>
+                        <span class="fw-lighter">{{collecte.formulaire.groupe}} du {{ changeFormatDateLit(collecte.date) }}</span>
                         <div class="d-flex align-items-baseline justify-content-start mt-2">
-                            <div v-if="itemResponse.result">
+                            <div v-if="itemResponse.result" class="d-flex align-items-center text-uppercase">
                                 <span class="me-2">Note générale:</span>
-                                <span class="badge" :class="classNameFromSAMI(itemResponse.result)">{{itemResponse.result}}</span>
+                                <span class="badge fs-5 text-uppercase" :class="classNameFromSAMI(itemResponse.result)">{{itemResponse.result}}</span>
                             </div>
-                            <div v-else>
+                            <div v-else class="d-flex align-items-center text-uppercase">
                                 <span class="me-1">Note générale:</span>
-                                <span class="badge" :class="classNameFromSAMI()">Non évaluée</span>
+                                <span class="badge fs-5 text-uppercase" :class="classNameFromSAMI()">Non renseignée</span>
                             </div>
                         </div>
                     </h4>
@@ -26,14 +26,14 @@
 
             <div class="card-body" v-if="listActifs">
                 <div class="row">
-                    <div class="mb-2 col">
+                    <div class="m-2 col border-start border-dark">
                         <strong class="d-block">Contrôleur:</strong>
                         <span class="ms-2 fw-lighter">
                             {{controleur}}
                         </span>
                     </div>
 
-                    <div class="mb-2 col border-start border-dark">
+                    <div class="m-2 col border-start border-dark">
                         <strong class="d-block">Opérateur:</strong>
                         <span class="ms-2 fw-lighter">
                             {{operateur}}
@@ -61,12 +61,12 @@
 
                 <div class="mb-2">
                     <label class="form-label fw-bold">Commentaire général:</label>
-                    <textarea class="form-control d-block" :value="itemResponse.commentaire" placeholder="Commentaire..."></textarea>
+                    <textarea class="form-control d-block" :value="itemResponse.commentaire" placeholder="Vos remarques complémentaires à propos de ce contrôle..."></textarea>
                 </div>
 
                 <div class="mb-2">
                     <label class="form-label fw-bold">Rapport final:</label>
-                    <textarea class="form-control d-block" v-model="itemResponse.rapport"></textarea>
+                    <textarea class="form-control d-block" v-model="itemResponse.rapport" placeholder="Tous les éléments justifiant l'évaluation générale de ce contrôle..."></textarea>
                 </div>
             </div>
             <!-- <div v-for="rep in collecte.reponses" :key="rep.id">
@@ -76,11 +76,21 @@
         </div>
 
         <div class="card my-2">
-            <div class="card-header d-flex align-items-baseline justify-content-between">
-                <h4 class="fs-5 card-title">Nombre d'items évalués </h4> BUG > items évalués affichés: '{{ nbReponse }}'
-                <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
-                    {{collecte.nb_reponse}}/{{collecte.nb_question}}
+            <div class="card-header">
+                <div class="d-flex align-items-baseline justify-content-between mb-2">
+                    <h4 class="fs-5 card-title">Nombre d'items évalués </h4>
+                    <div class="badge fs-5 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
+                        {{collecte.nb_reponse}}/{{collecte.nb_question}}
+                    </div>
                 </div>
+                <!-- pour ajouter un bouton de réinitialisation sans quitter la modale
+                <div v-if="changeItem" class="d-flex align-items-baseline justify-content-end">
+                    <div class="me-2"><span class="badge bg-warning me-1">{{ nbReponse }}</span><span class="fs-7">items renseignés après modifications</span></div>
+                        <button tupe="button" class="btn btn-outline-secondary me-1 fs-7" @click.prevent="cancelEdit()" :disabled="pending.buttonCancel">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.buttonCancel"></span>
+                            réinitialiser
+                        </button>
+                </div> -->
             </div>
 
             <div class="accordion accordion-flush" id="formulaireResume">
@@ -98,11 +108,11 @@
 
                                         <div class="d-flex align-items-center justify-content-between" v-if="reponse.reponse">
                                             <div class="fst-italic">{{quesionLigne(reponse.question)}}</div>
-                                            <div class="badge" :class="classNameFromSAMI(reponse.reponse)" >{{reponse.reponse}}</div>
+                                            <div class="badge text-uppercase fs-6" :class="classNameFromSAMI(reponse.reponse)" >{{reponse.reponse}}</div>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between" v-else>
                                             <div class="fst-italic">{{quesionLigne(reponse.question)}}</div>
-                                            <div class="badge" :class="classNameFromSAMI(reponse.reponse)">Non évaluée</div>
+                                            <div class="badge text-uppercase fs-7" :class="classNameFromSAMI(reponse.reponse)">Pas d'évaluation</div>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-start">
                                             <span class="me-2 text-warning">modification:</span>
@@ -111,7 +121,8 @@
                                         <!-- <sami-button v-model="reponse.reponse"></sami-button>
                                         <div class="fst-italic">{{quesionLigne(reponse.question)}}</div>
                                         v-if="reponse.reponse  {{reponse.commentaire}} -->
-                                        <textarea class="form-control d-block mt-2" v-model="reponse.commentaire" placeholder=""></textarea>
+
+                                        <textarea class="form-control d-block mt-2" v-model="reponse.commentaire" placeholder="modifier le commentaire"></textarea>
                                     </div>
                                 </template>
                                 </div>
@@ -121,18 +132,18 @@
                 </div>
             </div>
             
-        <div class="d-flex align-items-center justify-content-between">
-            <div>items modifiés: <span class="badge bg-warning">{{ nbReponse }}</span></div>
-
-            <button tupe="button" class="btn btn-outline-warning" @click.prevent="updateCollecte()" :disabled="pending.buttonSave">
+        
+        <div class="d-flex align-items-center justify-content-between py-3">
+            <!-- <div class="d-flex justify-content-between"> -->
+            <button tupe="button" class="btn btn-lg btn-outline-secondary" @click.prevent="cancelAndReturn()" :disabled="pending.buttonSave">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.buttonSave"></span>
-                Enregistrer les modifications
+                Annuler
             </button>
-
-            <button tupe="button" class="btn btn-outline-primary" @click.prevent="cancelEdit()" :disabled="pending.buttonCancel">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.buttonCancel"></span>
-                Annulez les modifications
+            <button tupe="button" class="btn btn-lg btn-outline-primary" @click.prevent="updateCollecte()" :disabled="pending.buttonSave">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.buttonSave"></span>
+                Enregistrer
             </button>
+            <!-- </div> -->
         </div>
     </div>
 </template>
@@ -141,6 +152,8 @@
 
 import SamiButton from './SamiButton.vue';
 import { mapState } from 'vuex';
+import date from 'date-and-time';
+import fr from 'date-and-time/locale/fr';
 
 export default {
     props: {
@@ -163,8 +176,8 @@ export default {
                 commentaire: '',
                 reponses: []
             },
-
-            nbreponses: 0
+            changeItem: true,
+            nbreponses: 0,
         }
     },
 
@@ -207,8 +220,8 @@ export default {
                 if (rep.reponse) {
                     count++;
                 }
+                
             });
-
             return count;
         },
 
@@ -244,6 +257,16 @@ export default {
     },
 
     methods: {
+        /**
+		 * Modifie le format de la date entrée en paramètre et la retourne 
+		 * sous le format 01 févr. 2021
+		 * @param {string} date 
+		 */
+
+		changeFormatDateLit(el) {
+			date.locale(fr);
+			return date.format(new Date(el), 'DD MMM YYYY')
+		},
 
         /**
          * Si premier index de l'object return true sinon false
@@ -368,8 +391,9 @@ export default {
             }).catch(this.$app.catchError).finally(() => this.pending.buttonSave = false);
         },
 
+
         cancelEdit(){
-            this.pending.buttonCancel = true;
+            this.itemResponse.result = this.collecte.reponses.data_var;
             this.itemResponse.reponses = [];
 
             this.collecte.formulaire.questions.forEach(question => {
@@ -381,7 +405,14 @@ export default {
                 }
                 this.itemResponse.reponses.push(reponse);
             });
-            this.pending.buttonCancel = false;
+        },
+
+        cancelAndReturn(){
+            this.cancelEdit();
+            
+            // this.$router.go(-1);
+            // this.$router.push({name:'ConsultationResponses', params:{id:id1, idCollecte:id2}});
+            this.$emit('cancelEdit');
         }
     },
 

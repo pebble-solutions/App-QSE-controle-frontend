@@ -234,22 +234,16 @@ export default createStore({
 			const collecte = collecteOptions.collecte;
 
 			if (mode == 'refresh') {
-
-				console.log('mode');
 				if (!state.collecte) {
-					console.log('creation');
 					state.collecte = {};
 				}
 
 				for (const key in collecte) {
 					state.collecte[key] = collecte[key];
 				}
-
-				console.log('mise à jour :', state.collecte);
 			}
 			else {
 				state.collecte = collecte;
-				console.log('set', state.collecte);
 			}
 		},
 
@@ -448,7 +442,6 @@ export default createStore({
 		 * @param {object} collecte La collecte à charger dans le store
 		 */
 		refreshCollecte(contexte, collecte) {
-			console.log(collecte);
 			contexte.commit('collecte', { collecte, mode: 'refresh' });
 		},
 
