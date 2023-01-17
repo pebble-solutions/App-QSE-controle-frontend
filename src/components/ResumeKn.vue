@@ -59,13 +59,13 @@
             </div>
 
             <div>
-                <label for="rapport" class="fs-5 form-label">Vos remarques complémentaires:</label>
-                <textarea class="form-control" id="rapport" v-model="itemResponse.rapport"></textarea>
+                <label for="collecte_rapport" class="fs-5 form-label">Vos remarques complémentaires:</label>
+                <textarea class="form-control" id="collecte_rapport" v-model="itemResponse.rapport"></textarea>
             </div>
 
             <div class="mt-3">
-                <label for="rapport" class="fs-5 form-label ">Actions correctives proposées:</label>
-                <textarea class="form-control" id="rapport" v-model="itemResponse.actions"></textarea>
+                <label for="collecte_action" class="fs-5 form-label ">Actions correctives proposées:</label>
+                <textarea class="form-control" id="collecte_action" v-model="itemResponse.actions"></textarea>
             </div>
 
             <div class="d-flex  mt-3" @click="validationKn()">

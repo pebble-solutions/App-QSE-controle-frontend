@@ -1,8 +1,8 @@
 <template>
 
     <div class="container py-3">
-        <div v-if="collecte">
-            <div>
+        <div v-if="!pending.collecte">
+            <template v-if="collecte">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
                         <UserImage class="me-2" :name="agent"></UserImage>
@@ -12,12 +12,12 @@
                                 <span class="me-2">#{{collecte.id}}</span>
                                 <span>{{typeKn}}</span>
                             </div>
-
+    
                             <div class="d-flex" v-if="collecte.projet_id">
                                 <i class="bi bi-boxes me-2"></i>
                                 {{ collecte.projet_label }}
                             </div>
-
+    
                             <!--
                             Développement en cours
                             <div v-if="collecte.projet_id" class="d-flex justify-content-start align-items-center">
@@ -33,7 +33,7 @@
                                 </select>
                             </div>
                             -->
-
+    
                         </div>
                     </div>
                     
@@ -42,25 +42,27 @@
                         <span v-else class="badge bg-secondary me-2">Programmé le {{changeFormatDateLit(collecte.date)}}</span>
                     </div>                    
                 </div>
-            </div>
-
-            
-            <template v-if="collecte.done == 'OUI'">
-                <div class="my-2">
-                    <alert-message icon="bi-check-circle" variant="success">Ce contrôle est terminé</alert-message>
-                </div>
-                <consultation-collecte-resume :collecte="collecte" :readonly="true"/>
-            </template>
     
-            <template v-else>
-                <div class="card mt-3" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
-                    <intro></intro>
-                </div>
-            </template>    
+                
+                <template v-if="collecte.done == 'OUI'">
+                    <div class="my-2">
+                        <alert-message icon="bi-check-circle" variant="success">Ce contrôle est terminé</alert-message>
+                    </div>
+                    <consultation-collecte-resume :collecte="collecte" :readonly="true"/>
+                </template>
+        
+                <template v-else>
+                    <div class="card mt-3" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
+                        <intro></intro>
+                    </div>
+                </template>    
+            </template>
+
+            <alert-message v-else icon="bi-exclamation-triangle-fill" variant="warning">La collecte n'a pas été trouvée.</alert-message>
         </div>
         
         <div v-else>
-            <spinner/>
+            <spinner />
         </div>
 
         <router-view></router-view>
@@ -76,7 +78,6 @@ import Intro from '../components/Intro.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import date from 'date-and-time';
-import fr from 'date-and-time/locale/fr';
 import UserImage from '../components/pebble-ui/UserImage.vue';
 
 
@@ -84,7 +85,7 @@ export default {
     data() {
         return {
             pending: {
-                collecte:true
+                collecte: true
             }
         }
     },
@@ -147,36 +148,11 @@ export default {
 			} else {
 				return 'Projet non renseigné'
 			}
-		},
-
-        /**
-         * Récupère la collecte id via le store
-         */
-        collecteId() {
-            if (this.collecte) {
-                return this.collecte.id;
-            }
-
-            return '';
-        },
-
-        /**
-		 * Retourn la date formater en d/m/Y
-		 */
-		collectDate() {
-			let date = new Date();
-			return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
 		}
     },
 
-    watch: {
-        collecteId() {
-            this.initResp(this.collecte.reponses);
-        }
-    },
-
     methods: {
-        ...mapActions(["setCollecte", 'initResp']),
+        ...mapActions(["setCollecte", "resetResponses"]),
 
         /**
          * Charge une collecte depuis le serveur dans le store.
@@ -190,10 +166,6 @@ export default {
             })
             .then((data) => {
                 this.setCollecte(data);
-
-                // if(data.reponses && 0 == this.responses.length) {
-                //     this.initResp(data.reponses);
-                // }
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
         /**
@@ -201,28 +173,21 @@ export default {
 		 * sous le format 01 févr. 2021
 		 * @param {string} date 
 		 */
-
 		changeFormatDateLit(el) {
-			date.locale(fr);
 			return date.format(new Date(el), 'DD MMM YYYY')
-		},
-
-        dateJour() {
-            date.locale(fr);
-            return date.format(new Date(), 'DD MMM YYYY')
-        }
+		}
     },
 
     /**
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
     beforeRouteUpdate(to) {
-        if (to.params.id) {
+        if (to.params.id != this.collecte?.id) {
+            this.resetResponses();
             this.loadCollecte(to.params.id);
         }
     },
-    
-    
+
     /**
      * Lorsque l'élément est monté, on va lire l'élément à charger passé en paramètre.
      */
@@ -230,6 +195,7 @@ export default {
         /**
          * Ici on va charger l'élément ouvert afin de le stocker dans le store
          */
+        this.resetResponses();
         this.loadCollecte(this.$route.params.id);
     }
 }

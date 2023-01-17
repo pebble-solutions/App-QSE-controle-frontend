@@ -92,44 +92,30 @@ export default createStore({
 			});
 		},
 		/**
-		 * Met à jour les réponses  dans le store.
+		 * Met à jour une réponse dans le store
 		 * 
 		 * @param {object} state State de VueX
-		 * @param {object} responses Informations à mettre à jour
+		 * @param {object} reponse Informations à mettre à jour
 		 */
-		setResponses(state, responses) {
-			let respIndex = state.responses.findIndex(e => e.question == responses.question);
+		setResponse(state, reponse) {
+			let respIndex = state.responses.findIndex(e => e.question == reponse.question);
 
-			if (respIndex == -1){
-				state.responses.push(responses);
+			if (respIndex === -1){
+				state.responses.push(reponse);
 			}
 			else {
-				state.responses[respIndex] = responses;
+				state.responses[respIndex] = reponse;
 			}
 		},
 
 		/**
-		 * Initialise le state responses avec une liste de reponse
-		 * @param {Object} state State de VueX
-		 * @param {Array} aResponses une liste de reponses
+		 * Défini la valeur des réponses.
+		 * 
+		 * @param {object} state Le state vueX
+		 * @param {array} responses Collection de réponses
 		 */
-		initResponses(state, aResponses) {
-			state.responses = [];
-
-			aResponses.forEach(resp => {
-				let itemResponse = {
-					question: resp.ligne,
-					reponse: resp.data,
-					commentaire: resp.commentaire,
-					bloc: ''
-				};
-
-				let question = state.collecte.formulaire.questions.find(question => question.id == resp.ligne && question.information__groupe_id == resp.groupe);
-
-				itemResponse.bloc = question.information__bloc_id;
-
-				state.responses.push(itemResponse);
-			});
+		responses(state, responses) {
+			state.responses = responses;
 		},
 
 		/**
@@ -310,8 +296,18 @@ export default createStore({
 			});
 		},
 
+		/**
+		 * Met à jour les informations sur une réponse.
+		 * 
+		 * @param {object} context L'instance VueX
+		 * @param {object} oReponse Objet contenant les informations d'une réponse
+		 * - number question
+		 * - string reponse
+		 * - string commentaire
+		 * - number bloc
+		 */
 		refreshResponse (context,oReponse) {
-			context.commit ('setResponses', oReponse)
+			context.commit ('setResponse', oReponse)
 		},
 
 		refreshFormulaires (context, data) {
@@ -441,16 +437,15 @@ export default createStore({
 			let formulaire = context.state.formulaires.find(e => e.id == formulaire_id);
 			context.commit('formulaire', formulaire);
 		},
-		
+
 		/**
-		 * initialisation du state responses en fonction de la collecte
+		 * Réinitialise le tableau des réponses.
 		 * 
-		 * @param {Object} context L'instance vueX'
-		 * @param {Array} aResponses Liste des responses a initiliser
-		*/
-		initResp(context, aResponses) {
-			context.commit('initResponses', aResponses)
-		},
+		 * @param {object} context Instance VueX
+		 */
+		resetResponses(context) {
+			context.commit('responses', []);
+		}
 	},
 
 	modules: {

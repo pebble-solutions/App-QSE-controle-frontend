@@ -2,36 +2,26 @@
     <div>
         <div class="row">
             
-            <div v-for="button in buttonsSami" :key="id+'-'+button" class="col d-grid">
+            <div v-for="value in samiDict" :key="ligne.id+'-'+value" class="col d-grid">
                 <button 
-                    @click="recordSami(button)" 
+                    @click.prevent="refreshValue(value)" 
                     type="button" class="btn" 
-                    :class="{
-                        'btn-outline-danger': 'i' == button && 'i' != displayResponse,
-                        'btn-danger': 'i' == button && 'i' == displayResponse,
-                        'btn-outline-warning': 'm' == button && 'm' != displayResponse,
-                        'btn-warning': 'm' == button && 'm' == displayResponse,
-                        'btn-outline-primary': 'a' == button && 'a' != displayResponse,
-                        'btn-primary': 'a' == button && 'a' == displayResponse,
-                        'btn-outline-success': 's' == button && 's' != displayResponse,
-                        'btn-success': 's' == button && 's' == displayResponse
-                    }"
-                >
-                    {{button.toUpperCase()}}
-                </button>
+                    :class="buttonsClassName[value]">{{value}}</button>
                 
             </div>
         </div>
         <div class="input-group mt-3">
-            <label  class="form-label d-none">Commentaire</label>
-            <textarea @blur="recordC(id)" rows="3" class="form-control"  placeholder="Votre commentaire" v-model="itemResponse.commentaire"></textarea>
+            <textarea rows="3" class="form-control"  placeholder="Votre commentaire" v-model="commentaire"></textarea>
 
+            <!--
+            Version 2
             <div class="btn btn-outline-dark d-flex align-items-center d-none">
                 <label :for="'takepicture'+itemResponse.question" >
                     <i class="bi bi-camera"></i>
                 </label>
                 <input :id="'takepicture'+itemResponse.question" type="file" class="visually-hidden"/>
             </div>
+            -->
         </div>
     </div>
 </template>
@@ -42,27 +32,65 @@ import {mapState, mapActions} from 'vuex';
 
 export default {
     props: {
-        id: Number,
-        bloc_id: Number
+        ligne: Object
     },
 
     data() {
         return {
-            response : null,
             itemResponse: {
-                question:'',
-                reponse: '',
-                commentaire: '',
-                bloc: ''
+                question: null,
+                reponse: null,
+                commentaire: null,
+                bloc: null
             },
-            buttonsSami: ['s', 'a', 'm', 'i']
+            commentaire: '',
+            samiDict: ['S', 'A', 'M', 'I']
         }
     },
+    
     computed: {
         ...mapState(['openedElement', 'responses', 'collecte']),
 
-        displayResponse() {
-            return this.itemResponse.reponse;
+        /**
+         * Retourne les noms des classes CSS de chaque type de bouton SAMI
+         * 
+         * Chaque clé de l'objet retourné est un type SAMI avec sa classe CSS en valeur.
+         * 
+         * @return {object}
+         */
+        buttonsClassName() {
+
+            let px = {
+                S: null,
+                A: null,
+                M: null,
+                I: null
+            };
+
+            ['S', 'A', 'M', 'I'].forEach(samiVal => {
+                px[samiVal] = "btn";
+                if (samiVal != this.itemResponse.reponse) {
+                    px[samiVal] += "-outline";
+                }
+            });
+
+            return {
+                S: px.S+'-success',
+                A: px.A+'-primary',
+                M: px.M+'-warning',
+                I: px.I+'-danger'
+            };
+        },
+    },
+
+    watch: {
+        /**
+         * Lorsque le commentaire est mis à jour, le store doit être actualisé.
+         * 
+         * @param {string} val La nouvelle valeur du commentaire
+         */
+        commentaire(val) {
+            this.refreshCommentaire(val);
         }
     },
 
@@ -72,46 +100,57 @@ export default {
         /**
          * enregistre le commentaire de l'item
          */
-        recordC(id) {
-            this.itemResponse.question = id;
+        refreshCommentaire(val) {
+            if (this.itemResponse.commentaire != val) {
+                this.itemResponse.commentaire = val;
+                this.refreshResponse(this.itemResponse);
+            }
+        },
+
+        /**
+         * Rafraichie la valeur de la réponse dans le store.
+         * 
+         * @param {string} value S,A,M,I
+         */
+        refreshValue(value) {
+            if (this.itemResponse.reponse == value) {
+                this.itemResponse.reponse = null;
+            } else {
+                this.itemResponse.reponse = value;
+            }
             this.refreshResponse(this.itemResponse);
         },
 
         /**
-         * enregistre le sami de l'item 
-         * @param {string} options s,a,m,i
+         * Initialise un objet tampon pour stocker les informations de la réponse.
          */
-        recordSami(sami) {
-            if (this.itemResponse.reponse == sami) {
-                this.itemResponse.reponse = null;
-                this.refreshResponse(this.itemResponse);
-            } else {
-                this.itemResponse.question = this.id;
-                this.itemResponse.reponse = sami;
-                this.refreshResponse(this.itemResponse);
+        initValues() {
+            const response = this.responses.find(e => e.question == this.ligne.id);
+            
+            this.itemResponse = {
+                question: this.ligne.id,
+                reponse: response ? response.reponse : null,
+                commentaire: response ? response.commentaire : null,
+                bloc: this.ligne.information__bloc_id
+            };
+
+            if (response) {
+                this.commentaire = response.commentaire;
             }
         },
 
         /**
-         * Recupere la reponse a la question et l'enregistre dans itemResponse si elle existe
+         * Retourne la classe à appliquer sur le bouton en fonction d'une valeur SAMI.
+         * 
+         * @param {string} samiVal S.A.M.I
          */
-        getReponse() {
-            let find = this.responses.find((resp) => resp.question == this.id);
+        // buttonClass(samiVal) {
 
-            if (find) {
-                this.itemResponse = {
-                    question: find.question,
-                    reponse: find.reponse,
-                    commentaire: find.commentaire,
-                    bloc: find.bloc
-                }
-            }
-        }
+        // }
     },
 
     mounted() {
-        this.itemResponse.bloc = this.bloc_id;
-        this.getReponse();
+        this.initValues();
     }
 }
 </script>

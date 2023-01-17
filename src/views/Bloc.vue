@@ -5,9 +5,9 @@
             <div class="d-flex justify-content-between">
                 <h2 class="card-title">{{ bloc.bloc }}</h2>
 
-                <div v-if="$route.params.bloc">
-                    <bloc-navigation :bloc_id="$route.params.bloc" :update-resp="sendResp('nav')"></bloc-navigation>
-                </div>
+                <!--<div v-if="$route.params.bloc">
+                    <bloc-navigation :currentBlocId="$route.params.bloc" @update-resp="sendResp('nav')"></bloc-navigation>
+                </div>-->
             </div>
 
             <div class="fw-light fst-italic mb-2">
@@ -16,19 +16,19 @@
 
             <div class="d-flex justify-content-between">
                 <button class="btn btn-secondary" v-if="prevBloc" @click="sendResp('prev')" :disabled="pending.bloc">
-                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status"></span>
                     <i v-else class="bi bi-box-arrow-left"></i> 
                     {{ prevBloc.bloc }}
                 </button>
 
                 <button class="btn btn-secondary ms-auto" v-if="nextBloc" @click="sendResp('next')" :disabled="pending.bloc">
                     {{nextBloc.bloc}} 
-                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status"></span>
                     <i v-else class="bi bi-box-arrow-right"></i>
                 </button>
 
                 <button v-else class="btn btn-success ms-auto" @click="sendResp('end')" :disabled="pending.bloc">
-                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span>
+                    <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status"></span>
                     <i v-else class="bi bi-file-earmark-text"></i>
                     Évaluation générale
                 </button>
@@ -42,7 +42,7 @@
                 <div :id="'collapse_'+ ligne.id" class="accordion-collapse collapse show" :aria-labelledby="'heading_' + ligne.id" :data-bs-parent="'#accordion-'+bloc.id">
                     <div class="ms-4 fst-italic" v-if="ligne.indication">{{ ligne.indication }}</div>
                     <div class="accordion-body">  
-                        <ItemAnswer :id="ligne.id" :bloc_id="bloc.id"></ItemAnswer>
+                        <ItemAnswer :ligne="ligne"></ItemAnswer>
                     </div>
                 </div>
             </div>
@@ -85,7 +85,7 @@ import {mapActions, mapState} from 'vuex';
 import ItemAnswer from '../components/ItemAnswer.vue'
 import ItemAnswerHeader from '@/components/ItemAnswerHeader.vue'
 import AlertMessage from '@/components/pebble-ui/AlertMessage.vue'
-import BlocNavigation from '../components/BlocNavigation.vue';
+// import BlocNavigation from '../components/BlocNavigation.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
@@ -99,7 +99,7 @@ export default {
         }
     },
 
-    components: {ItemAnswer, ItemAnswerHeader, AlertMessage, BlocNavigation, Spinner},
+    components: {ItemAnswer, ItemAnswerHeader, AlertMessage, Spinner},
 
     computed: {
         ...mapState(['collecte', 'responses']),
@@ -154,7 +154,8 @@ export default {
          * @param {string}  action      défini la navigation entre bloc a réaliser
          */
         sendResp(action) {
-            this.pending.bloc = true
+            this.pending.bloc = true;
+
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',
@@ -177,7 +178,7 @@ export default {
                         break;
                 }
             })
-            .catch(this.$app.catchError).finally(this.pending.bloc = false);
+            .catch(this.$app.catchError).finally(() => this.pending.bloc = false);
         },
 
         getReponses() {

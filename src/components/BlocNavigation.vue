@@ -7,17 +7,17 @@
 
         <ul class="dropdown-menu">
             <li v-for="blocItem in blocs" :key="blocItem.id">
-                <div class="dropdown-item d-flex justify-content-between" type="button" @click="saveResp(blocItem)">
+                <button class="dropdown-item d-flex justify-content-between" type="button" @click.prevent="saveResp(blocItem)">
                     {{blocItem.bloc}}
-                    <i class="bi bi-check2" v-if="bloc_id == blocItem.id"></i>
-                </div>
+                    <i class="bi bi-check2" v-if="currentBlocId == blocItem.id"></i>
+                </button>
             </li>
 
             <li>
-                <div class="dropdown-item d-flex justify-content-between" @click="saveResp('end')" type="button">
+                <button class="dropdown-item d-flex justify-content-between" @click.prevent="saveResp('end')" type="button">
                     Évaluation générale
-                    <i class="bi bi-check2" v-if="!bloc_id"></i>
-                </div>
+                    <i class="bi bi-check2" v-if="!currentBlocId"></i>
+                </button>
             </li>
         </ul>
     </div>
@@ -28,7 +28,7 @@ import { mapState } from 'vuex'
 
 export default {
     props: {
-        bloc_id: String
+        currentBlocId: String
     },
 
     computed: {

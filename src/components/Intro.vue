@@ -11,9 +11,9 @@
             </div>
 
             <div class="mt-3 text-end" v-if="collecte.formulaire?.blocs?.length">
-                <button class="btn btn-outline-primary" @click="beginKn()" :disabled="pending.buttonBegin">
+                <button type="button" class="btn btn-outline-primary" @click.prevent="startControl()" :disabled="pending.collecte">
                     Commencer
-                    <span v-if="pending.buttonBegin" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span v-if="pending.collecte" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     <i v-else class="bi bi-chevron-right"></i>
                 </button>
             </div>
@@ -33,7 +33,7 @@ export default {
                 environnement: 'private'
             },
             pending: {
-                buttonBegin: false
+                collecte: false
             }
         }
     },
@@ -48,18 +48,35 @@ export default {
     },
 
     methods: {
-        beginKn() {
-            if (this.itemResponse.commentaire) {
-                this.pending.buttonBegin = true;
-
+        /**
+         * Démarre le contrôle.
+         */
+        startControl() {
+            if (this.collecte.commentaire !== this.itemResponse.commentaire) {
+                this.pending.collecte = true;
+    
                 this.itemResponse.environnement = 'private';
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
                 .then(() => {
-                    this.$router.push({name:'collecteKnBloc', params:{id: this.collecte.id, bloc: this.collecte.formulaire.blocs[0].id}});
-                }).catch(this.$app.catchError).finally(this.pending.begin = false);
-            } else {
-                this.$router.push({name:'collecteKnBloc', params:{id: this.collecte.id, bloc: this.collecte.formulaire.blocs[0].id}});
+                    this.routeToQuestions();
+                }).catch(this.$app.catchError).finally(this.pending.collecte = false);
             }
+            else {
+                this.routeToQuestions();
+            }
+        },
+
+        /**
+         * Redirige la route vers l'étape des questions
+         */
+        routeToQuestions() {
+            this.$router.push({
+                name: 'collecteKnBloc', 
+                params: {
+                    id: this.collecte.id, 
+                    bloc: this.collecte.formulaire.blocs[0].id
+                }
+            });
         }
     },
 
