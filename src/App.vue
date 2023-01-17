@@ -49,6 +49,7 @@
 						<AppMenuItem :href="'/programmation/'+form.id" v-if="form.nb_todo" >
 							<formulaire-item :num="form.nb_todo" :formulaire="form" />
 						</AppMenuItem>
+						<AppMenuItem v-else> 0 résultat</AppMenuItem>
 					</template>
 				</template>
 			</AppMenu>
