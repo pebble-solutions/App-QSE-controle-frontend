@@ -1,5 +1,5 @@
 {
-    "env": "prod",
+    "env": "dev",
     "name": "kn",
     "cfg": {
         "module": "kn",

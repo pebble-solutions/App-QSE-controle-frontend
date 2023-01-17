@@ -127,7 +127,7 @@ export default {
 
         /**
          * Envoie les données a l'api pour valider le KN
-        */
+         */
         validationKn() {
             this.pending.validation = true;
 

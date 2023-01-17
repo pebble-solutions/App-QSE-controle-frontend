@@ -10,7 +10,7 @@
                             {{agent}}
                             <div class="fw-lighter">
                                 <span class="me-2">#{{collecte.id}}</span>
-                                <span>{{typeKn}}</span>
+                                <span>{{formulaireLabel}}</span>
                             </div>
     
                             <div class="d-flex" v-if="collecte.projet_id">
@@ -115,13 +115,13 @@ export default {
 		 * 
 		 * @return {string} // deja utilise dans App.vue 
 		 */
-        typeKn() {
+        formulaireLabel() {
 			let groupInformation = this.formulaires.find(e => e.id == this.collecte.information__groupe_id);
 
 			if (groupInformation) {
 				return groupInformation.groupe;
 			} else { 
-				return 'Type KN non renseigné';
+				return 'Formulaire non renseigné';
 			}
         },
 

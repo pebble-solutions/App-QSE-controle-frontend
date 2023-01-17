@@ -171,7 +171,7 @@ export default {
 			if (groupInformation) {
 				return groupInformation.groupe;
 			} else { 
-				return 'formulaire non renseigné';
+				return 'Formulaire non renseigné';
 			}
 		},
 
