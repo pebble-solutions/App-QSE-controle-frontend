@@ -225,10 +225,32 @@ export default createStore({
 		 * Charge une collecte dans le store
 		 * 
 		 * @param {object} state Le state vueX
-		 * @param {object} collecte La collecte à charger
+		 * @param {object} collecteOptions 
+		 * - collecte {object}
+		 * - mode 'set' (défaut), 'refresh'
 		 */
-		collecte(state, collecte) {
-			state.collecte = collecte;
+		collecte(state, collecteOptions) {
+			const mode = collecteOptions.mode ? collecteOptions.mode : 'set';
+			const collecte = collecteOptions.collecte;
+
+			if (mode == 'refresh') {
+
+				console.log('mode');
+				if (!state.collecte) {
+					console.log('creation');
+					state.collecte = {};
+				}
+
+				for (const key in collecte) {
+					state.collecte[key] = collecte[key];
+				}
+
+				console.log('mise à jour :', state.collecte);
+			}
+			else {
+				state.collecte = collecte;
+				console.log('set', state.collecte);
+			}
 		},
 
 		/**
@@ -416,7 +438,18 @@ export default createStore({
 		 * @param {object} collecte La collecte à charger dans le store
 		 */
 		setCollecte(contexte, collecte) {
-			contexte.commit('collecte', collecte)
+			contexte.commit('collecte', { collecte, mode: 'set' })
+		},
+
+		/**
+		 * Met à jour les informations de la collecte chargée dans le store
+		 * 
+		 * @param {object} contexte L'instance vueX
+		 * @param {object} collecte La collecte à charger dans le store
+		 */
+		refreshCollecte(contexte, collecte) {
+			console.log(collecte);
+			contexte.commit('collecte', { collecte, mode: 'refresh' });
 		},
 
 		/**

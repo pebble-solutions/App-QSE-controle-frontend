@@ -69,7 +69,7 @@ export default {
 
             ['S', 'A', 'M', 'I'].forEach(samiVal => {
                 px[samiVal] = "btn";
-                if (samiVal != this.itemResponse.reponse) {
+                if (samiVal != this.itemResponse.reponse?.toUpperCase()) {
                     px[samiVal] += "-outline";
                 }
             });

@@ -111,11 +111,11 @@ export default {
     },
 
     computed: {
-        ...mapState(['collecte'])
+        ...mapState(['collecte', 'responses'])
     },
 
     methods: {
-        ...mapActions(['refreshCollectes']),
+        ...mapActions(['refreshCollectes', 'refreshCollecte']),
         
         /**
          * enregistre le sami de l'itemReponse
@@ -134,9 +134,18 @@ export default {
             if (confirm('Une fois le contrôle validé, vous ne pourrez plus le modifier. Confirmez-vous la validation?')) {
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
                 .then((data) => {
-                    this.refreshCollectes([data]);
+                    return this.refreshCollectes([data]);
+                })
+                .then(() => {
+                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                        environnement: 'private'
+                    });
+                })
+                .then((collecte) => {
+                    this.refreshCollecte(collecte);
                     this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
-                }).catch(this.$app.catchError).finally(() => this.pending.validation = false);
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
             } else {
                 this.pending.validation = false;
             }
