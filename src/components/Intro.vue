@@ -9,7 +9,7 @@
 
                 <textarea class="form-control" id="context" name="context" rows="6" placeholder="contexte..." v-model="itemResponse.commentaire"></textarea>
             </div>
-
+            <!-- v-if="collecte.formulaire?.blocs?.length" -->
             <div class="mt-3 text-end" v-if="collecte.formulaire?.blocs?.length">
                 <button class="btn btn-outline-primary" @click="beginKn()" :disabled="pending.buttonBegin">
                     Commencer
@@ -56,7 +56,7 @@ export default {
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
                 .then(() => {
                     this.$router.push({name:'collecteKnBloc', params:{id: this.collecte.id, bloc: this.collecte.formulaire.blocs[0].id}});
-                }).catch(this.$app.catchError).finally(this.pending.begin = false);
+                }).catch(this.$app.catchError).finally(this.pending.buttonBegin = false);
             } else {
                 this.$router.push({name:'collecteKnBloc', params:{id: this.collecte.id, bloc: this.collecte.formulaire.blocs[0].id}});
             }

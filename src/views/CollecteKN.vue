@@ -2,7 +2,7 @@
 
     <div class="container py-3">
         <div v-if="collecte">
-            <control-title/>
+            <control-title v-if="collecte.done= 'NON'"/>
             <!-- <div> -->
                 <!-- <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
@@ -187,25 +187,6 @@ export default {
     methods: {
         ...mapActions(["setCollecte", 'initResp']),
 
-        /**
-         * enregistre le nouveau projet affecté à la collecte
-         * met à jour le store
-         * 
-         * @param {number} id   l'id du projet affecté à la collecte
-         */
-        ChangeProject() {
-
-        },
-
-        /**
-         * change l'intitulé du projet en formulaire permettant de le modifier
-         * 
-         * 
-         */
-
-        ChooseProject(){
-
-        },
 
         /**
          * Charge une collecte depuis le serveur dans le store.
@@ -220,9 +201,6 @@ export default {
             .then((data) => {
                 this.setCollecte(data);
 
-                // if(data.reponses && 0 == this.responses.length) {
-                //     this.initResp(data.reponses);
-                // }
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
         /**

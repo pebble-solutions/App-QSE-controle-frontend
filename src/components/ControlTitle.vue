@@ -19,7 +19,7 @@
                                 <span><i class="bi bi-boxes me-2"></i></span>
                                 <!-- {{collecte.projet_label}}  {{ collecte.projet_id }} {{ collecte.id }} -->
                                 <span class="me-2"> {{ projet }} </span>
-                                <button v-if="!action" class="btn btn-sm btn-outline-primary" type="button" @click.prevent="SelectProject()">modifier</button>
+                                <button v-if="!action && $route.name != 'collecteKnBloc' && $route.name != 'CollectKnEnd'" class="btn btn-sm btn-outline-primary" type="button" @click.prevent="SelectProject()">modifier</button>
                             </div>
                             <div v-else class="d-flex justify-content-start align-items-center">
                                 <span><i class="bi bi-boxes me-2"></i></span>
@@ -33,7 +33,7 @@
                     
                     <div class="d-flex align-items-center">
                         <span class="badge bg-warning me-2" v-if="!collecte.date || collecte.date ==='null' || collecte.date === '0000-00-00 00:00:00' || collecte.date ==='NULL'">date non renseignée</span>
-                        <span v-else class="badge bg-secondary me-2">Programmé le {{changeFormatDateLit(collecte.date)}}</span>
+                        <span v-else class="badge bg-secondary m-2">Programmé le {{changeFormatDateLit(collecte.date)}}</span>
                     </div>                    
                 </div>
                 <div v-else>
@@ -46,7 +46,7 @@
                     <select class="form-select" id="collecteProjet" name="projet.intitule" v-model="collecte.projet_id">
                         <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
                     </select>
-                <button class="btn btn-lg btn-outline-primary mt-2 " type="submit">Valider</button>
+                <button class="btn btn-sm btn-outline-primary mt-2 " type="submit">Valider</button>
                 </form>
 
             </div>
@@ -144,13 +144,13 @@ export default {
             return '';
         },
 
-        /**
-		 * Retourn la date formater en d/m/Y
-		 */
-		collectDate() {
-			let date = new Date();
-			return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
-		}
+        // /**
+		//  * Retourn la date formater en d/m/Y
+		//  */
+		// collectDate() {
+		// 	let date = new Date();
+		// 	return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+		// }
     },
 
     watch: {
@@ -163,8 +163,7 @@ export default {
         ...mapActions(["setCollecte", 'initResp']),
 
         /**
-         * enregistre le nouveau projet affecté à la collecte
-         * met à jour le store
+         * Ouvrir le formulaire permettant de modifier le projet
          * 
          * @param {number} id   l'id du projet affecté à la collecte
          */
@@ -174,28 +173,26 @@ export default {
         },
 
         changeProjet() {
-            confirm('voulez-vous modifier le projet?');
-            console.log(this.projet, this.projet_id,'id projet');
-            console.log(this.collecte.projet_id, this.collecte.projet_label, 'collectee projet');
+            
         
-            // this.pending.collecte = true;
+            this.pending.collecte = true;
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 environnement: 'private', projet_id: this.collecte.projet_id
             })
             .then((data) => {
-                
                 this.setCollecte(data); 
-                console.log(data, 'data')
+                this.loadCollecte(this.$route.params.id);
             })
             .catch(this.$app.catchError)
             .finally(() => this.pending.collecte = false);
-            this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
-                environnement: 'private'
-            })
-            .then((data) => {
-                // this.setCollecte(data);
-                console.log(data, 'loadmodif');
-            }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+            // this.pending.collecte = true;
+            // this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+            //     environnement: 'private'
+            // })
+            // .then((data) => {
+            //     // this.setCollecte(data);
+            //     console.log(data, 'loadmodif');
+            // }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
 
 
             this.select = false;
