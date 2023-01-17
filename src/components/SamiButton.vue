@@ -29,7 +29,6 @@
 </template>
 
 <script>
-
 export default {
     props: {
         modelValue: String

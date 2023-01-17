@@ -70,109 +70,109 @@ export default {
             colorBadge: null
         }
 	},
-
+	
     computed: {
-        ...mapState(['formulaires', 'listActifs', 'projets']),
-
+		...mapState(['formulaires', 'listActifs', 'projets']),
+		
 		// /**
 		//  * Retourn la date de la collecte formater en d/m/Y
 		//  * 
 		//  * @return {string}
 		//  */
 		// collectDate() {
-		// 	let date = new Date(this.collecte.date);
-		// 	return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
-		// },
-    },
-
-    methods: {
-        /**
-		 * Récupere le nom du groupe d'information de la collect via un id de
-		 * 
-		 * @param {number} groupInformationId l'id du group information de la collecte
-		 * 
-		 * @return {string}
-		 */
-		getGroupNameFromId(groupInformationId) {
-			let groupInformation = this.formulaires.find(e => e.id == groupInformationId);
-
-			if (groupInformation) {
-				return groupInformation.groupe;
-			} else { 
-				return 'formulaire non renseigné';
+			// 	let date = new Date(this.collecte.date);
+			// 	return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+			// },
+		},
+		
+		methods: {
+			/**
+			 * Récupere le nom du groupe d'information de la collect via un id de
+			 * 
+			 * @param {number} groupInformationId l'id du group information de la collecte
+			 * 
+			 * @return {string}
+			 */
+			getGroupNameFromId(groupInformationId) {
+				let groupInformation = this.formulaires.find(e => e.id == groupInformationId);
+				
+				if (groupInformation) {
+					return groupInformation.groupe;
+				} else { 
+					return 'formulaire non renseigné';
+				}
+			},
+			/**
+			 * Modifie le format de la date entrée en paramètre et la retourne 
+			 * sous le format 01 févr. 2021
+			 * @param {string} date 
+			 */
+			
+			changeFormatDateLit(el) {
+				date.locale(fr);
+				return date.format(new Date(el), 'DD MMM YYYY')
+			},
+			
+			/**
+			 * Récupère le nom d'un personnel actif via un id
+			 * 
+			 * @param {number} personnelId l'id d'un personnel actif
+			 * 
+			 * @return {string}
+			 */
+			getPersonnelNameFromId(personnelId) {
+				let personnelName = this.listActifs.find(personnel => personnel.id == personnelId);
+				
+				if (personnelName) {
+					return personnelName.cache_nom;
+				} else {
+					return 'Personnel non renseigné'
+				}
+			},
+			
+			/**
+			 * Compte le nombre de jour restant entre 2 date
+			 */
+			countRemainingDays(refDate, date = new Date) {
+				let collecteDate = new Date(refDate);
+				
+				let timeDifference = collecteDate.getTime() - date.getTime();
+				
+				return timeDifference;
+			},
+			
+			/**
+			 * Retourne nombre de jour ou d'heure et minutes restant entre 2 dates
+			 * 
+			 * @return {string}
+			 */
+			remainingDays() {
+				let countRemainingDays = this.countRemainingDays(this.collecte.date);
+		
+				let totalMinutes = Math.round(countRemainingDays / (1000 * 60));
+				let days = Math.floor(totalMinutes / (60 * 24));
+				// let hours = Math.floor(totalMinutes / 60);
+				// let minutes = totalMinutes % 60;
+		
+				if (0 == days+1){
+					this.colorBadge = 'warning';
+					// let displayHours = 24 + (hours+1);
+					// let displayMinutes = 60 + (minutes);
+		
+		
+					//return `${Math.abs(displayHours)}h ${Math.abs(displayMinutes)}min`;
+					return "Aujourd'hui"
+				} 
+		
+				this.colorBadge = 'success';
+		
+				if (days < 0) {
+					this.colorBadge = 'danger';
+				}
+		
+		
+				return `${days+1} J`;
 			}
-		},
-		/**
-		 * Modifie le format de la date entrée en paramètre et la retourne 
-		 * sous le format 01 févr. 2021
-		 * @param {string} date 
-		 */
-
-		changeFormatDateLit(el) {
-			date.locale(fr);
-			return date.format(new Date(el), 'DD MMM YYYY')
-		},
-
-		/**
-		 * Récupère le nom d'un personnel actif via un id
-		 * 
-		 * @param {number} personnelId l'id d'un personnel actif
-		 * 
-		 * @return {string}
-		 */
-		getPersonnelNameFromId(personnelId) {
-			let personnelName = this.listActifs.find(personnel => personnel.id == personnelId);
-
-			if (personnelName) {
-				return personnelName.cache_nom;
-			} else {
-				return 'Personnel non renseigné'
-			}
-		},
-
-		/**
-		 * Compte le nombre de jour restant entre 2 date
-		 */
-		countRemainingDays(refDate, date = new Date) {
-			let collecteDate = new Date(refDate);
-
-			let timeDifference = collecteDate.getTime() - date.getTime();
-
-			return timeDifference;
-		},
-
-		/**
-		 * Retourne nombre de jour ou d'heure et minutes restant entre 2 date
-		 * 
-		 * @return {string}
-		 */
-		remainingDays() {
-			let countRemainingDays = this.countRemainingDays(this.collecte.date);
-
-			let totalMinutes = Math.round(countRemainingDays / (1000 * 60));
-			let days = Math.floor(totalMinutes / (60 * 24));
-			// let hours = Math.floor(totalMinutes / 60);
-			// let minutes = totalMinutes % 60;
-
-			if (0 == days+1){
-				this.colorBadge = 'warning';
-				// let displayHours = 24 + (hours+1);
-				// let displayMinutes = 60 + (minutes);
-
-
-				//return `${Math.abs(displayHours)}h ${Math.abs(displayMinutes)}min`;
-				return "Aujourd'hui"
-			} 
-
-			this.colorBadge = 'success';
-
-			if (days < 0) {
-				this.colorBadge = 'danger';
-			}
-
-
-			return `${days+1} J`;
-		}
     },
 
 	components: {

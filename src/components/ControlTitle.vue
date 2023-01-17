@@ -17,26 +17,17 @@
                             
                             <div v-if="collecte.projet_id" class="d-flex justify-content-start align-items-center">
                                 <span><i class="bi bi-boxes me-2"></i></span>
-                                <span class="me-2">{{collecte.projet_label}}</span>
-                                <button class="btn btn-sm btn-outline-primary" type="button" @click.prevent="ChangeProject()">modifier</button>
-                                <!-- <label for="collecteProjet" class="form-label"></label>
-                                <select class="form-select" id="collecteProjet" name="projet.intitule" v-model="collecte.projet_id">
-                                    <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}} </option>
-                                </select>  -->
+                                <!-- {{collecte.projet_label}}  {{ collecte.projet_id }} {{ collecte.id }} -->
+                                <span class="me-2"> {{ projet }} </span>
+                                <button v-if="!action" class="btn btn-sm btn-outline-primary" type="button" @click.prevent="SelectProject()">modifier</button>
                             </div>
                             <div v-else class="d-flex justify-content-start align-items-center">
                                 <span><i class="bi bi-boxes me-2"></i></span>
                                 <span class="me-2 text-warning">Projet non renseigné</span>
 
-                                <!-- <label for="collecteProjet" class="form-label">Sélectionnez un projet:</label>
-                                <select class="form-select" id="collecteProjet" name="projet.intitule" v-model="collecte.projet_id">
-                                    <option selected>Choisissez un projet puis valider</option>
-                                    <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
-                                </select> -->
-                                <button class="btn btn-sm btn-outline-primary" type="button" @click.prevent="SelectProject()">Sélectionner</button>
+                                <button v-if="!action" class="btn btn-sm btn-outline-primary" type="button" @click.prevent="SelectProject()">Sélectionner</button>
                             </div> 
                             
-
                         </div>
                     </div>
                     
@@ -46,9 +37,19 @@
                     </div>                    
                 </div>
                 <div v-else>
-            <spinner/>
-        </div>
-    </div>
+                    <spinner/>
+                </div>
+            </div>
+            <div v-if="select" id="SelectProject" class="col-sm-12 col-md-6">
+                <form method="post" @submit.prevent="changeProjet()">
+                    <label for="collecteProjet" class="form-label">Sélectionnez un projet:</label>
+                    <select class="form-select" id="collecteProjet" name="projet.intitule" v-model="collecte.projet_id">
+                        <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+                    </select>
+                <button class="btn btn-lg btn-outline-primary mt-2 " type="submit">Valider</button>
+                </form>
+
+            </div>
 </template>
 
 <script>
@@ -65,7 +66,10 @@ export default {
         return {
             pending: {
                 collecte:true
-            }
+            },
+            select: false,
+            action: false,
+            projetId: null,
         }
     },
 
@@ -164,19 +168,42 @@ export default {
          * 
          * @param {number} id   l'id du projet affecté à la collecte
          */
-        ChangeProject() {
+        SelectProject() {
+            this.select = true;
+            this.action = true;
+        },
+
+        changeProjet() {
+            confirm('voulez-vous modifier le projet?');
+            console.log(this.projet, this.projet_id,'id projet');
+            console.log(this.collecte.projet_id, this.collecte.projet_label, 'collectee projet');
+        
+            // this.pending.collecte = true;
+            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
+                environnement: 'private', projet_id: this.collecte.projet_id
+            })
+            .then((data) => {
+                
+                this.setCollecte(data); 
+                console.log(data, 'data')
+            })
+            .catch(this.$app.catchError)
+            .finally(() => this.pending.collecte = false);
+            this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                environnement: 'private'
+            })
+            .then((data) => {
+                // this.setCollecte(data);
+                console.log(data, 'loadmodif');
+            }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+
+
+            this.select = false;
+            this.action= false;
 
         },
 
-        /**
-         * change l'intitulé du projet en formulaire permettant de le modifier
-         * 
-         * 
-         */
-
-        ChooseProject(){
-
-        },
+        
 
         /**
          * Charge une collecte depuis le serveur dans le store.
@@ -184,16 +211,14 @@ export default {
          * @param {number} id L'ID de la collecte à charger
          */
         loadCollecte(id) {
+            
             this.pending.collecte = true;
             this.$app.apiGet('data/GET/collecte/'+id, {
                 environnement: 'private'
             })
             .then((data) => {
                 this.setCollecte(data);
-
-                // if(data.reponses && 0 == this.responses.length) {
-                //     this.initResp(data.reponses);
-                // }
+                console.log(data, 'load');
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
         /**
