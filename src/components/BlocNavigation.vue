@@ -7,14 +7,14 @@
 
         <ul class="dropdown-menu">
             <li v-for="blocItem in blocs" :key="blocItem.id">
-                <button class="dropdown-item d-flex justify-content-between" type="button" @click.prevent="saveResp(blocItem)">
+                <button class="dropdown-item d-flex justify-content-between" type="button" @click.prevent="navigate(blocItem)">
                     {{blocItem.bloc}}
                     <i class="bi bi-check2" v-if="currentBlocId == blocItem.id"></i>
                 </button>
             </li>
 
             <li>
-                <button class="dropdown-item d-flex justify-content-between" @click.prevent="saveResp('end')" type="button">
+                <button class="dropdown-item d-flex justify-content-between" @click.prevent="navigate('end')" type="button">
                     Évaluation générale
                     <i class="bi bi-check2" v-if="!currentBlocId"></i>
                 </button>
@@ -40,15 +40,12 @@ export default {
     },
 
     methods: {
-        saveResp(options) {
-            this.$emit('update-resp');
-
+        navigate(options) {
             if ('end' === options) {
                 this.$router.push({name: 'CollectKnEnd', params:{id: this.collecte.id}})
             } else {
                 this.$router.push('/collecte/'+this.collecte.id+'/bloc/'+options.id);
             }
-            
         }
     }
 }
