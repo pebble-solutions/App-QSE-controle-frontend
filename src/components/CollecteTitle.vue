@@ -43,7 +43,6 @@
 </template>
 
 <script>
-
 import {mapState} from 'vuex';
 import date from 'date-and-time';
 import UserImage from '../components/pebble-ui/UserImage.vue';

@@ -2,9 +2,12 @@
     <div>
         <form @submit.prevent="search()" class="m-1">
             <div class="input-group">
-                <input type="date" class="form-control" id="dateDebutDone" name="dd_done" placeholder="Date début">
-                <input type="date" class="form-control" id="dateFinDone" name="df_done">
-                <div class="btn-group">
+                <div class="col">
+
+                    <input type="date" class="form-control" id="dateDebutDone" name="dd" v-model="dd">
+                    <input type="date" class="form-control" id="dateFinDone" name="df" v-model="df">
+                </div>
+                <div class="btn-group col">
                     <button type="button" class="btn rounded-0 btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-list"></i></button>
                     <ul class="dropdown-menu">
                         <button type="button" class="dropdown-item" @click.prevent="setModeAndSearch('collecte')">Tous les contrôles</button>
@@ -16,18 +19,45 @@
                 <!-- <i class="bi bi-arrow-return-left"></i> -->
             </div>
         </form>
+        <div v-if="result">
+            
+        </div>
+        <div v-else>Pas de résultats</div>
+        <template v-for="res in result" :key="res.id">
+            <!-- <app-menu-item :href="'/programmation/'+res.id" v-if="res.nb_todo" >
+                {{ res.groupe }} <span class="badge bg-warning">{{ res.nb_todo }}</span>
+            </app-menu-item> -->
+            <app-menu-item :href="'/consultation/'+res.id" v-if="res.nb_done">
+                {{ res.groupe }} <span class="badge bg-secondary">{{ res.nb_done }}</span>
+            </app-menu-item>
+            <app-menu-item v-else-if="res.cible_personnel">
+                {{ res.id }}
+            </app-menu-item>
+        
+        </template>
     </div>
 </template>
 <script>
+import AppMenuItem from './pebble-ui/AppMenuItem.vue';
 export default {
+components: {  AppMenuItem },
 
     data() {
         return {
-            mode: 'all'
+            mode: 'all',
+            pending: {
+                search:false
+            },
+            result: [],
+            resultSearch: [],
+            dd: null,
+            df: null,
         }
     },
 
     methods: {
+
+
         /**
          * Lance la recherche des données et met à jour le store.
          * 
@@ -37,6 +67,40 @@ export default {
          * - 
          */
         search() {
+            this.pending.search = true;
+
+                if(this.mode == 'formulaire') {
+                    this.$app.apiGet('data/GET/formulaire', {
+                        stats_dd: this.dd,
+                        stats_df: this.df,
+                    }) 
+                    .then((data) => {
+                        console.log(data, 'getformulaire');
+                        this.result = data;
+                        console.log(this.result, 'resultformulaire');
+                    })
+                    .catch(this.$app.catchError)
+        
+                    .finally(this.pending.search = false);
+                }
+                else {
+                        console.log(this.dd)
+                    this.$app.apiGet('data/GET/collecte', {
+                        done: 'OUI',
+                        dd_done: this.dd,
+                        df_done: this.df,
+                    }) 
+                    .then((data) => {
+                        this.result = data;
+                        console.log(this.result, 'resultcollecte');
+                        
+                    })
+                    .catch(this.$app.catchError)
+        
+                    .finally(this.pending.search = false);
+                }
+
+            
 
         },
 
@@ -47,7 +111,8 @@ export default {
          */
         setModeAndSearch(mode) {
             this.mode = mode;
-            this.search();
+            console.log(mode, 'mode')
+            // this.search(this.mode);
         }
     }
 }

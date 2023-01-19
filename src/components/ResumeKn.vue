@@ -24,10 +24,10 @@
                     <tbody>
                         <tr class="text-center">
                             <td scope="row">Total: {{this.collecte.nb_reponse}}/{{this.collecte.nb_question}}</td>
-                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.s}}</td>
-                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.a}}</td>
-                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.m}}</td>
-                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.i}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.S}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.A}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.M}}</td>
+                            <td>{{stats[this.collecte.information__groupe_id]?.type.sami.I}}</td>
                         </tr>
                     </tbody>
                 </table>

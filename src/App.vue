@@ -62,9 +62,9 @@
 					<SearchControl/>
 					
 					<template v-for="form in formulaires" :key="form.id">
-						<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
+						<!-- <AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
 							<formulaire-item :num="form.nb_done" :formulaire="form" />
-						</AppMenuItem>
+						</AppMenuItem> -->
 					</template>
 					<LoadPlus/>
 					
