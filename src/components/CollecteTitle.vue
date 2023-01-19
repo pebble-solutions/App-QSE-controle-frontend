@@ -11,7 +11,7 @@
                     <span>{{formulaireLabel}}</span>
                 </div>
                 
-                <div v-if="collecte.projet_id && !selectProjetForm" class="d-flex align-items-center">
+                <div v-if="collecte.projet_id && !selectProjetForm && collecte.done != 'OUI'" class="d-flex align-items-center">
                     <i class="bi bi-boxes me-2"></i>
                     <span class="me-2">{{collecte.projet_label}}</span>
                     <button v-if="isRouteHome" class="btn btn-sm btn-outline-secondary" type="button" @click.prevent="selectProject()">Modifier</button>

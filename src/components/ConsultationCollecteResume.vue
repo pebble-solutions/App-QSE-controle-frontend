@@ -101,7 +101,7 @@
             </div>
         </div>
 
-        <div class="text-center my-3">
+        <div class="text-center my-3" v-if="!readonly">
             <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">
                 Modifier les informations
             </button>

@@ -1,12 +1,44 @@
 <template>
-    <ResumeKn></ResumeKn>
+    <ControlResultForm :stats="stats"></ControlResultForm>
 </template>
 
 <script>
-import ResumeKn from '@/components/ResumeKn.vue';
+import ControlResultForm from '@/components/ControlResultForm.vue';
+import { mapState } from 'vuex';
 
 export default {
-    components: {ResumeKn}
+    data() {
+        return {
+            stats: null
+        }
+    },
+    
+    components: { ControlResultForm },
+
+    computed: {
+        ...mapState(['collecte'])
+    },
+
+    methods: {
+        /**
+         * Récupère les states de la collecte
+         */
+         getCollecteStats() {
+            this.$app.apiGet('data/GET/stats', {
+                environnement: 'private',
+                collecte: this.collecte.id,
+                type: 'formulaire'
+            }).then((data) => {
+                this.stats = data.stats;
+            }).catch(this.$app.catchError);
+        }
+    },
+
+    mounted() {
+        if (this.collecte) {
+            this.getCollecteStats();
+        }
+    }
 }
 
 </script>
