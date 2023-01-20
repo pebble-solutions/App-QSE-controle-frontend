@@ -61,11 +61,11 @@
 					<!-- Implémentation version 2 -->
 					<SearchControl/>
 					
-					<template v-for="form in formulaires" :key="form.id">
-						<!-- <AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
+					<!-- <template v-for="form in formulaires" :key="form.id">
+						<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
 							<formulaire-item :num="form.nb_done" :formulaire="form" />
-						</AppMenuItem> -->
-					</template>
+						</AppMenuItem>
+					</template> -->
 					<LoadPlus/>
 					
 				</template>
@@ -313,8 +313,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, LoadPlus },
-	
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner , SearchControl, LoadPlus	},
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
