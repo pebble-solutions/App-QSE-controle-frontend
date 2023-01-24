@@ -19,16 +19,16 @@
                 <!--</i><i class="bi bi-arrow-right"></i> alternative au chariot entréee-->
             </div>
         </form>
-        <div class="m-2 text-center" v-if="result" >
+        <div v-if="!result.length" class="m-2 text-center">
+			<alert-message class-name="m-2">0 résultat</alert-message>
+        </div>
+        <div class="m-2 text-center" v-else-if="result" >
             <span class="badge bg-primary me-1" >{{displayMode(mode)}}</span>  
             <span class="badge bg-primary me-1" v-if="dd">du {{ changeFormatDateLit(dd) }}</span>
             <span class="badge bg-primary me-1" v-if="df"> au {{ changeFormatDateLit(df) }}</span> 
         </div>
-        <div v-else class="m-2 text-center">
-            <span class="badge bg-primary me-1">Pas de résultats</span>
-        </div>
         <template v-for="res in result" :key="res.id">
-            <app-menu-item v-if="this.mode ==  'collecte'" :href="'/consultation/'+res.information__groupe_id+'/'+res.id">
+            <app-menu-item v-if="this.mode ==  'collecte' || this.mode =='tous'" :href="'/consultation/'+res.information__groupe_id+'/'+res.id">
                 <collecte-item-done :collecte="res"></collecte-item-done>
             </app-menu-item>
             <app-menu-item v-else-if="this.mode == 'formulaire' && res.nb_done != 0" :href="'/consultation/'+res.id" >
@@ -45,11 +45,12 @@
 import AppMenuItem from './pebble-ui/AppMenuItem.vue';
 import FormulaireItem from './menu/FormulaireItem.vue';
 import ProjectItemDone from './menu/ProjectItemDone.vue';
+import AlertMessage from './pebble-ui/AlertMessage.vue';
 import date from 'date-and-time';
 import CollecteItemDone from './menu/collecteItemDone.vue';
 
 export default {
-components: {  AppMenuItem, FormulaireItem,  ProjectItemDone, CollecteItemDone},
+components: {  AppMenuItem, FormulaireItem,  ProjectItemDone, CollecteItemDone, AlertMessage},
 
     data() {
         return {

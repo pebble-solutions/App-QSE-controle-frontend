@@ -37,7 +37,7 @@
 							<collecte-item :collecte="col" />
 						</div>
 					</AppMenuItem>
-					<alert-message class-name="m-2" v-if="noVal(collectes)">Il n'y a aucun contrôle programmé.</alert-message>
+					<alert-message class-name="m-2" v-if="noVal(collectes)">Vous n'avez aucun contrôle à réaliser.</alert-message>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
@@ -49,6 +49,7 @@
 						<AppMenuItem :href="'/programmation/'+form.id" v-if="form.nb_todo" >
 							<formulaire-item :num="form.nb_todo" :formulaire="form" />
 						</AppMenuItem>
+					<alert-message class-name="m-2" v-if="noVal(formulaires)">Il n'y a aucun contrôle programmé.</alert-message>
 					</template>
 				</template>
 			</AppMenu>
@@ -57,15 +58,14 @@
 					<Spinner />
 				</template>
 				<template v-else>
-					
-					<!-- Implémentation version 2 -->
+										<!-- Implémentation version 2 -->
 					<SearchControl/>
-					
 					<!-- <template v-for="form in formulaires" :key="form.id">
-						<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
-							<formulaire-item :num="form.nb_done" :formulaire="form" />
-						</AppMenuItem>
-					</template> -->
+							<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
+								<formulaire-item :num="form.nb_done" :formulaire="form" />
+							</AppMenuItem>
+						</template> -->
+
 					<LoadPlus/>
 					
 				</template>

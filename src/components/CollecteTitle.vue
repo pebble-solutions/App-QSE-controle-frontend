@@ -11,7 +11,7 @@
                     <span>{{formulaireLabel}}</span>
                 </div>
                 
-                <div v-if="collecte.projet_id && !selectProjetForm && collecte.done != 'OUI'" class="d-flex align-items-center">
+                <div v-if="collecte.projet_id && !selectProjetForm && collecte.done != 'OUI'" class="d-flex align-items-baseline">
                     <i class="bi bi-boxes me-2"></i>
                     <span class="me-2">{{collecte.projet_label}}</span>
                     <button v-if="isRouteHome" class="btn btn-sm btn-outline-secondary" type="button" @click.prevent="selectProject()">Modifier</button>
@@ -23,14 +23,20 @@
                     </button>
                 </template> 
 
-                <form method="post" class="d-flex align-items-end" @submit.prevent="changeProjet()" v-if="selectProjetForm">
-                    <div class="me-2">
-                        <label for="collecteProjet" class="form-label">Sélectionnez un projet:</label>
-                        <select class="form-select form-select-sm" id="collecteProjet" name="projet.intitule" v-model="projet_id">
-                            <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
-                        </select>
+                <form method="post" @submit.prevent="changeProjet()" v-if="selectProjetForm">
+                    <div class="d-flex align-items-end" v-if="isRouteHome">
+                        <div class="me-2">
+                            <label for="collecteProjet" class="form-label">Sélectionnez un projet:</label>
+                            <select class="form-select form-select-sm" id="collecteProjet" name="projet.intitule" v-model="projet_id">
+                                <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary" type="submit" :disabled="pending.collecte">Valider</button>
                     </div>
-                    <button class="btn btn-sm btn-outline-primary" type="submit" :disabled="pending.collecte">Valider</button>
+                    <div v-else>
+                        <i class="bi bi-boxes me-2"></i>
+                        <span class="me-2">{{collecte.projet_label}}</span>
+                    </div>
                 </form>
                 
             </div>
@@ -127,7 +133,7 @@ export default {
 
     methods: {
         /**
-         * Ouvrir le formulaire permettant de modifier le projet sélectionné
+         * Ouvre le formulaire permettant de modifier le projet sélectionné
          */
         selectProject() {
             this.selectProjetForm = true;
