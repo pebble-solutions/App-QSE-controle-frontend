@@ -41,7 +41,18 @@
             <app-menu-item v-else-if="this.resultSearch.mode =='projet' && res.nb_done != 0" :href="'/consultation/projet/'+res.id">
                 <project-item-done :num="res.nb_done" :projet="res" ></project-item-done>
             </app-menu-item>
+
         </template>
+
+        <div class="d-grid">
+            <button class="btn my-2 btn-outline-secondary" type="button" @click.prevent="loadPlus()" :disabled="pending.search" v-if="isMoreAvailable">
+                <span class="spinner-border spinner-border-sm" v-if="pending.search"></span>
+                <i class="bi bi-plus" v-else></i>
+                Charger plus
+            </button>
+        </div>
+
+        <alert-message icon="bi-info-circle-fill" v-if="noMoreAvailable">Oops, y'a pu !</alert-message>
     </div>
 </template>
 <script>
@@ -61,21 +72,34 @@ components: {  AppMenuItem, FormulaireItem,  ProjectItemDone, CollecteItemDone, 
 
     data() {
         return {
+            mode: 'collecte',
             pending: {
                 search:false
             },
             result: [],
-            resultSearch: [
-                {
-                    dd:null,
-                    df:null,
-                    mode: 'collecte'
-                }
-            ],
-            // dd: null,
-            // df: null,
-            // mode: 'tous',
+            resultSearch: [],
+            dd: null,
+            df: null,
+            start: 0,
+            limit: 4,
+            noMoreAvailable: false
+        }
+    },
 
+    computed: {
+        /**
+         * Contrôle si il peut exister plus de résultats sur le serveurs que 
+         * de données stockées dans résults.
+         * 
+         * On concidère qu'il peut exister des résultats supplémentaires sur le serveur
+         * à partir du moment ou il y a plus de 50 items dans result et que result / 50 est
+         * égal à 1.
+         * 
+         * @return {bool}
+         */
+        isMoreAvailable() {
+            let ln = this.result.length;
+            return (ln && ln % this.limit === 0 && !this.noMoreAvailable);
         }
     },
 
@@ -99,58 +123,62 @@ components: {  AppMenuItem, FormulaireItem,  ProjectItemDone, CollecteItemDone, 
          * - tous ou collecte : api/data/GET/collecte
          * - formulaire : api/data/GET/formulaire
          * - projet : api/data/GET/projet
+         * 
+         * @param {object} options
+         * - mode           'replace' (défaut), 'append' (ajout des données à la fin de la liste)
          */
-        search() {
+        search(options) {
+
+            if (!['collecte', 'projet', 'formulaire'].includes(this.mode)) {
+                alert("Erreur dans le mode d'information sélectionné.");
+                return false;
+            }
+
+            options = typeof options === 'undefined' ? {} : options;
+
+            if (!options.mode) {
+                this.start = 0;
+                this.noMoreAvailable = false;
+            }
+
             this.pending.search = true;
 
-                if(this.resultSearch.mode == 'collecte' || this.resultSearch.mode =='tous'){
-                    this.$app.apiGet('data/GET/collecte', {
-                        environnement: 'private',
-                        done: 'OUI',
-                        dd_done: this.resultSearch.dd,
-                        df_done: this.resultSearch.df,
-                    }) 
-                    .then((data) => {
-                        this.result = data;
-                        console.log (this.result,'resultcollecte');
-                    })
-                    .catch(this.$app.catchError)
-        
-                    .finally(this.pending.search = false);
-                }
+            let query = {
+                environnement: 'private',
+                start: this.start,
+                limit: this.limit,
+                dd_done: null,
+                df_done: null,
+                stats_dd: null,
+                stats_df: null,
+                done: null
+            };
 
-                else if(this.resultSearch.mode == 'formulaire') {
-                    this.$app.apiGet('data/GET/formulaire', {
-                        environnement: 'private',
-                        stats_dd: this.resultSearch.dd,
-                        stats_df: this.resultSearch.df,
-                    }) 
-                    .then((data) => {
-                        console.log(data, 'getformulaire');
-                        this.result = data;
-                        console.log (this.result, 'resultformulaire');
-                    })
-                    .catch(this.$app.catchError)
-        
-                    .finally(this.pending.search = false);
-                }
+            if (this.mode == 'collecte') {
+                query.dd_done = this.dd;
+                query.df_done = this.df;
+                query.done = 'OUI';
+            }
+            else {
+                query.stats_dd = this.dd;
+                query.stats_df = this.df;
+            }
 
-                else if(this.resultSearch.mode == 'projet'){
-                    console.log(this.resultSearch.dd)
-                    this.$app.apiGet('data/GET/projet', {
-                        environnement: 'private',
-                        stats_dd: this.resultSearch.dd,
-                        stats_df: this.resultSearch.df,
-                    }) 
-                    .then((data) => {
-                        this.result = data;
-                        console.log (this.result, 'resultprojet');
-                    })
-                    .catch(this.$app.catchError)
-        
-                    .finally(this.pending.search = false);
+            let url = `data/GET/${this.mode}`;
+
+            this.$app.apiGet(url, query).then((data) => {
+                if (options.mode == 'append') {
+                    if (!data.length) {
+                        this.noMoreAvailable = true;
+                    } else {
+                        this.result = this.result.concat(data);
+                    }
                 }
-        
+                else {
+                    this.result = data;
+                }
+            })
+            .catch(this.$app.catchError).finally(this.pending.search = false);
         },
 
         /**
@@ -159,8 +187,8 @@ components: {  AppMenuItem, FormulaireItem,  ProjectItemDone, CollecteItemDone, 
          * @param {string} mode 'collecte', 'formulaire', 'projet'
          */
         setModeAndSearch(mode) {
-            this.resultSearch.mode = mode;
-            console.log(this.resultSearch.mode, 'mode')
+            this.mode = mode;
+            this.search();
             // this.search(this.mode);
         },
 
@@ -192,6 +220,19 @@ components: {  AppMenuItem, FormulaireItem,  ProjectItemDone, CollecteItemDone, 
                 return 'Tous les contrôles'
             }
         },
+
+        /**
+         * Charge la suite des données lorsque le nombre de résultats est > à 50 
+         * et divisible par 50 en nombre entier.
+         */
+        loadPlus() {
+            if (this.isMoreAvailable) {
+                this.start += this.limit;
+                this.search({
+                    mode: 'append'
+                });
+            }
+        }
     },
 
     mounted(){
