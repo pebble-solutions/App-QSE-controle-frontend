@@ -148,7 +148,7 @@
     </div>
 </template>
 
-<script lang="js">
+<script>
 
 import SamiButton from './SamiButton.vue';
 import { mapState } from 'vuex';

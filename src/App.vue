@@ -59,15 +59,20 @@
 				</template>
 				<template v-else>
 										<!-- Implémentation version 2 -->
-					<SearchControl/>
-					<!-- <template v-for="form in formulaires" :key="form.id">
-							<AppMenuItem :href="'/consultation/'+form.id" v-if="form.nb_done">
-								<formulaire-item :num="form.nb_done" :formulaire="form" />
-							</AppMenuItem>
-						</template> -->
+					<SearchControl> </SearchControl>
+					<search-control-copy
+						v-model:dd="searchOptionsDd"
+						v-model:df="searchOptionsDf"
+						v-model:mode="searchOptionsMode"
+					></search-control-copy>
+					<span class="badge bg-primary me-1">du  {{ searchOptionsDd }}</span>
+					<span class="badge bg-primary me-1">au  {{ searchOptionsDf }}</span>
 
-					<LoadPlus/>
+
+
 					
+					
+					<!-- <LoadPlus/> -->
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
@@ -95,7 +100,6 @@ import AppWrapper from '@/components/pebble-ui/AppWrapper.vue'
 import AppMenu from '@/components/pebble-ui/AppMenu.vue'
 import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapActions, mapState } from 'vuex'
-
 import CONFIG from "@/config.json"
 import FormStats from './components/FormStats.vue'
 import CollecteItem from './components/CollecteItem.vue'
@@ -106,7 +110,9 @@ import ControleHeader from './components/headers/ControleHeader.vue'
 import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
-import LoadPlus from './components/LoadPlus.vue'
+import SearchControlCopy from './components/SearchControlCopy.vue'
+
+// import LoadPlus from './components/LoadPlus.vue'
 
 export default {
 
@@ -148,7 +154,12 @@ export default {
 					key: 'consultation',
 					href: '/consultation'
 				}
-			]
+			],
+			searchOptionsDd: '',
+			searchOptionsDf: '',
+			searchOptionsMode: 'collecte'
+
+
 		}
 	},
 
@@ -181,6 +192,9 @@ export default {
 	watch: {
 		$route () {
 			this.$app.dispatchEvent('menuChanged', 'list');
+		},
+		searchOptionsDd(){
+			console.log(this.searchOptionsDd, 'searchO')
 		},
 
 		/**
@@ -313,8 +327,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner , SearchControl, LoadPlus	},
-
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner , SearchControl, SearchControlCopy}, //, LoadPlus
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
 			this.$router.push('/programmation');

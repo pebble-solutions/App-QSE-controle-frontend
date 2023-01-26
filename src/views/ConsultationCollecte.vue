@@ -10,7 +10,8 @@
     
                     <div class="ms-2">
                         <h1 class="fs-3 m-0">{{formulaire.groupe}}</h1> 
-                        <div class="text-secondary">{{collectes_number_label}}</div>
+                        <div class="d-flex align-items-center text-secondary">{{collectes_number_label}}<span><button @click.prevent="LoadFollowingCollectes(formulaire.id)" class="ms-2 btn btn-outline-secondary" v-if="collectes.length > 49">+ de résultats</button></span></div>
+                        
                     </div>
                 </div>
             </div>
@@ -21,9 +22,9 @@
                 </div> 
     
             </div>
-            <div v-if="btnPlus" class="d-flex justify-content-end py-3">
+            <!-- <div v-if="btnPlus" class="d-flex justify-content-end py-3">
                 <button @click.prevent="loadCollectes(formulaire.id)" class="btn btn-outline-primary">+ de résultats</button>
-            </div>
+            </div> -->
             <!-- libellé{{ formulaire.groupe }},
             formualaire id{{ formulaire.id }},
             formulaire nb done{{ formulaire.nb_done }},
@@ -49,7 +50,7 @@ export default {
             pending: {
                 collectes: true
             },
-            btnPlus: false,
+            numColl: null,
         }
     },
 
@@ -65,8 +66,7 @@ export default {
             let count = this.collectes.length;
             if (count) {
                 let s = count > 1 ? "s" : "";
-                
-                let label = `${count} collecte${s} terminée${s}`;
+                let label = `${count} collecte${s} affichée${s}`;
                 return label;
             }
             return "Aucun contrôle terminé";
@@ -81,7 +81,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['setCollectes', 'openFormulaire']),
+        ...mapActions(['setCollectes', 'openFormulaire', 'addCollectes']),
 
         /**
 		 * Charge les collectes depuis le serveur et les stock dans le store
@@ -96,6 +96,10 @@ export default {
             return this.$app.apiGet('data/GET/collecte', {done:'OUI', information__groupe_id:id})
 				.then(data => {
 					this.setCollectes(data);
+                        // this.numColl = this.collectes.length + this.numColl;
+                        console.log(this.collectes.length, 'lenght set');
+                        console.log(data, 'result requete');
+                        console.log(this.numColl, 'num');
 					return data;
 				})
 				.catch(this.$app.catchError).finally(() => this.pending.collectes = false);
@@ -107,12 +111,15 @@ export default {
             console.log(this.formulaire.id);
 
             let count = this.collectes.length;
-            if(count>49) {
-                this.btnPlus = true
-                return this.$app.apiGet('data/GET/collecte', { done: 'OUI', information__groupe_id:id, start:0})
+            if(count > 49) {
+                return this.$app.apiGet('data/GET/collecte', { done: 'OUI', information__groupe_id:id, start:50})
 				.then(data => {
+                        // this.numColl = this.collectes.length + this.numColl;
+                        console.log(this.collectes.length, 'longueur follow');
+                        console.log(data, 'result requete');
+                        console.log(this.numColl, 'num');
                     console.log(data, 'data');
-					this.setCollectes(data);
+					this.addCollectes(data);
 					return data;
 				})
 				.catch(this.$app.catchError).finally(() => this.pending.collectes = false);
@@ -183,6 +190,7 @@ export default {
     mounted() {
         this.openFormulaire(this.$route.params.id);
         this.loadCollectes(this.$route.params.id);
+        this.btnPlus = false;
         // this.LoadFollowingCollectes(this.$route.params.id);
 
 

@@ -62,23 +62,59 @@ const routes = [
       }
     ]
   },
+
   {
     path: '/consultation',
     name: 'consultation',
-    component: () => import("../views/Consultation.vue")
+    component: () => import("../views/Consultation.vue"),
   },
+
   {
-    path: '/consultation/:id',
-    name: 'consultationFormulaire',
-    component: () => import("../views/ConsultationCollecte.vue"),
+    path: '/consultation/:idCollecte',
+    name: 'ConsultationControl',
+    component: () => import("../views/ConsultControl.vue")
+  },
+
+  {
+    path: '/consultation/projet',
+    name: 'consultProjet',
+    component: () => import("../views/ConsultProjet.vue"),
     children: [
       {
-        path: ':idCollecte',
-        name: 'ConsultationResponses',
-        component: () => import("../views/ConsultationResponses.vue")
+        path:':idProjet',
+        name: 'listProjet',
+        component: () => import("../views/ConsultProjetList.vue"),
+
       }
     ]
-  }
+  },
+
+  {
+    path: '/consultation/formulaire',
+    name: 'consultForm',
+    component: () => import("../views/ConsultForm.vue"),
+    children: [
+      {
+        path:':idFormulaire',
+        name: 'listForm',
+        component: () => import("../views/ConsultFormList.vue"),
+
+      }
+    ]
+  },
+
+  // {
+  //   path: '/consultation/:id',
+  //   name: 'consultationFormulaire',
+  //   component: () => import("../views/ConsultationCollecte.vue"),
+  //   children: [
+  //     {
+  //       path: ':idCollecte',
+  //       name: 'ConsultationResponses',
+  //       component: () => import("../views/ConsultationResponses.vue")
+  //     }
+  //   ]
+  // }
   // {
   //   path: '/formulaire/:id',
   //   name: 'Formulaire',

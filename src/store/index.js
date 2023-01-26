@@ -242,6 +242,11 @@ export default createStore({
 					state.collecte[key] = collecte[key];
 				}
 			}
+			else if(mode == 'add'){
+				for (const key in collecte) {
+					state.collecte[key] = collecte[key];
+				}
+			}
 			else {
 				state.collecte = collecte;
 			}
@@ -368,6 +373,14 @@ export default createStore({
 				action: 'set'
 			});
 		},
+		/**
+		 * ajoute une liste de collecte aux collectes dans le store
+		 * @param	{object}	contexte l'instance vueX
+		 * @param	{object}	collecte	la collecte à ajouter
+		 */
+		addCollectes(contexte, collectes) {
+			contexte.commit('collectes', {collectes, action:'add'})
+		},
 
 		/**
 		 * Retire une collecte du store.
@@ -434,6 +447,8 @@ export default createStore({
 		setCollecte(contexte, collecte) {
 			contexte.commit('collecte', { collecte, mode: 'set' })
 		},
+
+		
 
 		/**
 		 * Met à jour les informations de la collecte chargée dans le store

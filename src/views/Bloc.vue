@@ -101,7 +101,7 @@ export default {
                     this.$router.push({name: 'collecteKnBloc', params:{id:this.collecte.id, bloc:to.id}});
                 }
                 else {
-                    alert('Les informations sont enregistrées mais une erreur est servenue dansla navigation.');
+                    alert('Les informations sont enregistrées mais une erreur est survenue dans la navigation.');
                 }
             })
             .catch(this.$app.catchError).finally(() => this.pending.bloc = false);

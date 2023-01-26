@@ -45,6 +45,7 @@
 </template>
 
 <script>
+
 import {mapActions, mapState} from 'vuex';
 import BlocNavigation from './BlocNavigation.vue';
 import ControlSAMIStats from './ControlSAMIStats.vue';
