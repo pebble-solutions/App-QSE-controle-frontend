@@ -58,21 +58,27 @@
 					<Spinner />
 				</template>
 				<template v-else>
-										<!-- Implémentation version 2 -->
-					<SearchControl> </SearchControl>
-					<search-control-copy
+							<!-- Implémentation version 2 -->
+					<search-control
 						v-model:dd="searchOptionsDd"
 						v-model:df="searchOptionsDf"
 						v-model:mode="searchOptionsMode"
-					></search-control-copy>
-					<span class="badge bg-primary me-1">du  {{ searchOptionsDd }}</span>
-					<span class="badge bg-primary me-1">au  {{ searchOptionsDf }}</span>
-
-
-
-					
-					
-					<!-- <LoadPlus/> -->
+					></search-control>
+					<template v-for="res in result" :key="res.id">
+						<app-menu-item v-if="this.searchOptionsMode == 'collecte' " :href="'/consultation/'+res.id">
+							<collecte-item-done :collecte="res"></collecte-item-done>
+						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptionsMode == 'formulaire' && res.nb_done != 0" :href="'/consultation/formulaire/'+res.id" >
+							<formulaire-item :num="res.nb_done" :formulaire="res" ></formulaire-item>
+						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptionsMode =='projet' && res.nb_done != 0" :href="'/consultation/projet/'+res.id">
+							<project-item-done :num="res.nb_done" :projet="res" ></project-item-done>
+						</app-menu-item>
+					</template>
+					<br>
+					<!-- <SearchControl> </SearchControl> -->
+					<!-- <span class="badge bg-primary me-1">du  {{ searchOptionsDd }}</span>
+					<span class="badge bg-primary me-1">au  {{ searchOptionsDf }}</span> -->
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
@@ -103,16 +109,16 @@ import { mapActions, mapState } from 'vuex'
 import CONFIG from "@/config.json"
 import FormStats from './components/FormStats.vue'
 import CollecteItem from './components/CollecteItem.vue'
+import FormulaireItem from './components/menu/FormulaireItem.vue';
+import ProjectItemDone from './components/menu/ProjectItemDone.vue';
+import collecteItemDone from './components/menu/collecteItemDone.vue';
+
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
-import FormulaireItem from './components/menu/FormulaireItem.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
 import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
-import SearchControlCopy from './components/SearchControlCopy.vue'
-
-// import LoadPlus from './components/LoadPlus.vue'
 
 export default {
 
@@ -126,6 +132,7 @@ export default {
 				formulaires: true,
 				collectes: true,
 				projets: true,
+				search: false
 
 			},
 			isConnectedUser: false,
@@ -157,7 +164,8 @@ export default {
 			],
 			searchOptionsDd: '',
 			searchOptionsDf: '',
-			searchOptionsMode: 'collecte'
+			searchOptionsMode: 'collecte',
+			result:[]
 
 
 		}
@@ -179,7 +187,7 @@ export default {
 			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
 				return 'programmation';
 			}
-			else if (['consultation', 'consultationFormulaire', 'ConsultationResponses'].includes(this.$route.name)) {
+			else if (['consultation', 'consultationFormulaire', 'ConsultationResponses','ConsultationControl', 'listProjet','listForm','consultProjet','consultForm'].includes(this.$route.name)) {
 				return 'consultation';
 			}
 			else if (['Home'].includes(this.$route.name)) {
@@ -194,7 +202,14 @@ export default {
 			this.$app.dispatchEvent('menuChanged', 'list');
 		},
 		searchOptionsDd(){
-			console.log(this.searchOptionsDd, 'searchO')
+			console.log(this.searchOptionsDd, 'searchdd')
+		},
+		searchOptionsDf(){
+			console.log(this.searchOptionsDf, 'searchdf')
+		},
+		searchOptionsMode(){
+			console.log(this.searchOptionsMode, 'searchMode');
+			this.search()
 		},
 
 		/**
@@ -324,10 +339,99 @@ export default {
 			if (!val) return true;
 			if (!val.length) return true;
 			return false;
-		}
+		},
+		/**
+         * Lance la recherche des données et met à jour le store.
+         * lors de la recherche consultation
+         * La route d'API appelée dépend de la valeur de this.mode
+         * - tous ou collecte : api/data/GET/collecte
+         * - formulaire : api/data/GET/formulaire
+         * - projet : api/data/GET/projet
+         * 
+         * @param {object} options
+         * - mode           'replace' (défaut), 'append' (ajout des données à la fin de la liste)
+         */
+		search(options) {
+
+			if (!['collecte', 'projet', 'formulaire'].includes(this.searchOptionsMode)) {
+				alert("Erreur dans le mode d'information sélectionné.");
+				return false;
+			}
+
+			options = typeof options === 'undefined' ? {} : options;
+
+			if (!options.mode) {
+				this.start = 0;
+				// this.noMoreAvailable = false;
+			}
+
+			this.pending.search = true;
+
+			let query = {
+				environnement: 'private',
+				start: this.start,
+				limit: this.limit,
+				dd_done: null,
+				df_done: null,
+				stats_dd: null,
+				stats_df: null,
+				done: null
+			};
+
+			if (this.searchOptionsMode == 'collecte') {
+				query.dd_done = this.searchOptionsDd;
+				query.df_done = this.searchOptionsDf;
+				query.done = 'OUI';
+			}
+			else {
+				query.stats_dd = this.searchOptionsDd;
+				query.stats_df = this.searchOptionsDf;
+			}
+
+			let url = `data/GET/${this.searchOptionsMode}`;
+
+			this.$app.apiGet(url, query).then((data) => {
+				// if (options.mode == 'append') {
+				// 	if (!data.length) {
+				// 		this.noMoreAvailable = true;
+				// 	} else {
+				// 		this.result = this.result.concat(data);
+				// 	}
+				// }
+				// else {
+					console.log(data,'withsearchOptions')
+					this.result = data;
+					this.setCollectes(data);
+					this.routeToVue(this.searchOptionsMode)
+				// }
+			})
+			.catch(this.$app.catchError).finally(this.pending.search = false);
+		},
+		/**
+         * Affiche la liste des contrôles programmés avec le formulaire
+         * 
+         * @param {object} collecte
+         */
+		routeToVue(mode) {
+            this.$router.push('/consultation/'+mode);
+        },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner , SearchControl, SearchControlCopy}, //, LoadPlus
+	components: { AppWrapper,
+		AppMenu,
+		AppMenuItem,
+		FormStats,
+		CollecteItem,
+		AlertMessage,
+		StatsHeader,
+		ProgrammationHeader,
+		FormulaireItem,
+		ControleHeader,
+		Spinner,
+		SearchControl,
+		collecteItemDone,
+		ProjectItemDone}, 
+		//SearchControl,
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
 			this.$router.push('/programmation');

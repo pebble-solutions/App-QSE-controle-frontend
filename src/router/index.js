@@ -79,29 +79,25 @@ const routes = [
     path: '/consultation/projet',
     name: 'consultProjet',
     component: () => import("../views/ConsultProjet.vue"),
-    children: [
-      {
-        path:':idProjet',
-        name: 'listProjet',
-        component: () => import("../views/ConsultProjetList.vue"),
-
-      }
-    ]
   },
+    {
+    path:'/consultation/projet/:idProjet',
+    name: 'listProjet',
+    component: () => import("../views/ConsultProjetList.vue"),
 
+  },
+  
   {
     path: '/consultation/formulaire',
     name: 'consultForm',
     component: () => import("../views/ConsultForm.vue"),
-    children: [
-      {
-        path:':idFormulaire',
-        name: 'listForm',
-        component: () => import("../views/ConsultFormList.vue"),
-
-      }
-    ]
   },
+  {
+    path:'/consultation/formulaire/:idFormulaire',
+    name: 'listForm',
+    component: () => import("../views/ConsultFormList.vue"),
+
+  }
 
   // {
   //   path: '/consultation/:id',
