@@ -58,11 +58,11 @@
 					<Spinner />
 				</template>
 				<template v-else>
-							<!-- Implémentation version 2 -->
 					<search-control
 						v-model:dd="searchOptionsDd"
 						v-model:df="searchOptionsDf"
 						v-model:mode="searchOptionsMode"
+						@search="searchConsultations()"
 					></search-control>
 					<template v-for="res in result" :key="res.id">
 						<app-menu-item v-if="this.searchOptionsMode == 'collecte' " :href="'/consultation/'+res.id">
@@ -166,8 +166,6 @@ export default {
 			searchOptionsDf: '',
 			searchOptionsMode: 'collecte',
 			result:[]
-
-
 		}
 	},
 
@@ -209,7 +207,7 @@ export default {
 		},
 		searchOptionsMode(){
 			console.log(this.searchOptionsMode, 'searchMode');
-			this.search()
+			this.searchConsultations()
 		},
 
 		/**
@@ -222,6 +220,9 @@ export default {
 				if (this.isConnectedUser) {
 					if (val == 'collecte') {
 						this.loadCollectes();
+					}
+					else if (val == 'consultation') {
+						this.searchConsultations();
 					}
 				}
 			}
@@ -351,7 +352,7 @@ export default {
          * @param {object} options
          * - mode           'replace' (défaut), 'append' (ajout des données à la fin de la liste)
          */
-		search(options) {
+		searchConsultations(options) {
 
 			if (!['collecte', 'projet', 'formulaire'].includes(this.searchOptionsMode)) {
 				alert("Erreur dans le mode d'information sélectionné.");

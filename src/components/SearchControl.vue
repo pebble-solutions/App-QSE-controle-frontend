@@ -1,37 +1,32 @@
 <template>
-    <div>
-        <div class="m-2 text-center"  >
-            <span v-if="dd" class="badge bg-primary me-1">du  {{ changeFormatDateLit(searchDd) }}</span>
-            <span v-if="df" class="badge bg-primary me-1"> au {{ changeFormatDateLit(searchDf) }}</span>
-            <span class="badge bg-primary me-1" >{{displayMode(searchMode)}}</span>  
+    <form @submit.prevent="search()" class="m-1">
+        <div class="dropdown d-grid mb-1">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="bi bi-list"></i>
+                {{currentModeLabel}}
+            </button>
+            <ul class="dropdown-menu">
+                <button type="button" class="dropdown-item d-flex align-items-center justify-content-between" 
+                    @click.prevent="setModeAndSearch(index)" 
+                    v-for="(label, index) in modesDict" 
+                    :key="index">
+                    {{label}}
+                    <i class="bi bi-check text-success" v-if="index == mode"></i>
+                </button>
+            </ul>
         </div>
-
-        <form @submit.prevent="search()" class="m-1">   
-            <div class="input-group">
-                <div class="col">
-                    <input type="date" class="form-control" id="dateDebutDone"  v-model="searchDd">
-                    <input type="date" class="form-control" id="dateFinDone" v-model="searchDf">
-                </div>
-
-                <div class="btn-group col">
-                    <button type="button" class="btn rounded-0 btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-list"></i>Options</button>
-                    <ul class="dropdown-menu">
-                        <button type="button" class="dropdown-item" @click.prevent="setModeAndSearch('collecte')">Tous les contrôles<span><i v-if="this.mode == 'collecte'" class="ms-1 bi bi-check"></i></span></button>
-                        <button type="button" class="dropdown-item" @click.prevent="setModeAndSearch('formulaire')">Grouper par questionnaire<span><i v-if="this.mode == 'formulaire'" class="ms-1 bi bi-check"></i></span></button>
-                        <button type="button" class="dropdown-item" @click.prevent="setModeAndSearch('projet')">Grouper par projet<span><i v-if="this.mode == 'projet'" class="ms-1 bi bi-check"></i></span></button>
-                    </ul>
-                </div>
-            </div>
-        </form>
-
-        
-    </div>
+        <div class="input-group">
+            <input type="date" class="form-control" id="dateDebutDone"  v-model="searchDd">
+            <input type="date" class="form-control" id="dateFinDone" v-model="searchDf">
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-funnel"></i>
+            </button>
+        </div>
+    </form>
 </template>
 <script>
+
 import date from 'date-and-time';
-
-
-
 
 export default {
     props: {
@@ -53,6 +48,23 @@ export default {
             searchDd: null,
             searchDf: null,
             searchMode: 'collecte',
+            modesDict: {
+                collecte: "Tous les contrôles",
+                formulaire: "Grouper par questionnaire",
+                projet: "Grouper par projet"
+            }
+        }
+    },
+
+    emits: ['update:dd', 'update:df', 'update:mode', 'search'],
+
+    computed: {
+        /**
+         * Retourne le libellé du mode d'affichage sélectionné
+         * @return {string}
+         */
+        currentModeLabel() {
+            return this.modesDict[this.mode];
         }
     },
 
@@ -78,7 +90,6 @@ export default {
          * 
          * @param   {string} newVal
          */
-
         searchMode(newVal){
             this.updateVal('mode', newVal);
         },
@@ -103,34 +114,29 @@ export default {
 		changeFormatDateLit(el) {
 			return date.format(new Date(el), 'DD MMM YYYY')
 		},
-        setModeAndSearch(mode){
-            this.searchMode= mode
-        },
+
         /**
-         * Affiche les options de tri choisies par l'utilisateur
+         * Change le mode de recherche et d'affichage et lance la recherche
          * 
+         * @param {string} mode        'collecte', 'formulaire', 'projet'
          */
-        displayMode(){
-            if(this.mode == 'collecte'){
-                return 'Tous les contrôles'
-            }
-            else if (this.mode === 'formulaire'){
-        
-                return 'par formulaires'
-            }
-            else if (this.mode === 'projet'){
-                return 'par projets'
-            }
-            else {
-                return 'Tous les contrôles'
-            }
+        setModeAndSearch(mode) {
+            this.searchMode = mode;
+            this.search();
         },
+
+        /**
+         * Envoie un événement pour lancer la recherche
+         */
+        search() {
+            this.$emit('search');
+        }
     },
 
     mounted() {
         this.searchDd = this.dd;
         this.searchDf = this.df;
-        this.searchmode = 'collecte'
+        this.searchMode = this.mode;
     }
     
 }
