@@ -9,7 +9,7 @@
                     </div>
                     <div class="col display-6 ">
                         <p class="fs-4 text-center">Utilisez cet espace pour consulter les contrôles réalisés</p>
-                        <p class="fs-4 text-center">Sélectionnez un type de contrôle dans la liste de gauche pour consulter les enregistrements.</p>
+                        <p class="fs-4 text-center">Sélectionnez un contrôle dans la liste de gauche pour le consulter ou utilisez les outils de recherche.</p>
                     </div>
                 </div>
             </div>

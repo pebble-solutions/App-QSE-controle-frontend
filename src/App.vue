@@ -185,7 +185,7 @@ export default {
 			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
 				return 'programmation';
 			}
-			else if (['consultation', 'consultationFormulaire', 'ConsultationResponses','ConsultationControl', 'listProjet','listForm','consultProjet','consultForm'].includes(this.$route.name)) {
+			else if (['consultation', 'consultationFormulaire', 'ConsultationResponses','consultationControl', 'listProjet','listForm','consultProjet','consultForm'].includes(this.$route.name)) {
 				return 'consultation';
 			}
 			else if (['Home'].includes(this.$route.name)) {

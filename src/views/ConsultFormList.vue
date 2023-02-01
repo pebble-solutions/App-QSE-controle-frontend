@@ -1,10 +1,7 @@
 <template>
-    <div class="d-flex flex-row flex-wrap justify-content-between align-items-center">
-        <h1 class="fs-3 m-0 me-2">
-            {{ getGroupNameFromId }}
-        </h1> 
-        <div class="text-secondary">{{filterCollecte.length}}</div>
-
+    <div class="d-flex flex-wrap justify-content-start align-items-center my-4">
+        <h1 class="fs-3 m-0 me-2">{{ getGroupNameFromId }}</h1> 
+        <div class="badge bg-secondary">{{filterCollecte.length}}</div>
     </div>
     
     <div class="list-group" v-if="filterCollecte">
@@ -36,7 +33,7 @@ export default{
 
         /**
          * filtre les collectes en fonction de l'id du formulaire concerné
-         * et retourne les contrôles réaliséss concernés
+         * et retourne les contrôles réalisés correspondants
          */
 
         filterCollecte() {
