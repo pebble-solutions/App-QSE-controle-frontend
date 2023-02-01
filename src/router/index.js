@@ -71,7 +71,7 @@ const routes = [
 
   {
     path: '/consultation/:idCollecte',
-    name: 'ConsultationControl',
+    name: 'consultationControl',
     component: () => import("../views/ConsultControl.vue")
   },
 
@@ -96,6 +96,13 @@ const routes = [
     path:'/consultation/formulaire/:idFormulaire',
     name: 'listForm',
     component: () => import("../views/ConsultFormList.vue"),
+    // children: [
+    //   {
+    //     path:':idCollecte',
+    //     name: 'consultationidCollecte',
+    //     component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationIdCollecte.vue')
+    //   }
+    // ]
 
   }
 

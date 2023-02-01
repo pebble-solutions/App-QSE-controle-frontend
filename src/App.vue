@@ -383,30 +383,41 @@ export default {
 				query.dd_done = this.searchOptionsDd;
 				query.df_done = this.searchOptionsDf;
 				query.done = 'OUI';
+
+				let url = `data/GET/${this.searchOptionsMode}`;
+	
+				this.$app.apiGet(url, query).then((data) => {
+					// if (options.mode == 'append') {
+					// 	if (!data.length) {
+					// 		this.noMoreAvailable = true;
+					// 	} else {
+					// 		this.result = this.result.concat(data);
+					// 	}
+					// }
+					// else {
+						console.log(data,'withsearchOptions')
+						this.result = data;
+						this.setCollectes(data);
+						this.routeToVue(this.searchOptionsMode)
+					// }
+				})
+				.catch(this.$app.catchError).finally(this.pending.search = false);
 			}
 			else {
 				query.stats_dd = this.searchOptionsDd;
 				query.stats_df = this.searchOptionsDf;
+				let url = `data/GET/${this.searchOptionsMode}`;
+	
+				this.$app.apiGet(url, query).then((data) => {
+					
+						console.log(data,'form ou projet')
+						this.result = data
+						this.routeToVue(this.searchOptionsMode)
+					// }
+				})
+				.catch(this.$app.catchError).finally(this.pending.search = false);
 			}
 
-			let url = `data/GET/${this.searchOptionsMode}`;
-
-			this.$app.apiGet(url, query).then((data) => {
-				// if (options.mode == 'append') {
-				// 	if (!data.length) {
-				// 		this.noMoreAvailable = true;
-				// 	} else {
-				// 		this.result = this.result.concat(data);
-				// 	}
-				// }
-				// else {
-					console.log(data,'withsearchOptions')
-					this.result = data;
-					this.setCollectes(data);
-					this.routeToVue(this.searchOptionsMode)
-				// }
-			})
-			.catch(this.$app.catchError).finally(this.pending.search = false);
 		},
 		/**
          * Affiche la liste des contrôles programmés avec le formulaire
@@ -414,7 +425,12 @@ export default {
          * @param {object} collecte
          */
 		routeToVue(mode) {
-            this.$router.push('/consultation/'+mode);
+            if(mode === 'collecte') {
+				this.$router.push('/consultation');
+			}
+			else{
+				this.$router.push('/consultation/'+mode);
+			}
         },
 	},
 
