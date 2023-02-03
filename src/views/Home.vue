@@ -14,7 +14,8 @@
 							<img src="../assets/chart.jpg" class="img-fluid" alt="Extraction de statistiques">
 						</div>
 						<div class="col display-6 fs-4 text-center">
-							Ici, vous pouvez consultez les statistiques de réponse par opérateur afin d'établir. Utilisez le formulaire
+							Ici, vous pouvez consultez les statistiques de réponse par opérateur.
+							Utilisez le formulaire
 							à gauche afin de sélectionner une période et un opérateur.
 						</div>
 					</div>

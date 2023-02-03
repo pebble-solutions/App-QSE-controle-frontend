@@ -1,30 +1,33 @@
 <template>
 
-	<div class="d-flex align-items-center">
+	<div class="d-flex align-items-center justify-content-between">
 		<div class="me-2">
 			<UserImage :name="personnelName"></UserImage>
 		</div>
-
-		<div class="d-flex flex-column align-content-between">
+		
+		<div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100">
 			<div class="d-flex align-items-center">
 				<small class="fw-lighter me-2">#{{collecte.id}}</small>
-				<span :class="dateClassName" class="badge me-2">{{dateLabel}}</span>
-						</div>
-
+				<span  class="badge bg-info text-dark me-2">{{dateLabel}}</span>
+			</div>
+			
 			<div>
 				{{personnelName}}
 			</div>
-
+			
 			<div class="fw-lighter" >
-				<i class="bi bi-check me-1" v-if="collecte.done == 'OUI'"></i>
 				{{formulaireName}}
 			</div>
-
-			<div class="d-flex fs-7 fw-light" v-if="collecte.projet_label">
+			
+			<div class="fs-7 fw-light" v-if="collecte.projet_label">
 				<i class="bi bi-boxes me-2"></i>
 				{{collecte.projet_label}}
 			</div>
 		</div>
+		<div v-if="collecte.result_var && collecte.result_var != 'null'" class="badge fs-6 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
+			{{collecte.result_var}}
+		</div>
+		<div v-else class="badge fs-6 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">?</div>
 	</div>	
 		
 </template>
@@ -32,6 +35,8 @@
 import { mapState } from 'vuex';
 import UserImage from '../pebble-ui/UserImage.vue';
 import date from 'date-and-time';
+import fr from 'date-and-time/locale/fr';
+
 
 export default {
     props: {
@@ -48,32 +53,16 @@ export default {
 		 * @return {string}
 		 */
 		dateLabel() {
-			if (!this.collecte.date) {
+			if (!this.collecte.date_done) {
 				return 'Date non renseignée';
 			}
 			else {
-				//date.locale(fr);
-				return date.format(new Date(this.collecte.date_done), 'DD MMM YYYY');
+				date.locale(fr);
+				return date.format(new Date(this.collecte.date_done), 'D MMM YYYY');
 			}
 		},
 
-		/**
-		 * Retourne une classe CSS pour la date en fonction des informations renseignées.
-		 * 
-		 * @return {string}
-		 */
-		dateClassName() {
-			return !this.collecte.date ? 'text-bg-warning' : 'text-bg-secondary';
-		},
-
-		/**
-		 * Retourne une classe CSS pour le badge de date (text-bg-danger, text-bg-success, text-bg-warning)
-		 * 
-		 * @return {string}
-		 */
-		badgeClassName() {
-			return this.getRemaningString("text-bg-warning", "text-bg-danger", "text-bg-success");
-		},
+		
 
 		
 		
@@ -131,7 +120,22 @@ export default {
 				let personnelName = this.listActifs.find(personnel => personnel.id == personnelId);
 				return personnelName ? personnelName.cache_nom : `Personnel inconnu (${personnelId})`;
 			}
-		}
+		},/**
+         * Retourne une classe CSS par rapport à une réponse S A M I
+         * 
+         * @param {string} reponse S A M I
+         * 
+         * @return {string}
+         */
+        classNameFromSAMI(reponse) {
+            if (typeof reponse === 'string') {
+                if (reponse.toLowerCase() == 's') return 'text-bg-success';
+                else if (reponse.toLowerCase() == 'a') return 'text-bg-primary';
+                else if (reponse.toLowerCase() == 'm') return 'text-bg-warning';
+                else if (reponse.toLowerCase() == 'i') return 'text-bg-danger';
+            }
+            return 'text-bg-secondary';
+        },
     },
 
 	components: {

@@ -5,7 +5,7 @@
     </div>
     
     <div class="list-group" v-if="filterCollecte">
-        <div v-for="col in filterCollecte" :key=col.id class="list-group-item" @click="editCollecte(col.id)" type="button">
+        <div v-for="col in filterCollecte" :key=col.id class="list-group-item" @click="seeCollecte(col.id)" type="button">
                 <collecte-headband :collecte="col" :personnels="listActifs"/>
         </div>
     </div>  
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+
 import { mapActions, mapState } from 'vuex'
 import CollecteHeadband from '../components/CollecteHeadband.vue';
 export default{
@@ -63,11 +64,11 @@ export default{
         ...mapActions(['setCollectes', 'openFormulaire']),
 
         /**
-         * ouvre une modal pour éditer la collecte
+         * ouvre la collecte dans la vue principale pour consultation
          * @param {number} collecteId 
          */
-        editCollecte() {
-            // this.$router.push({name: 'Consultationcontrol', params: {idCollecte: id}});
+        seeCollecte(id) {
+            this.$router.push({name: 'consultationControl', params: {idCollecte: id}});
         },
     },
     

@@ -1,12 +1,15 @@
 <template>
-    <div v-if="collecte">
-        <consultation-collecte-resume :collecte ="collecte" :readonly="true"></consultation-collecte-resume>
+    <div class="container">
+        <div v-if="collecte">
+            <consultation-collecte-resume :collecte ="collecte" :readonly="true"></consultation-collecte-resume>
+        </div>
+        <router-view></router-view>
     </div>
     
-    <router-view></router-view>
 
 </template>
 <script>
+
 import {mapState, mapActions} from 'vuex'; //
 
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
