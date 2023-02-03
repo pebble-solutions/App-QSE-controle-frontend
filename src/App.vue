@@ -406,7 +406,7 @@ export default {
 					console.log(data,' projet vérif');
 					console.log(this.searchOptionsMode, 'modeoptions')
 
-					this.refreshProjets(data);
+					// this.refreshProjets(data);
 					this.result = data;
 					this.routeToVue(this.searchOptionsMode)
 				})
@@ -420,7 +420,7 @@ export default {
 					console.log(data,' form vérif');
 					console.log(this.searchOptionsMode, 'modeoptions')
 
-					this.refreshFormulaires(data);
+					// this.refreshFormulaires(data);
 					this.result = data;
 					this.routeToVue(this.searchOptionsMode)
 				})
