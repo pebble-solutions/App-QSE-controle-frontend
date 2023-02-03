@@ -8,7 +8,7 @@
                         <img src="../assets/consultation.jpg" class="img-fluid" alt="consultation de contrôles" />
                     </div>
                     <div class="col display-6 ">
-                        <p class="fs-4 text-center">Sélectionnez un <strong>projet</strong>  dans la liste de gauche pour afficher la liste des contrôles correspondants.</p>
+                        <p class="fs-4 text-center">Sélectionnez un <strong>projet</strong>  dans la liste pour afficher l'ensemble des contrôles correspondants.</p>
                     </div>
                 </div>
             </div>

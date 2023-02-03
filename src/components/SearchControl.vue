@@ -1,5 +1,12 @@
 <template>
     <form @submit.prevent="search()" class="m-1">
+        <div class="input-group border mb-1">
+            <input type="date" class="form-control" id="dateDebutDone"  v-model="searchDd">
+            <input type="date" class="form-control" id="dateFinDone" v-model="searchDf">
+            <!-- <button class="btn btn-primary" type="submit">
+                <i class="bi bi-funnel"></i>
+            </button> -->
+        </div>
         <div class="dropdown d-grid mb-1">
             <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="bi bi-list"></i>
@@ -14,13 +21,6 @@
                     <i class="bi bi-check text-success" v-if="index == mode"></i>
                 </button>
             </ul>
-        </div>
-        <div class="input-group">
-            <input type="date" class="form-control" id="dateDebutDone"  v-model="searchDd">
-            <input type="date" class="form-control" id="dateFinDone" v-model="searchDf">
-            <button class="btn btn-primary" type="submit">
-                <i class="bi bi-funnel"></i>
-            </button>
         </div>
     </form>
 </template>
@@ -121,14 +121,16 @@ export default {
          * @param {string} mode        'collecte', 'formulaire', 'projet'
          */
         setModeAndSearch(mode) {
+            console.log(this.searchMode, 'searchMode');
             this.searchMode = mode;
-            this.search();
+            // this.search();
         },
 
         /**
          * Envoie un événement pour lancer la recherche
          */
         search() {
+            console.log('emit')
             this.$emit('search');
         }
     },

@@ -1,14 +1,14 @@
 <template>
     <div class="d-flex justify-content-between align-items-center">
         <strong class="me-2 text-secondary" style="width:40px">#{{collecte.id}}</strong>
-
+        
         <div class="w-100 d-flex flex-column align-items-md-center flex-md-row-reverse justify-content-md-between">
-            <div class="text-nowrap badge rounded-pill" :class="{'text-bg-warning' : !collecte.date, 'text-bg-secondary' : collecte.date}">
+            
+            <div class="text-nowrap badge rounded-pill" :class="{'text-bg-warning' : !collecte.date, 'text-bg-info' : collecte.date}">
                 <i class="bi bi-calendar-event me-2"></i>
                 <span v-if="!collecte.date || collecte.date ==='null' || collecte.date === '0000-00-00 00:00:00' || collecte.date ==='NULL'">Non renseignée</span>
                 <span v-else>{{changeFormatDateLit(collecte.date)}}</span>
             </div>
-
             <div class="w-100 d-flex align-items-center justify-content-between">
                 <div>
                     <div  v-if="!getPersonnelNameFromId(collecte.enqueteur__structure__personnel_id)" class="me-2 text-warning">
@@ -52,10 +52,10 @@
                         </div>
                     </div>
                 </div>
-
-                <div v-if="collecte.result_var && collecte.result_var != 'null' && !editable" class="badge fs-6 text-uppercase me-md-2" :class="classNameFromSAMI(collecte.result_var)">
+                <div v-if="collecte.result_var && collecte.result_var != 'null'&& !editable " class="badge fs-6 text-uppercase me-md-2" :class="classNameFromSAMI(collecte.result_var)">
                     {{collecte.result_var}}
                 </div>
+                <div v-else-if="collecte.result_var && collecte.result_var == 'null' && !editable" class="badge fs-6 text-uppercase me-md-2" :class="classNameFromSAMI(collecte.result_var)">Non évalué</div>
             </div>
         </div>
     </div>

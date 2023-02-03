@@ -200,10 +200,12 @@ export default {
 			this.$app.dispatchEvent('menuChanged', 'list');
 		},
 		searchOptionsDd(){
-			console.log(this.searchOptionsDd, 'searchdd')
+			console.log(this.searchOptionsDd, 'searchdd');
+			this.searchConsultations()
 		},
 		searchOptionsDf(){
 			console.log(this.searchOptionsDf, 'searchdf')
+			this.searchConsultations()
 		},
 		searchOptionsMode(){
 			console.log(this.searchOptionsMode, 'searchMode');
@@ -352,50 +354,43 @@ export default {
          * @param {object} options
          * - mode           'replace' (défaut), 'append' (ajout des données à la fin de la liste)
          */
-		searchConsultations(options) {
+		searchConsultations() {
 
 			if (!['collecte', 'projet', 'formulaire'].includes(this.searchOptionsMode)) {
 				alert("Erreur dans le mode d'information sélectionné.");
 				return false;
 			}
 
-			options = typeof options === 'undefined' ? {} : options;
+			// options = typeof options === 'undefined' ? {} : options;
 
-			if (!options.mode) {
-				this.start = 0;
-				// this.noMoreAvailable = false;
-			}
+			// if (!options.mode) {
+			// 	this.start = 0;
+			// 	// this.noMoreAvailable = false;
+			// }
 
 			this.pending.search = true;
 
 			let query = {
 				environnement: 'private',
-				start: this.start,
-				limit: this.limit,
+				start: '0',
+				limit: 'aucune',
 				dd_done: null,
 				df_done: null,
 				stats_dd: null,
 				stats_df: null,
 				done: null
 			};
-
+			console.log(query)
 			if (this.searchOptionsMode == 'collecte') {
 				query.dd_done = this.searchOptionsDd;
 				query.df_done = this.searchOptionsDf;
 				query.done = 'OUI';
 
-				let url = `data/GET/${this.searchOptionsMode}`;
+				let url = `data/GET/${this.searchOptionsMode}`; //${this.searchOptionsMode}
 	
 				this.$app.apiGet(url, query).then((data) => {
-					// if (options.mode == 'append') {
-					// 	if (!data.length) {
-					// 		this.noMoreAvailable = true;
-					// 	} else {
-					// 		this.result = this.result.concat(data);
-					// 	}
-					// }
-					// else {
-						console.log(data,'withsearchOptions')
+						console.log(data,'collecte')
+						console.log(this.searchOptionsMode, 'modeoptions')
 						this.result = data;
 						this.setCollectes(data);
 						this.routeToVue(this.searchOptionsMode)
@@ -403,20 +398,39 @@ export default {
 				})
 				.catch(this.$app.catchError).finally(this.pending.search = false);
 			}
-			else {
+			else if (this.searchOptionsMode =='projet'){
 				query.stats_dd = this.searchOptionsDd;
 				query.stats_df = this.searchOptionsDf;
 				let url = `data/GET/${this.searchOptionsMode}`;
-	
 				this.$app.apiGet(url, query).then((data) => {
-					
-						console.log(data,'form ou projet')
-						this.result = data
-						this.routeToVue(this.searchOptionsMode)
-					// }
+					console.log(data,' projet vérif');
+					console.log(this.searchOptionsMode, 'modeoptions')
+
+					this.refreshProjets(data);
+					this.result = data;
+					this.routeToVue(this.searchOptionsMode)
 				})
 				.catch(this.$app.catchError).finally(this.pending.search = false);
 			}
+			else if(this.searchOptionsMode =='formulaire'){
+				query.stats_dd = this.searchOptionsDd;
+				query.stats_df = this.searchOptionsDf;
+				let url = `data/GET/${this.searchOptionsMode}`;
+				this.$app.apiGet(url, query).then((data) => {
+					console.log(data,' form vérif');
+					console.log(this.searchOptionsMode, 'modeoptions')
+
+					this.refreshFormulaires(data);
+					this.result = data;
+					this.routeToVue(this.searchOptionsMode)
+				})
+				.catch(this.$app.catchError).finally(this.pending.search = false);
+			}
+
+			else alert('erreur dans le chargement des données, renouvelez la recherche')
+		
+			this.routeToVue(this.searchOptionsMode)
+			
 
 		},
 		/**

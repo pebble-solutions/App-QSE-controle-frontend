@@ -6,7 +6,7 @@
 
     <div class="list-group" v-if="filterCollecte">
         <div v-for="col in filterCollecte" :key=col.id class="list-group-item" @click="seeCollecte(col.id)" type="button">
-            <collecte-headband :collecte="col" :personnels="listActifs"/>
+            <collecte-headband :collecte="col" :personnels="listActifs" :editable="false"/>
         </div>
     </div>  
         

@@ -46,9 +46,11 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-
+    import { mapActions, mapState } from 'vuex';
 export default {
+    
+
+
 
     data() {
         return {
@@ -73,9 +75,9 @@ export default {
         ...mapState(['formulaires','listActifs']),
     },
 
-
+    
     methods: {
-
+        
         ...mapActions(['refreshStat', 'setRequete']),
 
         /**
