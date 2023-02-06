@@ -13,10 +13,7 @@
                             <li class="fs-5 mb-2">Sélectionnez un contrôle dans la liste pour le consulter</li>
                             <li class="fs-5 mb-2">Vous pouvez effectuer une recherche par date</li>
                             <li class="fs-5 mb-2">Vous pouvez grouper vos résultats par formulaire ou par projets</li>
-
-
                         </ul>
-
                     </div>
                 </div>
             </div>

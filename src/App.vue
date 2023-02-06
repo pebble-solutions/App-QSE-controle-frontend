@@ -54,31 +54,31 @@
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
-				<template v-if="pending.formulaires">
+				<search-control
+					v-model:dd="searchOptions.dd"
+					v-model:df="searchOptions.df"
+					v-model:mode="searchOptions.mode"
+					v-model:pendingSearch="pending.search"
+				></search-control>
+				<template v-if="pending.search">
 					<Spinner />
 				</template>
 				<template v-else>
-					<search-control
-						v-model:dd="searchOptionsDd"
-						v-model:df="searchOptionsDf"
-						v-model:mode="searchOptionsMode"
-						@search="searchConsultations()"
-					></search-control>
-					<template v-for="res in result" :key="res.id">
-						<app-menu-item v-if="this.searchOptionsMode == 'collecte' " :href="'/consultation/'+res.id">
+					<template v-for="res in searchResults" :key="res.id">
+						<app-menu-item v-if="this.searchOptions.mode == 'collecte' " :href="'/consultation/'+res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptionsMode == 'formulaire' && res.nb_done != 0" :href="'/consultation/formulaire/'+res.id" >
+						<app-menu-item v-else-if="this.searchOptions.mode == 'formulaire' && res.nb_done != 0" :href="'/consultation/formulaire/'+res.id" >
 							<formulaire-item :num="res.nb_done" :formulaire="res" ></formulaire-item>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptionsMode =='projet' && res.nb_done != 0" :href="'/consultation/projet/'+res.id">
+						<app-menu-item v-else-if="this.searchOptions.mode =='projet' && res.nb_done != 0" :href="'/consultation/projet/'+res.id">
 							<project-item-done :num="res.nb_done" :projet="res" ></project-item-done>
 						</app-menu-item>
 					</template>
-					<br>
-					<!-- <SearchControl> </SearchControl> -->
-					<!-- <span class="badge bg-primary me-1">du  {{ searchOptionsDd }}</span>
-					<span class="badge bg-primary me-1">au  {{ searchOptionsDf }}</span> -->
+	
+					<alert-message className="m-1" v-if="!searchResults.length">
+						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre recherche.
+					</alert-message>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
@@ -119,6 +119,7 @@ import ControleHeader from './components/headers/ControleHeader.vue'
 import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
+import { searchConsultation } from './js/search-consultation'
 
 export default {
 
@@ -132,8 +133,7 @@ export default {
 				formulaires: true,
 				collectes: true,
 				projets: true,
-				search: false
-
+				search: true
 			},
 			isConnectedUser: false,
 			appMenu: [
@@ -162,15 +162,16 @@ export default {
 					href: '/consultation'
 				}
 			],
-			searchOptionsDd: '',
-			searchOptionsDf: '',
-			searchOptionsMode: 'collecte',
-			result:[]
+			searchOptions: {
+				dd: null,
+				df: null,
+				mode: 'collecte'
+			}
 		}
 	},
 
 	computed: {
-		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets']),
+		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -185,7 +186,7 @@ export default {
 			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
 				return 'programmation';
 			}
-			else if (['consultation', 'consultationFormulaire', 'ConsultationResponses','consultationControl', 'listProjet','listForm','consultProjet','consultForm'].includes(this.$route.name)) {
+			else if (['consultation', 'consultationFormulaire', 'consultationCollecte', 'consultationProjetList','consultationForm','consultationProjet','consultationFormList'].includes(this.$route.name)) {
 				return 'consultation';
 			}
 			else if (['Home'].includes(this.$route.name)) {
@@ -198,18 +199,6 @@ export default {
 	watch: {
 		$route () {
 			this.$app.dispatchEvent('menuChanged', 'list');
-		},
-		searchOptionsDd(){
-			console.log(this.searchOptionsDd, 'searchdd');
-			this.searchConsultations()
-		},
-		searchOptionsDf(){
-			console.log(this.searchOptionsDf, 'searchdf')
-			this.searchConsultations()
-		},
-		searchOptionsMode(){
-			console.log(this.searchOptionsMode, 'searchMode');
-			this.searchConsultations()
 		},
 
 		/**
@@ -224,7 +213,7 @@ export default {
 						this.loadCollectes();
 					}
 					else if (val == 'consultation') {
-						this.searchConsultations();
+						this.initConsultation();
 					}
 				}
 			}
@@ -232,7 +221,7 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes']),
+		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -344,107 +333,24 @@ export default {
 			return false;
 		},
 		/**
-         * Lance la recherche des données et met à jour le store.
-         * lors de la recherche consultation
-         * La route d'API appelée dépend de la valeur de this.mode
-         * - tous ou collecte : api/data/GET/collecte
-         * - formulaire : api/data/GET/formulaire
-         * - projet : api/data/GET/projet
-         * 
-         * @param {object} options
-         * - mode           'replace' (défaut), 'append' (ajout des données à la fin de la liste)
+         * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
          */
-		searchConsultations() {
-
-			if (!['collecte', 'projet', 'formulaire'].includes(this.searchOptionsMode)) {
-				alert("Erreur dans le mode d'information sélectionné.");
-				return false;
-			}
-
-			// options = typeof options === 'undefined' ? {} : options;
-
-			// if (!options.mode) {
-			// 	this.start = 0;
-			// 	// this.noMoreAvailable = false;
-			// }
-
+		initConsultation() {
 			this.pending.search = true;
-
-			let query = {
-				environnement: 'private',
-				start: '0',
-				limit: 'aucune',
-				dd_done: null,
-				df_done: null,
-				stats_dd: null,
-				stats_df: null,
-				done: null
-			};
-			console.log(query)
-			if (this.searchOptionsMode == 'collecte') {
-				query.dd_done = this.searchOptionsDd;
-				query.df_done = this.searchOptionsDf;
-				query.done = 'OUI';
-
-				let url = `data/GET/${this.searchOptionsMode}`; //${this.searchOptionsMode}
-	
-				this.$app.apiGet(url, query).then((data) => {
-						console.log(data,'collecte')
-						console.log(this.searchOptionsMode, 'modeoptions')
-						this.result = data;
-						this.setCollectes(data);
-						this.routeToVue(this.searchOptionsMode)
-					// }
-				})
-				.catch(this.$app.catchError).finally(this.pending.search = false);
-			}
-			else if (this.searchOptionsMode =='projet'){
-				query.stats_dd = this.searchOptionsDd;
-				query.stats_df = this.searchOptionsDf;
-				let url = `data/GET/${this.searchOptionsMode}`;
-				this.$app.apiGet(url, query).then((data) => {
-					console.log(data,' projet vérif');
-					console.log(this.searchOptionsMode, 'modeoptions')
-
-					// this.refreshProjets(data);
-					this.result = data;
-					this.routeToVue(this.searchOptionsMode)
-				})
-				.catch(this.$app.catchError).finally(this.pending.search = false);
-			}
-			else if(this.searchOptionsMode =='formulaire'){
-				query.stats_dd = this.searchOptionsDd;
-				query.stats_df = this.searchOptionsDf;
-				let url = `data/GET/${this.searchOptionsMode}`;
-				this.$app.apiGet(url, query).then((data) => {
-					console.log(data,' form vérif');
-					console.log(this.searchOptionsMode, 'modeoptions')
-
-					// this.refreshFormulaires(data);
-					this.result = data;
-					this.routeToVue(this.searchOptionsMode)
-				})
-				.catch(this.$app.catchError).finally(this.pending.search = false);
-			}
-
-			else alert('erreur dans le chargement des données, renouvelez la recherche')
-		
-			this.routeToVue(this.searchOptionsMode)
-			
-
+            searchConsultation(this.searchOptions, this.$app).then(data => {
+                this.setSearchResults(data);
+				this.routeToVue(this.searchOptions.mode)
+            }).catch(this.$app.catchError).finally(() => { this.pending.search = false });
 		},
+
 		/**
          * Affiche la liste des contrôles programmés avec le formulaire
          * 
          * @param {object} collecte
          */
 		routeToVue(mode) {
-            if(mode === 'collecte') {
-				this.$router.push('/consultation');
-			}
-			else{
-				this.$router.push('/consultation/'+mode);
-			}
+			let route = mode === 'collecte' ? '/consultation' : '/consultation/'+mode;
+            this.$router.push(route);
         },
 	},
 

@@ -71,31 +71,31 @@ const routes = [
 
   {
     path: '/consultation/:idCollecte',
-    name: 'consultationControl',
-    component: () => import("../views/ConsultControl.vue")
+    name: 'consultationCollecte',
+    component: () => import("../views/ConsultationCollecte.vue")
   },
 
   {
     path: '/consultation/projet',
-    name: 'consultProjet',
-    component: () => import("../views/ConsultProjet.vue"),
+    name: 'consultationProjet',
+    component: () => import("../views/ConsultationProjet.vue"),
   },
     {
     path:'/consultation/projet/:idProjet',
-    name: 'listProjet',
-    component: () => import("../views/ConsultProjetList.vue"),
+    name: 'consultationProjetList',
+    component: () => import("../views/ConsultationProjetList.vue"),
 
   },
   
   {
     path: '/consultation/formulaire',
-    name: 'consultForm',
-    component: () => import("../views/ConsultForm.vue"),
+    name: 'consultationForm',
+    component: () => import("../views/ConsultationForm.vue"),
   },
   {
     path:'/consultation/formulaire/:idFormulaire',
-    name: 'listForm',
-    component: () => import("../views/ConsultFormList.vue"),
+    name: 'consultationFormList',
+    component: () => import("../views/ConsultationFormList.vue"),
     // children: [
     //   {
     //     path:':idCollecte',

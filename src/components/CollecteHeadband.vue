@@ -4,43 +4,44 @@
         
         <div class="w-100 d-flex flex-column align-items-md-center flex-md-row-reverse justify-content-md-between">
             
-            <div class="text-nowrap badge rounded-pill" :class="{'text-bg-warning' : !collecte.date, 'text-bg-info' : collecte.date}">
-                <i class="bi bi-calendar-event me-2"></i>
+            <div class="text-nowrap badge rounded-pill border" :class="{'text-bg-warning' : (!collecte.date && !collecte.date_done), 'text-bg-light' : (collecte.date || collecte.date_done), 'text-success border-success': (collecte.date_done)}">
+                <i class="bi bi-calendar-check me-2" v-if="collecte.date_done"></i>
+                <i class="bi bi-calendar-event me-2" v-else></i>
                 <span v-if="!collecte.date || collecte.date ==='null' || collecte.date === '0000-00-00 00:00:00' || collecte.date ==='NULL'">Non renseignée</span>
-                <span v-else>{{changeFormatDateLit(collecte.date)}}</span>
+                <span v-else>{{changeFormatDateLit((collecte.date_done ?? collecte.date))}}</span>
             </div>
             <div class="w-100 d-flex align-items-center justify-content-between">
                 <div>
-                    <div  v-if="!getPersonnelNameFromId(collecte.enqueteur__structure__personnel_id)" class="me-2 text-warning">
+                    <div  v-if="!collecte.enqueteur_nom" class="me-2 text-warning">
                         Contrôleur non programmé 
                     </div>
 
                     <div v-else class="d-flex align-items-center">
                         <span>
-                            <user-image :name="getPersonnelNameFromId(collecte.enqueteur__structure__personnel_id)" className="me-1" size="sm" />
+                            <user-image :name="collecte.enqueteur_nom" className="me-1" size="sm" />
                         </span>
                         
                         <div>
                             <strong class="fs-7 d-block d-md-inline text-secondary">Contrôleur:</strong>
-                            {{getPersonnelNameFromId(collecte.enqueteur__structure__personnel_id)}}
+                            {{collecte.enqueteur_nom}}
                         </div>
                     </div>
 
                     <div class="d-flex align-items-center text-secondary">
                         <i class="bi bi-arrow-return-right me-1 ms-2"></i>
 
-                        <div v-if="!getPersonnelNameFromId(collecte.cible__structure__personnel_id)" class="me-2 text-warning">
+                        <div v-if="!collecte.cible_nom" class="me-2 text-warning">
                             Opérateur non programmé 
                         </div>
 
                         <div v-else class="d-flex align-items-center">
                             <span>
-                                <user-image :name="getPersonnelNameFromId(collecte.cible__structure__personnel_id)" className="me-1" size="sm" />
+                                <user-image :name="collecte.cible_nom" className="me-1" size="sm" />
                             </span>
 
                             <div>
                                 <strong class="fs-7 d-block d-md-inline text-secondary">Opérateur:</strong>
-                                {{getPersonnelNameFromId(collecte.cible__structure__personnel_id)}}
+                                {{collecte.cible_nom}}
                             </div>
                         </div>
                     </div>
@@ -72,7 +73,6 @@ export default {
 
 	props: {
 		collecte: Object,
-		personnels: Object,
 		editable: {
 			type: Boolean,
 			default: true,
@@ -99,23 +99,6 @@ export default {
     },
 
 	methods: {
-		/**
-         * Récupère le nom d'un personnel actif via un id
-         * 
-         * @param {number} personnelId l'id d'un personnel actif
-         * 
-         * @return {string}
-         */
-		getPersonnelNameFromId(personnelId) {
-            let personnelName = this.personnels.find(personnel => personnel.id == personnelId);
-    
-            if (personnelName) {
-                return personnelName.cache_nom;
-            } else {
-                return null
-            }
-        },
-
 		/**
 		 * Modifie le format de la date entrée en paramètre et la retourne 
 		 * sous le format 01 févr. 2021

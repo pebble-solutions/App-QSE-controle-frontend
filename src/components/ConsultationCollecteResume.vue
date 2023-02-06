@@ -4,9 +4,13 @@
             <div class="card-header">
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="fs-5 card-title">
-                        <span class="fw-lighter me-1">{{collecte.formulaire.groupe}} du {{changeFormatDateLit(collecte.date)}}</span>
+                        <span class="fw-lighter me-1"><span class="text-secondary">#{{ collecte.id }}</span> <strong>{{collecte.formulaire.groupe}}</strong> du {{changeFormatDateLit(collecte.date)}}</span>
                     </h4>
-                    <div class="text-success" v-if="collecte.date_done">Validé le {{changeFormatDateLit(collecte.date_done)}}</div>
+                    <div class="text-success border border-success badge rounded-pill text-bg-light" v-if="collecte.date_done">
+                        <i class="bi bi-calendar-check me-1"></i>
+                        <span class="d-none d-sm-inline">Validé le</span>
+                        {{changeFormatDateLit(collecte.date_done)}}
+                    </div>
                 </div>
                 <div>
                     Note générale:
@@ -18,47 +22,54 @@
             </div>
 
             <div class="card-body">
-
-                <div>
-                    <strong class="d-block">Projet:</strong>
-                    <div class="ms-2 fw-lighter">
-                        <span v-if="collecte.projet_label">{{ collecte.projet_label }}</span>
-                        <span v-else>Projet non renseigné</span>
-                    </div>
-                </div>
-
-                <div class="row" v-if="listActifs">
+                <div class="row">
                     <div class="mb-2 col">
-                        <strong class="d-block">Contrôleur:</strong>
-                        <span class="ms-2 fw-lighter">
-                            {{controleur}}
-                        </span>
+                        <div class="d-flex align-items-center">
+                            <user-image :name="operateur" />
+                            <div class="w-100 ps-2">
+                                <strong class="d-block">Opérateur :</strong>
+                                <span class="fw-lighter">{{operateur}}</span>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-2 col border-start border-dark">
-                        <strong class="d-block">Opérateur:</strong>
-                        <span class="ms-2 fw-lighter">
-                            {{operateur}}
-                        </span>
+
+                        <div class="d-flex align-items-center">
+                            <user-image :name="controleur" />
+                            <div class="w-100 ps-2">
+                                <strong class="d-block">Contrôleur :</strong>
+                                <span class="fw-lighter">{{controleur}}</span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="mb-2">
-                    <strong class="d-block">Commentaire général:</strong>
+                <div class="my-2">
+                    <strong>Projet :</strong>
+                    <span class="fw-lighter ms-1">
+                        <template v-if="collecte.projet_label">{{ collecte.projet_label }}</template>
+                        <template v-else>Non renseigné</template>
+                    </span>
+                </div>
+                
+                <div class="my-2" v-if="collecte.commentaire">
+                    <strong class="d-block">Commentaire général :</strong>
                     <div class="ms-2 fw-lighter">
                         {{collecte.commentaire}}
                     </div>
                 </div>
 
-                <div class="mb-2">
-                    <strong class="d-block">Rapport final:</strong>
+                <div class="my-2">
+                    <strong class="d-block">Rapport final :</strong>
                     <div class="ms-2 fw-lighter">
                         {{collecte.rapport}}
                     </div>
                 </div>
 
-                <div class="mb-2">
-                    <strong class="d-block">Actions correctives proposées:</strong>
+                <div class="my-2" v-if="collecte.actions">
+                    <strong class="d-block">Actions correctives proposées :</strong>
                     <div class="ms-2 fw-lighter">
                         {{collecte.actions}}
                     </div>
@@ -83,16 +94,14 @@
                     </h2>
 
                     <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id">
-                        <div class="accordion-body">
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item" v-for="question in getBlocQuestions(bloc)" :key="question.id">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <em class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">{{question.ligne}}</em>
-                                        <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
-                                    </div>
-                                    <div>
-                                        <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
-                                    </div>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item" v-for="question in getBlocQuestions(bloc)" :key="question.id">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <em class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">{{question.ligne}}</em>
+                                    <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
+                                </div>
+                                <div>
+                                    <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
                                 </div>
                             </div>
                         </div>
@@ -111,9 +120,9 @@
 
 <script lang="js">
 
-import { mapState } from 'vuex';
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
+import UserImage from './pebble-ui/UserImage.vue';
 
 
 export default {
@@ -123,7 +132,6 @@ export default {
     },
 
     computed: {
-        ...mapState(['listActifs']),
         /**
          * Racourcis vers la liste des blocs
          * @return {array}
@@ -154,13 +162,7 @@ export default {
          * @return {string}
          */
         controleur() {
-            let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.enqueteur__structure__personnel_id);
-
-            if (controleurName) {
-                return controleurName.cache_nom;
-            } else {
-                return 'Contrôleur non renseigné'
-            }
+            return this.collecte.enqueteur_nom ?? 'Opérateur non renseigné';
         },
 
         /**
@@ -169,13 +171,7 @@ export default {
          * @return {string}
          */
         operateur() {
-            let controleurName = this.listActifs.find(personnel => personnel.id == this.collecte.cible__structure__personnel_id);
-
-            if (controleurName) {
-                return controleurName.cache_nom;
-            } else {
-                return 'Opérateur non renseigné'
-            }
+            return this.collecte.cible_nom ?? 'Opérateur non renseigné';
         },
     },
 
@@ -272,7 +268,7 @@ export default {
         },
     },
 
-    components: {  }
+    components: { UserImage }
 }
 
 </script>

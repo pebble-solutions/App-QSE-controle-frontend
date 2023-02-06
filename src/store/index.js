@@ -19,6 +19,7 @@ export default createStore({
 		listActifs: [],
 		collectes: [],
 		collecte: null,
+		searchResults: [],
 		projets: [],
 		stat: null,
 		requeteStat: null,
@@ -268,6 +269,39 @@ export default createStore({
 		 */
 		formulaire(state, formulaire) {
 			state.formulaire = formulaire;
+		},
+
+		/**
+		 * Met à jour la collection de données des résultats de recherche
+		 * 
+		 * @param {object} state Le state de vueX
+		 * @param {object} dataOptions 
+		 * - mode : set (remplacement) ou update (mise à jour et ajout)
+		 * - data : les données à écrire
+		 */
+		searchResults(state, dataOptions) {
+			let mode = dataOptions.mode ?? 'set';
+			let data = dataOptions.data;
+
+			// mode set : remplacement de l'ensemble des informations
+			if (mode == 'set') {
+				state.searchResults = data;
+			}
+			// mode update : mise à jour des informations déjà stockées et ajout des nouvelles valeurs à la fin
+			else {
+				data.forEach(d => {
+					let found = state.searchResults.find(e => e.id == d.id);
+
+					if (found) {
+						for (const key in d) {
+							found[key] = d[key];
+						}
+					}
+					else {
+						state.searchResults.push(d);
+					}
+				});
+			}
 		}
 	
 	},
@@ -486,7 +520,33 @@ export default createStore({
 		 */
 		resetResponses(context) {
 			context.commit('responses', []);
-		}
+		},
+
+		/**
+		 * Remplace la collection searchResults par une nouvelle collection
+		 * 
+		 * @param {object} context Instance VueX
+		 * @param {array} data Collection de données à ajouter dans le store
+		 */
+		setSearchResults(context, data) {
+			context.commit('searchResults', {
+				mode: 'set',
+				data
+			});
+		},
+
+		/**
+		 * Met à jour ou ajoute des données à la collection searchResults
+		 * 
+		 * @param {object} context Instance VueX
+		 * @param {array} data Collection de données à mettre à jour ou à ajouter
+		 */
+		updateSearchResults(context, data) {
+			context.commit('searchResults', {
+				mode: 'update',
+				data
+			});
+		},
 	},
 
 	modules: {

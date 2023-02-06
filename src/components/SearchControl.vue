@@ -1,15 +1,17 @@
 <template>
     <form @submit.prevent="search()" class="m-1">
-        <div class="input-group border mb-1">
+        <div class="input-group mb-1">
             <input type="date" class="form-control" id="dateDebutDone"  v-model="searchDd">
             <input type="date" class="form-control" id="dateFinDone" v-model="searchDf">
-            <!-- <button class="btn btn-primary" type="submit">
-                <i class="bi bi-funnel"></i>
-            </button> -->
+            <button class="btn btn-primary" type="submit" :disabled="pendingSearch">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pendingSearch"></span>
+                <i class="bi bi-funnel" v-else></i>
+            </button>
         </div>
         <div class="dropdown d-grid mb-1">
             <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="bi bi-list"></i>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pendingSearch"></span>
+                <i class="bi bi-list" v-else></i>
                 {{currentModeLabel}}
             </button>
             <ul class="dropdown-menu">
@@ -27,6 +29,8 @@
 <script>
 
 import date from 'date-and-time';
+import { searchConsultation } from '../js/search-consultation';
+import { mapActions } from 'vuex';
 
 export default {
     props: {
@@ -37,9 +41,13 @@ export default {
             type: String,
         },
         mode: {
-            option: String,
+            type: String,
             default: 'collecte',
             required: true,
+        },
+        pendingSearch: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -56,7 +64,7 @@ export default {
         }
     },
 
-    emits: ['update:dd', 'update:df', 'update:mode', 'search'],
+    emits: ['update:dd', 'update:df', 'update:mode', 'update:pendingSearch', 'search-result'],
 
     computed: {
         /**
@@ -97,6 +105,8 @@ export default {
     },
 
     methods: {
+        ...mapActions(['setSearchResults']),
+
         /**
          * 
          * @param {*} key 
@@ -121,17 +131,24 @@ export default {
          * @param {string} mode        'collecte', 'formulaire', 'projet'
          */
         setModeAndSearch(mode) {
-            console.log(this.searchMode, 'searchMode');
             this.searchMode = mode;
-            // this.search();
+            this.search();
         },
 
         /**
-         * Envoie un événement pour lancer la recherche
+         * Lance une recherche, met à jour les informations sur le store.
          */
         search() {
-            console.log('emit')
-            this.$emit('search');
+            this.updateVal('pendingSearch', true);
+
+            searchConsultation({
+                dd: this.searchDd,
+                df: this.searchDf,
+                mode: this.searchMode
+            }, this.$app).then(data => {
+                this.$emit('search-result', data);
+                this.setSearchResults(data);
+            }).catch(this.$app.catchError).finally(() => this.updateVal('pendingSearch', false));
         }
     },
 

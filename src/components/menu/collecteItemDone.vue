@@ -8,7 +8,10 @@
 		<div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100">
 			<div class="d-flex align-items-center">
 				<small class="fw-lighter me-2">#{{collecte.id}}</small>
-				<span  class="badge bg-info text-dark me-2">{{dateLabel}}</span>
+				<span  class="badge bg-light text-dark rounded-pill border">
+					<i class="bi bi-calendar-check"></i>
+					{{dateLabel}}
+				</span>
 			</div>
 			
 			<div>
@@ -53,19 +56,15 @@ export default {
 		 * @return {string}
 		 */
 		dateLabel() {
-			if (!this.collecte.date_done) {
+			let dt = this.collecte.date_done ?? this.collecte.date;
+			if (!dt) {
 				return 'Date non renseignée';
 			}
 			else {
 				date.locale(fr);
-				return date.format(new Date(this.collecte.date_done), 'D MMM YYYY');
+				return date.format(new Date(dt), 'D MMM YYYY');
 			}
 		},
-
-		
-
-		
-		
 
 		/**
 		 * Retourne le nom du personnel correspondant à la collecte.
