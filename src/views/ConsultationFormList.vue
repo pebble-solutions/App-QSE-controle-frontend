@@ -84,7 +84,9 @@ export default{
 
             this.pending.collectes = true;
             searchConsultation({
-                formulaire: idForm
+                formulaire: idForm,
+                dd: null,
+                df: null
             }, this.$app).then(data => {
                 this.pending.collectes = false;
                 this.setCollectes(data);

@@ -10,7 +10,7 @@
  * - {number} start         Retourner les résultats depuis l'enregistrement numéro X
  * - {number} limit         Retourner maximum Y résultats depuis l'enregistrement X
  * - {number} formulaire    ID d'un formulaire limitant le retour
- * - {number} projet        ID d'un projet limitant le retour
+ * - {number} projet_id     ID d'un projet limitant le retour
  * @param {object} app Instance de AppJS
  * 
  * @returns {Promise<array>}
