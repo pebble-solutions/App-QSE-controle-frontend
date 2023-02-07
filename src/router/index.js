@@ -85,6 +85,14 @@ const routes = [
     name: 'consultationProjetList',
     component: () => import("../views/ConsultationProjetList.vue"),
 
+      children: [
+        {
+          path:':idCollecte',
+          name: 'consultationProjetCollecte',
+          component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationProjetCollecte.vue')
+        }
+      ]
+
   },
   
   {
@@ -96,51 +104,17 @@ const routes = [
     path:'/consultation/formulaire/:idFormulaire',
     name: 'consultationFormList',
     component: () => import("../views/ConsultationFormList.vue"),
-    // children: [
-    //   {
-    //     path:':idCollecte',
-    //     name: 'consultationidCollecte',
-    //     component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationIdCollecte.vue')
-    //   }
-    // ]
+    
+      children: [
+        {
+          path:':idCollecte',
+          name: 'consultationFormCollecte',
+          component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationFormCollecte.vue')
+        }
+      ]
 
   }
 
-  // {
-  //   path: '/consultation/:id',
-  //   name: 'consultationFormulaire',
-  //   component: () => import("../views/ConsultationCollecte.vue"),
-  //   children: [
-  //     {
-  //       path: ':idCollecte',
-  //       name: 'ConsultationResponses',
-  //       component: () => import("../views/ConsultationResponses.vue")
-  //     }
-  //   ]
-  // }
-  // {
-  //   path: '/formulaire/:id',
-  //   name: 'Formulaire',
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/CollecteKN.vue'),
-  //   children: [
-  //     {
-  //       path: 'properties',
-  //       component: () => import('../views/ElementProperties.vue')
-  //     },
-  //     {
-  //       path: 'informations',
-  //       component: () => import('../views/ElementInformations.vue')
-  //     },
-  //     {
-  //       path: 'bloc/:bloc',
-  //       component: () => import('../views/Bloc.vue')
-  //     },
-  //     // {
-  //     //   path: '',
-  //     //   component: () => import('../views/Contexte.vue')
-  //     // }
-  //   ]
-  // }
 ]
 
 const router = createRouter({

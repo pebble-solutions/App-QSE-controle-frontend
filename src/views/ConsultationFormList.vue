@@ -9,7 +9,7 @@
         
         <div class="list-group" v-else>
 
-            <router-link :to="'/consultation/'+col.id" v-slot="{navigate,href}" custom v-for="col in collectes" :key="col.id">
+            <router-link :to="'/consultation/formulaire/'+this.$route.params.idFormulaire+'/'+col.id" v-slot="{navigate,href}" custom v-for="col in collectes" :key="col.id">
                 <a :href="href" @click="navigate" class="list-group-item list-group-item-action">
                     <collecte-headband :collecte="col" :editable="false" />
                 </a>
@@ -66,13 +66,13 @@ export default{
     methods: {
         ...mapActions(['setCollectes']),
 
-        /**
-         * ouvre la collecte dans la vue principale pour consultation
-         * @param {number} collecteId 
-         */
-        seeCollecte(id) {
-            this.$router.push({name: 'consultationCollecte', params: {idCollecte: id}});
-        },
+        // /**
+        //  * ouvre la collecte dans la vue principale pour consultation
+        //  * @param {number} collecteId 
+        //  */
+        // seeCollecte(id) {
+        //     this.$router.push({name: 'consultationCollecte', params: {idCollecte: id}});
+        // },
 
         /**
          * Charge les collectes liées au formulaire ouvert

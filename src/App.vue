@@ -186,7 +186,17 @@ export default {
 			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
 				return 'programmation';
 			}
-			else if (['consultation', 'consultationFormulaire', 'consultationCollecte', 'consultationProjetList','consultationForm','consultationProjet','consultationFormList'].includes(this.$route.name)) {
+			else if (['consultation',
+				'consultationFormulaire',
+				'consultationCollecte',
+				'consultationForm',
+				'consultationFormList',
+				'consultationFormCollecte',
+				'consultationProjet',
+				'consultationProjetList',
+				'consultationProjetCollecte'
+				]
+				.includes(this.$route.name)) {
 				return 'consultation';
 			}
 			else if (['Home'].includes(this.$route.name)) {
