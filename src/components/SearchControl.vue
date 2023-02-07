@@ -148,8 +148,18 @@ export default {
             }, this.$app).then(data => {
                 this.$emit('search-result', data);
                 this.setSearchResults(data);
+                this.routeToVue(this.searchMode);
             }).catch(this.$app.catchError).finally(() => this.updateVal('pendingSearch', false));
-        }
+        },
+        /**
+         * Affiche la liste des contrôles programmés avec le formulaire
+         * 
+         * @param {object} collecte
+         */
+		routeToVue(mode) {
+			let route = mode === 'collecte' ? '/consultation' : '/consultation/'+mode;
+            this.$router.push(route);
+        },
     },
 
     mounted() {
