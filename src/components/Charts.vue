@@ -21,7 +21,7 @@
         </div>
 
         <div class="row">
-            <div class="col-12 col-md-6">
+            <div class="col-12 ">
                 <div class="card my-2">
                     <div class="card-body">
                         <h3 class="fs-4">Répartition par contrôles réalisés</h3>
@@ -29,11 +29,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 ">
                 <div class="card my-2">
                     <div class="card-body">
                         <h3 class="fs-4">Répartition par questions</h3>
-                        <div id="chart_questions" style="width:100%; position:relative;"></div>
+                        <div id="chart_questions" style="width:100%; position:relative; height:800px"></div>
                     </div>
                 </div>
             </div>

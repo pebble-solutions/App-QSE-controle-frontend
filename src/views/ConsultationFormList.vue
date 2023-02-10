@@ -66,13 +66,7 @@ export default{
     methods: {
         ...mapActions(['setCollectes']),
 
-        // /**
-        //  * ouvre la collecte dans la vue principale pour consultation
-        //  * @param {number} collecteId 
-        //  */
-        // seeCollecte(id) {
-        //     this.$router.push({name: 'consultationCollecte', params: {idCollecte: id}});
-        // },
+        
 
         /**
          * Charge les collectes liées au formulaire ouvert
@@ -91,7 +85,9 @@ export default{
                 this.pending.collectes = false;
                 this.setCollectes(data);
             }).catch(this.$app.catchError).finally(() => this.pending.collectes = false);
-        }
+        },
+        
+        
     },
 
     beforeRouteUpdate(to, from) {

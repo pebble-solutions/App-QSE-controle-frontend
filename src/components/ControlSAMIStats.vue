@@ -9,10 +9,16 @@
         </thead>
 
         <tbody>
-            <tr class="text-center">
+            <tr class="text-center" v-if="collecte.nb_reponse" >
                 <td scope="row">Total: {{collecte.nb_reponse}}/{{collecte.nb_question}}</td>
                 <td scope="row" v-for="letter in samiDict" :key="letter">{{ getValue(letter) }}</td>
             </tr>
+            <tr v-else >
+                <td scope="row" class="text-warning text-center">Aucune réponse enregistrée !</td>
+                <td scope="row" class="text-center" v-for="letter in samiDict" :key="letter">{{ getValue(letter) }}</td>
+
+            </tr>
+            
         </tbody>
     </table>
 
@@ -40,7 +46,15 @@ export default {
          */
         getValue(letter) {
             let key = letter.toLowerCase();
-            return this.stats[key];
+            if(!this.stats){
+                // alert('Attention: aucune réponse enregistrée pour ce contrôle');
+                console.log(this.stats)
+                return '0';
+            } else{
+
+                console.log(this.stats);
+                return this.stats[key];
+            }
         },
 
         /**

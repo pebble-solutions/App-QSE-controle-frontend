@@ -118,7 +118,7 @@
     </div>
 </template>
 
-<script lang="js">
+<script>
 
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
@@ -270,5 +270,4 @@ export default {
 
     components: { UserImage }
 }
-
 </script>

@@ -133,7 +133,8 @@ export default {
 				formulaires: true,
 				collectes: true,
 				projets: true,
-				search: true
+				search: true,
+				actifs: true,
 			},
 			isConnectedUser: false,
 			appMenu: [
@@ -317,7 +318,7 @@ export default {
 		 * Charge le personnel actifs
 		 */
 		loadAgent() {
-            this.pending.loadAgent = true;
+            this.pending.actifs = true;
             this.$app.apiGet('structurePersonnel/GET/list', {
                 actif:true,
 				structure: "toutes",
@@ -327,7 +328,7 @@ export default {
 				this.refreshListActifs(data);
 			})
 			.catch(this.$app.catchError)
-			.finally(this.pending.loadAgent = false);
+			.finally(this.pending.actifs = false);
         },
 
 		/**

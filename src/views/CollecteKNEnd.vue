@@ -1,8 +1,13 @@
 <template>
-    <ControlResultForm :stats="stats"></ControlResultForm>
+    
+    <div>
+        <ControlResultForm :stats="stats"></ControlResultForm>
+    </div>
 </template>
 
 <script>
+
+
 import ControlResultForm from '@/components/ControlResultForm.vue';
 import { mapState } from 'vuex';
 
@@ -23,13 +28,16 @@ export default {
         /**
          * Récupère les states de la collecte
          */
-         getCollecteStats() {
+        getCollecteStats() {
             this.$app.apiGet('data/GET/stats', {
                 environnement: 'private',
                 collecte: this.collecte.id,
                 type: 'formulaire'
             }).then((data) => {
                 this.stats = data.stats;
+                    // if(this.stats.lenght == 0);
+                    // alert('oups')
+
             }).catch(this.$app.catchError);
         }
     },

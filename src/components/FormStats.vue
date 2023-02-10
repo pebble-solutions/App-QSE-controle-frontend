@@ -28,7 +28,7 @@
         </div>
 
         <!-- <div class="col mb-3">
-            <label for="kn" class="form-label">KN</label>
+            <label for="kn" class="form-label">Contrôles</label>
             <select class="form-select" id="formulaire" name="kn" v-model="requete.formulaire" >
                 <option value="">non</option>
                 <option v-for="(form) in formulaires" :value="form.id" :key="form.id">{{form.groupe}}</option>

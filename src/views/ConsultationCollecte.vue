@@ -8,12 +8,12 @@
 </template>
 <script>
 
-import {mapState, mapActions} from 'vuex'; //
+import {mapState, mapActions} from 'vuex'; 
 
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 
 export default {
-    components:{ConsultationCollecteResume}, //ConsultationCollecteResume
+    components:{ConsultationCollecteResume}, 
 
     computed: {
         ...mapState(['collectes','collecte']),
