@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="collecte">
         <div class="card my-2">
             <div class="card-header">
                 <div class="d-flex align-items-center justify-content-between">
@@ -119,7 +119,6 @@
 </template>
 
 <script>
-
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
 import UserImage from './pebble-ui/UserImage.vue';
