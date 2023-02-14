@@ -7,7 +7,6 @@
 
 <script>
 
-
 import ControlResultForm from '@/components/ControlResultForm.vue';
 import { mapState } from 'vuex';
 
@@ -26,7 +25,7 @@ export default {
 
     methods: {
         /**
-         * Récupère les states de la collecte
+         * Récupère les stats de la collecte
          */
         getCollecteStats() {
             this.$app.apiGet('data/GET/stats', {

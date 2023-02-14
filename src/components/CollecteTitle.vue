@@ -50,7 +50,7 @@
 
 <script>
 
-import {mapState} from 'vuex';
+import { mapState} from 'vuex';
 import date from 'date-and-time';
 import UserImage from '../components/pebble-ui/UserImage.vue';
 
@@ -74,7 +74,6 @@ export default {
 
     computed: {
         ...mapState(['listActifs', 'formulaires', 'projets']),
-
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
 		 * 
@@ -109,7 +108,10 @@ export default {
          * Retourne true si la route est sur l'accueil du KN
          */
         isRouteHome() {
-            return this.$route.name == 'collecteKN' ? true : false;
+            if (this.$route.name =='collecteKN' && this.collecte.done == "NON"){
+                return true
+            } else {return false}
+            // return this.$route.name == 'collecteKN' ? true : false;
         },
 
         /**
@@ -132,6 +134,8 @@ export default {
     },
 
     methods: {
+        // ...mapActions(['refreshCollecte']),
+
         /**
          * Ouvre le formulaire permettant de modifier le projet sélectionné
          */
@@ -148,6 +152,7 @@ export default {
                 environnement: 'private', projet_id: this.projet_id
             })
             .then(() => {
+                // this.refreshCollecte(this.collecte)
                 this.$emit('projet-change', {
                     projet_id: this.projet_id,
                     projet_label: this.getProjetLabelFromId(this.projet_id)
