@@ -79,7 +79,7 @@
 
         <div v-if="collecte.documents.length" class="card my-3">
             <div class="card-body">
-                <h6>Fichiers joints</h6>
+                <h5 class="mb-3"><i class="bi bi-cloud-check"></i> Fichiers joints</h5>
                 <div class="list-group">
                     <file-item :document="document" v-for="document in collecte.documents" :key="document.id" />
                 </div>
@@ -114,7 +114,7 @@
                                 </div>
 
                                 <div v-if="getQuestionDocuments(question)" class="my-3">
-                                    <h6>Fichiers joints</h6>
+                                    <h6 class="mb-2"><i class="bi bi-cloud-check"></i> Fichiers joints</h6>
                                     <div class="list-group">
                                         <file-item :document="document" v-for="document in getQuestionDocuments(question)" :key="document.id" />
                                     </div>
@@ -292,7 +292,7 @@ export default {
          */
         getQuestionDocuments(question) {
             let reponse = this.reponses.find(e => e.question == question.id);
-            return reponse ? reponse.documents : null;
+            return reponse?.documents?.length ? reponse.documents : null;
         },
     },
 
