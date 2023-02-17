@@ -302,6 +302,25 @@ export default createStore({
 					}
 				});
 			}
+		},
+
+		/**
+		 * Modifie les documents de la collecte active
+		 * 
+		 * @param {object} state Le state de VueX
+		 * @param {object} docOptions 
+		 * - mode 'append' ou 'set'
+		 * - document    un objet document à ajouter
+		 */
+		documentToCollecte(state, docOptions) {
+			const document = docOptions.document;
+			const mode = docOptions.mode ?? 'append';
+
+			if (mode == 'set') {
+				state.collecte.documents = [];
+			}
+
+			state.collecte.documents.push(document);
 		}
 	
 	},
@@ -547,6 +566,19 @@ export default createStore({
 				data
 			});
 		},
+
+		/**
+		 * Ajoute un document sur la collecte ouverte
+		 * 
+		 * @param {object} context Instance VueX
+		 * @param {object} document Document à ajouter
+		 */
+		addDocumentToCollecte(context, document) {
+			context.commit('documentToCollecte', {
+				mode: 'append',
+				document
+			});
+		}
 	},
 
 	modules: {

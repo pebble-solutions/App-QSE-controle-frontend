@@ -13,6 +13,7 @@
 
         <div :id="bodyId" class="accordion-collapse collapse show" :aria-labelledby="headerId">
             <div class="accordion-body">
+
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
 
                 <FormModuleSAMI :question="question" v-model:value="value" v-if="question.type == 'sami'" />
@@ -20,6 +21,17 @@
 
                 <textarea rows="3" class="form-control mt-3"  placeholder="Votre commentaire" v-model="commentaire"></textarea>
 
+                <dropzone-comp 
+                    :dropzoneId="dzId" 
+                    :toolbar="['open']" 
+                    :params="dzParams" 
+                    :url="dzUrl" 
+                    :documents="itemResponse.documents" 
+                    
+                    @upload-success="addDocument($event)"
+
+                    v-if="inited"
+                    />
 
             </div>
         </div>
@@ -29,6 +41,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import DropzoneComp from '../dropzone/DropzoneDocument.vue';
 import FormModuleNone from './FormModuleNone.vue';
 import FormModuleSAMI from './FormModuleSAMI.vue';
 import FormModuleSAMIHeader from './FormModuleSAMIHeader.vue';
@@ -36,7 +49,8 @@ import FormModuleSAMIHeader from './FormModuleSAMIHeader.vue';
 export default {
 
     props: {
-        question: Object
+        question: Object,
+        collecte: Object
     },
 
     data() {
@@ -45,10 +59,12 @@ export default {
                 question: null,
                 reponse: null,
                 commentaire: null,
-                bloc: null
+                bloc: null,
+                documents: []
             },
             value: null,
-            commentaire: ''
+            commentaire: '',
+            inited: false
         }
     },
 
@@ -87,6 +103,33 @@ export default {
          */
         bodyId() {
             return `formItemBody-${this.question.id}`;
+        },
+
+        /**
+         * Retourne l'ID unique de la boite de dépôt de fichiers du formulaire.
+         * @return {string}
+         */
+        dzId() {
+            return `dz-item-${this.question.id}`;
+        },
+
+        /**
+         * Retourne la liste des paramètres envoyés en post lors du téléchargement de pièces jointes
+         * @return {object}
+         */
+        dzParams() {
+            return {
+                question_id: this.question.id,
+                input_md5: this.collecte.input_md5
+            };
+        },
+
+        /**
+         * Retourne l'URL pour l'envoi de pièce jointe
+         * @return {string}
+         */
+        dzUrl() {
+            return this.$app.licence.apiBaseURL+'data/POST/collecte/'+this.collecte.id+'/file';
         }
     },
 
@@ -117,27 +160,41 @@ export default {
          * Initialise un objet tampon pour stocker les informations de la réponse.
          */
         initValues() {
+            this.inited = false;
+            
             const response = this.responses.find(e => e.question == this.question.id);
             
             this.itemResponse = {
                 question: this.question.id,
                 reponse: response ? response.reponse : null,
                 commentaire: response ? response.commentaire : null,
-                bloc: this.question.information__bloc_id
+                bloc: this.question.information__bloc_id,
+                documents: response ? response.documents : []
             };
 
             if (response) {
                 this.commentaire = response.commentaire;
                 this.value = response.reponse;
             }
+
+            this.inited = true;
         },
+
+        /**
+         * Ajoute un document à la collection des documents liés à la réponse active.
+         * @param {object} document Le document à ajouter
+         */
+        addDocument(document) {
+            this.itemResponse.documents.push(document);
+            this.refreshResponse(this.itemResponse);
+        }
     },
 
     mounted() {
         this.initValues();
     },
 
-    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone }
+    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp }
 }
 
 </script>
