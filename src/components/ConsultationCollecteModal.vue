@@ -1,42 +1,27 @@
 <template>
-    <div class="container py-2 px-0">
-        <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
-        <router-view></router-view>
+    <div>
+        
+        <app-modal
+            size="lg"
+            @modal-hide="routeToParent()"
+            >
+            <ConsultationCollecteResume :collecte="collecte" :readonly="true"></ConsultationCollecteResume>
+        </app-modal>
     </div>
-    
-
 </template>
 
 <script>
+import {mapState, mapActions} from 'vuex'; //
 
-import {mapState, mapActions} from 'vuex'; 
-
-import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
-
+import AppModal from './pebble-ui/AppModal.vue';
+import ConsultationCollecteResume from './ConsultationCollecteResume.vue';
 export default {
-    components:{ConsultationCollecteResume}, 
+    components:{AppModal,ConsultationCollecteResume}, //
 
-    computed: {
+    computed:{
         ...mapState(['collectes','collecte']),
-
-        data() {
-            return {
-                pending: {
-                    collecte: true
-                },
-            }
-        },
-
-        /**
-         * filtre les collectes en fonction de l'id de la collecte concernée
-         * et retourne les contrôle  correspondant
-         */
-
-        filterCollecte() {
-            let collecteid = this.collectes.filter((collecte)=> collecte.id == this.$route.params.idCollecte);
-            return collecteid;
-        },
     },
+
     methods: {
         ...mapActions(["setCollecte", "resetResponses"]),
 
@@ -55,7 +40,15 @@ export default {
                 this.setCollecte(data);
             }).catch(this.$app.catchError).finally(() => console.log('ok'));
         },
+        /**
+         * Retourne à la vue précédente
+         */
+        routeToParent() {
+            this.$router.go(-1);
+        }
+    
     },
+
     /**
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
@@ -75,7 +68,7 @@ export default {
          */
         // this.resetResponses();
         this.loadCollecte(this.$route.params.idCollecte);
+        
     }
 }
-
 </script>

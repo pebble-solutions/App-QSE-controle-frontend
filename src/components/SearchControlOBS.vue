@@ -55,6 +55,7 @@
     </div>
 </template>
 <script>
+
 import AppMenuItem from './pebble-ui/AppMenuItem.vue';
 import FormulaireItem from './menu/FormulaireItem.vue';
 import ProjectItemDone from './menu/ProjectItemDone.vue';

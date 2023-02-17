@@ -7,6 +7,7 @@
     </div>
 </template>
 <script>
+
 import { mapState } from 'vuex';
 import {GoogleCharts} from 'google-charts';
 

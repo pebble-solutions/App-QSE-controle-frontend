@@ -133,7 +133,8 @@ export default {
 				formulaires: true,
 				collectes: true,
 				projets: true,
-				search: true
+				search: true,
+				actifs: true,
 			},
 			isConnectedUser: false,
 			appMenu: [
@@ -186,7 +187,17 @@ export default {
 			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
 				return 'programmation';
 			}
-			else if (['consultation', 'consultationFormulaire', 'consultationCollecte', 'consultationProjetList','consultationForm','consultationProjet','consultationFormList'].includes(this.$route.name)) {
+			else if (['consultation',
+				'consultationFormulaire',
+				'consultationCollecte',
+				'consultationForm',
+				'consultationFormList',
+				'consultationFormCollecte',
+				'consultationProjet',
+				'consultationProjetList',
+				'consultationProjetCollecte'
+				]
+				.includes(this.$route.name)) {
 				return 'consultation';
 			}
 			else if (['Home'].includes(this.$route.name)) {
@@ -307,7 +318,7 @@ export default {
 		 * Charge le personnel actifs
 		 */
 		loadAgent() {
-            this.pending.loadAgent = true;
+            this.pending.actifs = true;
             this.$app.apiGet('structurePersonnel/GET/list', {
                 actif:true,
 				structure: "toutes",
@@ -317,7 +328,7 @@ export default {
 				this.refreshListActifs(data);
 			})
 			.catch(this.$app.catchError)
-			.finally(this.pending.loadAgent = false);
+			.finally(this.pending.actifs = false);
         },
 
 		/**

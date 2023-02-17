@@ -1,5 +1,5 @@
 <template>
-    <div class="card my-3" v-if="collecte">
+    <div class="card my-3" v-if="collecte" >
         <div class="card-header">
             <div class="d-flex">
                 <h2 class="card-title">Bilan du contrôle</h2>
@@ -161,6 +161,7 @@ export default {
         if (this.collecte) {
             this.itemResponse.rapport = this.collecte.rapport;
             this.itemResponse.result = this.collecte.result_var;
+            
         }
 
     }
