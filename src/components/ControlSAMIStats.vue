@@ -46,13 +46,9 @@ export default {
          */
         getValue(letter) {
             let key = letter.toLowerCase();
-            if(!this.stats){
-                // alert('Attention: aucune réponse enregistrée pour ce contrôle');
-                console.log(this.stats)
+            if(!this.stats) {
                 return '0';
-            } else{
-
-                console.log(this.stats);
+            } else {
                 return this.stats[key];
             }
         },
