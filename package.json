@@ -1,6 +1,6 @@
 {
-  "name": "sample",
-  "version": "0.1.0",
+  "name": "controle",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -15,6 +15,7 @@
     "bootstrap-icons": "^1.10.2",
     "core-js": "^3.6.5",
     "date-and-time": "^2.4.1",
+    "dropzone": "^6.0.0-beta.2",
     "firebase": "^9.13.0",
     "google-charts": "^2.0.0",
     "jwt-decode": "^3.1.2",

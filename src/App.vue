@@ -330,7 +330,8 @@ export default {
 		loadAgent() {
             this.pending.actifs = true;
             this.$app.apiGet('structurePersonnel/GET/list', {
-                actif:true,
+                actif: true,
+				futur: true,
 				structure: "toutes",
 				limit: "aucune"
             })

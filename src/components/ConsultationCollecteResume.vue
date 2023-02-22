@@ -77,6 +77,15 @@
             </div>
         </div>
 
+        <div v-if="collecte.documents.length" class="card my-3">
+            <div class="card-body">
+                <h5 class="mb-3"><i class="bi bi-cloud-check"></i> Fichiers joints</h5>
+                <div class="list-group">
+                    <file-item :document="document" v-for="document in collecte.documents" :key="document.id" />
+                </div>
+            </div>
+        </div>
+
         <div class="card my-2">
             <div class="card-header d-flex align-items-baseline justify-content-between">
                 <h4 class="fs-5 card-title">Nombre d'items évalués</h4> 
@@ -103,6 +112,14 @@
                                 <div>
                                     <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
                                 </div>
+
+                                <div v-if="getQuestionDocuments(question)" class="my-3">
+                                    <h6 class="mb-2"><i class="bi bi-cloud-check"></i> Fichiers joints</h6>
+                                    <div class="list-group">
+                                        <file-item :document="document" v-for="document in getQuestionDocuments(question)" :key="document.id" />
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -122,7 +139,7 @@
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
 import UserImage from './pebble-ui/UserImage.vue';
-
+import FileItem from './dropzone/FileItem.vue';
 
 export default {
     props: {
@@ -265,8 +282,20 @@ export default {
             }
             return 'text-bg-secondary';
         },
+
+        /**
+         * Retourne la collection de documents liés à une question
+         * 
+         * @param {object} question La question à analyser
+         * 
+         * @return {string|null}
+         */
+        getQuestionDocuments(question) {
+            let reponse = this.reponses.find(e => e.question == question.id);
+            return reponse?.documents?.length ? reponse.documents : null;
+        },
     },
 
-    components: { UserImage }
+    components: { UserImage, FileItem }
 }
 </script>

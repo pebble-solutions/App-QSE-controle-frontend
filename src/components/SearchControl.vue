@@ -24,10 +24,7 @@
                 </button>
             </ul>
         </div>
-        <button class="btn my-2 btn-outline-secondary float-end" type="button" @click.prevent="loadPlus()"  >
-            <i class="bi bi-plus"></i>
-            Charger plus
-        </button>
+        
     </form>
     <!-- <alert-message icon="bi-info-circle-fill" v-if="noMoreAvailable">Oops, y'a pu !</alert-message> -->
     

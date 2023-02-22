@@ -195,6 +195,9 @@ export default createStore({
 					}
 				});
 			}
+			else if (action == 'add') {
+				state.collectes = state.collectes.concat(collectes);
+			}
 			else {
 				state.collectes = collectes;
 			}
@@ -276,7 +279,7 @@ export default createStore({
 		 * 
 		 * @param {object} state Le state de vueX
 		 * @param {object} dataOptions 
-		 * - mode : set (remplacement) ou update (mise à jour et ajout)
+		 * - mode : set (remplacement) ou update (mise à jour et ajout) ou add (ajout à la fin)
 		 * - data : les données à écrire
 		 */
 		searchResults(state, dataOptions) {
@@ -286,6 +289,9 @@ export default createStore({
 			// mode set : remplacement de l'ensemble des informations
 			if (mode == 'set') {
 				state.searchResults = data;
+			}
+			else if (mode == 'add') {
+				state.searchResults = state.searchResults.concat(data);
 			}
 			// mode update : mise à jour des informations déjà stockées et ajout des nouvelles valeurs à la fin
 			else {
@@ -302,6 +308,25 @@ export default createStore({
 					}
 				});
 			}
+		},
+
+		/**
+		 * Modifie les documents de la collecte active
+		 * 
+		 * @param {object} state Le state de VueX
+		 * @param {object} docOptions 
+		 * - mode 'append' ou 'set'
+		 * - document    un objet document à ajouter
+		 */
+		documentToCollecte(state, docOptions) {
+			const document = docOptions.document;
+			const mode = docOptions.mode ?? 'append';
+
+			if (mode == 'set') {
+				state.collecte.documents = [];
+			}
+
+			state.collecte.documents.push(document);
 		}
 	
 	},
@@ -536,6 +561,19 @@ export default createStore({
 		},
 
 		/**
+		 * Ajoute des nouveaux résultats à la collection searchResults
+		 * 
+		 * @param {object} context Instance VueX
+		 * @param {array} data Collection de données à ajouter dans le store
+		 */
+		addSearchResults(context, data) {
+			context.commit('searchResults', {
+				mode: 'add',
+				data
+			});
+		},
+
+		/**
 		 * Met à jour ou ajoute des données à la collection searchResults
 		 * 
 		 * @param {object} context Instance VueX
@@ -547,6 +585,19 @@ export default createStore({
 				data
 			});
 		},
+
+		/**
+		 * Ajoute un document sur la collecte ouverte
+		 * 
+		 * @param {object} context Instance VueX
+		 * @param {object} document Document à ajouter
+		 */
+		addDocumentToCollecte(context, document) {
+			context.commit('documentToCollecte', {
+				mode: 'append',
+				document
+			});
+		}
 	},
 
 	modules: {

@@ -38,7 +38,7 @@ export default {
             })
             .then((data) => {
                 this.setCollecte(data);
-            }).catch(this.$app.catchError).finally(() => console.log('ok'));
+            }).catch(this.$app.catchError);
         },
         /**
          * Retourne à la vue précédente

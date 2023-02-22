@@ -384,11 +384,7 @@ export default {
 
         updateCollecte() {
             this.pending.buttonSave = true;
-                console.log(this.collecte.id)
-            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
-            .then((data) => {
-                console.log('retour edit', data);
-            }).catch(this.$app.catchError).finally(() => this.pending.buttonSave = false);
+            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse).catch(this.$app.catchError).finally(() => this.pending.buttonSave = false);
         },
 
 

@@ -29,6 +29,18 @@
                 <textarea class="form-control" id="collecte_action" v-model="itemResponse.actions"></textarea>
             </div>
 
+            <div class="mt-3">
+                <label class="fs-5">Joindre des fichiers</label>
+                <dropzone-document
+                    :dropzoneId="'dz-file-'+collecte.id" 
+                    :toolbar="['open']" 
+                    :params="dzParams" 
+                    :url="dzUrl" 
+                    :documents="collecte.documents" 
+                    
+                    @upload-success="addDocument($event)"/>
+            </div>
+
             <div class="d-flex  mt-3" @click.prevent="validate()">
                 <button type="button" class="d-block w-100 btn btn-lg btn-success" :disabled="pending.validation">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
@@ -49,6 +61,7 @@
 import {mapActions, mapState} from 'vuex';
 import BlocNavigation from './BlocNavigation.vue';
 import ControlSAMIStats from './ControlSAMIStats.vue';
+import DropzoneDocument from './dropzone/DropzoneDocument.vue';
 import FormModuleSAMI from './form/FormModuleSAMI.vue';
 import Spinner from './pebble-ui/Spinner.vue';
 
@@ -57,7 +70,7 @@ export default {
         stats: Object
     },
 
-    components: { BlocNavigation, Spinner, FormModuleSAMI, ControlSAMIStats },
+    components: { BlocNavigation, Spinner, FormModuleSAMI, ControlSAMIStats, DropzoneDocument },
 
     data() {
         return {
@@ -84,11 +97,29 @@ export default {
          */
         samiStats() {
             return this.stats[this.collecte.information__groupe_id]?.type.sami;
+        },
+
+        /**
+         * Retourne la liste des paramètres envoyés en post lors du téléchargement de pièces jointes
+         * @return {object}
+         */
+         dzParams() {
+            return {
+                input_md5: this.collecte.input_md5
+            };
+        },
+
+        /**
+         * Retourne l'URL pour l'envoi de pièce jointe
+         * @return {string}
+         */
+        dzUrl() {
+            return this.$app.licence.apiBaseURL+'data/POST/collecte/'+this.collecte.id+'/file';
         }
     },
 
     methods: {
-        ...mapActions(['refreshCollectes', 'refreshCollecte']),
+        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte']),
 
         /**
          * Envoie les données a l'api pour valider le KN
@@ -115,6 +146,15 @@ export default {
                 this.pending.validation = false;
             }
         },
+
+        /**
+         * Ajout une document à la collection de documents liés à la collecte
+         * 
+         * @param {object} document Le document à ajouter à la collection
+         */
+        addDocument(document) {
+            this.addDocumentToCollecte(document);
+        }
     },
 
     mounted() {

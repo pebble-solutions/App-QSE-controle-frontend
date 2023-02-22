@@ -18,7 +18,7 @@
         </div>
         
 
-        <form-section :questions="lignes" />
+        <form-section :questions="lignes" :collecte="collecte" />
         
         
         <div class="card-footer">
@@ -117,6 +117,7 @@ export default {
                 itemReponse.question = resp.ligne;
                 itemReponse.reponse = resp.data_var;
                 itemReponse.commentaire = resp.commentaire;
+                itemReponse.documents = resp.documents;
 
                 let findBloc = this.collecte.formulaire.questions.find((question) => question.id == resp.ligne);
                 itemReponse.bloc = findBloc.information__bloc_id;
