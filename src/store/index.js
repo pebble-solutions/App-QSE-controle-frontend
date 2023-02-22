@@ -195,6 +195,9 @@ export default createStore({
 					}
 				});
 			}
+			else if (action == 'add') {
+				state.collectes = state.collectes.concat(collectes);
+			}
 			else {
 				state.collectes = collectes;
 			}

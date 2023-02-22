@@ -3,7 +3,6 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center my-2 mb-3">
             <h1 class="fs-3 m-0 me-2">{{ formulaireName }}</h1> 
             <div class="badge bg-secondary">{{collectes.length}}</div>
-            <button v-if="isMoreAvailable"  class="btn btn-outline-primary" @click.prevent="loadPlus()"> Charger <i class="bi bi-plus"></i></button>
         </div>
     
         <spinner v-if="pending.collectes" />
@@ -15,7 +14,15 @@
                     <collecte-headband :collecte="col" :editable="false" />
                 </a>
             </router-link>
-        </div>  
+        </div>
+
+        <div class="d-grid my-2" v-if="isMoreAvailable">
+            <button class="btn btn-outline-secondary" @click.prevent="loadMore()" :disabled="pending.moreCollectes">
+                Charger 
+                <span class="spinner-border spinner-border-sm" role="status" v-if="pending.moreCollectes"></span>
+                <i class="bi bi-plus" v-else></i>
+            </button>
+        </div>
     </div>
     
     <router-view></router-view>
@@ -28,24 +35,21 @@ import CollecteHeadband from '../components/CollecteHeadband.vue';
 import { searchConsultation } from '../js/search-consultation';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 
-export default{
-    components:{CollecteHeadband, Spinner},
+export default {
+    components: { CollecteHeadband, Spinner },
 
     data() {
         return {
-
             pending: {
                 collectes: true,
-                formulaire : true,
+                moreCollectes: false
             },
-            result: [],
-            dd: null,
-            df: null,
             start: 0,
             limit: 50,
             noMoreAvailable: false
         }
     },
+
     computed: {
         ...mapState(['formulaire', 'formulaires', 'collectes']),
 
@@ -56,7 +60,6 @@ export default{
          * 
          * @return {string}
          */
-
         formulaireName() {
             let groupInformation = this.formulaires.find(e => e.id == this.$route.params.idFormulaire);
     
@@ -67,6 +70,7 @@ export default{
                 return null ;
             }
         },
+
         /**
          * Contrôle si il peut exister plus de résultats sur le serveurs que
          * de données stockées dans résults.
@@ -84,81 +88,72 @@ export default{
     },
 
     methods: {
-        ...mapActions(['setCollectes']),
+        ...mapActions(['setCollectes', 'addCollectes']),
 
         
 
         /**
          * Charge les collectes liées au formulaire ouvert
          * 
-         * @param {number} idForm
+         * @param  {Number} idForm
          * @param  {string} mode
          * - mode           'replace' (défaut), 'append' (ajout des données à la fin de la liste)
          * 
          */
         loadCollectes(idForm, mode) {
-            if(!mode){
-                this.start= 0;
-                this.noMoreAvailable=false
+            if (!mode) {
+                this.start = 0;
+                this.noMoreAvailable = false
             }
-                console.log(mode, 'mode')
-                console.log(this.start, 'start load');
-                console.log(this.limit, 'limit load')
-                idForm = idForm ?? this.$route.params.idFormulaire;
+
+            idForm = idForm ?? this.$route.params.idFormulaire;
+
+            if (mode == 'append') {
+                this.pending.moreCollectes = true;
+            }
+            else {
                 this.pending.collectes = true;
-                
-                searchConsultation({
-                    formulaire: idForm,
-                    dd: null,
-                    df: null,
-                    start: this.start,
-                    limit: this.limit,
-                    },
-    
-                    this.$app)
-                    .then(data => {
-                            if (mode == 'append') {
-                                if(!data.length){
-                                    this.noMoreAvailable =true;
-                                } else {
-                                    // this.result =this.result.concat(data);
-                                    this.setCollectes(data);
-                                    this.pending.collectes = false;
-
-                                }
-                            } else{
-
-                                this.setCollectes(data);
-                                this.pending.collectes = false;
-                            }
-                        })
-                        .catch(this.$app.catchError)
-                        .finally(() => this.pending.collectes = false);
+            }
             
+            searchConsultation({
+                formulaire: idForm,
+                start: this.start,
+                limit: this.limit,
+            }, this.$app)
+            .then(data => {
+                if (mode == 'append') {
+                    if(!data.length){
+                        this.noMoreAvailable = true;
+                    } else {
+                        this.addCollectes(data);
+                    }
+                } else {
+                    this.setCollectes(data);
+                }
+            })
+            .catch(this.$app.catchError)
+            .finally(() => {
+                this.pending.collectes = false
+                this.pending.moreCollectes = false
+            });
     
         },
+
         /**
          * Charge la suite des données lorsque le nombre de résultats est > à 50
          * et divisible par 50 en nombre entier.
          */
-        loadPlus() {
+        loadMore() {
             if (this.isMoreAvailable) {
                 this.start += this.limit;
-                console.log('plus');
-                console.log(this.start, 'start');
-                console.log(this.limit, 'limit')
-                this.loadCollectes(this.idForm,'append');
-            } else {
-                console.log('pas besoin');
-
+                this.loadCollectes(null, 'append');
             }
         }
-        
-        
     },
 
     beforeRouteUpdate(to, from) {
         if (to.params.idFormulaire !== from.params.idFormulaire) {
+            this.start = 0;
             this.loadCollectes(to.params.idFormulaire);
         }
     },
