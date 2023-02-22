@@ -101,9 +101,6 @@ export default{
                 this.start= 0;
                 this.noMoreAvailable=false
             }
-                console.log(mode, 'mode')
-                console.log(this.start, 'start load');
-                console.log(this.limit, 'limit load')
                 idForm = idForm ?? this.$route.params.idFormulaire;
                 this.pending.collectes = true;
                 
@@ -144,14 +141,8 @@ export default{
         loadPlus() {
             if (this.isMoreAvailable) {
                 this.start += this.limit;
-                console.log('plus');
-                console.log(this.start, 'start');
-                console.log(this.limit, 'limit')
                 this.loadCollectes(this.idForm,'append');
-            } else {
-                console.log('pas besoin');
-
-            }
+            } 
         }
         
         

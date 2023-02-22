@@ -64,6 +64,11 @@
 					<Spinner />
 				</template>
 				<template v-else>
+					
+					{{ searchResults.length }}//
+					<template v-for="res in searchResults" :key="res.id">
+						{{ res.id }}-
+					</template>
 					<template v-for="res in searchResults" :key="res.id">
 						<app-menu-item v-if="this.searchOptions.mode == 'collecte' " :href="'/consultation/'+res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
@@ -73,6 +78,7 @@
 						</app-menu-item>
 						<app-menu-item v-else-if="this.searchOptions.mode =='projet' && res.nb_done != 0" :href="'/consultation/projet/'+res.id">
 							<project-item-done :num="res.nb_done" :projet="res" ></project-item-done>
+							
 						</app-menu-item>
 					</template>
 	
@@ -204,7 +210,11 @@ export default {
 				return 'home';
 			}
 			return null;
-		}
+		},
+
+		
+		
+
 	},
 
 	watch: {

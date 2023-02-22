@@ -24,7 +24,15 @@
                 </button>
             </ul>
         </div>
+        <button class="btn my-2 btn-outline-secondary float-end" type="button" @click.prevent="loadPlus()"  >
+            <i class="bi bi-plus"></i>
+            Charger plus
+        </button>
     </form>
+    <!-- <alert-message icon="bi-info-circle-fill" v-if="noMoreAvailable">Oops, y'a pu !</alert-message> -->
+    
+    <!-- <div class="d-grid">
+        </div> -->
 </template>
 <script>
 
@@ -48,7 +56,8 @@ export default {
         pendingSearch: {
             type: Boolean,
             default: false
-        }
+        },
+        
     },
 
     data() {
@@ -56,11 +65,16 @@ export default {
             searchDd: null,
             searchDf: null,
             searchMode: 'collecte',
+            searchStart: 0,
+            searchLimit: 50,
+            noMoreAvailable: false,
             modesDict: {
                 collecte: "Tous les contrôles",
                 formulaire: "Grouper par questionnaire",
                 projet: "Grouper par projet"
-            }
+            },
+            
+
         }
     },
 
@@ -73,7 +87,10 @@ export default {
          */
         currentModeLabel() {
             return this.modesDict[this.mode];
-        }
+        },
+        
+
+
     },
 
     watch: {
@@ -144,10 +161,20 @@ export default {
             searchConsultation({
                 dd: this.searchDd,
                 df: this.searchDf,
-                mode: this.searchMode
+                mode: this.searchMode,
+                start: this.searchStart,
+                limit: this.searchLimit,
+
+
             }, this.$app).then(data => {
                 this.$emit('search-result', data);
                 this.setSearchResults(data);
+                console.log(data.length);
+                    if(data.length){
+                        let ln = data.length;
+                        if (ln && ln % this.searchLimit === 0){this.noMoreAvailable = true} else {this.noMoreAvailable = false}
+                        console.log(this.noMoreAvailable);
+                    }
                 this.routeToVue(this.searchMode);
             }).catch(this.$app.catchError).finally(() => this.updateVal('pendingSearch', false));
         },
