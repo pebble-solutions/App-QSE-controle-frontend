@@ -26,10 +26,7 @@
         </div>
         
     </form>
-    <!-- <alert-message icon="bi-info-circle-fill" v-if="noMoreAvailable">Oops, y'a pu !</alert-message> -->
     
-    <!-- <div class="d-grid">
-        </div> -->
 </template>
 <script>
 
@@ -166,12 +163,8 @@ export default {
             }, this.$app).then(data => {
                 this.$emit('search-result', data);
                 this.setSearchResults(data);
-                console.log(data.length);
-                    if(data.length){
-                        let ln = data.length;
-                        if (ln && ln % this.searchLimit === 0){this.noMoreAvailable = true} else {this.noMoreAvailable = false}
-                        console.log(this.noMoreAvailable);
-                    }
+                console.log(data.length, 'search');
+                    
                 this.routeToVue(this.searchMode);
             }).catch(this.$app.catchError).finally(() => this.updateVal('pendingSearch', false));
         },

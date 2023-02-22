@@ -64,11 +64,7 @@
 					<Spinner />
 				</template>
 				<template v-else>
-					
-					{{ searchResults.length }}//
-					<template v-for="res in searchResults" :key="res.id">
-						{{ res.id }}-
-					</template>
+										
 					<template v-for="res in searchResults" :key="res.id">
 						<app-menu-item v-if="this.searchOptions.mode == 'collecte' " :href="'/consultation/'+res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
@@ -78,9 +74,16 @@
 						</app-menu-item>
 						<app-menu-item v-else-if="this.searchOptions.mode =='projet' && res.nb_done != 0" :href="'/consultation/projet/'+res.id">
 							<project-item-done :num="res.nb_done" :projet="res" ></project-item-done>
-							
 						</app-menu-item>
 					</template>
+					
+							<div class="d-grid my-2" v-if="isMoreAvailable && searchOptions.mode === 'collecte'">
+								<button class="btn btn-outline-secondary" @click.prevent="loadMore()">
+								Charger +
+								<!-- <span class="spinner-border spinner-border-sm" role="status" ></span> -->
+								</button>
+							</div>
+					
 	
 					<alert-message className="m-1" v-if="!searchResults.length">
 						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre recherche.
@@ -172,8 +175,11 @@ export default {
 			searchOptions: {
 				dd: null,
 				df: null,
-				mode: 'collecte'
-			}
+				mode: 'collecte',
+				start: 0,
+				limit: 50,
+			},
+			// isMoreAvailable: false
 		}
 	},
 
@@ -212,7 +218,20 @@ export default {
 			return null;
 		},
 
-		
+		/**
+         * Contrôle si il peut exister plus de résultats sur le serveurs que
+         * de données stockées dans résults.
+         *
+         * On concidère qu'il peut exister des résultats supplémentaires sur le serveur
+         * à partir du moment ou il y a plus de 50 items dans result et que result / 50 est
+         * égal à 1.
+         *
+         * @return {bool}
+         */
+		isMoreAvailable() {
+            let ln = this.searchResults.length;
+            return (ln && ln % this.searchOptions.limit === 0 && !this.noMoreAvailable);
+        }		
 		
 
 	},
@@ -242,7 +261,7 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults']),
+		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults', 'addSearchResults']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -357,13 +376,40 @@ export default {
 		/**
          * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
          */
-		initConsultation() {
+		initConsultation(mode) {
 			this.pending.search = true;
             searchConsultation(this.searchOptions, this.$app).then(data => {
-                this.setSearchResults(data);
+				if(this.searchOptions.mode =='collecte') {
+
+					if(!mode){
+						this.noMoreAvailable = false;
+						this.searchOptions.start = 0;
+						this.setSearchResults(data);
+	
+					}
+					else if(mode == 'append'){
+						if(!data.length){
+							this.noMoreAvailable =true
+						} else {
+							this.addSearchResults(data)
+						}
+					} 
+				}
+
 				this.routeToVue(this.searchOptions.mode)
             }).catch(this.$app.catchError).finally(() => { this.pending.search = false });
 		},
+
+		/**
+         * Charge la suite des données lorsque le nombre de résultats est > à 50
+         * et divisible par 50 en nombre entier.
+         */
+		loadMore() {
+            if (this.isMoreAvailable) {
+                this.searchOptions.start += this.searchOptions.limit;
+                this.initConsultation('append');
+            }
+        },
 
 		/**
          * Affiche la liste des contrôles programmés avec le formulaire
