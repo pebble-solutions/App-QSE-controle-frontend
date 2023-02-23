@@ -46,12 +46,20 @@
                         </div>
                     </div>
 
-                    <div class="fw-light fs-7">
+                    <div class="fw-light fs-7" v-if="displayProjet">
                         <div class="d-flex" v-if="collecte.projet_id">
                             <i class="bi bi-boxes me-2"></i>
                             {{ projet_label }}
                         </div>
+                        <div v-else class="text-warning">Projet non renseigné</div>
                     </div>
+                    <div class="fw-light fs-7" v-if="displayForm">
+                        <div class="d-flex" v-if="collecte.formulaire">
+                            <i class="bi bi-card-list me-2"></i>
+                            {{ form_label }} 
+                        </div>
+                    </div>
+                    
                 </div>
                 <div v-if="collecte.result_var && collecte.result_var != 'null'&& !editable " class="badge fs-6 text-uppercase me-md-2" :class="classNameFromSAMI(collecte.result_var)">
                     {{collecte.result_var}}
@@ -68,6 +76,7 @@
 import UserImage from './pebble-ui/UserImage.vue';
 import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
+import { mapState } from 'vuex';
 
 export default {
 
@@ -76,10 +85,19 @@ export default {
 		editable: {
 			type: Boolean,
 			default: true,
-		}
+		},
+        displayForm: {
+            type: Boolean,
+            default: false,
+        },
+        displayProjet: {
+            type: Boolean,
+            default: false,
+        }
 	},
 
     computed: {
+        ...mapState(['formulaires']),
         /**
          * Retourne le libellé du projet en fonction des informations projet_id et projet_label sur la collecte.
          * 
@@ -93,6 +111,27 @@ export default {
             }
             else {
                 label = "Projet non renseigné";
+            }
+            return label;
+        },
+        /**
+         * Retourne le libellé du projet en fonction des informations projet_id et projet_label sur la collecte.
+         * 
+         * @return {string}
+         */
+        form_label() {
+            let c = this.collecte;
+            let label;
+            let formLabel;
+            if (c.formulaire) {
+                
+                label= this.formulaires.find(e => e.id == c.formulaire);
+                
+                formLabel = label.groupe;
+                return formLabel
+            }
+            else {
+                label = "Formulaire non renseigné";
             }
             return label;
         }

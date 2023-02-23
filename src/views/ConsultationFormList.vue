@@ -11,7 +11,7 @@
             
             <router-link :to="'/consultation/formulaire/'+this.$route.params.idFormulaire+'/'+col.id" v-slot="{navigate,href}" custom v-for="col in collectes" :key="col.id">
                 <a :href="href" @click="navigate" class="list-group-item list-group-item-action">
-                    <collecte-headband :collecte="col" :editable="false" />
+                    <collecte-headband :collecte="col" :editable="false" :displayProjet="true" :displayForm="false"/>
                 </a>
             </router-link>
         </div>
