@@ -163,7 +163,6 @@ export default {
             }, this.$app).then(data => {
                 this.$emit('search-result', data);
                 this.setSearchResults(data);
-                console.log(data.length, 'search');
                     
                 this.routeToVue(this.searchMode);
             }).catch(this.$app.catchError).finally(() => this.updateVal('pendingSearch', false));

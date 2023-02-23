@@ -76,6 +76,9 @@
 							<project-item-done :num="res.nb_done" :projet="res" ></project-item-done>
 						</app-menu-item>
 					</template>
+					<alert-message className="m-1" v-if="!searchResults.length">
+						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre recherche.
+					</alert-message>
 					
 							<div class="d-grid my-2" v-if="isMoreAvailable && searchOptions.mode === 'collecte'">
 								<button class="btn btn-outline-secondary" @click.prevent="loadMore()">
@@ -85,9 +88,6 @@
 							</div>
 					
 	
-					<alert-message className="m-1" v-if="!searchResults.length">
-						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre recherche.
-					</alert-message>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
@@ -375,12 +375,14 @@ export default {
 		},
 		/**
          * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
+		 * 
+		 * @param	{string}	searchOptions défini les paramètres envoyés au serveur via api POST
+		 * @param	{string}	mode 'set' par défaut: enregistre le retour de l'api et 'append' ajoute le retour de l'api aux résultats deja enregistrés
          */
 		initConsultation(mode) {
 			this.pending.search = true;
             searchConsultation(this.searchOptions, this.$app).then(data => {
 				if(this.searchOptions.mode =='collecte') {
-
 					if(!mode){
 						this.noMoreAvailable = false;
 						this.searchOptions.start = 0;

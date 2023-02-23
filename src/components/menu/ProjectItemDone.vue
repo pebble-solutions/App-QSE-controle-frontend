@@ -6,7 +6,7 @@
                 <i class="bi me-2" :class="icon"></i>
             </div>
             <div class="justify-content-between align-items-center"  >
-                <div class="d-flex justify-content-between align-items-center">{{projet.intitule}}</div>
+                <div class="d-flex justify-content-between align-items-center">{{projet.intitule}} {{ projet.id }}</div>
             </div>
         </div>
         <div class="badge bg-secondary ms-1" v-if="num">{{num}}</div>
