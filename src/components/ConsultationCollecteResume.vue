@@ -76,7 +76,7 @@
                 </div>
             </div>
         </div>
-<!-- 
+ 
         <div v-if="collecte.documents.length" class="card my-3">
             <div class="card-body">
                 <h5 class="mb-3"><i class="bi bi-cloud-check"></i> Fichiers joints</h5>
@@ -84,7 +84,7 @@
                     <file-item :document="document" v-for="document in collecte.documents" :key="document.id" />
                 </div>
             </div>
-        </div> -->
+        </div>
 
         <div class="card my-2">
             <div class="card-header d-flex align-items-baseline justify-content-between">
