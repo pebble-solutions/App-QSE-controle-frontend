@@ -104,28 +104,30 @@
 
                     <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id">
                         <div class="list-group list-group-flush">
-                            <div class="list-group-item" v-for="question in getBlocQuestions(bloc)" :key="question.id">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <em class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
-                                        {{question.ligne}}
-                                    </em>
-                                    <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
-                                </div>
-                                <div class="fs-7 text-muted" v-if="question.corbeille === 'OUI'">
-                                    <i class="bi bi-trash me-1"></i> Cette question n'existe plus dans la dernière version du formulaire
-                                </div>
-                                <div>
-                                    <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
-                                </div>
-
-                                <div v-if="getQuestionDocuments(question)" class="my-3">
-                                    <h6 class="mb-2"><i class="bi bi-cloud-check"></i> Fichiers joints</h6>
-                                    <div class="list-group">
-                                        <file-item :document="document" v-for="document in getQuestionDocuments(question)" :key="document.id" />
+                            <template v-for="question in getBlocQuestions(bloc)" :key="question.id">
+                                <div class="list-group-item" v-if="question.corbeille !== 'OUI' || getQuestionReponse(question)">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <em class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
+                                            {{question.ligne}}
+                                        </em>
+                                        <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
                                     </div>
+                                    <div class="fs-7 text-muted" v-if="question.corbeille === 'OUI'">
+                                        <i class="bi bi-trash me-1"></i> Cette question n'existe plus dans la dernière version du formulaire
+                                    </div>
+                                    <div>
+                                        <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
+                                    </div>
+    
+                                    <div v-if="getQuestionDocuments(question)" class="my-3">
+                                        <h6 class="mb-2"><i class="bi bi-cloud-check"></i> Fichiers joints</h6>
+                                        <div class="list-group">
+                                            <file-item :document="document" v-for="document in getQuestionDocuments(question)" :key="document.id" />
+                                        </div>
+                                    </div>
+    
                                 </div>
-
-                            </div>
+                            </template>
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,10 @@
 <template>
     <div class="container py-2 px-0">
-        <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
-        <router-view></router-view>
+        <spinner v-if="pending.collecte" />
+        <template v-else>
+            <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
+            <router-view></router-view>
+        </template>
     </div>
     
 
@@ -12,20 +15,22 @@
 import {mapState, mapActions} from 'vuex'; 
 
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
+import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
-    components:{ConsultationCollecteResume}, 
+    components:{ConsultationCollecteResume, Spinner}, 
+
+    data() {
+        return {
+            pending: {
+                collecte: true
+            },
+        }
+    },
 
     computed: {
         ...mapState(['collectes','collecte']),
 
-        data() {
-            return {
-                pending: {
-                    collecte: true
-                },
-            }
-        },
 
         /**
          * filtre les collectes en fonction de l'id de la collecte concernée
@@ -47,14 +52,15 @@ export default {
          * @param {number} id L'ID de la collecte à charger
          */
         loadCollecte(id) {
-            // this.pending.collecte = true;
+            this.pending.collecte = true;
+
             this.$app.apiGet('data/GET/collecte/'+id, {
                 environnement: 'private',
                 afficher_corbeille: 'aussi'
             })
             .then((data) => {
                 this.setCollecte(data);
-            }).catch(this.$app.catchError);
+            }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
     },
     /**

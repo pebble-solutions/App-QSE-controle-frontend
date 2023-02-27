@@ -390,7 +390,7 @@ export default {
 			}
 
             searchConsultation(this.searchOptions, this.$app).then(data => {
-				if(this.searchOptions.mode =='collecte') {
+				if(this.searchOptions.mode == 'collecte') {
 					if(mode == 'append') {
 						if(!data.length) {
 							this.noMoreAvailable = true
@@ -402,11 +402,12 @@ export default {
 						this.noMoreAvailable = false;
 						this.searchOptions.start = 0;
 						this.setSearchResults(data);
-	
 					}
 				}
 
-				this.routeToVue(this.searchOptions.mode)
+				if (mode !== 'append') {
+					this.routeToVue(this.searchOptions.mode);
+				}
             }).catch(this.$app.catchError).finally(() => { 
 				this.pending.search = false;
 				this.pending.loadMore = false;
