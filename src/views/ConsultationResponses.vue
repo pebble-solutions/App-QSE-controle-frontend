@@ -84,7 +84,8 @@ export default {
         loadCollecte(id) {
             this.pending.collecte = true;
             this.$app.apiGet('data/GET/collecte/'+id, {
-                environnement: 'private'
+                environnement: 'private',
+                afficher_corbeille: 'aussi'
             })
             .then((data) => {
                 this.setCollecte(data);

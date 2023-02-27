@@ -106,8 +106,13 @@
                         <div class="list-group list-group-flush">
                             <div class="list-group-item" v-for="question in getBlocQuestions(bloc)" :key="question.id">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <em class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">{{question.ligne}}</em>
+                                    <em class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
+                                        {{question.ligne}}
+                                    </em>
                                     <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
+                                </div>
+                                <div class="fs-7 text-muted" v-if="question.corbeille === 'OUI'">
+                                    <i class="bi bi-trash me-1"></i> Cette question n'existe plus dans la dernière version du formulaire
                                 </div>
                                 <div>
                                     <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
