@@ -178,9 +178,8 @@ export default {
 				df: null,
 				mode: 'collecte',
 				start: 0,
-				limit: 10,
-			},
-			// isMoreAvailable: false
+				limit: 50,
+			}
 		}
 	},
 

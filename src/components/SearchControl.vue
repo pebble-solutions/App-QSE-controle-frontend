@@ -157,13 +157,10 @@ export default {
                 df: this.searchDf,
                 mode: this.searchMode,
                 start: this.searchStart,
-                limit: this.searchLimit,
-
-
+                limit: this.searchLimit
             }, this.$app).then(data => {
                 this.$emit('search-result', data);
                 this.setSearchResults(data);
-                    
                 this.routeToVue(this.searchMode);
             }).catch(this.$app.catchError).finally(() => this.updateVal('pendingSearch', false));
         },
