@@ -61,14 +61,7 @@ export default {
 
         projetName() {
             let projectInfo = this.projets.find(e => e.id == this.$route.params.idProjet);
-                console.log(this.projets, 'porjets')
-            if (projectInfo) {
-                console.log(projectInfo);
-                return projectInfo.intitule;
-            }
-            else { 
-                return 'Nom du projet' ;
-            }
+            return projectInfo ? projectInfo.intitule : "Projet non trouvé";
         },		
 
         /**

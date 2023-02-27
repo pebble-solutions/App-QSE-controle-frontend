@@ -72,7 +72,10 @@ export default {
 		 * @return {string}
 		 */
 		personnelName() {
-			return this.getPersonnelNameFromId(this.collecte.cible__structure__personnel_id);
+			if (this.collecte.cible__structure__personnel_id) {
+				return this.collecte.cible_nom ?? "Personnel introuvable";
+			}
+			return "Personnel non-définit";
 		},
 
 		/**
@@ -86,9 +89,6 @@ export default {
     },
 
     methods: {
-
-		
-
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
 		 * 
@@ -107,19 +107,6 @@ export default {
 		},
 
 		/**
-		 * Récupère le nom d'un personnel actif via un id
-		 * 
-		 * @param {number} personnelId l'id d'un personnel actif
-		 * 
-		 * @return {string}
-		 */
-		getPersonnelNameFromId(personnelId) {
-			if (!personnelId) return 'Personnel non renseigné';
-			else {
-				let personnelName = this.listActifs.find(personnel => personnel.id == personnelId);
-				return personnelName ? personnelName.cache_nom : `Personnel inconnu (${personnelId})`;
-			}
-		},/**
          * Retourne une classe CSS par rapport à une réponse S A M I
          * 
          * @param {string} reponse S A M I

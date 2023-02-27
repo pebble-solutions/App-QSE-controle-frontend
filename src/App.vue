@@ -80,12 +80,12 @@
 						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre recherche.
 					</alert-message>
 					
-							<div class="d-grid my-2" v-if="isMoreAvailable && searchOptions.mode === 'collecte'">
-								<button class="btn btn-outline-secondary" @click.prevent="loadMore()">
-								Charger +
-								<!-- <span class="spinner-border spinner-border-sm" role="status" ></span> -->
-								</button>
-							</div>
+					<div class="d-grid my-2" v-if="isMoreAvailable && searchOptions.mode === 'collecte'">
+						<button class="btn btn-outline-secondary" @click.prevent="loadMore()" :disabled="pending.loadMore">
+							<span class="spinner-border spinner-border-sm" v-if="pending.loadMore"></span>
+							Charger +
+						</button>
+					</div>
 					
 	
 				</template>
@@ -120,7 +120,7 @@ import FormStats from './components/FormStats.vue'
 import CollecteItem from './components/CollecteItem.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
-import collecteItemDone from './components/menu/collecteItemDone.vue';
+import CollecteItemDone from './components/menu/CollecteItemDone.vue';
 
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
@@ -144,6 +144,7 @@ export default {
 				projets: true,
 				search: true,
 				actifs: true,
+				loadMore: false
 			},
 			isConnectedUser: false,
 			appMenu: [
@@ -177,7 +178,7 @@ export default {
 				df: null,
 				mode: 'collecte',
 				start: 0,
-				limit: 50,
+				limit: 10,
 			},
 			// isMoreAvailable: false
 		}
@@ -253,7 +254,7 @@ export default {
 						this.loadCollectes();
 					}
 					else if (val == 'consultation') {
-						this.initConsultation();
+						this.loadConsultations();
 					}
 				}
 			}
@@ -376,30 +377,41 @@ export default {
 		/**
          * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
 		 * 
-		 * @param	{string}	searchOptions défini les paramètres envoyés au serveur via api POST
 		 * @param	{string}	mode 'set' par défaut: enregistre le retour de l'api et 'append' ajoute le retour de l'api aux résultats deja enregistrés
          */
-		initConsultation(mode) {
-			this.pending.search = true;
+		loadConsultations(mode) {
+
+			mode = typeof mode === 'undefined' ? 'set' : mode;
+
+			if (mode === 'append') {
+				this.pending.loadMore = true;
+			}
+			else {
+				this.pending.search = true;
+			}
+
             searchConsultation(this.searchOptions, this.$app).then(data => {
 				if(this.searchOptions.mode =='collecte') {
-					if(!mode){
+					if(mode == 'append') {
+						if(!data.length) {
+							this.noMoreAvailable = true
+						} else {
+							this.addSearchResults(data)
+						}
+					} 
+					else {
 						this.noMoreAvailable = false;
 						this.searchOptions.start = 0;
 						this.setSearchResults(data);
 	
 					}
-					else if(mode == 'append'){
-						if(!data.length){
-							this.noMoreAvailable =true
-						} else {
-							this.addSearchResults(data)
-						}
-					} 
 				}
 
 				this.routeToVue(this.searchOptions.mode)
-            }).catch(this.$app.catchError).finally(() => { this.pending.search = false });
+            }).catch(this.$app.catchError).finally(() => { 
+				this.pending.search = false;
+				this.pending.loadMore = false;
+			});
 		},
 
 		/**
@@ -409,7 +421,7 @@ export default {
 		loadMore() {
             if (this.isMoreAvailable) {
                 this.searchOptions.start += this.searchOptions.limit;
-                this.initConsultation('append');
+                this.loadConsultations('append');
             }
         },
 
@@ -436,7 +448,7 @@ export default {
 		ControleHeader,
 		Spinner,
 		SearchControl,
-		collecteItemDone,
+		CollecteItemDone,
 		ProjectItemDone}, 
 		//SearchControl,
 	mounted() {
