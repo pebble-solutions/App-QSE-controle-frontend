@@ -14,7 +14,7 @@
                 </template>
         
                 <template v-else>
-                    <div class="card mt-3" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd')">
+                    <div class="card mt-3" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd' && !$route.params.bloc && $route.name !='CollecteVerif')">
                         <intro></intro>
                     </div>
                 </template>
