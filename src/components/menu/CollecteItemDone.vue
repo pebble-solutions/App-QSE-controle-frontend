@@ -75,7 +75,7 @@ export default {
 			if (this.collecte.cible__structure__personnel_id) {
 				return this.collecte.cible_nom ?? "Personnel introuvable";
 			}
-			return "Personnel non-définit";
+			return "Personnel non renseigné";
 		},
 
 		/**

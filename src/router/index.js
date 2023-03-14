@@ -113,7 +113,12 @@ const routes = [
         }
       ]
 
-  }
+  },
+  {
+    path: '/qualite_1',
+    name: 'qualite_1',
+    component: () => import("../views/QualiteNiveau1.vue"),
+  },
 
 ]
 
