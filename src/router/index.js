@@ -59,7 +59,12 @@ const routes = [
         path:'collecte-end',
         name: 'CollectKnEnd',
         component: () => import('../views/CollecteKNEnd.vue')
-      }
+      },
+      {
+        path:'collecte-verif',
+        name: 'CollecteVerif',
+        component: () => import('../views/CollecteVerif.vue')
+      },
     ]
   },
 
@@ -113,7 +118,12 @@ const routes = [
         }
       ]
 
-  }
+  },
+  {
+    path: '/qualite_1',
+    name: 'qualite_1',
+    component: () => import("../views/QualiteNiveau1.vue"),
+  },
 
 ]
 

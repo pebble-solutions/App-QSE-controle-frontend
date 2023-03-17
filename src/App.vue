@@ -23,6 +23,8 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
+				<AppMenuItem href="/qualite_1" look="dark" icon="bi bi-star">Qualité</AppMenuItem>
+
 			</AppMenu>
 		</template>
 
@@ -89,6 +91,9 @@
 					
 	
 				</template>
+			</AppMenu>
+			<AppMenu v-else-if="listMode === 'qualite'">
+					Menu des vérifications de niveau 1 et 2
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
@@ -211,6 +216,9 @@ export default {
 				]
 				.includes(this.$route.name)) {
 				return 'consultation';
+			}
+			else if (['qualite_1'].includes(this.$route.name)) {
+				return 'qualite'
 			}
 			else if (['Home'].includes(this.$route.name)) {
 				return 'home';

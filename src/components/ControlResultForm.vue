@@ -15,9 +15,13 @@
         </div>
 
         <div class="card-body">
-            <h3>Votre évaluation générale pour ce contrôle</h3>
+            <div class="bg-light rounded p-3">
 
-            <FormModuleSAMI :question="{id: 'end'}" v-model:value="itemResponse.result" />
+                <h3>Votre évaluation générale pour ce contrôle</h3>
+    
+                <FormModuleSAMI :question="{id: 'end'}" v-model:value="itemResponse.result" />
+            </div>
+            <hr>
 
             <div>
                 <label for="collecte_rapport" class="fs-5 form-label">Vos remarques complémentaires:</label>
@@ -40,13 +44,25 @@
                     
                     @upload-success="addDocument($event)"/>
             </div>
-
-            <div class="d-flex  mt-3" @click.prevent="validate()">
-                <button type="button" class="d-block w-100 btn btn-lg btn-success" :disabled="pending.validation">
-                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
-                    <i v-else class="bi bi-clipboard-check"></i>
-                    Valider
-                </button>
+            <div class="row g-4">
+                <div class="col">
+                    <div class="d-flex  mt-3" @click.prevent="read()">
+                        <button type="button" class="d-block w-100 btn btn-lg btn-outline-secondary" :disabled="pending.validation">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
+                            <i v-else class="bi bi-info-square me-2"></i>
+                            Consulter
+                        </button>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="d-flex  mt-3" @click.prevent="validate()">
+                        <button type="button" class="d-block w-100 btn btn-lg btn-primary" :disabled="pending.validation">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
+                            <i v-else class="bi bi-check-square me-2"></i>
+                            Terminer
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -80,7 +96,7 @@ export default {
                 result: '',
                 rapport: '',
                 environnement: 'private',
-                done: 'OUI',
+                done: '',
                 actions: ''
             },
             pending: {
@@ -126,9 +142,10 @@ export default {
          */
         validate() {
             this.pending.validation = true;
+            this.itemResponse.done = 'OUI';
 
-            if (confirm('Une fois le contrôle validé, vous ne pourrez plus le modifier. Confirmez-vous la validation?')) {
-                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
+            if (confirm('Une fois le contrôle terminé, vous ne pourrez plus le modifier. Confirmez-vous l\'enregistrement définitif de ce contrôle ?')) {
+                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
                 .then((data) => {
                     return this.refreshCollectes([data]);
                 })
@@ -140,11 +157,37 @@ export default {
                 .then((collecte) => {
                     this.refreshCollecte(collecte);
                     this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
+
                 })
                 .catch(this.$app.catchError).finally(() => this.pending.validation = false);
             } else {
                 this.pending.validation = false;
             }
+        },
+        
+        read() {
+            this.pending.validation = true;
+            this.itemResponse.done ='NON'
+
+            
+                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
+                .then((data) => {
+                    return this.refreshCollectes([data]);
+                })
+                .then(() => {
+                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                        environnement: 'private'
+                    });
+                })
+                .then((collecte) => {
+                    this.refreshCollecte(collecte);
+                    this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
+
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
+            
+            this.pending.validation = false;
+                 
         },
 
         /**
