@@ -107,11 +107,16 @@
                             <template v-for="question in getBlocQuestions(bloc)" :key="question.id">
                                 <div class="list-group-item" v-if="question.corbeille !== 'OUI' || getQuestionReponse(question)">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <em class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
+                                        <span class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
                                             {{question.ligne}}
-                                        </em>
-                                        <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)">{{getQuestionReponse(question)}}</strong>
+                                        </span>
+                                        <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)" v-if="['sami', 'integer', 'float'].includes(question.type)">{{getQuestionReponse(question)}}</strong>
                                     </div>
+
+                                    <em v-if="!['sami', 'integer', 'float'].includes(question.type)" class="d-block">
+                                        {{ getQuestionReponse(question) }}
+                                    </em>
+
                                     <div class="fs-7 text-muted" v-if="question.corbeille === 'OUI'">
                                         <i class="bi bi-trash me-1"></i> Cette question n'existe plus dans la dernière version du formulaire
                                     </div>

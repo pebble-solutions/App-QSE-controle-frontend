@@ -115,7 +115,7 @@ export default {
                 let itemReponse = {};
 
                 itemReponse.question = resp.ligne;
-                itemReponse.reponse = resp.data_var;
+                itemReponse.reponse = resp.data;
                 itemReponse.commentaire = resp.commentaire;
                 itemReponse.documents = resp.documents;
 

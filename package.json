@@ -18,6 +18,7 @@
     "dropzone": "^6.0.0-beta.2",
     "firebase": "^9.13.0",
     "google-charts": "^2.0.0",
+    "js-date-to-sql-datetime": "^1.2.7",
     "jwt-decode": "^3.1.2",
     "string-to-color": "^2.2.2",
     "vue": "^3.0.0",
