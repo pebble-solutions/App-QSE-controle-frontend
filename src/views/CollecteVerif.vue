@@ -2,13 +2,13 @@
     <div class="container py-2 px-0">
         <spinner v-if="pending.collecte" />
         <template v-else>
-            <div class="d-flex justify-content-between">
-                <h2 class="fw-lighter">Visualisation de votre contrôle en attente de validation</h2>
-                <button class="btn btn-outline-primary" @click.prevent="routeToBilan()">
-                    <i class="bi bi-file-earmark-text"></i>
-                    Bilan du contrôle
-                </button>
-            </div>
+            
+                <alert-message class="card">
+                    Le contrôle de {{ collecte.cible_nom }} est en attente de validation
+                </alert-message>
+               
+                <BlocNavigation></BlocNavigation>
+            
             <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             
             <router-view></router-view>
@@ -23,9 +23,10 @@ import {mapState} from 'vuex';
 
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
-
+import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
+import BlocNavigation from '../components/BlocNavigation.vue';
 export default {
-    components:{ConsultationCollecteResume, Spinner}, 
+    components:{ConsultationCollecteResume, Spinner, AlertMessage, BlocNavigation}, 
 
     data() {
         return {

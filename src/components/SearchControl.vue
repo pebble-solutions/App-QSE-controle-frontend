@@ -65,7 +65,9 @@ export default {
             modesDict: {
                 collecte: "Tous les contrôles",
                 formulaire: "Grouper par questionnaire",
-                projet: "Grouper par projet"
+                projet: "Grouper par projet",
+                
+
             },
             
 

@@ -4,7 +4,7 @@
         <div class="card-body">
             <div class="card-title">
                 <label for="context" class="form-label">
-                    Décrivez ici le contexte général dans lequel se déroule le contrôle:
+                    Contexte général du contrôle:
                 </label>
 
                 <textarea class="form-control" id="context" name="context" rows="6" placeholder="contexte..." v-model="itemResponse.commentaire"></textarea>
@@ -29,7 +29,7 @@ export default {
     data() {
         return {
             itemResponse: {
-                commentaire: null,
+                commentaire: '',
                 environnement: 'private'
             },
             pending: {

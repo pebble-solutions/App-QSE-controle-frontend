@@ -15,39 +15,39 @@
         </div>
 
         <div class="card-body">
-            <div class="bg-light rounded p-3">
-
-                <h3>Votre évaluation générale pour ce contrôle</h3>
-    
+            <div class="mb-3">
+                <h3>Votre évaluation générale pour ce contrôle :</h3>
                 <FormModuleSAMI :question="{id: 'end'}" v-model:value="itemResponse.result" />
             </div>
             <hr>
-
             <div>
                 <label for="collecte_rapport" class="fs-5 form-label">Vos remarques complémentaires:</label>
                 <textarea class="form-control" id="collecte_rapport" v-model="itemResponse.rapport"></textarea>
             </div>
-
+            
             <div class="mt-3">
                 <label for="collecte_action" class="fs-5 form-label ">Actions correctives proposées:</label>
                 <textarea class="form-control" id="collecte_action" v-model="itemResponse.actions"></textarea>
             </div>
-
+            
+            
             <div class="mt-3">
                 <label class="fs-5">Joindre des fichiers</label>
                 <dropzone-document
-                    :dropzoneId="'dz-file-'+collecte.id" 
-                    :toolbar="['open']" 
-                    :params="dzParams" 
-                    :url="dzUrl" 
-                    :documents="collecte.documents" 
-                    
-                    @upload-success="addDocument($event)"/>
+                :dropzoneId="'dz-file-'+collecte.id" 
+                :toolbar="['open']" 
+                :params="dzParams" 
+                :url="dzUrl" 
+                :documents="collecte.documents" 
+                
+                @upload-success="addDocument($event)"/>
             </div>
+            <hr>
             <div class="row g-4">
+               
                 <div class="col">
                     <div class="d-flex  mt-3" @click.prevent="read()">
-                        <button type="button" class="d-block w-100 btn btn-lg btn-outline-secondary" :disabled="pending.validation">
+                        <button type="button" class="d-block w-100 btn btn-outline-secondary" :disabled="pending.validation">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
                             <i v-else class="bi bi-info-square me-2"></i>
                             Consulter
@@ -56,7 +56,7 @@
                 </div>
                 <div class="col">
                     <div class="d-flex  mt-3" @click.prevent="validate()">
-                        <button type="button" class="d-block w-100 btn btn-lg btn-primary" :disabled="pending.validation">
+                        <button type="button" class="d-block w-100 btn btn-outline-primary" :disabled="pending.validation">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
                             <i v-else class="bi bi-check-square me-2"></i>
                             Terminer
@@ -65,7 +65,8 @@
                 </div>
             </div>
         </div>
-    </div>
+
+        </div>
 
     <div v-else>
         <spinner></spinner>
@@ -189,6 +190,9 @@ export default {
             this.pending.validation = false;
                  
         },
+        plan(){
+            confirm('souhaitez vous programmer un nouveau contrôle?')
+        },
 
         /**
          * Ajout une document à la collection de documents liés à la collecte
@@ -204,6 +208,7 @@ export default {
         if (this.collecte) {
             this.itemResponse.rapport = this.collecte.rapport;
             this.itemResponse.result = this.collecte.result_var;
+            this.itemResponse.actions = this.collecte.actions;
             
         }
 

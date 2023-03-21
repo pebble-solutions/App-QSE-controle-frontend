@@ -84,6 +84,7 @@ export default {
          */
         deleteCollecte() {
             this.pending.delete = true;
+            console.log(this.collecte.id,'delete');
             this.$app.apiPost('data/DELETE/collecte/'+this.collecte.id).then(() => {
                 this.removeCollecte(this.collecte);
                 this.$emit("deleted", this.collecte);
@@ -98,6 +99,7 @@ export default {
             this.tmpCollecte.environnement = 'private';
             
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte).then(data => {
+                console.log(data);
                 this.refreshCollectes([data]);
                 this.refreshNbTodoFormulaires(data.information__groupe_id);
                 this.$emit('updated', data);

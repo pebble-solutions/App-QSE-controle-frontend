@@ -32,7 +32,7 @@ export default {
 
     methods: {
         /**
-         * Affiche la liste des KN programé sur le formulaire
+         * Affiche 
          * 
          * @param {object} collecte
          */

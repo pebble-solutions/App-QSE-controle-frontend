@@ -58,13 +58,21 @@ const routes = [
       {
         path:'collecte-end',
         name: 'CollectKnEnd',
-        component: () => import('../views/CollecteKNEnd.vue')
+        component: () => import('../views/CollecteKNEnd.vue'),
+        // children: [
+        //   {
+        //     path:'collecte-Control',
+        //     name: 'CollecteControl',
+        //     component: () => import('../views/CollecteControl.vue')
+        //   },
+        // ],
       },
       {
         path:'collecte-verif',
         name: 'CollecteVerif',
         component: () => import('../views/CollecteVerif.vue')
       },
+
     ]
   },
 

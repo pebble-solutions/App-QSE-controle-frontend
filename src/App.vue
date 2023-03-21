@@ -47,11 +47,15 @@
 					<Spinner />
 				</template>
 				<template v-else>
+					<!-- <alert-message class-name="m-2" v-if="noVal(formulaires)" >Il n'y a aucun contrôle programmé.</alert-message> -->
+					<alert-message class-name="m-2" v-if="!exist(formulaires)" >Il n'y a aucun contrôle programmé</alert-message>
+					<!-- <alert-message class-name="m-2" v-if="exist(formulaires)" >contrôle</alert-message> -->
+
+
 					<template v-for="form in formulaires" :key="form.id">
 						<AppMenuItem :href="'/programmation/'+form.id" v-if="form.nb_todo" >
 							<formulaire-item :num="form.nb_todo" :formulaire="form" />
 						</AppMenuItem>
-					<alert-message class-name="m-2" v-if="noVal(formulaires)">Il n'y a aucun contrôle programmé.</alert-message>
 					</template>
 				</template>
 			</AppMenu>
@@ -111,6 +115,9 @@
 <style lang="scss">
 .fs-7 {
 	font-size: 0.80rem !important;
+}
+.progress-ht{
+	height: 25px !important;
 }
 </style>
 
@@ -198,7 +205,7 @@ export default {
 		 * @return {string}
 		 */
 		listMode() {
-			if (['collecte', 'collecteKN', 'collecteKnBloc', 'CollectKnEnd','UnexpectedCollecte'].includes(this.$route.name)) {
+			if (['collecte', 'collecteKN', 'collecteKnBloc', 'CollectKnEnd','UnexpectedCollecte','CollecteVerif'].includes(this.$route.name)) {
 				return 'collecte';
 			}
 			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
@@ -377,9 +384,36 @@ export default {
 		 * @return {boolean}
 		 */
 		noVal(val) {
+
 			if (!val) return true;
 			if (!val.length) return true;
 			return false;
+		},
+
+		/**boucle dans la collection de formulaire pour voir s'il existe un nb.todo!=0
+		 * si tous sont nuls, retourne false
+		 * 
+		 * @param	{array}	le tableau à parcourir
+		 */
+
+		exist(val) {
+			let liste = val;
+			let compteur = 0
+			
+			for (let form of liste) {
+				console.log('à afficher', form.nb_todo);
+				let result= form.nb_todo;
+				if (result === 0){
+					compteur += 0
+				}
+				else compteur += 1;
+			}
+			if (compteur > 0){
+				return true
+			} else {
+				return false
+			}
+		
 		},
 		/**
          * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.

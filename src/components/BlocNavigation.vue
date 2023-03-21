@@ -1,8 +1,7 @@
 <template>
     <div class="dropdown">
-        <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-list"></i>
-            <!-- Etapes -->
+        <button class="btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-list me-2"></i>Retour au contrôle
         </button>
 
         <ul class="dropdown-menu">
@@ -15,7 +14,7 @@
 
             <li>
                 <button class="dropdown-item d-flex justify-content-between" @click.prevent="navigate('end')" type="button">
-                    Évaluation générale
+                    Bilan du contrôle
                     <i class="bi bi-check2" v-if="!currentBlocId"></i>
                 </button>
             </li>

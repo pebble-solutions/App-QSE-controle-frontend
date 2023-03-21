@@ -2,19 +2,19 @@
     <div class="d-flex justify-content-between">
         <button class="btn btn-secondary" v-if="prevBloc" @click.prevent="navigate(prevBloc)" :disabled="pending.bloc">
             <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status"></span>
-            <i v-else class="bi bi-box-arrow-left"></i> 
+            <i v-else class="bi bi-box-arrow-left me-2"></i> 
             {{ prevBloc.bloc }}
         </button>
 
         <button class="btn btn-secondary ms-auto" v-if="nextBloc" @click.prevent="navigate(nextBloc)" :disabled="pending.bloc">
             {{nextBloc.bloc}} 
             <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status"></span>
-            <i v-else class="bi bi-box-arrow-right"></i>
+            <i v-else class="bi bi-box-arrow-right ms-2"></i>
         </button>
 
         <button v-else class="btn btn-outline-primary ms-auto" @click.prevent="navigate('end')" :disabled="pending.bloc">
             <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status"></span>
-            <i v-else class="bi bi-file-earmark-text"></i>
+            <i v-else class="bi bi-file-earmark-text me-2"></i>
             Bilan du contrôle
         </button>
     </div>

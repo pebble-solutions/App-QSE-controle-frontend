@@ -42,7 +42,6 @@
                                 <span class="fw-lighter">{{controleur}}</span>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -55,14 +54,14 @@
                 </div>
                 
                 <div class="my-2" v-if="collecte.commentaire">
-                    <strong class="d-block">Commentaire général :</strong>
+                    <strong class="d-block">Contexte:</strong>
                     <div class="ms-2 fw-lighter">
                         {{collecte.commentaire}}
                     </div>
                 </div>
 
                 <div class="my-2">
-                    <strong class="d-block">Rapport final :</strong>
+                    <strong class="d-block">Commentaire final :</strong>
                     <div class="ms-2 fw-lighter">
                         {{collecte.rapport}}
                     </div>
@@ -76,10 +75,11 @@
                 </div>
             </div>
         </div>
+        
  
         <div v-if="collecte.documents.length" class="card my-3">
             <div class="card-body">
-                <h5 class="mb-3"><i class="bi bi-cloud-check"></i> Fichiers joints</h5>
+                <h5 class="mb-3"><i class="bi bi-cloud-check me-1"></i> Fichiers joints</h5>
                 <div class="list-group">
                     <file-item :document="document" v-for="document in collecte.documents" :key="document.id" />
                 </div>
@@ -90,7 +90,7 @@
             <div class="card-header d-flex align-items-baseline justify-content-between">
                 <h4 class="fs-5 card-title">Nombre d'items évalués</h4> 
                 <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
-                {{collecte.nb_reponse}} / {{collecte.nb_question}}
+                    {{collecte.nb_reponse}} / {{collecte.nb_question}}
                 </div>
             </div>
 
@@ -98,11 +98,21 @@
                 <div v-for="bloc in blocs" :key="'bloc-'+bloc.id" class="accordion-item">
                     <h2 class="accordion-header" :id="'heading-'+bloc.id">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-'+bloc.id" aria-expanded="true" :aria-controls="'collapse-'+bloc.id">
-                            {{bloc.bloc}}
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <div> {{bloc.bloc}}  </div>
+
+                                <div class="btn-group progress progress-ht me-3">
+                                    <div class="btn progress-bar bg-success" role="progressbar" style="width: 45%" >8</div>
+                                    <div class="btn progress-bar bg-primary" role="progressbar" style="width: 30%" >6</div>
+                                    <div class="btn progress-bar bg-warning" role="progressbar" style="width: 20%" >4</div>
+                                    <div class="btn progress-bar bg-danger" role="progressbar" style="width: 6%" >2</div>
+                                </div>
+                            </div>
+                            <!-- {{bloc.bloc}}  -->
                         </button>
                     </h2>
 
-                    <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id">
+                    <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse-show" :aria-labelledby="'heading-'+bloc.id">
                         <div class="list-group list-group-flush">
                             <template v-for="question in getBlocQuestions(bloc)" :key="question.id">
                                 <div class="list-group-item" v-if="question.corbeille !== 'OUI' || getQuestionReponse(question)">
@@ -132,6 +142,9 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <CollecteHistory></CollecteHistory>
+            </div>
         </div>
 
         <div class="text-center my-3" v-if="!readonly">
@@ -147,6 +160,7 @@ import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
 import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
+import CollecteHistory from './CollecteHistory.vue';
 
 export default {
     props: {
@@ -303,6 +317,6 @@ export default {
         },
     },
 
-    components: { UserImage, FileItem }
+    components: { UserImage, FileItem, CollecteHistory }
 }
 </script>
