@@ -2,22 +2,35 @@
     <div v-if="collecte">
         <div class="card my-2">
             <div class="card-header">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="fs-5 card-title">
-                        <span class="fw-lighter me-1"><span class="text-secondary">#{{ collecte.id }}</span> <strong>{{collecte.formulaire.groupe}}</strong> du {{changeFormatDateLit(collecte.date)}}</span>
-                    </h4>
-                    <div class="text-success border border-success badge rounded-pill text-bg-light" v-if="collecte.date_done">
-                        <i class="bi bi-calendar-check me-1"></i>
-                        <span class="d-none d-sm-inline">Validé le</span>
-                        {{changeFormatDateLit(collecte.date_done)}}
-                    </div>
-                </div>
-                <div>
-                    Note générale:
-                    <div v-if="collecte.result_var && collecte.result_var != 'null'" class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
-                        {{collecte.result_var}}
-                    </div>
-                    <div v-else class="badge fs-5 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">Non renseignée</div>
+
+                <div class="timeline d-flex align-items-start justify-content-between">
+                    <a href="#" class="timeline-el link-secondary">
+                        <div class="timeline-label">
+                            <span class="badge text-bg-warning mb-1">M</span><br>
+                            <i class="bi bi-arrow-left"></i> <span class="fw-light">230</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="timeline-el link-secondary active">
+                        <div class="timeline-label">
+                            <span class="badge text-uppercase fs-5 mb-1" :class="classNameFromSAMI(collecte.result_var)">{{ collecte.result_var }}</span><br>
+                            <h4 class="fs-5 card-title">
+                                <span class="fw-lighter me-1"><span class="text-secondary">#{{ collecte.id }}</span> <strong>{{collecte.formulaire.groupe}}</strong> du {{changeFormatDateLit(collecte.date)}}</span>
+                            </h4>
+                            <div class="text-success border border-success badge rounded-pill text-bg-light" v-if="collecte.date_done">
+                                <i class="bi bi-calendar-check me-1"></i>
+                                <span class="d-none d-sm-inline">Validé le</span>
+                                {{changeFormatDateLit(collecte.date_done)}}
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#" class="timeline-el link-secondary">
+                        <div class="timeline-label">
+                            <span class="badge text-bg-success mb-1">S</span><br>
+                            <span class="fw-light">270</span> <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </a>
                 </div>
             </div>
 
@@ -146,6 +159,33 @@
         </div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.timeline {
+    position: relative;
+}
+
+.timeline:before {
+    content: '';
+    display:block;
+    position:absolute;
+    top:12px;
+    left:0px;
+    right:0px;
+    border-bottom:2px solid #dee2e6;
+    z-index:0;
+}
+
+.timeline-el {
+    text-align:center;
+    z-index: 10;
+    text-decoration: none;
+}
+
+.timeline-el.active {
+    font-weight: bold;
+}
+</style>
 
 <script>
 import date from 'date-and-time';
