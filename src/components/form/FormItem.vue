@@ -1,13 +1,13 @@
 <template>
 
-    <div class="accordion-item">
+    <div class="accordion-item" v-if="inited">
 
         <h3 class="accordion-header" :id="headerId">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="bodyId" aria-expanded="true" :aria-controls="bodyId">
                 <span>{{question.ligne}}</span>
                 <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
 
-                <FormModuleSAMIHeader :value="value" />
+                <FormModuleSAMIHeader :value="value" v-if="question.type == 'sami'" />
             </button>
         </h3>
 
@@ -17,9 +17,12 @@
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
 
                 <FormModuleSAMI :question="question" v-model:value="value" v-if="question.type == 'sami'" />
+                <form-module-text :question="question" v-model:value="value" v-else-if="['text', 'textarea'].includes(question.type)" />
+                <form-module-number :question="question" v-model:value="value" v-else-if="['integer', 'float'].includes(question.type)" />
+                <form-module-date :question="question" v-model:value="value" v-else-if="['date', 'datetime'].includes(question.type)" />
                 <FormModuleNone v-else />
 
-                <textarea rows="3" class="form-control mt-3"  placeholder="Votre commentaire" v-model="commentaire"></textarea>
+                <textarea rows="3" class="form-control mt-3"  placeholder="Votre commentaire" v-model="commentaire" v-if="acceptComment"></textarea>
 
                 <dropzone-comp 
                     :dropzoneId="dzId" 
@@ -42,9 +45,12 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import DropzoneComp from '../dropzone/DropzoneDocument.vue';
+import FormModuleDate from './FormModuleDate.vue';
 import FormModuleNone from './FormModuleNone.vue';
+import FormModuleNumber from './FormModuleNumber.vue';
 import FormModuleSAMI from './FormModuleSAMI.vue';
 import FormModuleSAMIHeader from './FormModuleSAMIHeader.vue';
+import FormModuleText from './FormModuleText.vue';
 
 export default {
 
@@ -130,6 +136,24 @@ export default {
          */
         dzUrl() {
             return this.$app.licence.apiBaseURL+'data/POST/collecte/'+this.collecte.id+'/file';
+        },
+
+        /**
+         * Retourne true si le champ accepte un commentaire
+         * @return {bool}
+         */
+        acceptComment() {
+            const types = {
+                sami: 'comment_sami',
+                text: 'comment_text',
+                textarea: 'comment_textarea',
+                integer: 'comment_number',
+                float: 'comment_number',
+                date: 'comment_date',
+                datetime: 'comment_date'
+            };
+
+            return this.collecte.formulaire[types[this.question.type]];
         }
     },
 
@@ -163,10 +187,19 @@ export default {
             this.inited = false;
             
             const response = this.responses.find(e => e.question == this.question.id);
+
+            let val = response ? response.reponse : null;
+
+            if (this.question.type === 'float') {
+                val = parseFloat(val);
+            }
+            if (this.question.type === 'integer') {
+                val = parseInt(val);
+            }
             
             this.itemResponse = {
                 question: this.question.id,
-                reponse: response ? response.reponse : null,
+                reponse: response ? val : null,
                 commentaire: response ? response.commentaire : null,
                 bloc: this.question.information__bloc_id,
                 documents: response ? response.documents : []
@@ -174,7 +207,7 @@ export default {
 
             if (response) {
                 this.commentaire = response.commentaire;
-                this.value = response.reponse;
+                this.value = val;
             }
 
             this.inited = true;
@@ -194,7 +227,7 @@ export default {
         this.initValues();
     },
 
-    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp }
+    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate }
 }
 
 </script>
