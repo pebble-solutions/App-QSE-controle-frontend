@@ -205,7 +205,7 @@ export default {
 		 * @return {string}
 		 */
 		listMode() {
-			if (['collecte', 'collecteKN', 'collecteKnBloc', 'CollectKnEnd','UnexpectedCollecte','CollecteVerif'].includes(this.$route.name)) {
+			if (['collecte', 'CollecteNext','collecteKN', 'collecteKnBloc', 'CollectKnEnd','UnexpectedCollecte','CollecteVerif'].includes(this.$route.name)) {
 				return 'collecte';
 			}
 			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
@@ -401,7 +401,6 @@ export default {
 			let compteur = 0
 			
 			for (let form of liste) {
-				console.log('à afficher', form.nb_todo);
 				let result= form.nb_todo;
 				if (result === 0){
 					compteur += 0

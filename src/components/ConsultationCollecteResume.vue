@@ -160,9 +160,7 @@
                     </div>
                 </div>
             </div>
-            <div>
-                <CollecteHistory></CollecteHistory>
-            </div>
+           
         </div>
 
         <div class="text-center my-3" v-if="!readonly">
@@ -205,7 +203,6 @@ import date from 'date-and-time';
 import fr from 'date-and-time/locale/fr';
 import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
-import CollecteHistory from './CollecteHistory.vue';
 
 export default {
     props: {
@@ -362,6 +359,6 @@ export default {
         },
     },
 
-    components: { UserImage, FileItem, CollecteHistory }
+    components: { UserImage, FileItem }
 }
 </script>

@@ -10,17 +10,16 @@
                     
                     <AlertMessage class ="card" :dismissible="true">
 
-                        Le contrôle de {{ collecte.cible_nom }} (#{{ collecte.id }}) est enregistré et n'est plus modifiable. <br>
+                        Le contrôle de {{collecte.cible_nom}} (#{{collecte.id}}) est enregistré et n'est plus modifiable. <br>
                         Vous pourrez le retrouver via le menu consultation.<br>
                         Souhaitez-vous programmer un nouveau contrôle?
                     </AlertMessage>
-                        <router-link to="/collecte/new" custom v-slot="{ navigate, href }">
+                        <router-link :to="'/collecte/'+this.$route.params.id+'/next'" custom v-slot="{ navigate, href }"> 
                             <a class="btn btn-outline-primary col" :href="href" @click="navigate">
                                 <i class="bi bi-plus-square me-2"></i>Prochain contrôle
                             </a>
                         </router-link>
                 
-                        <!-- <alert-message icon="bi-check-circle" variant="success">Ce contrôle est terminé</alert-message> -->
                     
                     <consultation-collecte-resume :collecte="collecte" :readonly="true"/>
 
