@@ -6,7 +6,10 @@
                 <CollecteHeaderToolbar :collecte="collecte" />
             </div>
             <div class="d-flex align-items-center">
-                <button class="btn btn-secondary me-2">Liste des étapes</button>
+                <button class="btn btn-secondary me-2">
+                <i class="bi bi-list"></i>
+               <span class="ms-2 d-none d-md-inline">Liste des étapes</span> 
+            </button>
                 <button class="btn btn-secondary">
                     <i class="bi bi-save"></i>
                     <span class="ms-2 d-none d-md-inline">Enregistrer</span>

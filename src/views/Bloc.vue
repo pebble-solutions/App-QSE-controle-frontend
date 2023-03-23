@@ -14,7 +14,7 @@
                 Questions :  {{nbAnswers}} / {{lignes?.length}}
             </div>
 
-            <BlocNavigationButtons :bloc="bloc" :blocs="formulaire.blocs" :pending="pending.bloc" @navigate="navigate($event)" />
+            <!-- <BlocNavigationButtons :bloc="bloc" :blocs="formulaire.blocs" :pending="pending.bloc" @navigate="navigate($event)" /> -->
         </div>
         
 
@@ -22,7 +22,7 @@
         
         
         <div class="card-footer">
-            <BlocNavigationButtons :bloc="bloc" :blocs="formulaire.blocs" :pending="pending.bloc" @navigate="navigate($event)" />
+            <!-- <BlocNavigationButtons :bloc="bloc" :blocs="formulaire.blocs" :pending="pending.bloc" @navigate="navigate($event)" /> -->
         </div>
     </div>
 

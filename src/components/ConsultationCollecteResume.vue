@@ -1,11 +1,8 @@
 <template>
     <div v-if="collecte">
-        {{ collecte.id }} {{ collecte.result_var }} {{ collecte.done }} {{ collecte.previous_id }}
         <div class="card my-2">
             <div class="card-header">
-
                 <Timeline :collecte="collecte" />
-                
             </div>
 
             <div class="card-body">
@@ -47,7 +44,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <strong class="d-block">Aucun contexte</strong>
+                    <strong class="d-block">Pas d'éléments de contexte</strong>
                 </div>
 
                 <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
@@ -67,7 +64,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <strong class="d-block">Aucune actions correctives proposées</strong>
+                    <strong class="d-block">Aucune action corrective proposée</strong>
                 </div>
             </div>
         </div>
@@ -95,7 +92,7 @@
                     <h2 class="accordion-header" :id="'heading-'+bloc.id">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-'+bloc.id" aria-expanded="true" :aria-controls="'collapse-'+bloc.id">
                             <div class="d-flex justify-content-between align-items-center w-100">
-                                <div> {{bloc.bloc}}  </div>
+                                <div> {{bloc.bloc}} </div>
 
                                 <div class="btn-group progress progress-ht me-3">
                                     <div class="btn progress-bar bg-success" role="progressbar" style="width: 45%" >8</div>

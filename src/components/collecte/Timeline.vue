@@ -24,9 +24,9 @@
                 <h4 class="fs-5 card-title">
                     <span class="fw-lighter me-1"><span class="text-secondary">#{{ collecte.id }}</span> <strong>{{collecte.formulaire.groupe}}</strong> du {{changeFormatDateLit(collecte.date)}}</span>
                 </h4>
-                <div class="text-success border border-success badge rounded-pill text-bg-light" v-if="collecte.date_done">
+                <div class="text-primary border border-primary badge rounded-pill text-bg-light" v-if="collecte.date_done">
                     <i class="bi bi-calendar-check me-1"></i>
-                    <span class="d-none d-sm-inline">Validé le</span>
+                    <span class="d-none d-sm-inline">Terminé le</span>
                     {{changeFormatDateLit(collecte.date_done)}}
                 </div>
             </div>

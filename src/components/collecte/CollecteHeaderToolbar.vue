@@ -5,7 +5,7 @@
     <span class="me-2 d-none d-md-inline">{{collecte.cible_nom}}</span>
     <span class="fw-lighter">
         <span class="me-2">#{{collecte.id}}</span>
-        <span>{{formulaireLabel}}</span>
+        <span>{{formulaireLabel}}XX</span>
     </span>
 </div>
 
