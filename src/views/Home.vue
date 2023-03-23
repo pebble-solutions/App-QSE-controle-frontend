@@ -45,10 +45,9 @@
 import { mapActions, mapState } from 'vuex';
 import Charts from '../components/Charts.vue';
 
-import date from 'date-and-time';
-import fr from 'date-and-time/locale/fr';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import UserImage from '../components/pebble-ui/UserImage.vue';
+import { dateFormat } from '../js/collecte';
 
 export default {
 	computed: {
@@ -95,10 +94,8 @@ export default {
 		 * sous le format 01 févr. 2021
 		 * @param {string} date 
 		 */
-
 		changeFormatDateLit(el) {
-			date.locale(fr);
-			return date.format(new Date(el), 'DD MMM YYYY')
+			return dateFormat(el);
 		},
 	},
 
