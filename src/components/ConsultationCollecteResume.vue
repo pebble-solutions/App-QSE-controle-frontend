@@ -1,37 +1,11 @@
 <template>
     <div v-if="collecte">
+        {{ collecte.id }} {{ collecte.result_var }} {{ collecte.done }} {{ collecte.previous_id }}
         <div class="card my-2">
             <div class="card-header">
 
-                <div class="timeline d-flex align-items-start justify-content-between">
-                    <a href="#" class="timeline-el link-secondary">
-                        <div class="timeline-label">
-                            <span class="badge text-bg-warning mb-1">M</span><br>
-                            <i class="bi bi-arrow-left"></i> <span class="fw-light">230</span>
-                        </div>
-                    </a>
-
-                    <a href="#" class="timeline-el link-secondary active">
-                        <div class="timeline-label">
-                            <span class="badge text-uppercase fs-5 mb-1" :class="classNameFromSAMI(collecte.result_var)">{{ collecte.result_var }}</span><br>
-                            <h4 class="fs-5 card-title">
-                                <span class="fw-lighter me-1"><span class="text-secondary">#{{ collecte.id }}</span> <strong>{{collecte.formulaire.groupe}}</strong> du {{changeFormatDateLit(collecte.date)}}</span>
-                            </h4>
-                            <div class="text-success border border-success badge rounded-pill text-bg-light" v-if="collecte.date_done">
-                                <i class="bi bi-calendar-check me-1"></i>
-                                <span class="d-none d-sm-inline">Validé le</span>
-                                {{changeFormatDateLit(collecte.date_done)}}
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="#" class="timeline-el link-secondary">
-                        <div class="timeline-label">
-                            <span class="badge text-bg-success mb-1">S</span><br>
-                            <span class="fw-light">270</span> <i class="bi bi-arrow-right"></i>
-                        </div>
-                    </a>
-                </div>
+                <Timeline :collecte="collecte" />
+                
             </div>
 
             <div class="card-body">
@@ -171,38 +145,11 @@
     </div>
 </template>
 
-<style lang="scss" scoped>
-.timeline {
-    position: relative;
-}
-
-.timeline:before {
-    content: '';
-    display:block;
-    position:absolute;
-    top:12px;
-    left:0px;
-    right:0px;
-    border-bottom:2px solid #dee2e6;
-    z-index:0;
-}
-
-.timeline-el {
-    text-align:center;
-    z-index: 10;
-    text-decoration: none;
-}
-
-.timeline-el.active {
-    font-weight: bold;
-}
-</style>
-
 <script>
-import date from 'date-and-time';
-import fr from 'date-and-time/locale/fr';
+import {classNameFromSAMI, dateFormat} from '../js/collecte';
 import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
+import Timeline from './collecte/Timeline.vue';
 
 export default {
     props: {
@@ -263,8 +210,7 @@ export default {
 		 */
 
 		changeFormatDateLit(el) {
-			date.locale(fr);
-			return date.format(new Date(el), 'DD MMM YYYY')
+			return dateFormat(el);
 		},
 
         /**
@@ -337,13 +283,7 @@ export default {
          * @return {string}
          */
         classNameFromSAMI(reponse) {
-            if (typeof reponse === 'string') {
-                if (reponse.toLowerCase() == 's') return 'text-bg-success';
-                else if (reponse.toLowerCase() == 'a') return 'text-bg-primary';
-                else if (reponse.toLowerCase() == 'm') return 'text-bg-warning';
-                else if (reponse.toLowerCase() == 'i') return 'text-bg-danger';
-            }
-            return 'text-bg-secondary';
+            return classNameFromSAMI(reponse);
         },
 
         /**
@@ -359,6 +299,6 @@ export default {
         },
     },
 
-    components: { UserImage, FileItem }
+    components: { UserImage, FileItem, Timeline }
 }
 </script>

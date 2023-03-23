@@ -1,10 +1,27 @@
 <template>
 
+    <HeaderToolbar v-if="collecte">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <CollecteHeaderToolbar :collecte="collecte" />
+            </div>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-secondary me-2">Liste des étapes</button>
+                <button class="btn btn-secondary">
+                    <i class="bi bi-save"></i>
+                    <span class="ms-2 d-none d-md-inline">Enregistrer</span>
+                </button>
+            </div>
+        </div>
+    </HeaderToolbar>
+
     <div class="container py-3">
         <template v-if="!pending.collecte">
             <template v-if="collecte">
 
                 <CollecteTitle :collecte="collecte" @projet-change="projetChange" />
+
+                <Timeline :collecte="collecte" />
 
                 <template v-if="collecte.done == 'OUI'">
                     
@@ -51,6 +68,9 @@ import Intro from '../components/Intro.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import CollecteTitle from '../components/CollecteTitle.vue';
+import HeaderToolbar from '../components/pebble-ui/toolbar/HeaderToolbar.vue';
+import CollecteHeaderToolbar from '../components/collecte/CollecteHeaderToolbar.vue';
+import Timeline from '../components/collecte/Timeline.vue';
 
 
 export default {
@@ -63,7 +83,7 @@ export default {
         }
     },
 
-    components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner,  CollecteTitle },
+    components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline },
 
     computed: {
         ...mapState(['collecte']),

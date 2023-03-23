@@ -1,19 +1,24 @@
 <template>
     <div class="card my-3" v-if="collecte" >
         <div class="card-header">
-            <div class="d-flex">
+            <div class="d-flex flex-column">
                 <h2 class="card-title">Bilan du contrôle</h2>
-
-                <div class="ms-auto">
-                    <bloc-navigation></bloc-navigation>
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                            <bloc-navigation></bloc-navigation>
+                    </div>
+                    <button class="btn btn-outline-secondary" @click.prevent="read()">Consulter</button>
                 </div>
-            </div>
 
+                
+                
+            </div>
+            
             <div v-if="stats">
                 <ControlSAMIStats :stats="samiStats" :collecte="collecte" />
             </div>
         </div>
-
+        
         <div class="card-body">
             <div class="mb-3">
                 <h3>Votre évaluation générale pour ce contrôle :</h3>
@@ -44,8 +49,8 @@
             </div>
             <hr>
             <div class="row g-4">
-               
-                <div class="col">
+                
+                <!-- <div class="col">
                     <div class="d-flex  mt-3" @click.prevent="read()">
                         <button type="button" class="d-block w-100 btn btn-outline-secondary" :disabled="pending.validation">
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
@@ -53,7 +58,7 @@
                             Consulter
                         </button>
                     </div>
-                </div>
+                </div> -->
                 <div class="col">
                     <div class="d-flex  mt-3" @click.prevent="validate()">
                         <button type="button" class="d-block w-100 btn btn-outline-primary" :disabled="pending.validation">

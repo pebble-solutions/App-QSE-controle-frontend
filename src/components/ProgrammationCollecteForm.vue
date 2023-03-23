@@ -99,6 +99,7 @@ export default {
 
     mounted() {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
+        console.log(this.tmpCollecte, 'collecte mounted')
         if (this.tmpCollecte.date) {
             let part = this.tmpCollecte.date.split(" ");
             this.tmpCollecte.date = part[0];

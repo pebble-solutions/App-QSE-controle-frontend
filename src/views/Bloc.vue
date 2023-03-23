@@ -4,10 +4,10 @@
         <div  class="card-header">
             <div class="d-flex justify-content-between">
                 <h2 class="card-title">{{ bloc.bloc }}</h2>
-                <button class="btn btn-outline-primary">Enregistrer</button>
-                <!--<div v-if="$route.params.bloc">
+                <button class="btn btn-outline-secondary">Enregistrer</button>
+                <!-- <div v-if="$route.params.bloc">
                     <bloc-navigation :currentBlocId="$route.params.bloc" @update-resp="sendResp('nav')"></bloc-navigation>
-                </div>-->
+                </div> -->
             </div>
 
             <div class="fw-light fst-italic mb-2">
@@ -28,7 +28,11 @@
 
     <div v-else>
         <spinner></spinner>
-    </div>  
+    </div>
+
+    <FooterToolbar v-if="bloc">
+        <BlocNavigationButtons :bloc="bloc" :blocs="formulaire.blocs" :pending="pending.bloc" @navigate="navigate($event)" />
+    </FooterToolbar>
 
 </template>
 
@@ -38,6 +42,7 @@ import {mapActions, mapState} from 'vuex';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import FormSection from '../components/form/FormSection.vue';
 import BlocNavigationButtons from '../components/form/BlocNavigationButtons.vue';
+import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
 
 export default {
     data() {
@@ -50,7 +55,7 @@ export default {
         }
     },
 
-    components: { Spinner, FormSection, BlocNavigationButtons},
+    components: { Spinner, FormSection, BlocNavigationButtons, FooterToolbar },
 
     computed: {
         ...mapState(['collecte', 'responses']),
@@ -125,6 +130,7 @@ export default {
                 this.refreshResponse(itemReponse);
             })
         }
+        
     },
 
     beforeRouteUpdate(to) {

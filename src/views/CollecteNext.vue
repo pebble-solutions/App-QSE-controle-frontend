@@ -17,21 +17,7 @@ export default {
 
     data() {
         return {
-            // collecte: {
-            //     formulaire: null,
-            //     cible_personnel: null,
-            //     date: null,
-            //     enqueteur_personnel: null,
-            //     environnement: "private"
-            // },
-            // col:{
-            //     formulaire:'54',
-            //     cible_personnel:'142',
-            //     projet: null,
-            //     date: null,
-            //     enqueteur_personnel: '735',
-            //     environnement: "private"
-            // },
+            
             read : ['formulaire','enqueteur_personnel','cible_personnel']              
             }
     },
@@ -47,7 +33,24 @@ export default {
         collecteObject() {
             let collecte = JSON.parse(JSON.stringify(this.collecte));
             collecte.formulaire = collecte.information__groupe_id;
-            return collecte;
+            console.log(collecte, 'collecte actuelle');
+            let nextCollecte = {
+                formulaire: collecte.formulaire,
+                projet_id: collecte.projet_id,
+                date:collecte.date,
+                cible_personnel: collecte.cible_personnel,
+                enqueteur_personnel: collecte.enqueteur_personnel,
+                previous_id: collecte.id,
+            };
+            // nextCollecte.formulaire = collecte.information__groupe_id;
+            // nextCollecte.date = collecte.date;
+            // nextCollecte.cible_personnel = collecte.cible_personnel;
+            // nextCollecte.enqueteur_personnel = collecte.enqueteur_personnel;
+            // nextCollecte.previous_id = collecte.id;
+
+            console.log(collecte.id, collecte.formulaire, collecte.projet_id, collecte.date, collecte.cible_personnel,collecte.enqueteur_personnel, 'champ collecte');
+            console.log(nextCollecte,'nextCollecte');
+            return nextCollecte;
         }
     },
 

@@ -105,7 +105,7 @@
 		</template>
 
 		<template v-slot:core>
-			<div class="px-2 bg-light" v-if="isConnectedUser">
+			<div class="bg-light" v-if="isConnectedUser">
 				<router-view/>
 			</div>
 		</template>

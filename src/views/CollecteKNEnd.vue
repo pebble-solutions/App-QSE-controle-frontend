@@ -3,12 +3,18 @@
     <div>
         <ControlResultForm :stats="stats"></ControlResultForm>
     </div>
+
+    <FooterToolbar>
+        Bouton finaliser
+    </FooterToolbar>
+
 </template>
 
 <script>
 
 import ControlResultForm from '@/components/ControlResultForm.vue';
 import { mapState } from 'vuex';
+import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
 
 export default {
     data() {
@@ -17,7 +23,7 @@ export default {
         }
     },
     
-    components: { ControlResultForm },
+    components: { ControlResultForm, FooterToolbar },
 
     computed: {
         ...mapState(['collecte'])
@@ -34,8 +40,9 @@ export default {
                 type: 'formulaire'
             }).then((data) => {
                 this.stats = data.stats;
-                    // if(this.stats.lenght == 0);
-                    // alert('oups')
+                console.log(this.stats);
+                    if(this.stats.lenght == 0);
+                    alert('oups')
 
             }).catch(this.$app.catchError);
         }

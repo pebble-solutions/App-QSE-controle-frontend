@@ -14,6 +14,8 @@
             <router-view></router-view>
         </template>
     </div>
+
+    <FooterToolbar>Bouton terminer & Modifier</FooterToolbar>
     
 </template>
 
@@ -25,8 +27,9 @@ import ConsultationCollecteResume from '../components/ConsultationCollecteResume
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import BlocNavigation from '../components/BlocNavigation.vue';
+import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
 export default {
-    components:{ConsultationCollecteResume, Spinner, AlertMessage, BlocNavigation}, 
+    components:{ ConsultationCollecteResume, Spinner, AlertMessage, BlocNavigation, FooterToolbar }, 
 
     data() {
         return {
