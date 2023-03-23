@@ -66,25 +66,34 @@
                     </span>
                 </div>
                 
-                <div class="my-2" v-if="collecte.commentaire">
+                <div class="my-2" v-if="collecte.commentaire != 'null' && collecte.commentaire">
                     <strong class="d-block">Contexte:</strong>
                     <div class="ms-2 fw-lighter">
                         {{collecte.commentaire}}
                     </div>
                 </div>
+                <div v-else>
+                    <strong class="d-block">Aucun contexte</strong>
+                </div>
 
-                <div class="my-2">
+                <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
                     <strong class="d-block">Commentaire final :</strong>
                     <div class="ms-2 fw-lighter">
                         {{collecte.rapport}}
                     </div>
                 </div>
+                <div v-else>
+                    <strong class="d-block">Aucun commentaire final</strong>
+                </div>
 
-                <div class="my-2" v-if="collecte.actions">
+                <div class="my-2" v-if="collecte.actions != 'null' && collecte.actions">
                     <strong class="d-block">Actions correctives proposées :</strong>
                     <div class="ms-2 fw-lighter">
                         {{collecte.actions}}
                     </div>
+                </div>
+                <div v-else>
+                    <strong class="d-block">Aucune actions correctives proposées</strong>
                 </div>
             </div>
         </div>
