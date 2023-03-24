@@ -37,8 +37,7 @@
 <script>
 import { mapState } from 'vuex';
 import UserImage from '../pebble-ui/UserImage.vue';
-import date from 'date-and-time';
-import fr from 'date-and-time/locale/fr';
+import { dateFormat } from '../../js/collecte';
 
 
 export default {
@@ -61,8 +60,7 @@ export default {
 				return 'Date non renseignée';
 			}
 			else {
-				date.locale(fr);
-				return date.format(new Date(dt), 'D MMM YYYY');
+				return dateFormat(dt);
 			}
 		},
 

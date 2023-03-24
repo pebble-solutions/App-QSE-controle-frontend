@@ -43,8 +43,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import date from 'date-and-time';
-import fr from 'date-and-time/locale/fr';
+import { dateFormat } from '../js/collecte';
 
 export default {
 
@@ -72,8 +71,7 @@ export default {
 		 */
 
 		changeFormatDateLit(el) {
-			date.locale(fr);
-			return date.format(new Date(el), 'DD MMM YYYY')
+			return dateFormat(el);
 		},
 
         searchID() {

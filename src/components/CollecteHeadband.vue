@@ -74,9 +74,8 @@
 <script>
 
 import UserImage from './pebble-ui/UserImage.vue';
-import date from 'date-and-time';
-import fr from 'date-and-time/locale/fr';
 import { mapState } from 'vuex';
+import { dateFormat } from '../js/collecte';
 
 export default {
 
@@ -144,8 +143,7 @@ export default {
 		 * @param {string} date 
 		 */
 		changeFormatDateLit(el) {
-			date.locale(fr);
-			return date.format(new Date(el), 'DD MMM YYYY')
+			return dateFormat(el);
 		},
 
 		/**

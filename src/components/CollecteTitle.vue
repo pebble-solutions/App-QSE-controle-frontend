@@ -166,7 +166,7 @@ export default {
 		 * @param {string} date 
 		 */
 		changeFormatDateLit(el) {
-			return date.format(new Date(el), 'DD MMM YYYY')
+            return dateFormat(el);
 		},
     },
 

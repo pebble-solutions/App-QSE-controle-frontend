@@ -30,9 +30,9 @@
 </template>
 <script>
 
-import date from 'date-and-time';
 import { searchConsultation } from '../js/search-consultation';
 import { mapActions } from 'vuex';
+import { dateFormat } from '../js/collecte';
 
 export default {
     props: {
@@ -135,7 +135,7 @@ export default {
 		 * @param {string} date 
 		 */
 		changeFormatDateLit(el) {
-			return date.format(new Date(el), 'DD MMM YYYY')
+			return dateFormat(el);
 		},
 
         /**

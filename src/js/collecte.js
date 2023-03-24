@@ -25,5 +25,5 @@ export function classNameFromSAMI(reponse) {
  */
 export function dateFormat(el) {
     date.locale(fr);
-    return date.format(new Date(el), 'DD MMM YYYY')
+    return date.format(new Date(el.replace(' ', 'T')), 'DD MMM YYYY')
 }
