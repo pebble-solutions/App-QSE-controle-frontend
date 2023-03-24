@@ -4,7 +4,6 @@
         <div  class="card-header">
             <div class="d-flex justify-content-between">
                 <h2 class="card-title">{{ bloc.bloc }}</h2>
-                <button class="btn btn-outline-secondary">Enregistrer</button>
                 <!-- <div v-if="$route.params.bloc">
                     <bloc-navigation :currentBlocId="$route.params.bloc" @update-resp="sendResp('nav')"></bloc-navigation>
                 </div> -->

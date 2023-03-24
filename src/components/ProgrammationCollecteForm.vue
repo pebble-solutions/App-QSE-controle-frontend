@@ -98,6 +98,7 @@ export default {
     },
 
     mounted() {
+        console.log(this.tmpCollecte, 'mounted1');
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
         console.log(this.tmpCollecte, 'collecte mounted')
         if (this.tmpCollecte.date) {

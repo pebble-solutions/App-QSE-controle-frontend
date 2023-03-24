@@ -5,14 +5,15 @@
             <div>
                 <CollecteHeaderToolbar :collecte="collecte" />
             </div>
+            <div>
+            </div>
             <div class="d-flex align-items-center">
-                <button class="btn btn-secondary me-2">
-                <i class="bi bi-list"></i>
-               <span class="ms-2 d-none d-md-inline">Liste des étapes</span> 
-            </button>
-                <button class="btn btn-secondary">
+                <BlocNavigation/>
+               
+                <button @click.prevent="validate()" class="btn btn-secondary">
                     <i class="bi bi-save"></i>
                     <span class="ms-2 d-none d-md-inline">Enregistrer</span>
+                    {{ itemResponse }}
                 </button>
             </div>
         </div>
@@ -22,9 +23,9 @@
         <template v-if="!pending.collecte">
             <template v-if="collecte">
 
-                <CollecteTitle :collecte="collecte" @projet-change="projetChange" />
+                <CollecteTitle  class="text-end" :collecte="collecte" @projet-change="projetChange" />
 
-                <Timeline :collecte="collecte" />
+                <Timeline class="card p-2" :collecte="collecte" />
 
                 <template v-if="collecte.done == 'OUI'">
                     
@@ -74,6 +75,7 @@ import CollecteTitle from '../components/CollecteTitle.vue';
 import HeaderToolbar from '../components/pebble-ui/toolbar/HeaderToolbar.vue';
 import CollecteHeaderToolbar from '../components/collecte/CollecteHeaderToolbar.vue';
 import Timeline from '../components/collecte/Timeline.vue';
+import BlocNavigation from '../components/BlocNavigation.vue';
 
 
 export default {
@@ -86,7 +88,7 @@ export default {
         }
     },
 
-    components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline },
+    components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation },
 
     computed: {
         ...mapState(['collecte']),
@@ -120,7 +122,34 @@ export default {
          */
         projetChange(projet_data) {
             this.refreshCollecte(projet_data);
-        }
+        },
+        /**
+         * Envoie les données a l'api pour valider le KN
+         */
+        validate() {
+            this.pending.validation = true;
+            this.itemResponse.done = 'NON';
+            console.log(this.itemResponse, "validate")
+            if (confirm('Une fois le contrôle terminé, vous ne pourrez plus le modifier. Confirmez-vous l\'enregistrement définitif de ce contrôle ?')) {
+                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
+                .then((data) => {
+                    return this.refreshCollectes([data]);
+                })
+                .then(() => {
+                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                        environnement: 'private'
+                    });
+                })
+                .then((collecte) => {
+                    this.refreshCollecte(collecte);
+                    this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
+
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
+            } else {
+                this.pending.validation = false;
+            }
+        },
     },
 
     /**

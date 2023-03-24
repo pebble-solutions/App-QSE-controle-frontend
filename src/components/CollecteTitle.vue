@@ -1,25 +1,17 @@
 <template>
-    <div v-if="collecte" class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2">
-        <div class="d-flex align-items-center">
-
-            <UserImage class="me-2" :name="agent"></UserImage>
-
-            <div>
-                {{agent}}
-                <div class="fw-lighter">
-                    <span class="me-2">#{{collecte.id}}</span>
-                    <span>{{formulaireLabel}}</span>
-                </div>
+    <div v-if="collecte" class="d-flex justify-content-end align-items-center my-3">
+        
                 
                 <div v-if="collecte.projet_id && !selectProjetForm && collecte.done != 'OUI'" class="d-flex align-items-baseline">
-                    <i class="bi bi-boxes me-2"></i>
-                    <span class="me-2">{{collecte.projet_label}}</span>
-                    <button v-if="isRouteHome" class="btn btn-sm btn-outline-secondary" type="button" @click.prevent="selectProject()">Modifier</button>
+                    <!-- <span class="me-2">{{collecte.projet_label}}</span> -->
+                    <button v-if="isRouteHome" class="btn btn-sm btn-outline-secondary" type="button" @click.prevent="selectProject()">  
+                        <i class="bi bi-boxes me-2"></i>
+                        Modifier le projet</button>
                 </div>
 
                 <template v-else-if="!collecte.projet_id">
                     <button v-if="!selectProjetForm && isRouteHome" class="btn btn-sm btn-outline-secondary" type="button" @click.prevent="selectProject()">
-                        <i class="bi bi-boxes me-2"></i> Sélectionner un projet
+                        <i class="bi bi-boxes me-2"></i> Sélectionnez un projet
                     </button>
                 </template> 
 
@@ -33,26 +25,17 @@
                         </div>
                         <button class="btn btn-sm btn-outline-primary" type="submit" :disabled="pending.collecte">Valider</button>
                     </div>
-                    <div v-else>
-                        <i class="bi bi-boxes me-2"></i>
-                        <span class="me-2">{{collecte.projet_label}}</span>
-                    </div>
                 </form>
-                
-            </div>
         </div>
                 
-        <div class="badge" :class="dateClassName">
-            {{ dateLabel }}
-        </div>
-    </div>
+        
 </template>
 
 <script>
 
 import { mapState} from 'vuex';
 import date from 'date-and-time';
-import UserImage from '../components/pebble-ui/UserImage.vue';
+// import UserImage from '../components/pebble-ui/UserImage.vue';
 
 
 export default {
@@ -70,7 +53,7 @@ export default {
         }
     },
 
-    components: { UserImage },
+    // components: { UserImage },
 
     computed: {
         ...mapState(['listActifs', 'formulaires', 'projets']),
@@ -120,7 +103,7 @@ export default {
          * @return {string}
          */
         dateClassName() {
-            return this.collecte.date ? 'text-bg-secondary' : 'text-bg-warning';
+            return this.collecte.date ? 'text-secondary' : 'text-warning';
         },
 
         /**

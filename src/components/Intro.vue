@@ -10,7 +10,7 @@
                 <textarea class="form-control" id="context" name="context" rows="6" placeholder="contexte..." v-model="itemResponse.commentaire"></textarea>
             </div>
             
-            <div class="mt-3 text-center" v-if="collecte.formulaire?.blocs?.length">
+            <div class="mt-3 text-end" v-if="collecte.formulaire?.blocs?.length">
                 <button type="button" class="btn btn-outline-primary" @click.prevent="startControl()" :disabled="pending.collecte">
                     Commencer
                     <span v-if="pending.collecte" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -29,24 +29,22 @@ export default {
     data() {
         return {
             itemResponse: {
-                commentaire: '',
-                environnement: 'private'
+                commentaire: "",
+                environnement: "private"
             },
             pending: {
                 collecte: false
             }
-        }
+        };
     },
     computed: {
-        ...mapState(['collecte'])
+        ...mapState(["collecte"])
     },
-
     watch: {
         collecte(val) {
-            this.itemResponse.commentaire = val.commentaire
+            this.itemResponse.commentaire = val.commentaire;
         }
     },
-
     methods: {
         /**
          * Démarre le contrôle.
@@ -54,10 +52,9 @@ export default {
         startControl() {
             if (this.collecte.commentaire !== this.itemResponse.commentaire) {
                 this.pending.collecte = true;
-    
-                this.itemResponse.environnement = 'private';
-                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse)
-                .then(() => {
+                this.itemResponse.environnement = "private";
+                this.$app.apiPost("data/POST/collecte/" + this.collecte.id, this.itemResponse)
+                    .then(() => {
                     this.routeToQuestions();
                 }).catch(this.$app.catchError).finally(this.pending.collecte = false);
             }
@@ -65,25 +62,23 @@ export default {
                 this.routeToQuestions();
             }
         },
-
         /**
          * Redirige la route vers l'étape des questions
          */
         routeToQuestions() {
             this.$router.push({
-                name: 'collecteKnBloc', 
+                name: "collecteKnBloc",
                 params: {
-                    id: this.collecte.id, 
+                    id: this.collecte.id,
                     bloc: this.collecte.formulaire.blocs[0].id
                 }
             });
         }
     },
-
     mounted() {
         if (this.collecte) {
-            this.itemResponse.commentaire = this.collecte.commentaire
+            this.itemResponse.commentaire = this.collecte.commentaire;
         }
-    }
+    },
 }
 </script>
