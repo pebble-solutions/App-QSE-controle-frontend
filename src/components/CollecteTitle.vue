@@ -33,7 +33,9 @@
 
 <script>
 
-import { mapState } from 'vuex';
+import { mapState} from 'vuex';
+import { dateFormat } from '../js/collecte';
+
 
 export default {
     props: {
