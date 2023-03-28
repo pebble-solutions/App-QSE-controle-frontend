@@ -1,12 +1,9 @@
 <template>
     <div class="card my-3" v-if="collecte" >
         <div class="card-header">
-            <div class="d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-center mb-3">
                 <h2 class="card-title">Bilan du contrôle</h2>
-                <div class="d-flex justify-content-between mb-3">
-                    <div>
-                            <bloc-navigation></bloc-navigation>
-                    </div>
+                <div class="">
                     <button class="btn btn-outline-secondary" @click.prevent="read()">Consulter</button>
                 </div>
 
@@ -50,15 +47,7 @@
             <hr>
             <div class="row g-4">
                 
-                <!-- <div class="col">
-                    <div class="d-flex  mt-3" @click.prevent="read()">
-                        <button type="button" class="d-block w-100 btn btn-outline-secondary" :disabled="pending.validation">
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
-                            <i v-else class="bi bi-info-square me-2"></i>
-                            Consulter
-                        </button>
-                    </div>
-                </div> -->
+                
                 <div class="col">
                     <div class="d-flex  mt-3" @click.prevent="validate()">
                         <button type="button" class="d-block w-100 btn btn-outline-primary" :disabled="pending.validation">
@@ -81,7 +70,6 @@
 <script>
 
 import {mapActions, mapState} from 'vuex';
-import BlocNavigation from './BlocNavigation.vue';
 import ControlSAMIStats from './ControlSAMIStats.vue';
 import DropzoneDocument from './dropzone/DropzoneDocument.vue';
 import FormModuleSAMI from './form/FormModuleSAMI.vue';
@@ -92,7 +80,7 @@ export default {
         stats: Object
     },
 
-    components: { BlocNavigation, Spinner, FormModuleSAMI, ControlSAMIStats, DropzoneDocument },
+    components: {  Spinner, FormModuleSAMI, ControlSAMIStats, DropzoneDocument },
 
     data() {
         return {

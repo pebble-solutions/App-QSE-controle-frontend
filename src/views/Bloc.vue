@@ -29,7 +29,7 @@
         <spinner></spinner>
     </div>
 
-    <FooterToolbar v-if="bloc">
+    <FooterToolbar v-if="bloc" wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
         <BlocNavigationButtons :bloc="bloc" :blocs="formulaire.blocs" :pending="pending.bloc" @navigate="navigate($event)" />
     </FooterToolbar>
 

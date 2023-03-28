@@ -7,7 +7,6 @@
                     Le contrôle de {{ collecte.cible_nom }} est en attente de validation
                 </alert-message>
                
-                <BlocNavigation></BlocNavigation>
             
             <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             
@@ -26,10 +25,9 @@ import {mapState} from 'vuex';
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
-import BlocNavigation from '../components/BlocNavigation.vue';
 import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
 export default {
-    components:{ ConsultationCollecteResume, Spinner, AlertMessage, BlocNavigation, FooterToolbar }, 
+    components:{ ConsultationCollecteResume, Spinner, AlertMessage,  FooterToolbar }, 
 
     data() {
         return {

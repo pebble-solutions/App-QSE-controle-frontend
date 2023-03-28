@@ -13,7 +13,7 @@
                 <button @click.prevent="validate()" class="btn btn-secondary">
                     <i class="bi bi-save"></i>
                     <span class="ms-2 d-none d-md-inline">Enregistrer</span>
-                    {{ itemResponse }}
+                    <!-- {{ itemResponse }} -->
                 </button>
             </div>
         </div>
@@ -25,7 +25,7 @@
 
                 <CollecteTitle  class="text-end" :collecte="collecte" @projet-change="projetChange" />
 
-                <Timeline class="card p-2" :collecte="collecte" />
+                <Timeline class="" :collecte="collecte" />
 
                 <template v-if="collecte.done == 'OUI'">
                     
@@ -127,8 +127,8 @@ export default {
          * Envoie les données a l'api pour valider le KN
          */
         validate() {
-            this.pending.validation = true;
-            this.itemResponse.done = 'NON';
+            // this.pending.validation = true;
+            // this.itemResponse.done = 'NON';
             console.log(this.itemResponse, "validate")
             if (confirm('Une fois le contrôle terminé, vous ne pourrez plus le modifier. Confirmez-vous l\'enregistrement définitif de ce contrôle ?')) {
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
