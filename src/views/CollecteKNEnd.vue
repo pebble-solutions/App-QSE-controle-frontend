@@ -6,7 +6,7 @@
 
     <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
         <div class="d-flex justify-content-center align-items-center">
-            <button class="btn btn-secondary" @click.prevent="check()" >Vérifier</button>
+            <button class="btn btn-primary" @click.prevent="check()" >Enregistrer et Vérifier</button>
         </div>
     </FooterToolbar>
         
@@ -69,7 +69,7 @@ export default {
             }).catch(this.$app.catchError);
         },
         /**
-         * Envoie les données a l'api pour valider le KN
+         * Envoie les données du KN a l'api et met à jour le store 
          */
          check() {
 

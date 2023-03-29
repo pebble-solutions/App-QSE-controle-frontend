@@ -15,9 +15,8 @@
             <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             
             <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark" v-if="collecte.done == 'NON'">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-around align-items-center g-4">
                     <button class="btn btn-secondary" @click.prevent="routeToBilan()" >Retour</button>
-                    
                     <button class="btn btn-lg btn-danger" @click.prevent="validate()" >Terminer</button>
                 </div>
             </FooterToolbar>
@@ -78,7 +77,7 @@ export default {
     },
     methods: {
 
-        ...mapActions(['refreshCollecte']),
+        ...mapActions(['refreshCollectes','refreshCollecte']),
         /**
          * retourne à la vue précédente de bilan
          */
@@ -88,12 +87,34 @@ export default {
          /**
          * Envoie les données a l'api pour valider le KN
          */
-        validate(collecte) {
-            if (confirm('terminer votre contrôle? Vous ne pourrez plus le modifier')){
-                this.collecte.done ='OUI';
-                console.log (this.collecte, 'colle')
-                this.refreshCollecte(collecte)
-                this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
+        validate() {
+            if (confirm('Une fois terminé, le contrôle ne sera plus modifiable.')){
+                // console.log (this.collecte, 'avant done')
+                // this.collecte.done ='OUI';
+                // console.log (this.collecte, 'colle')
+                // this.refreshCollecte(this.collecte)
+                // this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
+
+                this.pending.validation = true;
+                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
+                    environnement: 'private',
+                    done: 'OUI'
+                })
+                .then((data) => {
+                    console.log(data)
+                    return this.refreshCollectes([data]);
+                })
+                .then(() => {
+                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                        environnement: 'private'
+                    });
+                })
+                .then((collecte) => {
+                    this.refreshCollecte(collecte);
+                    this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
+
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
             }
         },
 
