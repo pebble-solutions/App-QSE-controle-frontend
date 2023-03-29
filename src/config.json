@@ -10,7 +10,8 @@
     },
     "domains": {
         "prod": "pebble.solutions",
-        "dev": "localhost"
+        "dev": "localhost",
+        "test": "pebble.recipes"
     },
     "cfgMenu": {
         "href": null
@@ -33,6 +34,11 @@
             "authServer": "auth.pebble.solutions",
             "tls": true
         },
+        "test": {
+            "pas": true,
+            "authServer": "auth.pebble.solutions",
+            "tls": true
+        },
         "dev": {
             "pas": true,
             "authServer": "127.0.0.1:3333",
@@ -40,7 +46,7 @@
         }
     },
     "firebaseConfig": {
-        "prod":{
+        "prod": {
             "apiKey": "AIzaSyAm-yEHEBuXt_2frDrNrH2o3mT0Ffj_4v0",
             "authDomain": "ace-charter-310713.firebaseapp.com",
             "databaseURL": "https://ace-charter-310713-default-rtdb.europe-west1.firebasedatabase.app",
@@ -49,7 +55,16 @@
             "messagingSenderId": "914156232758",
             "appId": "1:914156232758:web:575ea7a83880159d68f897"
         },
-        "dev":{
+        "test": {
+            "apiKey": "AIzaSyAm-yEHEBuXt_2frDrNrH2o3mT0Ffj_4v0",
+            "authDomain": "ace-charter-310713.firebaseapp.com",
+            "databaseURL": "https://ace-charter-310713-default-rtdb.europe-west1.firebasedatabase.app",
+            "projectId": "ace-charter-310713",
+            "storageBucket": "ace-charter-310713.appspot.com",
+            "messagingSenderId": "914156232758",
+            "appId": "1:914156232758:web:575ea7a83880159d68f897"
+        },
+        "dev": {
             "apiKey": "AIzaSyAzwQE4rI03KgtFYEN2zkXhqUA1-agVQsA",
             "authDomain": "pebble-test.firebaseapp.com",
             "projectId": "pebble-test",
