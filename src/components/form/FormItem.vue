@@ -3,7 +3,7 @@
     <div class="accordion-item" v-if="inited">
 
         <h3 class="accordion-header" :id="headerId">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="bodyId" aria-expanded="true" :aria-controls="bodyId">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#'+bodyId" aria-expanded="true" :aria-controls="bodyId">
                 <span>{{question.ligne}}</span>
                 <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
 

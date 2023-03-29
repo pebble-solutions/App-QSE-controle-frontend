@@ -3,38 +3,70 @@
         <spinner v-if="pending.collecte" />
         <template v-else>
             
-                <alert-message class="card">
-                    Le contrôle de {{ collecte.cible_nom }} est en attente de validation
+                <alert-message class="card" v-if="collecte.done =='NON'">
+                    Ce contrôle de {{ collecte.cible_nom }} est en attente de validation
                 </alert-message>
-               
+                <alert-message class="card" v-else-if="collecte.done =='OUI'">
+                    Le contrôle de {{collecte.cible_nom}} (#{{collecte.id}}) est enregistré et n'est plus modifiable. <br>
+                    Vous pourrez le retrouver via le menu consultation.<br>
+                    Souhaitez-vous programmer un nouveau contrôle?
+                </alert-message>
             
             <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             
-            <router-view></router-view>
+            <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark" v-if="collecte.done == 'NON'">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-secondary" @click.prevent="routeToBilan()" >Retour</button>
+                    
+                    <button class="btn btn-lg btn-danger" @click.prevent="validate()" >Terminer</button>
+                </div>
+            </FooterToolbar>
+            <FooterToolbar v-else wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
+                <div class="d-flex justify-content-center align-items-center">
+                    <router-link :to="'/collecte/'+this.$route.params.id+'/next'" custom v-slot="{ navigate, href }"> 
+                        <a class="btn btn-primary" :href="href" @click="navigate">
+                            <i class="bi bi-plus-square me-2"></i>
+                            Programmer une veille
+                        </a>
+                    </router-link>
+                </div>
+                
+            </FooterToolbar>
         </template>
     </div>
-
-    <FooterToolbar>Bouton terminer & Modifier</FooterToolbar>
+    
     
 </template>
+    <!-- <router-view></router-view> -->
 
 <script>
 
-import {mapState} from 'vuex'; 
+import {mapActions, mapState} from 'vuex'; 
 
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
 export default {
+
     components:{ ConsultationCollecteResume, Spinner, AlertMessage,  FooterToolbar }, 
 
     data() {
         return {
             
             pending: {
-                collecte: false
+                collecte: false,
+                validation: false
             },
+            itemResponse: {
+                result_type: 'sami',
+                result: '',
+                rapport: '',
+                actions: '',
+                environnement: 'private',
+                done: '',
+            },
+            
         }
     },
 
@@ -45,10 +77,25 @@ export default {
         
     },
     methods: {
+
+        ...mapActions(['refreshCollecte']),
+        /**
+         * retourne à la vue précédente de bilan
+         */
         routeToBilan(){
             this.$router.go(-1);
-
-        }
+        },
+         /**
+         * Envoie les données a l'api pour valider le KN
+         */
+        validate(collecte) {
+            if (confirm('terminer votre contrôle? Vous ne pourrez plus le modifier')){
+                this.collecte.done ='OUI';
+                console.log (this.collecte, 'colle')
+                this.refreshCollecte(collecte)
+                this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
+            }
+        },
 
       
     },

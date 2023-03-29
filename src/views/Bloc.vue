@@ -12,17 +12,13 @@
             <div class="fw-light fst-italic mb-2">
                 Questions :  {{nbAnswers}} / {{lignes?.length}}
             </div>
-
-            <!-- <BlocNavigationButtons :bloc="bloc" :blocs="formulaire.blocs" :pending="pending.bloc" @navigate="navigate($event)" /> -->
         </div>
         
 
         <form-section :questions="lignes" :collecte="collecte" />
         
         
-        <div class="card-footer">
-            <!-- <BlocNavigationButtons :bloc="bloc" :blocs="formulaire.blocs" :pending="pending.bloc" @navigate="navigate($event)" /> -->
-        </div>
+        
     </div>
 
     <div v-else>

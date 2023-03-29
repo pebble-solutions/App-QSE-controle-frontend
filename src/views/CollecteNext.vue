@@ -41,6 +41,7 @@ export default {
                 cible_personnel: collecte.cible_personnel,
                 enqueteur_personnel: collecte.enqueteur_personnel,
                 previous_id: collecte.id,
+                previous_result: collecte.result_var,
             };
             // nextCollecte.formulaire = collecte.information__groupe_id;
             // nextCollecte.date = collecte.date;
@@ -64,11 +65,7 @@ export default {
             this.$router.push("/collecte/"+collecte.id);
         },
 
-        coll(){
-            console.log(this.$route.params.id, 'paramsId');
-            console.log(this.collecte, 'collecte')
-
-        }
+       
     },
 
     components: { ProgrammationCollecteModal },

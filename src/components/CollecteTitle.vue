@@ -159,14 +159,14 @@ export default {
             return projet ? projet.intitule : `Projet sans nom (${id})`;
         },
 
-        // /**
-		//  * Modifie le format de la date entrée en paramètre et la retourne 
-		//  * sous le format 01 févr. 2021
-		//  * @param {string} date 
-		//  */
-		// changeFormatDateLit(el) {
-        //     return dateFormat(el);
-		// },
+        /**
+		 * Modifie le format de la date entrée en paramètre et la retourne 
+		 * sous le format 01 févr. 2021
+		 * @param {string} date 
+		 */
+		changeFormatDateLit(el) {
+            return dateFormat(el);
+		},
     },
 
     mounted() {

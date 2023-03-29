@@ -1,7 +1,7 @@
 <template>
     <div v-if="collecte">
         <div class="card my-2">
-            <div class="card-header">
+            <div class="card-header" v-if="this.$route.name!='CollecteVerif' && this.$route.name!='collecteKN'">
                 <Timeline :collecte="collecte" />
             </div>
 
@@ -94,12 +94,12 @@
                             <div class="d-flex justify-content-between align-items-center w-100">
                                 <div> {{bloc.bloc}} </div>
 
-                                <div class="btn-group progress progress-ht me-3">
+                                <!-- <div class="btn-group progress progress-ht me-3">
                                     <div class="btn progress-bar bg-success" role="progressbar" style="width: 45%" >8</div>
                                     <div class="btn progress-bar bg-primary" role="progressbar" style="width: 30%" >6</div>
                                     <div class="btn progress-bar bg-warning" role="progressbar" style="width: 20%" >4</div>
                                     <div class="btn progress-bar bg-danger" role="progressbar" style="width: 6%" >2</div>
-                                </div>
+                                </div> -->
                             </div>
                             <!-- {{bloc.bloc}}  -->
                         </button>
@@ -305,6 +305,6 @@ export default {
         },
     },
 
-    components: { UserImage, FileItem, Timeline }
+    components: { UserImage, FileItem, Timeline }//
 }
 </script>
