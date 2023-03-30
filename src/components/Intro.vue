@@ -11,7 +11,7 @@
             </div>
             
             <div class="mt-3 text-end" v-if="collecte.formulaire?.blocs?.length">
-                <button type="button" class="btn btn-outline-primary" @click.prevent="startControl()" :disabled="pending.collecte">
+                <button type="button" class="btn btn-primary" @click.prevent="startControl()" :disabled="pending.collecte">
                     Commencer
                     <span v-if="pending.collecte" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     <i v-else class="bi bi-chevron-right"></i>
@@ -71,7 +71,7 @@ export default {
                         this.routeToQuestions();
                     })
                     .catch(this.$app.catchError).finally(this.pending.collecte = false);
-            }
+            } else {this.routeToQuestions()}
             
         },
         /**

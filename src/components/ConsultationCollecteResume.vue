@@ -1,7 +1,7 @@
 <template>
     <div v-if="collecte">
         <div class="card my-2">
-            <div class="card-header" v-if="this.$route.name!='CollecteVerif' && this.$route.name!='collecteKN'">
+            <div class="card-header" v-if="timeline">
                 <Timeline :collecte="collecte" />
             </div>
 
@@ -37,40 +37,43 @@
                     </span>
                 </div>
                 
-                <div class="my-2" v-if="collecte.commentaire != 'null' && collecte.commentaire">
-                    <strong class="d-block">Contexte:</strong>
-                    <div class="ms-2 fw-lighter">
-                        {{collecte.commentaire}}
+                <template v-if="isReadable">
+                    <div class="my-2" v-if="collecte.commentaire != 'null' && collecte.commentaire">
+                        <strong class="d-block">Contexte:</strong>
+                        <div class="ms-2 fw-lighter">
+                            {{collecte.commentaire}}
+                        </div>
                     </div>
-                </div>
-                <div v-else>
-                    <strong class="d-block">Pas d'éléments de contexte</strong>
-                </div>
-
-                <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
-                    <strong class="d-block">Commentaire final :</strong>
-                    <div class="ms-2 fw-lighter">
-                        {{collecte.rapport}}
+                    <div v-else>
+                        <strong class="d-block">Pas d'éléments de contexte</strong>
                     </div>
-                </div>
-                <div v-else>
-                    <strong class="d-block">Aucun commentaire final</strong>
-                </div>
-
-                <div class="my-2" v-if="collecte.actions != 'null' && collecte.actions">
-                    <strong class="d-block">Actions correctives proposées :</strong>
-                    <div class="ms-2 fw-lighter">
-                        {{collecte.actions}}
+    
+                    <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
+                        <strong class="d-block">Commentaire final :</strong>
+                        <div class="ms-2 fw-lighter">
+                            {{collecte.rapport}}
+                        </div>
                     </div>
-                </div>
-                <div v-else>
-                    <strong class="d-block">Aucune action corrective proposée</strong>
-                </div>
+                    <div v-else>
+                        <strong class="d-block">Aucun commentaire final</strong>
+                    </div>
+    
+                    <div class="my-2" v-if="collecte.actions != 'null' && collecte.actions">
+                        <strong class="d-block">Actions correctives proposées :</strong>
+                        <div class="ms-2 fw-lighter">
+                            {{collecte.actions}}
+                        </div>
+                    </div>
+                    <div v-else>
+                        <strong class="d-block">Aucune action corrective proposée</strong>
+                    </div>
+                </template>
+                
             </div>
         </div>
         
  
-        <div v-if="collecte.documents.length" class="card my-3">
+        <div v-if="collecte.documents.length && (isReadable)" class="card my-3">
             <div class="card-body">
                 <h5 class="mb-3"><i class="bi bi-cloud-check me-1"></i> Fichiers joints</h5>
                 <div class="list-group">
@@ -79,7 +82,7 @@
             </div>
         </div>
 
-        <div class="card my-2">
+        <div class="card my-2" v-if="isReadable">
             <div class="card-header d-flex align-items-baseline justify-content-between">
                 <h4 class="fs-5 card-title">Nombre d'items évalués</h4> 
                 <div class="badge fs-6 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
@@ -142,12 +145,18 @@
             </div>
            
         </div>
+        <alert-message 
+            icon="bi-exclamation-triangle-fill" 
+            className="my-3" 
+            variant="warning" v-else>
+                Ce contrôle n'est pas consultable car il n'est pas terminé.
+        </alert-message>
 
-        <div class="text-center my-3" v-if="!readonly">
+        <!-- <div class="text-center my-3" v-if="!readonly">
             <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">
                 Modifier les informations
             </button>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -156,11 +165,16 @@ import {classNameFromSAMI, dateFormat} from '../js/collecte';
 import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
 import Timeline from './collecte/Timeline.vue';
+import AlertMessage from './pebble-ui/AlertMessage.vue';
 
 export default {
     props: {
         collecte: Object,
-        readonly: Boolean
+        readonly: Boolean,
+        timeline: {
+            type: Boolean,
+            default: true
+        }
     },
 
     computed: {
@@ -205,6 +219,15 @@ export default {
         operateur() {
             return this.collecte.cible_nom ?? 'Opérateur non renseigné';
         },
+
+        /**
+         * Retourne vrais lorsque le résumé peut être consulté
+         * 
+         * @return {bool}
+         */
+        isReadable() {
+            return (!this.readonly || this.collecte.locked || this.collecte.done == 'OUI');
+        }
     },
 
     methods: {
@@ -305,6 +328,6 @@ export default {
         },
     },
 
-    components: { UserImage, FileItem, Timeline }//
+    components: { UserImage, FileItem, Timeline, AlertMessage }
 }
 </script>

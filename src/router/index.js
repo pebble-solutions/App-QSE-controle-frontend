@@ -70,13 +70,15 @@ const routes = [
       {
         path:'collecte-verif',
         name: 'CollecteVerif',
-        component: () => import('../views/CollecteVerif.vue')
-      },
-      {
-        path:'next',
-        name: 'CollecteNext',
-        component: () => import('../views/CollecteNext.vue')
-      },
+        component: () => import('../views/CollecteVerif.vue'),
+        children: [
+          {
+            path:'next',
+            name: 'CollecteNext',
+            component: () => import('../views/CollecteNext.vue')
+          },
+        ]
+      }
 
     ]
   },

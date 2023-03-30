@@ -12,7 +12,7 @@
                
                 <button @click.prevent="record()" class="btn btn-secondary">
                     <i class="bi bi-save"></i>
-                    <span class="ms-2 d-none d-md-inline">Enregistrer</span>
+                    <span class="ms-2 d-none d-md-inline">Sauvegarder</span>
                 </button>
             </div>
         </div>
@@ -24,24 +24,11 @@
 
                 <CollecteTitle  class="text-end" :collecte="collecte" @projet-change="projetChange" />
 
-                <Timeline :collecte="collecte" />
+                <Timeline :collecte="collecte" route="collecte" />
 
                 <template v-if="collecte.done == 'OUI'">
                     
-                    <!-- <AlertMessage class ="card" :dismissible="true">
-
-                        Le contrôle de {{collecte.cible_nom}} (#{{collecte.id}}) est enregistré et n'est plus modifiable. <br>
-                        Vous pourrez le retrouver via le menu consultation.<br>
-                        Souhaitez-vous programmer un nouveau contrôle?
-                    </AlertMessage> -->
-                        <!-- <router-link :to="'/collecte/'+this.$route.params.id+'/next'" custom v-slot="{ navigate, href }"> 
-                            <a class="btn btn-outline-primary col" :href="href" @click="navigate">
-                                <i class="bi bi-plus-square me-2"></i>Prochain contrôle
-                            </a>
-                        </router-link> -->
-                
-                    
-                    <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd' && !$route.params.bloc && $route.name !='CollecteVerif')"/>
+                    <consultation-collecte-resume :collecte="collecte" :readonly="true" :timeline="false" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd' && $route.name !='CollecteVerif' && $route.name !='CollecteNext')"/>
 
                 </template>
         
@@ -128,7 +115,18 @@ export default {
          * Envoie les données a l'api pour valider le KN
          */
         record() {
-           confirm('sauvegarder l\'enregistrement?');
+            this.pending.collecte = true;
+            console.log(this.reponses, 'reponses')
+            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
+                reponses: JSON.stringify(this.responses),
+                environnement:'private',
+            })
+            .then((data)=> {
+                console.log(data, 'sauvegarder')
+                this.$router.push({name: 'CollecteVerif',params:{id:this.collecte.id} });
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+
         },
     },
 

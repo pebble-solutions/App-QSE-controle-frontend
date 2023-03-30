@@ -1,7 +1,7 @@
 <template>
 
     <div class="timeline d-flex align-items-start justify-content-between">
-        <router-link :to="'/consultation/'+collecte.previous_id" v-slot="{navigate,href}" v-if="collecte.previous_id" custom>
+        <router-link :to="'/'+route+'/'+collecte.previous_id" v-slot="{navigate,href}" v-if="collecte.previous_id" custom>
             <a :href="href"  @click="navigate" class="timeline-el link-secondary">
                 <div class="timeline-label">
                     <span class="badge rounded-pill mb-1" :class="classNameFromSAMI(collecte.previous_result)">
@@ -36,10 +36,10 @@
                 </div>
             </div>
 
-        <router-link :to="'/consultation/'+collecte.following_id" v-slot="{navigate,href}" v-if="collecte.following_id" custom>
+        <router-link :to="'/'+route+'/'+collecte.following_id" v-slot="{navigate,href}" v-if="collecte.following_id" custom>
             <a :href="href" @click="navigate" class="timeline-el link-secondary" >
                 <div class="timeline-label">
-                    <span class="badge" :class="classNameFromSAMI(collecte.following_result)">
+                    <span class="badge rounded-pill mb-1" :class="classNameFromSAMI(collecte.following_result)">
                         <template v-if="collecte.following_result">{{ collecte.following_result}}</template>
                         <i class="bi bi-question-circle" v-else></i>
                     </span><br>
@@ -92,7 +92,11 @@ import {classNameFromSAMI, dateFormat} from '../../js/collecte.js';
 
 export default {
     props: {
-        collecte: Object
+        collecte: Object,
+        route: {
+            type: String,
+            default: 'consultation'
+        }
     },
     methods: {
         /**

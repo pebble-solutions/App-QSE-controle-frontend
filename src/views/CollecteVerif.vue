@@ -12,7 +12,7 @@
                     Souhaitez-vous programmer un nouveau contrôle?
                 </alert-message>
             
-            <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
+            <consultation-collecte-resume :collecte="collecte" :readonly="false" :timeline="false" v-if="collecte"></consultation-collecte-resume>
             
             <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark" v-if="collecte.done == 'NON'">
                 <div class="d-flex justify-content-around align-items-center g-4">
@@ -22,7 +22,7 @@
             </FooterToolbar>
             <FooterToolbar v-else wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
                 <div class="d-flex justify-content-center align-items-center">
-                    <router-link :to="'/collecte/'+this.$route.params.id+'/next'" custom v-slot="{ navigate, href }"> 
+                    <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
                         <a class="btn btn-primary" :href="href" @click="navigate">
                             <i class="bi bi-plus-square me-2"></i>
                             Programmer une veille
@@ -34,9 +34,9 @@
         </template>
     </div>
     
+    <router-view></router-view>
     
 </template>
-    <!-- <router-view></router-view> -->
 
 <script>
 

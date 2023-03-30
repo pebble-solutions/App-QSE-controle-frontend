@@ -1,9 +1,8 @@
 <template>
-    <div class="container py-2 px-0">
+    <div class="container py-2 px-2">
         <spinner v-if="pending.collecte" />
         <template v-else>
-            <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte && collecte.done == 'OUI'"></consultation-collecte-resume>
-            <alert-message :icon="bi-info" :className="primary"  :dismissible="true" v-else>Ce contrôle n'est pas consultable car il n'est pas terminé</alert-message>
+            <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             <router-view></router-view>
         </template>
     </div>
@@ -17,10 +16,9 @@ import {mapState, mapActions} from 'vuex';
 
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
-import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 
 export default {
-    components:{ConsultationCollecteResume, Spinner, AlertMessage}, 
+    components:{ConsultationCollecteResume, Spinner}, 
 
     data() {
         return {
