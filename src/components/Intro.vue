@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 
 export default {
     data() {
@@ -46,6 +46,8 @@ export default {
         }
     },
     methods: {
+
+        ...mapActions(['refreshCollecte','refreshCollectes']),
         /**
          * Démarre le contrôle.
          */
@@ -53,14 +55,24 @@ export default {
             if (this.collecte.commentaire !== this.itemResponse.commentaire) {
                 this.pending.collecte = true;
                 this.itemResponse.environnement = "private";
+                console.log(this.itemResponse.commentaire,'commentaire');
                 this.$app.apiPost("data/POST/collecte/" + this.collecte.id, this.itemResponse)
+                    .then((data) => {
+                        console.log(data, 'retour api');
+                        return this.refreshCollectes([data]);
+                    })
                     .then(() => {
-                    this.routeToQuestions();
-                }).catch(this.$app.catchError).finally(this.pending.collecte = false);
+                        return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                        environnement: 'private'
+                        });
+                    })
+                    .then ((collecte)=> {
+                        this.refreshCollecte(collecte);
+                        this.routeToQuestions();
+                    })
+                    .catch(this.$app.catchError).finally(this.pending.collecte = false);
             }
-            else {
-                this.routeToQuestions();
-            }
+            
         },
         /**
          * Redirige la route vers l'étape des questions

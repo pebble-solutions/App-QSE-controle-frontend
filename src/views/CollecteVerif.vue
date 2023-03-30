@@ -17,7 +17,7 @@
             <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark" v-if="collecte.done == 'NON'">
                 <div class="d-flex justify-content-around align-items-center g-4">
                     <button class="btn btn-secondary" @click.prevent="routeToBilan()" >Retour</button>
-                    <button class="btn btn-lg btn-danger" @click.prevent="validate()" >Terminer</button>
+                    <button class="btn btn-primary" @click.prevent="validate()" >Terminer</button>
                 </div>
             </FooterToolbar>
             <FooterToolbar v-else wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">

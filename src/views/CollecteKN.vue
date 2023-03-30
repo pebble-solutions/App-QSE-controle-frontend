@@ -41,7 +41,7 @@
                         </router-link> -->
                 
                     
-                    <!-- <consultation-collecte-resume :collecte="collecte" :readonly="true"/> -->
+                    <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd' && !$route.params.bloc && $route.name !='CollecteVerif')"/>
 
                 </template>
         
@@ -76,6 +76,7 @@ import HeaderToolbar from '../components/pebble-ui/toolbar/HeaderToolbar.vue';
 import CollecteHeaderToolbar from '../components/collecte/CollecteHeaderToolbar.vue';
 import Timeline from '../components/collecte/Timeline.vue';
 import BlocNavigation from '../components/BlocNavigation.vue';
+import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 
 
 export default {
@@ -88,7 +89,7 @@ export default {
         }
     },
 
-    components: { Intro,  AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation }, //ConsultationCollecteResume
+    components: { Intro,  AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation, ConsultationCollecteResume }, //
 
     computed: {
         ...mapState(['collecte']),
