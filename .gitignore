@@ -8,7 +8,7 @@ jsconfig
 .env.local
 .env.*.local
 .env.json
-.env.*.local
+.env.*.json
 
 # Log files
 npm-debug.log*
