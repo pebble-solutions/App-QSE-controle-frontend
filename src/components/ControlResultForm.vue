@@ -4,7 +4,6 @@
             <div class="d-flex align-items-center justify-content-center mb-3">
                 <h2 class="card-title">Bilan du contrôle</h2>
                 <div class="">
-                    <button class="btn btn-outline-secondary" @click.prevent="read()">Consulter</button>
                 </div>
 
                 
@@ -17,9 +16,11 @@
         </div>
         
         <div class="card-body">
+            
             <div class="mb-3">
                 <h3>Votre évaluation générale pour ce contrôle :</h3>
                 <FormModuleSAMI :question="{id: 'end'}" v-model:value="itemResponse.result" />
+
             </div>
             <hr>
             <div>
@@ -45,19 +46,7 @@
                 @upload-success="addDocument($event)"/>
             </div>
             <hr>
-            <div class="row g-4">
-                
-                
-                <div class="col">
-                    <div class="d-flex  mt-3" @click.prevent="validate()">
-                        <button type="button" class="d-block w-100 btn btn-outline-primary" :disabled="pending.validation">
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.validation"></span>
-                            <i v-else class="bi bi-check-square me-2"></i>
-                            Terminer
-                        </button>
-                    </div>
-                </div>
-            </div>
+            
         </div>
 
         </div>
@@ -89,14 +78,29 @@ export default {
                 result_type: 'sami',
                 result: '',
                 rapport: '',
+                actions: '',
                 environnement: 'private',
                 done: '',
-                actions: ''
             },
             pending: {
                 validation: false
-            }
+            },
+            result:''
         }
+    },
+    emits:['update'],
+
+    watch: {
+        /**
+         * Lorsque l'évaluation est mise à jour, la valeur dans le store est actualisée
+         * @param {string} val la nouvelle valeur de l'évaluation générale
+         */
+        itemResponse: {
+            handler(newVal){
+                this.$emit('update', newVal)
+            },
+            deep:true
+        }, 
     },
 
     computed: {
@@ -129,7 +133,19 @@ export default {
     },
 
     methods: {
-        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte']),
+        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte', 'refreshResponse']),
+
+        /**
+         * enregistre dans le store le résultat général du contrôle
+         */
+        refreshResult(val) {
+            if(this.itemResponse.result !=val) {
+                console.log(val);
+                this.itemResponse.result = val;
+                this.refreshResponse (this.itemResponse.result)
+            }
+        },
+
 
         /**
          * Envoie les données a l'api pour valider le KN
@@ -163,7 +179,7 @@ export default {
             this.pending.validation = true;
             this.itemResponse.done ='NON'
 
-            
+            console.log(this.itemResponse, 'consult')
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
                 .then((data) => {
                     return this.refreshCollectes([data]);
@@ -183,9 +199,6 @@ export default {
             this.pending.validation = false;
                  
         },
-        plan(){
-            confirm('souhaitez vous programmer un nouveau contrôle?')
-        },
 
         /**
          * Ajout une document à la collection de documents liés à la collecte
@@ -194,7 +207,11 @@ export default {
          */
         addDocument(document) {
             this.addDocumentToCollecte(document);
-        }
+        },
+    },
+    beforeRouteUpdate(){
+        alert('quiter')
+        this.validate()
     },
 
     mounted() {

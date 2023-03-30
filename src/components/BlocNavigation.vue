@@ -16,7 +16,7 @@
             <li>
                 <button class="dropdown-item d-flex justify-content-between" @click.prevent="navigate('end')" type="button">
                     Bilan
-                    <i class="bi bi-check2 ms-1" v-if="!currentBlocId"></i>
+                    <!-- <i class="bi bi-check2 ms-1" v-if="!currentBlocId"></i> -->
                 </button>
             </li>
         </ul>

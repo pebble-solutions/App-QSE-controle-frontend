@@ -7,13 +7,12 @@
             </div>
             <div>
             </div>
-            <div class="d-flex align-items-center">
-                <BlocNavigation/>
+            <div class="d-flex align-items-center" v-if="collecte.done == 'NON'">
+                <BlocNavigation />
                
-                <button @click.prevent="validate()" class="btn btn-secondary">
+                <button @click.prevent="record()" class="btn btn-secondary">
                     <i class="bi bi-save"></i>
                     <span class="ms-2 d-none d-md-inline">Enregistrer</span>
-                    <!-- {{ itemResponse }} -->
                 </button>
             </div>
         </div>
@@ -25,24 +24,24 @@
 
                 <CollecteTitle  class="text-end" :collecte="collecte" @projet-change="projetChange" />
 
-                <Timeline class="" :collecte="collecte" />
+                <Timeline :collecte="collecte" />
 
                 <template v-if="collecte.done == 'OUI'">
                     
-                    <AlertMessage class ="card" :dismissible="true">
+                    <!-- <AlertMessage class ="card" :dismissible="true">
 
                         Le contrôle de {{collecte.cible_nom}} (#{{collecte.id}}) est enregistré et n'est plus modifiable. <br>
                         Vous pourrez le retrouver via le menu consultation.<br>
                         Souhaitez-vous programmer un nouveau contrôle?
-                    </AlertMessage>
-                        <router-link :to="'/collecte/'+this.$route.params.id+'/next'" custom v-slot="{ navigate, href }"> 
+                    </AlertMessage> -->
+                        <!-- <router-link :to="'/collecte/'+this.$route.params.id+'/next'" custom v-slot="{ navigate, href }"> 
                             <a class="btn btn-outline-primary col" :href="href" @click="navigate">
                                 <i class="bi bi-plus-square me-2"></i>Prochain contrôle
                             </a>
-                        </router-link>
+                        </router-link> -->
                 
                     
-                    <consultation-collecte-resume :collecte="collecte" :readonly="true"/>
+                    <!-- <consultation-collecte-resume :collecte="collecte" :readonly="true"/> -->
 
                 </template>
         
@@ -51,6 +50,7 @@
                         <intro></intro>
                     </div>
                 </template>
+                
 
             </template>
             <alert-message v-else icon="bi-exclamation-triangle-fill" variant="warning">La collecte n'a pas été trouvée.</alert-message>
@@ -67,7 +67,7 @@
 
 <script>
 import {mapState, mapActions} from 'vuex';
-import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
+// import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Intro from '../components/Intro.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
@@ -88,7 +88,7 @@ export default {
         }
     },
 
-    components: { Intro, ConsultationCollecteResume, AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation },
+    components: { Intro,  AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation }, //ConsultationCollecteResume
 
     computed: {
         ...mapState(['collecte']),
@@ -126,29 +126,8 @@ export default {
         /**
          * Envoie les données a l'api pour valider le KN
          */
-        validate() {
-            // this.pending.validation = true;
-            // this.itemResponse.done = 'NON';
-            console.log(this.itemResponse, "validate")
-            if (confirm('Une fois le contrôle terminé, vous ne pourrez plus le modifier. Confirmez-vous l\'enregistrement définitif de ce contrôle ?')) {
-                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
-                .then((data) => {
-                    return this.refreshCollectes([data]);
-                })
-                .then(() => {
-                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
-                        environnement: 'private'
-                    });
-                })
-                .then((collecte) => {
-                    this.refreshCollecte(collecte);
-                    this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
-
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
-            } else {
-                this.pending.validation = false;
-            }
+        record() {
+           confirm('sauvegarder l\'enregistrement?');
         },
     },
 

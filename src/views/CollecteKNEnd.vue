@@ -1,13 +1,12 @@
 <template>
     
     <div>
-        <ControlResultForm :stats="stats"></ControlResultForm>
+        <ControlResultForm :stats="stats" @update="updateItem($event)"></ControlResultForm>
     </div>
 
     <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
         <div class="d-flex justify-content-center align-items-center">
-
-            <button class="btn btn-primary" @click.prevent="validate()" >Terminer</button>
+            <button class="btn btn-primary" @click.prevent="check()" >Enregistrer et Vérifier</button>
         </div>
     </FooterToolbar>
         
@@ -18,13 +17,24 @@
 <script>
 
 import ControlResultForm from '@/components/ControlResultForm.vue';
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
 
 export default {
     data() {
         return {
-            stats: null
+            stats: null,
+            itemResponse: {
+                result_type: 'sami',
+                result: '',
+                rapport: '',
+                actions: '',
+                environnement: 'private',
+                done: '',
+            },
+            pending: {
+                validation: false
+            }
         }
     },
     
@@ -36,6 +46,12 @@ export default {
     },
 
     methods: {
+        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte']),
+
+        updateItem(val){
+            this.itemResponse = val
+        },
+
         /**
          * Récupère les stats de la collecte
          */
@@ -53,38 +69,40 @@ export default {
             }).catch(this.$app.catchError);
         },
         /**
-         * Envoie les données a l'api pour valider le KN
+         * Envoie les données du KN a l'api et met à jour le store 
          */
-         validate() {
-            alert('contrôle terminé ?')
-            // this.pending.validation = true;
-            // this.itemResponse.done = 'OUI';
+         check() {
 
-            // if (confirm('Une fois le contrôle terminé, vous ne pourrez plus le modifier. Confirmez-vous l\'enregistrement définitif de ce contrôle ?')) {
-            //     this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
-            //     .then((data) => {
-            //         return this.refreshCollectes([data]);
-            //     })
-            //     .then(() => {
-            //         return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
-            //             environnement: 'private'
-            //         });
-            //     })
-            //     .then((collecte) => {
-            //         this.refreshCollecte(collecte);
-            //         this.$router.push({name:'collecteKN', params:{id:this.collecte.id}});
+            this.pending.validation = true;
+            this.itemResponse.done = 'NON';
+            console.log(this.itemResponse, 'item response')
+            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
+                .then((data) => {
+                    return this.refreshCollectes([data]);
+                })
+                .then(() => {
+                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                        environnement: 'private'
+                    });
+                })
+                .then((collecte) => {
+                    this.refreshCollecte(collecte);
+                    this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
 
-            //     })
-            //     .catch(this.$app.catchError).finally(() => this.pending.validation = false);
-            // } else {
-            //     this.pending.validation = false;
-            // }
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
+           
         },
+       
     },
+    
 
     mounted() {
         if (this.collecte) {
             this.getCollecteStats();
+            this.itemResponse.rapport = this.collecte.rapport;
+            this.itemResponse.result = this.collecte.result_var;
+            this.itemResponse.actions = this.collecte.actions;
         }
     }
 }
