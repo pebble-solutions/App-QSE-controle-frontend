@@ -5,7 +5,9 @@
     </div>
 
     <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
-        <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
+            <button class="btn btn-secondary" @click.prevent="routeReturn()" >Retour</button>
+
             <button class="btn btn-primary" @click.prevent="check()" >Enregistrer et Vérifier</button>
         </div>
     </FooterToolbar>
@@ -93,6 +95,9 @@ export default {
                 .catch(this.$app.catchError).finally(() => this.pending.validation = false);
            
         },
+        routeReturn(){
+            this.$router.go(-1)
+        }
        
     },
     

@@ -3,27 +3,27 @@
         <spinner v-if="pending.collecte" />
         <template v-else>
             
-                <alert-message class="card" v-if="collecte.done =='NON'">
-                    Ce contrôle de {{ collecte.cible_nom }} est en attente de validation
+                <alert-message icon="bi-info-square" class="card" v-if="collecte.done =='NON'">
+                    Le contrôle de {{ collecte.cible_nom }} n'est pas clôturé
                 </alert-message>
-                <alert-message class="card" v-else-if="collecte.done =='OUI'">
+                <alert-message icon="bi-info-square" class="card" v-else-if="collecte.done =='OUI'">
                     Le contrôle de {{collecte.cible_nom}} (#{{collecte.id}}) est enregistré et n'est plus modifiable. <br>
                     Vous pourrez le retrouver via le menu consultation.<br>
-                    Souhaitez-vous programmer un nouveau contrôle?
+                    Souhaitez-vous programmer un nouveau contrôle rattaché?
                 </alert-message>
             
             <consultation-collecte-resume :collecte="collecte" :readonly="false" :timeline="false" v-if="collecte"></consultation-collecte-resume>
             
             <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark" v-if="collecte.done == 'NON'">
-                <div class="d-flex justify-content-around align-items-center g-4">
+                <div class="d-flex justify-content-between align-items-center g-4">
                     <button class="btn btn-secondary" @click.prevent="routeToBilan()" >Retour</button>
-                    <button class="btn btn-primary" @click.prevent="validate()" >Terminer</button>
+                    <button class="btn btn-primary" @click.prevent="validate()" >Clôturer</button>
                 </div>
             </FooterToolbar>
             <FooterToolbar v-else wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
                 <div class="d-flex justify-content-center align-items-center">
                     <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
-                        <a class="btn btn-primary" :href="href" @click="navigate">
+                        <a class="btn btn-lg btn-primary" :href="href" @click="navigate">
                             <i class="bi bi-plus-square me-2"></i>
                             Programmer une veille
                         </a>
@@ -88,7 +88,7 @@ export default {
          * Envoie les données a l'api pour valider le KN
          */
         validate() {
-            if (confirm('Une fois terminé, le contrôle ne sera plus modifiable.')){
+            if (confirm('Une fois clôturé, le contrôle ne sera plus modifiable.')){
                 // console.log (this.collecte, 'avant done')
                 // this.collecte.done ='OUI';
                 // console.log (this.collecte, 'colle')
