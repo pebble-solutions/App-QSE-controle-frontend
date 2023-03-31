@@ -1,26 +1,31 @@
 <template>
 
-    <HeaderToolbar v-if="collecte">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <CollecteHeaderToolbar :collecte="collecte" />
-            </div>
-            <div>
-            </div>
-            <div class="d-flex align-items-center" v-if="collecte.done == 'NON'">
-                <BlocNavigation />
-               
-                <button @click.prevent="record()" class="btn btn-secondary">
-                    <i class="bi bi-save"></i>
-                    <span class="ms-2 d-none d-md-inline">Sauvegarder</span>
-                </button>
-            </div>
-        </div>
-    </HeaderToolbar>
-
+    
     <div class="container py-3">
         <template v-if="!pending.collecte">
             <template v-if="collecte">
+                <HeaderToolbar v-if="collecte">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <CollecteHeaderToolbar :collecte="collecte" />
+                        </div>
+                        <div>
+                        </div>
+                        <div class="d-flex align-items-center" v-if="collecte.done == 'NON'">
+                            <BlocNavigation v-if="($route.name != 'CollectKnEnd' && $route.name!='CollecteVerif')" />
+                           
+                            <button v-if="($route.name != 'CollectKnEnd' && $route.name!='CollecteVerif')" @click.prevent="navigate()" class="btn btn-primary">
+                                <i class="bi bi-file-earmark-text me-2"></i>
+                                <span class="ms-2 d-none d-md-inline">Finaliser</span>
+                            </button>
+                            <!-- <button v-else class="btn btn-secondary ms-auto" @click.prevent="navigate('end')" :disabled="pending.bloc">
+                                <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status"></span>
+                                <i v-else class="bi bi-file-earmark-text me-2"></i>
+                                    Finaliser
+                            </button> -->
+                        </div>
+                    </div>
+                </HeaderToolbar>
 
                 <CollecteTitle  class="text-end" :collecte="collecte" @projet-change="projetChange" />
 
@@ -76,7 +81,7 @@ export default {
         }
     },
 
-    components: { Intro,  AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation, ConsultationCollecteResume }, //
+    components: { Intro,  AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation, ConsultationCollecteResume }, 
 
     computed: {
         ...mapState(['collecte']),
@@ -84,6 +89,12 @@ export default {
 
     methods: {
         ...mapActions(["setCollecte", "resetResponses", "refreshCollecte"]),
+
+        navigate() {
+            
+                this.$router.push({name: 'CollectKnEnd', params:{id: this.collecte.id}})
+           
+        },
 
 
         /**
@@ -139,6 +150,7 @@ export default {
             this.loadCollecte(to.params.id);
         }
     },
+   
 
     /**
      * Lorsque l'élément est monté, on va lire l'élément à charger passé en paramètre.

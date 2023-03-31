@@ -87,6 +87,8 @@ export default {
             });
         }
     },
+    
+
     mounted() {
         if (this.collecte) {
             this.itemResponse.commentaire = this.collecte.commentaire;

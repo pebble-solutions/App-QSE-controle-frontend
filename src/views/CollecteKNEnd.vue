@@ -6,9 +6,15 @@
 
     <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
         <div class="d-flex justify-content-between align-items-center">
-            <button class="btn btn-secondary" @click.prevent="routeReturn()" >Retour</button>
+            <button class="btn btn-secondary" @click.prevent="retour()" >
+                <i class="bi bi-box-arrow-left me-2"></i>
+                Retour
+            </button>
 
-            <button class="btn btn-primary" @click.prevent="check()" >Enregistrer et Vérifier</button>
+            <button class="btn btn-primary" @click.prevent="check()" >
+                <i class="bi bi-save me-2"></i>
+                Enregistrer et Vérifier
+            </button>
         </div>
     </FooterToolbar>
         
@@ -48,7 +54,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte']),
+        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte', 'refreshResponse']),
 
         updateItem(val){
             this.itemResponse = val
@@ -73,7 +79,7 @@ export default {
         /**
          * Envoie les données du KN a l'api et met à jour le store 
          */
-         check() {
+         record() {
 
             this.pending.validation = true;
             this.itemResponse.done = 'NON';
@@ -89,14 +95,44 @@ export default {
                 })
                 .then((collecte) => {
                     this.refreshCollecte(collecte);
-                    this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
-
+                    this.getReponses(collecte);
                 })
                 .catch(this.$app.catchError).finally(() => this.pending.validation = false);
            
         },
-        routeReturn(){
+        /**
+         * Récupère les réponses de la collecte pour les déplacer dans un élément tampon
+         * du store.
+         */
+         getReponses(collecte) {
+            collecte.reponses.forEach((resp) => {
+                let itemReponse = {};
+
+                itemReponse.question = resp.ligne;
+                itemReponse.reponse = resp.data;
+                itemReponse.commentaire = resp.commentaire;
+                itemReponse.documents = resp.documents;
+
+                let findBloc = this.collecte.formulaire.questions.find((question) => question.id == resp.ligne);
+                itemReponse.bloc = findBloc.information__bloc_id;
+
+                this.refreshResponse(itemReponse);
+            })
+        },
+        /**
+         * envoie les données saisies à l'api, met à jour le store et retourne à la vue précedente
+         */
+
+        retour(){
+            this.record()
             this.$router.go(-1)
+        },
+        /**
+         * envoie les données saisies à l'api, met à jour le store et envoie sur la route de cloture du controle
+         */
+        check(){
+            this.record()
+            this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
         }
        
     },

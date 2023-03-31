@@ -81,13 +81,14 @@ export default {
 
 
         /**
-         * Envoi les reponses du questionnaire a l'api et passe a la page suivante a fonction de l'action.
+         * Envoi les reponses du questionnaire a l'api et passe a la page suivante en fonction de l'action.
          * 
          * @param {object}  to      Le bloc vers lequel naviguer
          */
         navigate(to) {
             this.pending.bloc = true;
 
+            console.log(this.responses,' post bloc');
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',
@@ -134,7 +135,7 @@ export default {
     
     mounted() {
         this.bloc_id = this.$route.params.bloc;
-        this.getReponses();
+        // this.getReponses();
     }
 }
 </script>
