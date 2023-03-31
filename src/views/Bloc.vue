@@ -88,7 +88,6 @@ export default {
         navigate(to) {
             this.pending.bloc = true;
 
-            console.log(this.responses,' post bloc');
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',

@@ -9,20 +9,14 @@
                         <div>
                             <CollecteHeaderToolbar :collecte="collecte" />
                         </div>
-                        <div>
-                        </div>
-                        <div class="d-flex align-items-center" v-if="collecte.done == 'NON'">
-                            <BlocNavigation v-if="($route.name != 'CollectKnEnd' && $route.name!='CollecteVerif')" />
-                           
-                            <button v-if="($route.name != 'CollectKnEnd' && $route.name!='CollecteVerif')" @click.prevent="navigate()" class="btn btn-primary">
-                                <i class="bi bi-file-earmark-text me-2"></i>
-                                <span class="ms-2 d-none d-md-inline">Finaliser</span>
+                        
+                        <div class="d-flex align-items-center" v-if="collecte.done == 'NON' && $route.name =='collecteKnBloc'">
+                            <BlocNavigation />
+                            <!-- v-if="($route.name != 'CollectKnEnd' && $route.name!='CollecteVerif')" -->
+                            <button  @click.prevent="navigate()" class="btn btn-primary">
+                                <i class="bi bi bi-save me-2"></i>
+                                <span class="ms-2 d-none d-md-inline">Sauvegarder</span>
                             </button>
-                            <!-- <button v-else class="btn btn-secondary ms-auto" @click.prevent="navigate('end')" :disabled="pending.bloc">
-                                <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status"></span>
-                                <i v-else class="bi bi-file-earmark-text me-2"></i>
-                                    Finaliser
-                            </button> -->
                         </div>
                     </div>
                 </HeaderToolbar>
@@ -122,23 +116,23 @@ export default {
         projetChange(projet_data) {
             this.refreshCollecte(projet_data);
         },
-        /**
-         * Envoie les données a l'api pour valider le KN
-         */
-        record() {
-            this.pending.collecte = true;
-            console.log(this.reponses, 'reponses')
-            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
-                reponses: JSON.stringify(this.responses),
-                environnement:'private',
-            })
-            .then((data)=> {
-                console.log(data, 'sauvegarder')
-                this.$router.push({name: 'CollecteVerif',params:{id:this.collecte.id} });
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+        // /**
+        //  * Envoie les données a l'api pour valider le KN
+        //  */
+        // record() {
+        //     this.pending.collecte = true;
+        //     console.log(this.reponses, 'reponses')
+        //     this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
+        //         reponses: JSON.stringify(this.responses),
+        //         environnement:'private',
+        //     })
+        //     .then((data)=> {
+        //         console.log(data, 'sauvegarder')
+        //         this.$router.push({name: 'CollecteVerif',params:{id:this.collecte.id} });
+        //     })
+        //     .catch(this.$app.catchError).finally(() => this.pending.collecte = false);
 
-        },
+        // },
     },
 
     /**

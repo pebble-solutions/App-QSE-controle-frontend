@@ -13,7 +13,7 @@
 
             <button class="btn btn-primary" @click.prevent="check()" >
                 <i class="bi bi-save me-2"></i>
-                Enregistrer et Vérifier
+                Enregistrer
             </button>
         </div>
     </FooterToolbar>
@@ -70,7 +70,6 @@ export default {
                 type: 'formulaire'
             }).then((data) => {
                 this.stats = data.stats;
-                console.log(this.stats);
                     if(this.stats.lenght == 0);
                     
 
@@ -83,7 +82,6 @@ export default {
 
             this.pending.validation = true;
             this.itemResponse.done = 'NON';
-            console.log(this.itemResponse, 'item response')
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
                 .then((data) => {
                     return this.refreshCollectes([data]);

@@ -95,19 +95,12 @@ export default {
          */
         validate() {
             if (confirm('Une fois clôturé, le contrôle ne sera plus modifiable.')){
-                // console.log (this.collecte, 'avant done')
-                // this.collecte.done ='OUI';
-                // console.log (this.collecte, 'colle')
-                // this.refreshCollecte(this.collecte)
-                // this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
-
                 this.pending.validation = true;
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                     environnement: 'private',
                     done: 'OUI'
                 })
                 .then((data) => {
-                    console.log(data)
                     return this.refreshCollectes([data]);
                 })
                 .then(() => {
