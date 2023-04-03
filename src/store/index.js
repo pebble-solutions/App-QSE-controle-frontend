@@ -315,7 +315,7 @@ export default createStore({
 		 * 
 		 * @param {object} state Le state de VueX
 		 * @param {object} docOptions 
-		 * - mode 'append' ou 'set'
+		 * - mode 'append', 'set', 'remove'
 		 * - document    un objet document à ajouter
 		 */
 		documentToCollecte(state, docOptions) {
@@ -325,8 +325,16 @@ export default createStore({
 			if (mode == 'set') {
 				state.collecte.documents = [];
 			}
+			else if (mode == 'remove') {
+				const index = state.collecte.documents.findIndex(e => e.id == document.id);
+				if (index !== -1) {
+					state.collecte.documents.splice(index, 1);
+				}
+			}
 
-			state.collecte.documents.push(document);
+			if (['set', 'append'].includes(mode)) {
+				state.collecte.documents.push(document);
+			}
 		}
 	
 	},
@@ -595,6 +603,19 @@ export default createStore({
 		addDocumentToCollecte(context, document) {
 			context.commit('documentToCollecte', {
 				mode: 'append',
+				document
+			});
+		},
+
+		/**
+		 * Supprimer un document de la collecte ouverte
+		 * 
+		 * @param {object} context Instance VueX
+		 * @param {object} document Document à ajouter
+		 */
+		removeDocumentFromCollecte(context, document) {
+			context.commit('documentToCollecte', {
+				mode: 'remove',
 				document
 			});
 		}
