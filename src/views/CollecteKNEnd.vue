@@ -68,30 +68,49 @@ export default {
 
             }).catch(this.$app.catchError);
         },
+
+        /**
+        * Retourne true si toutes les questions Obligatoires sont remplies (On une valeur) et false sinon
+        * 
+        * @return {boolean}
+        */
+        verifObligatoire(){
+            for (let ligne of this.itemResponse) {
+                if (ligne.obligatoire == 'OUI') {
+                    if (!ligne.result) {
+                        return false;
+                    }
+                }
+            }
+            return true
+        },
+
         /**
          * Envoie les données a l'api pour valider le KN
          */
          check() {
+            if (this.verifObligatoire) {
+                this.pending.validation = true;
+                this.itemResponse.done = 'NON';
+                console.log(this.itemResponse, 'item response')
+                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
+                    .then((data) => {
+                        return this.refreshCollectes([data]);
+                    })
+                    .then(() => {
+                        return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                            environnement: 'private'
+                        });
+                    })
+                    .then((collecte) => {
+                        this.refreshCollecte(collecte);
+                        this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
 
-            this.pending.validation = true;
-            this.itemResponse.done = 'NON';
-            console.log(this.itemResponse, 'item response')
-            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
-                .then((data) => {
-                    return this.refreshCollectes([data]);
-                })
-                .then(() => {
-                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
-                        environnement: 'private'
-                    });
-                })
-                .then((collecte) => {
-                    this.refreshCollecte(collecte);
-                    this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
-
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
-           
+                    })
+                    .catch(this.$app.catchError).finally(() => this.pending.validation = false);
+            } else {
+                alert("Toutes les questions obligatoires ne sont pas remplies")
+            }
         },
        
     },

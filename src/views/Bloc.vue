@@ -16,6 +16,19 @@
         
 
         <form-section :questions="lignes" :collecte="collecte" />
+
+        <div v-for="ligne in lignes" :key="ligne.id">
+            <div v-if="ligne.obligatoire == 'OUI'">
+                <br>
+                {{ ligne }}
+                <br><br>
+                {{ ligne.obligatoire }}
+                <br><br>
+                {{ ligne.commentaire }}
+                <br><br>
+                {{ ligne.response }}
+            </div>
+        </div>
         
         
         
