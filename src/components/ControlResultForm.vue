@@ -37,19 +37,20 @@
             <div class="mt-3">
                 <label class="fs-5">Joindre des fichiers</label>
                 <dropzone-document
-                :dropzoneId="'dz-file-'+collecte.id" 
-                :toolbar="['open']" 
-                :params="dzParams" 
-                :url="dzUrl" 
-                :documents="collecte.documents" 
-                
-                @upload-success="addDocument($event)"/>
+                    :dropzoneId="'dz-file-'+collecte.id" 
+                    :toolbar="['open']" 
+                    :params="dzParams" 
+                    :url="dzUrl" 
+                    :documents="collecte.documents" 
+                    
+                    @upload-success="addDocument($event)"
+                    @removed-document="removeDocument($event)" />
             </div>
             <hr>
             
         </div>
 
-        </div>
+    </div>
 
     <div v-else>
         <spinner></spinner>
@@ -133,7 +134,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte', 'refreshResponse']),
+        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte', 'refreshResponse', 'removeDocumentFromCollecte']),
 
         /**
          * enregistre dans le store le résultat général du contrôle
@@ -145,7 +146,6 @@ export default {
                 this.refreshResponse (this.itemResponse.result)
             }
         },
-
 
         /**
          * Envoie les données a l'api pour valider le KN
@@ -208,10 +208,19 @@ export default {
         addDocument(document) {
             this.addDocumentToCollecte(document);
         },
+
+        /**
+         * Retire un document de la collecte
+         * 
+         * @param {object} document Le document à retirer
+         */
+        removeDocument(document) {
+            this.removeDocumentFromCollecte(document);
+        }
     },
     beforeRouteUpdate(){
         alert('quiter')
-        this.validate()
+        this.validate();
     },
 
     mounted() {
@@ -221,7 +230,6 @@ export default {
             this.itemResponse.actions = this.collecte.actions;
             
         }
-
     }
 }
 </script>

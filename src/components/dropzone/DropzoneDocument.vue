@@ -8,7 +8,7 @@
             </button>
         </div>
         <div :id="dzFilesId" class="list-group my-2">
-            <file-item v-for="document in initialDocuments" :document="document" :key="document.id" />
+            <file-item v-for="document in initialDocuments" :document="document" :key="document.id" :input_md5="params.input_md5" @deleted="removeDocument(document)" />
         </div>
     </div>
 
@@ -27,10 +27,9 @@ import Dropzone from 'dropzone';
 import FileItem from './FileItem.vue';
 
 export default {
-  components: { FileItem },
+    components: { FileItem },
 
     props: {
-        toolbar: Array,
         dropzoneId: String,
         params: Object,
         url: String,
@@ -43,7 +42,7 @@ export default {
         }
     },
 
-    emits: ['upload-success', 'upload-error'],
+    emits: ['upload-success', 'upload-error', 'removed-document'],
 
     computed: {
         /**
@@ -70,34 +69,12 @@ export default {
             let el = file.previewElement;
             let progressEl = el.querySelector('.dz-progress-bar');
             let statusEl = el.querySelector('.dz-file-status');
-            let aside = el.querySelector('.dz-file-aside');
             progressEl.remove();
 
             if (status === 'OK') {
-                //this.documents.push(response.data);
-
-                statusEl.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i>';
-
+                el.remove();
+                this.initialDocuments.push(response.data);
                 this.$emit('upload-success', response.data);
-
-                if (this.toolbar) {
-
-                    const toolbarCfg = {
-                        open: {
-                            icon: 'bi bi-folder2-open',
-                            action: response.data.url
-                        }
-                    };
-
-                    this.toolbar.forEach(element => {
-                        let btn = document.createElement('a');
-                        btn.classList.add('btn', 'btn-light', 'btn-sm', 'mx-1');
-                        btn.innerHTML = '<i class="'+toolbarCfg[element].icon+'"></i>';
-                        btn.setAttribute('href', toolbarCfg[element].action);
-                        btn.setAttribute('target', 'document-'+response.data.id);
-                        aside.prepend(btn);
-                    });
-                }
             }
             else {
                 statusEl.innerHTML = '<i class="bi bi-x-circle-fill"></i>';
@@ -169,6 +146,18 @@ export default {
             this.documents.forEach(document => {
                 this.initialDocuments.push(document);
             });
+        },
+
+        /**
+         * Retire un document de la liste
+         * @param {object} document Le document à supprimer
+         */
+        removeDocument(document) {
+            const index = this.initialDocuments.findIndex(e => e.id == document.id);
+            if (index !== -1) {
+                this.initialDocuments.splice(index, 1);
+            }
+            this.$emit('removed-document', document);
         }
     },
 
