@@ -38,7 +38,8 @@
                     :url="dzUrl" 
                     :documents="collecte.documents" 
                     
-                    @upload-success="addDocument($event)"/>
+                    @upload-success="addDocument($event)"
+                    @removed-document="removeDocument($event)" />
             </div>
 
             <div class="d-flex  mt-3" @click.prevent="validate()">
@@ -119,7 +120,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte']),
+        ...mapActions(['refreshCollectes', 'refreshCollecte', 'addDocumentToCollecte', 'removeDocumentFromCollecte']),
 
         /**
          * Envoie les données a l'api pour valider le KN
@@ -154,6 +155,15 @@ export default {
          */
         addDocument(document) {
             this.addDocumentToCollecte(document);
+        },
+
+        /**
+         * Retire un document de la collecte
+         * 
+         * @param {object} document Le document à retirer
+         */
+        removeDocument(document) {
+            this.removeDocumentFromCollecte(document);
         }
     },
 

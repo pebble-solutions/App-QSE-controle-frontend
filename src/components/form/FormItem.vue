@@ -32,6 +32,7 @@
                     :documents="itemResponse.documents" 
                     
                     @upload-success="addDocument($event)"
+                    @removed-document="removeDocument($event)"
 
                     v-if="inited"
                     />
@@ -220,6 +221,18 @@ export default {
         addDocument(document) {
             this.itemResponse.documents.push(document);
             this.refreshResponse(this.itemResponse);
+        },
+
+        /**
+         * Retire un document à la collection de documents liés à la réponse active.
+         * @param {object} document Le document à retirer
+         */
+        removeDocument(document) {
+            const index = this.itemResponse.documents.findIndex(e => e.id == document.id);
+            if (index !== -1) {
+                this.itemResponse.documents.splice(index, 1);
+                this.refreshResponse(this.itemResponse);
+            }
         }
     },
 
