@@ -140,7 +140,6 @@ export default {
          */
         refreshResult(val) {
             if(this.itemResponse.result !=val) {
-                console.log(val);
                 this.itemResponse.result = val;
                 this.refreshResponse (this.itemResponse.result)
             }
@@ -178,8 +177,6 @@ export default {
         read() {
             this.pending.validation = true;
             this.itemResponse.done ='NON'
-
-            console.log(this.itemResponse, 'consult')
                 this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
                 .then((data) => {
                     return this.refreshCollectes([data]);

@@ -13,7 +13,7 @@
 
             <button class="btn btn-primary" @click.prevent="check()" >
                 <i class="bi bi-save me-2"></i>
-                Enregistrer
+                Vérifier
             </button>
         </div>
     </FooterToolbar>
