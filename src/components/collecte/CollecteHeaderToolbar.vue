@@ -1,13 +1,13 @@
 <template>
 
-<div class="d-flex align-items-center">
-    <UserImage class="me-2" :name="collecte.cible_nom"></UserImage>
-    <span class="me-2 d-none d-md-inline">{{collecte.cible_nom}}</span>
-    <span class="fw-lighter">
-        <span class="me-2">#{{collecte.id}}</span>
-        <span>{{collecte.projet_label}}</span>
-    </span>
-</div>
+    <div class="d-flex align-items-center">
+        <UserImage class="me-2" :name="collecte.cible_nom"></UserImage>
+        <span class="me-2 d-none d-md-inline">{{collecte.cible_nom}}</span>
+        <span class="fw-lighter">
+            <span class="me-2">#{{collecte.id}}</span>
+            <span v-if="collecte.projet_label">{{collecte.projet_label}}</span>
+        </span>
+    </div>
 
 </template>
 

@@ -3,14 +3,14 @@
         <spinner v-if="pending.collecte" />
         <template v-else>
             
-                <alert-message icon="bi-info-square" class="card" v-if="collecte.done =='NON'">
-                    Le contrôle de {{ collecte.cible_nom }} n'est pas clôturé
-                </alert-message>
-                <alert-message icon="bi-info-square" class="card" v-else-if="collecte.done =='OUI'">
-                    Le contrôle de {{collecte.cible_nom}} (#{{collecte.id}}) est enregistré et n'est plus modifiable. <br>
-                    Vous pourrez le retrouver via le menu consultation.<br>
-                    Souhaitez-vous programmer un nouveau contrôle rattaché?
-                </alert-message>
+            <alert-message icon="bi-info-square" class="mt-2" v-if="collecte.done =='NON'">
+                Le contrôle de {{ collecte.cible_nom }} n'est pas clôturé
+            </alert-message>
+            <alert-message icon="bi-info-square" v-else-if="collecte.done =='OUI'">
+                Le contrôle de {{collecte.cible_nom}} (#{{collecte.id}}) est enregistré et n'est plus modifiable. <br>
+                Vous pourrez le retrouver via le menu consultation.<br>
+                Souhaitez-vous programmer un nouveau contrôle rattaché?
+            </alert-message>
             
             <consultation-collecte-resume :collecte="collecte" :readonly="false" :timeline="false" v-if="collecte"></consultation-collecte-resume>
             
@@ -18,9 +18,9 @@
                 <div class="d-flex justify-content-between align-items-center g-4">
                     <button class="btn btn-secondary" @click.prevent="routeToBilan()" >
                         <i class="bi bi-box-arrow-left me-2"></i>
-                        Retour
+                        Modifier
                     </button>
-                    <button class="btn btn-primary" @click.prevent="validate()" >
+                    <button class="btn btn-success btn-lg" @click.prevent="validate()" >
                         <i class="bi bi-check-square me-2"></i>
                         Clôturer
                     </button>
@@ -77,9 +77,6 @@ export default {
 
     computed: {
         ...mapState(['collectes','collecte']),
-
-
-        
     },
     methods: {
 

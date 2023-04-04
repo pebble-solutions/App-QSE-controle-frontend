@@ -1,25 +1,26 @@
 <template>
 
+    <HeaderToolbar v-if="collecte">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <CollecteHeaderToolbar :collecte="collecte" />
+            </div>
+            
+            <div class="d-flex align-items-center" v-if="collecte.done == 'NON' && $route.name =='collecteKnBloc'">
+                <BlocNavigation />
+                <!-- v-if="($route.name != 'CollectKnEnd' && $route.name!='CollecteVerif')" -->
+                <button  @click.prevent="record()" class="btn btn-outline-primary" :disabled="pending.recordCollecte">
+                    <i class="bi bi bi-save me-1" v-if="!pending.recordCollecte"></i>
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" v-else></span>
+                    <span class="ms-2 d-none d-md-inline">Sauvegarder</span>
+                </button>
+            </div>
+        </div>
+    </HeaderToolbar>
     
-    <div class="container py-3">
+    <div class="container pb-3">
         <template v-if="!pending.collecte">
             <template v-if="collecte">
-                <HeaderToolbar v-if="collecte">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <CollecteHeaderToolbar :collecte="collecte" />
-                        </div>
-                        
-                        <div class="d-flex align-items-center" v-if="collecte.done == 'NON' && $route.name =='collecteKnBloc'">
-                            <BlocNavigation />
-                            <!-- v-if="($route.name != 'CollectKnEnd' && $route.name!='CollecteVerif')" -->
-                            <button  @click.prevent="navigate()" class="btn btn-primary">
-                                <i class="bi bi bi-save me-2"></i>
-                                <span class="ms-2 d-none d-md-inline">Sauvegarder</span>
-                            </button>
-                        </div>
-                    </div>
-                </HeaderToolbar>
 
                 <CollecteTitle  class="text-end" :collecte="collecte" @projet-change="projetChange" />
 
@@ -69,25 +70,23 @@ export default {
     data() {
         return {
             pending: {
-                collecte: true
+                collecte: true,
+                recordCollecte: false
             },
-
         }
     },
 
     components: { Intro,  AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation, ConsultationCollecteResume }, 
 
     computed: {
-        ...mapState(['collecte']),
+        ...mapState(['collecte', 'responses']),
     },
 
     methods: {
         ...mapActions(["setCollecte", "resetResponses", "refreshCollecte"]),
 
         navigate() {
-            
-                this.$router.push({name: 'CollectKnEnd', params:{id: this.collecte.id}})
-           
+            this.$router.push({name: 'CollectKnEnd', params:{id: this.collecte.id}})
         },
 
 
@@ -116,23 +115,19 @@ export default {
         projetChange(projet_data) {
             this.refreshCollecte(projet_data);
         },
-        // /**
-        //  * Envoie les données a l'api pour valider le KN
-        //  */
-        // record() {
-        //     this.pending.collecte = true;
-        //     console.log(this.reponses, 'reponses')
-        //     this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
-        //         reponses: JSON.stringify(this.responses),
-        //         environnement:'private',
-        //     })
-        //     .then((data)=> {
-        //         console.log(data, 'sauvegarder')
-        //         this.$router.push({name: 'CollecteVerif',params:{id:this.collecte.id} });
-        //     })
-        //     .catch(this.$app.catchError).finally(() => this.pending.collecte = false);
 
-        // },
+        /**
+         * Enregistre les données du KN
+         */
+        record() {
+            this.pending.recordCollecte = true;
+            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
+                reponses: JSON.stringify(this.responses),
+                environnement:'private',
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.recordCollecte = false);
+
+        },
     },
 
     /**
