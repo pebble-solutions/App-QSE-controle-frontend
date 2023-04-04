@@ -113,13 +113,16 @@
                                         <span class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
                                             {{question.ligne}}
                                         </span>
+                                        <p v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark mt-2">Obligatoire</p>
                                         <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)" v-if="['sami', 'integer', 'float'].includes(question.type)">{{getQuestionReponse(question)}}</strong>
                                     </div>
 
-                                    <em v-if="!['sami', 'integer', 'float'].includes(question.type)" class="d-block">
-                                        {{ getQuestionReponse(question) }}
-                                    </em>
-
+                                    <div class="align-self-center">
+                                        <em v-if="!['sami', 'integer', 'float'].includes(question.type)" class="d-block">
+                                            {{ getQuestionReponse(question) }}
+                                        </em>
+                                    </div>
+                                    
                                     <div class="fs-7 text-muted" v-if="question.corbeille === 'OUI'">
                                         <i class="bi bi-trash me-1"></i> Cette question n'existe plus dans la dernière version du formulaire
                                     </div>

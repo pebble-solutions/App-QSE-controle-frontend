@@ -17,7 +17,7 @@
             <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark" v-if="collecte.done == 'NON'">
                 <div class="d-flex justify-content-between align-items-center">
                     <button class="btn btn-secondary" @click.prevent="routeToBilan()" >Retour</button>
-                    
+
                     <button class="btn btn-lg btn-danger" @click.prevent="validate()" >Terminer</button>
                 </div>
             </FooterToolbar>
@@ -66,6 +66,8 @@ export default {
                 environnement: 'private',
                 done: '',
             },
+            tabQuestionObligatoire : [],
+            validTerminer : true
             
         }
     },
@@ -89,18 +91,70 @@ export default {
          * Envoie les données a l'api pour valider le KN
          */
         validate(collecte) {
-            if (confirm('terminer votre contrôle? Vous ne pourrez plus le modifier')){
-                this.collecte.done ='OUI';
-                console.log (this.collecte, 'colle')
-                this.refreshCollecte(collecte)
-                this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
+            if (this.validTerminer){
+                if (confirm('terminer votre contrôle? Vous ne pourrez plus le modifier')){
+                    this.collecte.done ='OUI';
+                    console.log (this.collecte, 'colle')
+                    this.refreshCollecte(collecte)
+                    this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
+                }
+            } else {
+                alert("Vous ne pouvez pas terminez le controle car toutes les questions obligatoires ne sont pas remplies : " + this.tabQuestionObligatoire)
             }
         },
 
-      
-    },
-    
+        /**
+         * Retourne true si toutes les questions obligatoires sont remplies (On une valeur) et false sinon
+         * 
+         * @param {array} lignes 
+         * @param {array} responses 
+         * 
+         * @returns {boolean}
+         */
+        verifQuestionObligatoire(lignes, responses) {
+            let tabQuestion = []
+            for (const {obligatoire, id, question} of lignes) {
+                if (obligatoire === 'OUI') {
+                    let trouvee = false;
+                    for (const resp of responses) {
+                        if (resp.question === id) {
+                            if (!resp.data) {
+                                tabQuestion.push(question);
+                            }
+                            trouvee = true;
+                            break;
+                        }
+                    }
+                    if (!trouvee) {
+                        tabQuestion.push(question);
+                    }
+                }
+            }
 
+            if (tabQuestion.length) {
+                this.tabQuestionObligatoire = tabQuestion;
+                return true
+            }else {
+                return false
+            }
+        },
+
+        /**
+         * active une alerte si une des question obligatoire n'a pas de valeur de réponse
+         */
+        alerteVerifQuestion(){
+            if (this.verifQuestionObligatoire(this.collecte.formulaire.questions, this.collecte.reponses)) {
+                alert("Vous n'avez pas répondu a toutes les questions obligatoires : " + this.tabQuestionObligatoire);
+                this.validTerminer = false
+            } else {
+                this.validTerminer = true
+            }
+        }
+    },
+
+    mounted(){
+        this.alerteVerifQuestion()
+    }
     
 }
 
