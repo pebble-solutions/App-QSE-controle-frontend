@@ -41,6 +41,7 @@
 
     </div>
 </template>
+
 <script>
 
 import { GoogleCharts } from 'google-charts';
