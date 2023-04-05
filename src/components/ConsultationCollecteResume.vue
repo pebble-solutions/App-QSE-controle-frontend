@@ -110,10 +110,10 @@
                             <template v-for="question in getBlocQuestions(bloc)" :key="question.id">
                                 <div class="list-group-item" v-if="question.corbeille !== 'OUI' || getQuestionReponse(question)">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <span class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
+                                        <span class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null, 'text-danger' : question.obligatoire == 'OUI' && !getQuestionReponse(question)}">
                                             {{question.ligne}}
+                                            <p v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark mt-2">Obligatoire</p>
                                         </span>
-                                        <p v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark mt-2">Obligatoire</p>
                                         <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)" v-if="['sami', 'integer', 'float'].includes(question.type)">{{getQuestionReponse(question)}}</strong>
                                     </div>
 
