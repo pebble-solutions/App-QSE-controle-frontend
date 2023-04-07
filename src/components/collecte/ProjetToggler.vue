@@ -1,6 +1,6 @@
 <template>
 
-    <button @click.prevent="toggleForm()" v-if="!showForm && !readonly" class="btn btn-light" :title="collecte.projet_label" :disabled="pending.collecte">
+    <button @click.prevent="toggleForm()" v-if="!showForm && !readonly" class="btn btn-light" :class="classList" :title="collecte.projet_label" :disabled="pending.collecte">
         <i class="bi bi-boxes me-2" v-if="!pending.collecte"></i>
         <span class="spinner-border spinner-border-sm me-2" role="status" v-else></span>
         <span v-if="hasProject">{{ shortProjetLabel }}</span>
@@ -76,6 +76,15 @@ export default {
                 projet_label += '...';
             }
             return projet_label;
+        },
+
+        /**
+         * Retourne la liste des classes CSS en fonction de l'état du projet
+         * 
+         * @return {string}
+         */
+        classList() {
+            return this.collecte.projet_id ? '' : 'text-secondary text-decoration-underline';
         }
     },
 
