@@ -92,6 +92,8 @@ export default createStore({
 				}
 			});
 		},
+		
+
 		/**
 		 * Met à jour une réponse dans le store
 		 * 

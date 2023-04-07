@@ -81,7 +81,7 @@ export default {
 
 
         /**
-         * Envoi les reponses du questionnaire a l'api et passe a la page suivante a fonction de l'action.
+         * Envoi les reponses du questionnaire a l'api et passe a la page suivante en fonction de l'action.
          * 
          * @param {object}  to      Le bloc vers lequel naviguer
          */
@@ -134,7 +134,7 @@ export default {
     
     mounted() {
         this.bloc_id = this.$route.params.bloc;
-        this.getReponses();
+        // this.getReponses();
     }
 }
 </script>

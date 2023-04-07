@@ -1,5 +1,5 @@
 <template>
-    <div class="container py-2">
+    <div class="container py-2 px-2">
         <h1 class="fs-3 my-3">Consultation des contrôles réalisés par <strong>projets</strong></h1>
         <div class="card my-2">
             <div class="card-body">

@@ -1,5 +1,5 @@
 <template>
-    <div class="container px-0 py-2">
+    <div class="container px-2 py-2">
         <div class="d-flex flex-wrap justify-content-between align-items-center my-2 mb-3">
             <h1 class="fs-3 m-0 me-2">{{ formulaireName }}</h1> 
             <div class="badge bg-secondary">{{collectes.length}}</div>

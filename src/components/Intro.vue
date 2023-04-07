@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
+import {mapState, mapActions} from 'vuex';
 
 export default {
     data() {
@@ -55,10 +55,8 @@ export default {
             if (this.collecte.commentaire !== this.itemResponse.commentaire) {
                 this.pending.collecte = true;
                 this.itemResponse.environnement = "private";
-                console.log(this.itemResponse.commentaire,'commentaire');
                 this.$app.apiPost("data/POST/collecte/" + this.collecte.id, this.itemResponse)
                     .then((data) => {
-                        console.log(data, 'retour api');
                         return this.refreshCollectes([data]);
                     })
                     .then(() => {
@@ -87,6 +85,8 @@ export default {
             });
         }
     },
+    
+
     mounted() {
         if (this.collecte) {
             this.itemResponse.commentaire = this.collecte.commentaire;

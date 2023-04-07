@@ -96,15 +96,7 @@
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse-'+bloc.id" aria-expanded="true" :aria-controls="'collapse-'+bloc.id">
                             <div class="d-flex justify-content-between align-items-center w-100">
                                 <div> {{bloc.bloc}} </div>
-
-                                <!-- <div class="btn-group progress progress-ht me-3">
-                                    <div class="btn progress-bar bg-success" role="progressbar" style="width: 45%" >8</div>
-                                    <div class="btn progress-bar bg-primary" role="progressbar" style="width: 30%" >6</div>
-                                    <div class="btn progress-bar bg-warning" role="progressbar" style="width: 20%" >4</div>
-                                    <div class="btn progress-bar bg-danger" role="progressbar" style="width: 6%" >2</div>
-                                </div> -->
                             </div>
-                            <!-- {{bloc.bloc}}  -->
                         </button>
                     </h2>
 

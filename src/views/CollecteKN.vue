@@ -2,27 +2,22 @@
 
     <HeaderToolbar v-if="collecte">
         <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <CollecteHeaderToolbar :collecte="collecte" />
-            </div>
-            <div>
-            </div>
-            <div class="d-flex align-items-center" v-if="collecte.done == 'NON'">
+            <CollecteHeaderToolbar :collecte="collecte" :projet-toggler="projetToggler" @projet-change="projetChange($event)" />
+            
+            <div class="d-flex align-items-center" v-if="collecte.done == 'NON' && $route.name =='collecteKnBloc'">
                 <BlocNavigation />
-               
-                <button @click.prevent="record()" class="btn btn-secondary">
-                    <i class="bi bi-save"></i>
+                <button  @click.prevent="record()" class="btn btn-outline-primary" :disabled="pending.recordCollecte">
+                    <i class="bi bi bi-save me-1" v-if="!pending.recordCollecte"></i>
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" v-else></span>
                     <span class="ms-2 d-none d-md-inline">Sauvegarder</span>
                 </button>
             </div>
         </div>
     </HeaderToolbar>
-
+    
     <div class="container py-3">
         <template v-if="!pending.collecte">
             <template v-if="collecte">
-
-                <CollecteTitle  class="text-end" :collecte="collecte" @projet-change="projetChange" />
 
                 <Timeline :collecte="collecte" route="collecte" />
 
@@ -54,11 +49,9 @@
 
 <script>
 import {mapState, mapActions} from 'vuex';
-// import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Intro from '../components/Intro.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
-import CollecteTitle from '../components/CollecteTitle.vue';
 import HeaderToolbar from '../components/pebble-ui/toolbar/HeaderToolbar.vue';
 import CollecteHeaderToolbar from '../components/collecte/CollecteHeaderToolbar.vue';
 import Timeline from '../components/collecte/Timeline.vue';
@@ -70,20 +63,35 @@ export default {
     data() {
         return {
             pending: {
-                collecte: true
+                collecte: true,
+                recordCollecte: false
             },
-
         }
     },
 
-    components: { Intro,  AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation, ConsultationCollecteResume }, //
+    components: { Intro,  AlertMessage, Spinner, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation, ConsultationCollecteResume }, 
 
     computed: {
-        ...mapState(['collecte']),
+        ...mapState(['collecte', 'responses']),
+
+        /**
+         * Retourne true sur le formulaire de changement de projet doit être disponible.
+         * 
+         * On autorise le changement de projet uniquement sur l'accueil du contrôle.
+         * 
+         * @return {bool}
+         */
+        projetToggler() {
+            return this.$route.name == 'collecteKN';
+        }
     },
 
     methods: {
         ...mapActions(["setCollecte", "resetResponses", "refreshCollecte"]),
+
+        navigate() {
+            this.$router.push({name: 'CollectKnEnd', params:{id: this.collecte.id}})
+        },
 
 
         /**
@@ -102,30 +110,26 @@ export default {
         },
 
         /**
-         * Action déclenchée lorsque les informations du projet sont modifiées.
+         * Action déclenchée pour mettre à jour les informations du projet lié
          * 
-         * @param {object} projet_data Données du projet comportant deux infos :
+         * @param {object} projet_data Données du projet :
          * - projet_id
          * - projet_label
          */
         projetChange(projet_data) {
             this.refreshCollecte(projet_data);
         },
+
         /**
-         * Envoie les données a l'api pour valider le KN
+         * Enregistre les données du KN
          */
         record() {
-            this.pending.collecte = true;
-            console.log(this.reponses, 'reponses')
+            this.pending.recordCollecte = true;
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',
             })
-            .then((data)=> {
-                console.log(data, 'sauvegarder')
-                this.$router.push({name: 'CollecteVerif',params:{id:this.collecte.id} });
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+            .catch(this.$app.catchError).finally(() => this.pending.recordCollecte = false);
 
         },
     },
@@ -139,6 +143,7 @@ export default {
             this.loadCollecte(to.params.id);
         }
     },
+   
 
     /**
      * Lorsque l'élément est monté, on va lire l'élément à charger passé en paramètre.

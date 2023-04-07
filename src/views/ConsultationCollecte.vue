@@ -59,7 +59,6 @@ export default {
                 afficher_corbeille: 'aussi'
             })
             .then((data) => {
-                console.log(data, 'collecte consultée')
                 this.setCollecte(data);
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
