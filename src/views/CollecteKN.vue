@@ -2,13 +2,10 @@
 
     <HeaderToolbar v-if="collecte">
         <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <CollecteHeaderToolbar :collecte="collecte" />
-            </div>
+            <CollecteHeaderToolbar :collecte="collecte" :projet-toggler="projetToggler" @projet-change="projetChange($event)" />
             
             <div class="d-flex align-items-center" v-if="collecte.done == 'NON' && $route.name =='collecteKnBloc'">
                 <BlocNavigation />
-                <!-- v-if="($route.name != 'CollectKnEnd' && $route.name!='CollecteVerif')" -->
                 <button  @click.prevent="record()" class="btn btn-outline-primary" :disabled="pending.recordCollecte">
                     <i class="bi bi bi-save me-1" v-if="!pending.recordCollecte"></i>
                     <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" v-else></span>
@@ -18,11 +15,9 @@
         </div>
     </HeaderToolbar>
     
-    <div class="container pb-3">
+    <div class="container py-3">
         <template v-if="!pending.collecte">
             <template v-if="collecte">
-
-                <CollecteTitle  class="text-end" :collecte="collecte" @projet-change="projetChange" />
 
                 <Timeline :collecte="collecte" route="collecte" />
 
@@ -54,11 +49,9 @@
 
 <script>
 import {mapState, mapActions} from 'vuex';
-// import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Intro from '../components/Intro.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
-import CollecteTitle from '../components/CollecteTitle.vue';
 import HeaderToolbar from '../components/pebble-ui/toolbar/HeaderToolbar.vue';
 import CollecteHeaderToolbar from '../components/collecte/CollecteHeaderToolbar.vue';
 import Timeline from '../components/collecte/Timeline.vue';
@@ -76,10 +69,21 @@ export default {
         }
     },
 
-    components: { Intro,  AlertMessage, Spinner, CollecteTitle, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation, ConsultationCollecteResume }, 
+    components: { Intro,  AlertMessage, Spinner, HeaderToolbar, CollecteHeaderToolbar, Timeline, BlocNavigation, ConsultationCollecteResume }, 
 
     computed: {
         ...mapState(['collecte', 'responses']),
+
+        /**
+         * Retourne true sur le formulaire de changement de projet doit être disponible.
+         * 
+         * On autorise le changement de projet uniquement sur l'accueil du contrôle.
+         * 
+         * @return {bool}
+         */
+        projetToggler() {
+            return this.$route.name == 'collecteKN';
+        }
     },
 
     methods: {
@@ -106,9 +110,9 @@ export default {
         },
 
         /**
-         * Action déclenchée lorsque les informations du projet sont modifiées.
+         * Action déclenchée pour mettre à jour les informations du projet lié
          * 
-         * @param {object} projet_data Données du projet comportant deux infos :
+         * @param {object} projet_data Données du projet :
          * - projet_id
          * - projet_label
          */

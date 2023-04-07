@@ -51,7 +51,6 @@
                             <i class="bi bi-boxes me-2"></i>
                             {{ projet_label }}
                         </div>
-                        <div v-else class="text-warning">Projet non renseigné</div>
                     </div>
                     <div class="fw-light fs-7" v-if="displayForm">
                         <div class="d-flex" v-if="collecte.formulaire">
