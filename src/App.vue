@@ -23,7 +23,7 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<AppMenuItem href="/qualite_1" look="dark" icon="bi bi-star">Qualité</AppMenuItem>
+				<!-- <AppMenuItem href="/qualite_1" look="dark" icon="bi bi-star">Qualité</AppMenuItem> -->
 
 			</AppMenu>
 		</template>
@@ -97,15 +97,16 @@
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'qualite'">
-					Menu des vérifications de niveau 1 et 2
+						<SearchHab/>
+						<AppMenuItem>John DOE</AppMenuItem>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
 		</template>
-
-		<template v-slot:core>
-			<div class="bg-light" v-if="isConnectedUser">
+		
+		<template v-slot:core v-if="isConnectedUser">
+			<div class="bg-light" >
 				<router-view/>
 			</div>
 		</template>
@@ -141,6 +142,7 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
+// import SearchHab from './components/menu/SearchHab.vue'
 
 export default {
 
@@ -191,7 +193,8 @@ export default {
 				mode: 'collecte',
 				start: 0,
 				limit: 50,
-			}
+			},
+			
 		}
 	},
 
@@ -477,21 +480,8 @@ export default {
         },
 	},
 
-	components: { AppWrapper,
-		AppMenu,
-		AppMenuItem,
-		FormStats,
-		CollecteItem,
-		AlertMessage,
-		StatsHeader,
-		ProgrammationHeader,
-		FormulaireItem,
-		ControleHeader,
-		Spinner,
-		SearchControl,
-		CollecteItemDone,
-		ProjectItemDone}, 
-		//SearchControl,
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone }, 
+	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
 			this.$router.push('/programmation');
