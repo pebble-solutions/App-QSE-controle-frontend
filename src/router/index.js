@@ -92,7 +92,14 @@ const routes = [
   {
     path: '/consultation/:idCollecte',
     name: 'consultationCollecte',
-    component: () => import("../views/ConsultationCollecte.vue")
+    component: () => import("../views/ConsultationCollecte.vue"),
+    children: [
+      {
+        path:'new',
+        name: 'newCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteNew.vue')
+      }
+    ]
   },
 
   {

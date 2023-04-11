@@ -33,8 +33,11 @@
             :collecte="{id: collecte.following_id, result_var: collecte.following_result}" 
             direction="following"
             v-if="collecte.following_id" />
-        <div v-else></div>
+            <!-- <div v-else>Veille?</div> -->
+       <!-- <TimelineProgElementVue v-else></TimelineProgElementVue> -->
 
+        <TimelineProgElement :collecte="collecte" v-else-if="this.$route.name.includes('consultation')"/>
+        <div v-else></div>
     </div>
     
 
@@ -72,6 +75,7 @@
 
 import {classNameFromSAMI, dateFormat} from '../../js/collecte.js';
 import TimelineNavElement from './TimelineNavElement.vue';
+import TimelineProgElement from './TimelineProgElement.vue';
 
 export default {
     props: {
@@ -114,7 +118,7 @@ export default {
         }
     },
 
-    components: {  TimelineNavElement }
+    components: {  TimelineNavElement, TimelineProgElement }
 }
 
 </script>

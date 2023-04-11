@@ -96,10 +96,10 @@
 	
 				</template>
 			</AppMenu>
-			<AppMenu v-else-if="listMode === 'qualite'">
+			<!-- <AppMenu v-else-if="listMode === 'qualite'">
 						<SearchHab/>
 						<AppMenuItem>John DOE</AppMenuItem>
-			</AppMenu>
+			</AppMenu> -->
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
@@ -222,7 +222,8 @@ export default {
 				'consultationFormCollecte',
 				'consultationProjet',
 				'consultationProjetList',
-				'consultationProjetCollecte'
+				'consultationProjetCollecte',
+				'newCollecte'
 				]
 				.includes(this.$route.name)) {
 				return 'consultation';
