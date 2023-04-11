@@ -22,7 +22,7 @@
                 </h4>
                 <div class="text-primary border border-primary badge rounded-pill text-bg-light" v-if="collecte.date_done">
                     <i class="bi bi-calendar-check me-1"></i>
-                    <span class="d-none d-sm-inline">Terminé le</span>
+                    <span class="d-none d-sm-inline">Clôturé le</span>
                     {{changeFormatDateLit(collecte.date_done)}}
                 </div>
             </div>

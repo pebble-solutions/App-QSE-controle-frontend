@@ -42,7 +42,6 @@ export default {
                 previous_id: collecte.id,
                 previous_result: collecte.result_var,
             };
-           
             return nextCollecte;
         }
     },
@@ -54,7 +53,14 @@ export default {
          * @param {object} collecte
          */
         routeToFormulaire(collecte) {
+           
             this.$router.push("/collecte/"+collecte.id);
+            
+            // if(){
+            // } else {
+            //     this.$router.push("/collecte/"+collecte.previous_id);
+
+            // }
         },
 
        

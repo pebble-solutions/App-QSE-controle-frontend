@@ -9,11 +9,11 @@
             <alert-message icon="bi-info-square" v-else-if="collecte.done =='OUI'">
                 <div class="d-flex flex-column">
                     <div class="my-2">
-                        Le contrôle de {{collecte.cible_nom}} (#{{collecte.id}}) est enregistré et n'est plus modifiable. <br>
+                        Le contrôle #{{collecte.id}} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> est enregistré et n'est plus modifiable. <br>
                         Vous pourrez le retrouver via le menu consultation.<br>
                     </div>
-                    <div>
-                        Souhaitez-vous programmer la prochaine veille?
+                    <div v-if="!collecte.following_id">
+                         <strong>Souhaitez-vous programmer la prochaine veille?</strong> 
                         <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
                             <a class="btn btn-outline-primary ms-3" :href="href" @click="navigate">
                                 <i class="bi bi-plus-square me-2"></i>
@@ -42,7 +42,7 @@
                 </div>
             </FooterToolbar>
             <FooterToolbar v-else wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center" v-if="!collecte.following_id">
                     <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
                         <a class="btn btn-lg btn-primary" :href="href" @click="navigate">
                             <i class="bi bi-plus-square me-2"></i>

@@ -71,6 +71,14 @@
                 
             </div>
         </div>
+        <alert-message
+            icon="bi-info-square-fill" 
+            className="my-3" 
+            
+        v-if="collecte.following_id">
+            un contrôle de veille est programmé
+
+        </alert-message>
         
  
         <div v-if="collecte.documents.length && (isReadable)" class="card my-3">
@@ -141,8 +149,9 @@
             icon="bi-exclamation-triangle-fill" 
             className="my-3" 
             variant="warning" v-else>
-                Ce contrôle n'est pas consultable car il n'est pas terminé.
+                Ce contrôle n'est pas consultable car il n'est pas clôturé.
         </alert-message>
+        
 
         <!-- <div class="text-center my-3" v-if="!readonly">
             <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">

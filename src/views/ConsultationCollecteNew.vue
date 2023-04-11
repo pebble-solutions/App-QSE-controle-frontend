@@ -3,7 +3,7 @@
         :collecte="collecteObject"
         :formulaires="formulaires"
         :personnels="listActifs"
-
+        :readonly="read"
         @updated="routeToFormulaire" />
 </template>
 
@@ -15,7 +15,7 @@ export default {
 
     data() {
         return {
-            read : ['formulaire']
+            read : ['formulaire','cible_personnel']
         }
     },
 
@@ -29,6 +29,8 @@ export default {
          collecteObject() {
             let collecte = JSON.parse(JSON.stringify(this.collecte));
             collecte.formulaire = collecte.information__groupe_id;
+            
+            console.log(collecte)
             let newCollecte = {
                 formulaire: collecte.formulaire,
                 projet_id: collecte.projet_id,
@@ -38,7 +40,7 @@ export default {
                 previous_id: collecte.id,
                 previous_result: collecte.result_var,
             };
-           
+           console.log(this.collecte);
             return newCollecte;
         }
     },
@@ -47,18 +49,17 @@ export default {
         /**
          * Affiche 
          * 
-         * @param {object} collecte
+         * @param {object} //collecte
          */
         routeToFormulaire(collecte) {
-            this.$router.push("/consultation/"+collecte.id);
+            // alert('le nouveau contrôle est programmé')
+            this.$router.push("/consultation/"+collecte.previous_id);
         },
     },
 
     components: { ProgrammationCollecteModal },
 
-    mounted() {
-
-    }
+   
 }
 
 </script>

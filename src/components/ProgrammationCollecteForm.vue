@@ -10,8 +10,8 @@
         </div>
 
         <div class="col mb-3">
-            <label for="collecteEnqueteur" class="form-label">Projet</label>
-            <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.projet_id">
+            <label for="collecteProjet" class="form-label">Projet</label>
+            <select class="form-select" id="collecteProjet" name="projet" v-model="tmpCollecte.projet_id" :disabled="isReadonly('projet')">
                 <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
             </select>
         </div>
