@@ -4,7 +4,7 @@
         <template v-else>
             
             <alert-message icon="bi-info-square" class="mt-2" v-if="collecte.done =='NON'">
-                Le contrôle de {{ collecte.cible_nom }} n'est pas clôturé
+                Le contrôle #{{ collecte.id }} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> n'est pas clôturé
             </alert-message>
             <alert-message icon="bi-info-square" v-else-if="collecte.done =='OUI'">
                 <div class="d-flex flex-column">

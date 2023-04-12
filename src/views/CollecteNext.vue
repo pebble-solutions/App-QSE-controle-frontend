@@ -10,13 +10,16 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import ProgrammationCollecteModal from '../components/ProgrammationCollecteModal.vue'
 
 export default {
 
     data() {
         return {
+            pending: {
+                collecte: false
+            },
             
             read : ['formulaire','enqueteur_personnel','cible_personnel']              
             }
@@ -47,24 +50,47 @@ export default {
     },
 
     methods: {
+        ...mapActions(['setCollecte']),
         /**
-         * Affiche 
+         * Charge une collecte depuis le serveur dans le store.
+         * 
+         * @param {number} id L'ID de la collecte à charger
+         */
+         loadCollecte(id) {
+            this.pending.collecte = true;
+            this.$app.apiGet('data/GET/collecte/'+id, {
+                environnement: 'private'
+            })
+            .then((data) => {
+                this.setCollecte(data);
+            }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+        },
+        
+        /**
+         * change la route en fonction de la date du nouveau contrôle
          * 
          * @param {object} collecte
          */
         routeToFormulaire(collecte) {
+            let dateDay = new Date().toLocaleDateString('fr-FR')
+            let dateCollecte = new Date(collecte.date).toLocaleDateString('fr-FR')
+             console.log(dateDay, dateCollecte, 'les deux')
+            if(dateDay == dateCollecte){
+                console.log(collecte.id)
+                this.$router.push("/collecte/"+collecte.id);
+            }
+            else {
+                console.log(collecte.previous_id)
+                this.loadCollecte(collecte.previous_id)
+                this.$router.push("/collecte/"+collecte.previous_id);
+                // Fonction manquante !n'affiche pas la nouvelle collecte dans la timeline et pas de message indiquant que c'est crée 
+            }
            
-            this.$router.push("/collecte/"+collecte.id);
-            
-            // if(){
-            // } else {
-            //     this.$router.push("/collecte/"+collecte.previous_id);
-
-            // }
         },
-
        
     },
+
+    
 
     components: { ProgrammationCollecteModal },
 
