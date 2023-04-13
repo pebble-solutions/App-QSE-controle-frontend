@@ -111,7 +111,7 @@ export default {
          * Retourne les statistiques 
          */
         samiStats() {
-            return this.stats[this.collecte.information__groupe_id]?.type.sami;
+            return this.stats[this.collecte.information__groupe_id]?.type?.sami;
         },
 
         /**

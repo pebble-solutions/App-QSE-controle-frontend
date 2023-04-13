@@ -364,7 +364,6 @@ export default {
 
     mounted () {
         this.collecte;
-        console.log(this.collecte)
     }
 }
 </script>

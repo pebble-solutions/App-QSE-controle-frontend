@@ -96,10 +96,6 @@
 	
 				</template>
 			</AppMenu>
-			<AppMenu v-else-if="listMode === 'qualite'">
-						<SearchHab/>
-						<AppMenuItem>John DOE</AppMenuItem>
-			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
@@ -142,7 +138,6 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
-// import SearchHab from './components/menu/SearchHab.vue'
 
 export default {
 
