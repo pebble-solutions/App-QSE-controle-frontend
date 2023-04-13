@@ -13,8 +13,10 @@
 					{{dateLabel}}
 				</span>
 			</div>
-			
-			<div>
+			<div v-if="!collecte.cible__structure__personnel_id" class="text-warning">
+				{{personnelName}}
+			</div>
+			<div v-else>
 				{{personnelName}}
 			</div>
 			
@@ -73,7 +75,7 @@ export default {
 			if (this.collecte.cible__structure__personnel_id) {
 				return this.collecte.cible_nom ?? "Personnel introuvable";
 			}
-			return "Personnel non renseigné";
+			return "Opérateur non renseigné";
 		},
 
 		/**

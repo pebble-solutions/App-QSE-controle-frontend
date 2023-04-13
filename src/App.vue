@@ -23,7 +23,7 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<!-- <AppMenuItem href="/qualite_1" look="dark" icon="bi bi-star">Qualité</AppMenuItem> -->
+				<AppMenuItem href="/qualite_1" look="dark" icon="bi bi-star">Qualité</AppMenuItem>
 
 			</AppMenu>
 		</template>
@@ -96,10 +96,10 @@
 	
 				</template>
 			</AppMenu>
-			<!-- <AppMenu v-else-if="listMode === 'qualite'">
+			<AppMenu v-else-if="listMode === 'qualite'">
 						<SearchHab/>
 						<AppMenuItem>John DOE</AppMenuItem>
-			</AppMenu> -->
+			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
@@ -142,7 +142,7 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
-// import SearchHab from './components/menu/SearchHab.vue'
+import SearchHab from './components/menu/SearchHab.vue'
 
 export default {
 
@@ -481,7 +481,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone }, 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, SearchHab }, 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

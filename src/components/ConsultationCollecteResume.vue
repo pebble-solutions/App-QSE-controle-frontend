@@ -4,7 +4,12 @@
             <div class="card-header" v-if="timeline">
                 <Timeline :collecte="collecte" />
             </div>
-
+            <alert-message
+                icon="bi-info-square-fill" 
+                className="" 
+                v-if="collecte.following_id">
+                Un contrôle de veille est programmé
+            </alert-message>
             <div class="card-body">
                 <div class="row">
                     <div class="mb-2 col">
@@ -71,14 +76,7 @@
                 
             </div>
         </div>
-        <alert-message
-            icon="bi-info-square-fill" 
-            className="my-3" 
-            
-        v-if="collecte.following_id">
-            un contrôle de veille est programmé
-
-        </alert-message>
+       
         
  
         <div v-if="collecte.documents.length && (isReadable)" class="card my-3">

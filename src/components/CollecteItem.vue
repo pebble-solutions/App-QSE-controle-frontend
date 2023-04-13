@@ -18,10 +18,12 @@
 				</span>
 			</div>
 
-			<div>
+			<div v-if="!collecte.cible__structure__personnel_id" class="text-warning">
 				{{personnelName}}
 			</div>
-
+			<div v-else>
+				{{ personnelName }}
+			</div>
 			<div class="fw-lighter" >
 				<i class="bi bi-check me-1" v-if="collecte.done == 'OUI'"></i>
 				{{formulaireName}}
@@ -179,7 +181,7 @@ export default {
 		 * @return {string}
 		 */
 		getPersonnelNameFromId(personnelId) {
-			if (!personnelId) return 'Personnel non renseigné';
+			if (!personnelId) return 'Opérateur non renseigné';
 			else {
 				let personnelName = this.listActifs.find(personnel => personnel.id == personnelId);
 				return personnelName ? personnelName.cache_nom : `Personnel inconnu (${personnelId})`;

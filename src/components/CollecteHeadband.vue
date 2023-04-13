@@ -13,7 +13,7 @@
             <div class="w-100 d-flex align-items-center justify-content-between">
                 <div>
                     <div  v-if="!collecte.enqueteur_nom" class="me-2 text-warning">
-                        Contrôleur non programmé 
+                        Contrôleur non renseigné 
                     </div>
 
                     <div v-else class="d-flex align-items-center">
@@ -31,7 +31,7 @@
                         <i class="bi bi-arrow-return-right me-1 ms-2"></i>
 
                         <div v-if="!collecte.cible_nom" class="me-2 text-warning">
-                            Opérateur non programmé 
+                            Opérateur non renseigné
                         </div>
 
                         <div v-else class="d-flex align-items-center">

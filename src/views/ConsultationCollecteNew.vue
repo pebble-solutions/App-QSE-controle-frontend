@@ -47,7 +47,7 @@ export default {
 
     methods: {
         /**
-         * Affiche 
+         * change la route vers le contrôle modifié
          * 
          * @param {object} //collecte
          */
