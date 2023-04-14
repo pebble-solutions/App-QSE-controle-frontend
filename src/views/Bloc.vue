@@ -134,7 +134,7 @@ export default {
     
     mounted() {
         this.bloc_id = this.$route.params.bloc;
-        // this.getReponses();
+        this.getReponses();
     }
 }
 </script>

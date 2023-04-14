@@ -4,60 +4,27 @@
         
         <div class="w-100 d-flex flex-column align-items-md-center flex-md-row-reverse justify-content-md-between">
             
-            <div class="text-nowrap badge rounded-pill border" :class="{'text-bg-warning' : (!collecte.date && !collecte.date_done), 'text-bg-light' : (collecte.date || collecte.date_done), 'text-success border-success': (collecte.date_done)}">
-                <i class="bi bi-calendar-check me-2" v-if="collecte.date_done"></i>
-                <i class="bi bi-calendar-event me-2" v-else></i>
-                <span v-if="!collecte.date || collecte.date ==='null' || collecte.date === '0000-00-00 00:00:00' || collecte.date ==='NULL'">Non renseignée</span>
-                <span v-else>{{changeFormatDateLit((collecte.date_done ?? collecte.date))}}</span>
-            </div>
+            <date-badge :collecte="collecte" />
             <div class="w-100 d-flex align-items-center justify-content-between">
                 <div>
-                    <div  v-if="!collecte.enqueteur_nom" class="me-2 text-warning">
-                        Contrôleur non renseigné 
-                    </div>
-
-                    <div v-else class="d-flex align-items-center">
+                    <div class="d-flex align-items-center">
                         <span>
-                            <user-image :name="collecte.enqueteur_nom" className="me-1" size="sm" />
+                            <user-image :name="collecte.enqueteur_nom" v-if="collecte.enqueteur_nom" className="me-1" size="sm" />
                         </span>
-                        
-                        <div>
-                            <strong class="fs-7 d-block d-md-inline text-secondary">Contrôleur:</strong>
-                            {{collecte.enqueteur_nom}}
-                        </div>
+                        <personnel-name :displayFonction="true" fonctionLabel="Contrôleur" :personnelId="collecte.enqueteur__structure__personnel_id" :personnelName="collecte.enqueteur_nom" />
                     </div>
 
                     <div class="d-flex align-items-center text-secondary">
                         <i class="bi bi-arrow-return-right me-1 ms-2"></i>
-
-                        <div v-if="!collecte.cible_nom" class="me-2 text-warning">
-                            Opérateur non renseigné
-                        </div>
-
-                        <div v-else class="d-flex align-items-center">
-                            <span>
-                                <user-image :name="collecte.cible_nom" className="me-1" size="sm" />
-                            </span>
-
-                            <div>
-                                <strong class="fs-7 d-block d-md-inline text-secondary">Opérateur:</strong>
-                                {{collecte.cible_nom}}
-                            </div>
-                        </div>
+                        <span>
+                            <user-image :name="collecte.cible_nom" v-if="collecte.cible_nom" className="me-1" size="sm" />
+                        </span>
+                        <personnel-name :displayFonction="true" fonctionLabel="Opérateur" :personnelId="collecte.cible__structure__personnel_id" :personnelName="collecte.cible_nom" />
                     </div>
 
-                    <div class="fw-light fs-7" v-if="displayProjet">
-                        <div class="d-flex" v-if="collecte.projet_id">
-                            <i class="bi bi-boxes me-2"></i>
-                            {{ projet_label }}
-                        </div>
-                    </div>
-                    <div class="fw-light fs-7" v-if="displayForm">
-                        <div class="d-flex" v-if="collecte.formulaire">
-                            <i class="bi bi-card-list me-2"></i>
-                            {{ form_label }} 
-                        </div>
-                    </div>
+                    <projet-name v-if="displayProjet && collecte.projet_id" :name="projet_label" />
+
+                    <formulaire-name v-if="displayForm && collecte.formulaire" :name="form_label" />
                     
                 </div>
                 <div v-if="collecte.result_var && collecte.result_var != 'null'&& !editable " class="badge fs-6 text-uppercase me-md-2" :class="classNameFromSAMI(collecte.result_var)">
@@ -74,7 +41,10 @@
 
 import UserImage from './pebble-ui/UserImage.vue';
 import { mapState } from 'vuex';
-import { dateFormat } from '../js/collecte';
+import DateBadge from './collecte/DateBadge.vue';
+import PersonnelName from './collecte/PersonnelName.vue';
+import ProjetName from './collecte/ProjetName.vue';
+import FormulaireName from './collecte/FormulaireName.vue';
 
 export default {
 
@@ -96,6 +66,7 @@ export default {
 
     computed: {
         ...mapState(['formulaires']),
+
         /**
          * Retourne le libellé du projet en fonction des informations projet_id et projet_label sur la collecte.
          * 
@@ -108,7 +79,7 @@ export default {
                 label = c.projet_label ? c.projet_label : `Projet sans nom (#${c.projet_id})`;
             }
             else {
-                label = "Projet non renseigné";
+                label = null;
             }
             return label;
         },
@@ -128,23 +99,11 @@ export default {
                 formLabel = label.groupe;
                 return formLabel
             }
-            else {
-                label = "Formulaire non renseigné";
-            }
-            return label;
+            return null;
         }
     },
 
 	methods: {
-		/**
-		 * Modifie le format de la date entrée en paramètre et la retourne 
-		 * sous le format 01 févr. 2021
-		 * @param {string} date 
-		 */
-		changeFormatDateLit(el) {
-			return dateFormat(el);
-		},
-
 		/**
          * Retourne une classe CSS par rapport à une réponse S A M I
          * 
@@ -163,6 +122,6 @@ export default {
         },
 	},
 
-	components: { UserImage },
+	components: { UserImage, DateBadge, PersonnelName, ProjetName, FormulaireName },
 }
 </script>
