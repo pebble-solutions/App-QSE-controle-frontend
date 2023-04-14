@@ -2,30 +2,20 @@
 
 	<div class="d-flex align-items-center justify-content-between">
 		<div class="me-2">
-			<UserImage :name="personnelName"></UserImage>
+			<UserImage :name="collecte.cible_nom ?? '?'"></UserImage>
 		</div>
 		
 		<div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100">
 			<div class="d-flex align-items-center">
 				<small class="fw-lighter me-2">#{{collecte.id}}</small>
-				<span  class="badge bg-light text-dark rounded-pill border">
-					<i class="bi bi-calendar-check"></i>
-					{{dateLabel}}
-				</span>
+				<date-badge :collecte="collecte" />
 			</div>
+
+			<personnel-name :personnel-name="collecte.cible_nom" :personnel-id="collecte.cible__structure__personnel_id" />
 			
-			<div>
-				{{personnelName}}
-			</div>
-			
-			<div class="fw-lighter" >
-				{{formulaireName}}
-			</div>
-			
-			<div class="fs-7 fw-light" v-if="collecte.projet_label">
-				<i class="bi bi-boxes me-2"></i>
-				{{collecte.projet_label}}
-			</div>
+			<formulaire-name :name="formulaireName" v-if="formulaireName" />
+
+			<projet-name :name="collecte.projet_label" v-if="collecte.projet_label" />
 		</div>
 		<div v-if="collecte.result_var && collecte.result_var != 'null'" class="badge fs-6 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
 			{{collecte.result_var}}
@@ -37,7 +27,10 @@
 <script>
 import { mapState } from 'vuex';
 import UserImage from '../pebble-ui/UserImage.vue';
-import { dateFormat } from '../../js/collecte';
+import DateBadge from '../collecte/DateBadge.vue';
+import PersonnelName from '../collecte/PersonnelName.vue';
+import FormulaireName from '../collecte/FormulaireName.vue';
+import ProjetName from '../collecte/ProjetName.vue';
 
 
 export default {
@@ -47,34 +40,6 @@ export default {
 
     computed: {
         ...mapState(['formulaires', 'listActifs', 'projets']),
-
-		/**
-		 * Modifie le format de la date entrée en paramètre et la retourne 
-		 * sous le format 01 févr. 2021
-		 * 
-		 * @return {string}
-		 */
-		dateLabel() {
-			let dt = this.collecte.date_done ?? this.collecte.date;
-			if (!dt) {
-				return 'Date non renseignée';
-			}
-			else {
-				return dateFormat(dt);
-			}
-		},
-
-		/**
-		 * Retourne le nom du personnel correspondant à la collecte.
-		 * 
-		 * @return {string}
-		 */
-		personnelName() {
-			if (this.collecte.cible__structure__personnel_id) {
-				return this.collecte.cible_nom ?? "Personnel introuvable";
-			}
-			return "Personnel non renseigné";
-		},
 
 		/**
 		 * Retourne le nom du formulaire correspondant à la collecte
@@ -99,9 +64,8 @@ export default {
 
 			if (groupInformation) {
 				return groupInformation.groupe;
-			} else { 
-				return 'Formulaire non renseigné';
 			}
+			return null;
 		},
 
 		/**
@@ -123,7 +87,9 @@ export default {
     },
 
 	components: {
-		UserImage
+		UserImage, DateBadge, PersonnelName,
+FormulaireName,
+ProjetName
 	}
 }
 

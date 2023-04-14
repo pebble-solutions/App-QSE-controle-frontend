@@ -8,29 +8,25 @@
 		<div class="d-flex flex-column align-content-between">
 			<div class="d-flex align-items-center">
 				<small class="fw-lighter me-2">#{{collecte.id}}</small>
-				<span :class="dateClassName" class="badge me-2">{{dateLabel}}</span>
+				
+				<date-badge :collecte="collecte" />
 
 				<span v-if="collecte.date"
-					class="badge"
+					class="badge rounded-pill ms-1"
 					:class="badgeClassName">
 					<i class="bi" :class="remaningIcon"></i>
 					{{ remaningLabel }}
 				</span>
 			</div>
 
-			<div>
-				{{personnelName}}
-			</div>
+			<personnel-name :personnel-name="collecte.cible_nom" :personnel-id="collecte.cible__structure__personnel_id" />
 
-			<div class="fw-lighter" >
+			<div class="d-flex align-items-center" >
 				<i class="bi bi-check me-1" v-if="collecte.done == 'OUI'"></i>
-				{{formulaireName}}
+				<formulaire-name :name="formulaireName" v-if="formulaireName" />
 			</div>
 
-			<div class="d-flex fs-7 fw-light" v-if="collecte.projet_label">
-				<i class="bi bi-boxes me-2"></i>
-				{{collecte.projet_label}}
-			</div>
+			<projet-name :name="collecte.projet_label" v-if="collecte.projet_label" />
 		</div>
 	</div>	
 		
@@ -41,6 +37,10 @@
 import { mapState } from 'vuex';
 import UserImage from './pebble-ui/UserImage.vue';
 import { dateFormat } from '../js/collecte';
+import DateBadge from './collecte/DateBadge.vue';
+import PersonnelName from './collecte/PersonnelName.vue';
+import FormulaireName from './collecte/FormulaireName.vue';
+import ProjetName from './collecte/ProjetName.vue';
 
 export default {
     props: {
@@ -123,7 +123,10 @@ export default {
 		 * @return {string}
 		 */
 		personnelName() {
-			return this.getPersonnelNameFromId(this.collecte.cible__structure__personnel_id);
+			if (this.collecte.cible__structure__personnel_id) {
+				return this.collecte.cible_nom ?? `Personnel introuvable (${this.collecte.cible__structure__personnel_id})`;
+			}
+			return "Personnel non renseigné";
 		},
 
 		/**
@@ -169,26 +172,14 @@ export default {
 			} else { 
 				return 'Formulaire non renseigné';
 			}
-		},
-
-		/**
-		 * Récupère le nom d'un personnel actif via un id
-		 * 
-		 * @param {number} personnelId l'id d'un personnel actif
-		 * 
-		 * @return {string}
-		 */
-		getPersonnelNameFromId(personnelId) {
-			if (!personnelId) return 'Personnel non renseigné';
-			else {
-				let personnelName = this.listActifs.find(personnel => personnel.id == personnelId);
-				return personnelName ? personnelName.cache_nom : `Personnel inconnu (${personnelId})`;
-			}
 		}
     },
 
 	components: {
-		UserImage
+		UserImage, DateBadge,
+PersonnelName,
+FormulaireName,
+ProjetName
 	}
 }
 
