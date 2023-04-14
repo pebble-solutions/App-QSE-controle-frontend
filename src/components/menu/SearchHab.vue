@@ -7,18 +7,18 @@
                     <button  class="btn btn-outline-secondary" type="button">
                         Agents
                     </button>
-                    <button class="btn btn-outline-secondary">
+                    <button class="btn btn-secondary">
                         Habilitations 
                     </button>
                 </div>
             </div>
 
-        <div class="text-center my-4">
+        <!-- <div class="text-center my-4">
             <button  type="button" class="btn btn-primary col-8">
                 <span></span>
                 Appliquer
             </button>
-        </div>
+        </div> -->
     </div>
 </template>
 

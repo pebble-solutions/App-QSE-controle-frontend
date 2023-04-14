@@ -2,7 +2,7 @@
     <div v-if="collecte">
         <div class="card my-2">
             <div class="card-header" v-if="timeline">
-                <Timeline :collecte="collecte" />
+                <Timeline :collecte="collecte" :route="route" />
             </div>
             <alert-message
                 icon="bi-info-square-fill" 
@@ -173,10 +173,21 @@ export default {
         timeline: {
             type: Boolean,
             default: true
+        },
+        
+        
+        route: {
+            type: String,
+            default: 'consultation'
         }
+    
+               
     },
+   
 
     computed: {
+
+        
         /**
          * Racourcis vers la liste des blocs
          * @return {array}

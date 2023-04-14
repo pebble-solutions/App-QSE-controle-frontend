@@ -85,6 +85,7 @@ export default {
             default: 'consultation'
         }
     },
+    
     methods: {
         /**
          * Retourne une classe CSS par rapport à une réponse S A M I
@@ -115,10 +116,14 @@ export default {
          */
         hasResult(collecte) {
             return collecte.result_var && collecte.result_var != "null";
-        }
+        },
+
+       
+
     },
 
-    components: {  TimelineNavElement, TimelineProgElement }
+    components: {  TimelineNavElement, TimelineProgElement },
+    
 }
 
 </script>

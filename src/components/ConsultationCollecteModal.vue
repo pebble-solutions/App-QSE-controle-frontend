@@ -5,7 +5,7 @@
             size="lg"
             @modal-hide="routeToParent()"
             >
-            <ConsultationCollecteResume :collecte="collecte" :readonly="true"></ConsultationCollecteResume>
+            <ConsultationCollecteResume :collecte="collecte" :readonly="true" :route="nameRoute" ></ConsultationCollecteResume>
         </app-modal>
     </div>
 </template>
@@ -20,8 +20,24 @@ export default {
 
     computed:{
         ...mapState(['collectes','collecte']),
+
+        nameRoute() {
+            if(this.$route.name == 'consultationFormCollecte' ){
+                console.log(this.$route.name, 'routename');
+               return 'consultation/formulaire/'+this.$route.params.idFormulaire;
+            }
+            return 'consultation';
+        }
+    },
+    data() {
+        return {
+            route: '',
+        }
     },
 
+   
+
+    
     methods: {
         ...mapActions(["setCollecte", "resetResponses"]),
 
@@ -53,8 +69,9 @@ export default {
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
     beforeRouteUpdate(to) {
-        if (to.params.idCollecte != this.collecte?.idCollecte) {
-            this.resetResponses();
+        console.log(to,'to');
+        if (to.params.idCollecte != this.collecte?.id) {
+            // this.resetResponses();
             this.loadCollecte(to.params.idCollecte);
         }
     },

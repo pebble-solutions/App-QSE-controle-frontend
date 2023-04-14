@@ -96,10 +96,10 @@
 	
 				</template>
 			</AppMenu>
-			<AppMenu v-else-if="listMode === 'qualite'">
+			<!-- <AppMenu v-else-if="listMode === 'qualite'">
 						<SearchHab/>
-						<AppMenuItem>John DOE</AppMenuItem>
-			</AppMenu>
+						<AppMenuItem :active ='true' :look=" 'dark'">Habilitation H4</AppMenuItem>
+			</AppMenu> -->
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
@@ -142,7 +142,7 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
-import SearchHab from './components/menu/SearchHab.vue'
+// import SearchHab from './components/menu/SearchHab.vue'
 
 export default {
 
@@ -481,7 +481,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, SearchHab }, 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone  }, //SearchHab
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
