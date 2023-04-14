@@ -4,12 +4,27 @@
         <template v-else>
             
             <alert-message icon="bi-info-square" class="mt-2" v-if="collecte.done =='NON'">
-                Le contrôle de {{ collecte.cible_nom }} n'est pas clôturé
+                Le contrôle #{{ collecte.id }} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> n'est pas clôturé
             </alert-message>
             <alert-message icon="bi-info-square" v-else-if="collecte.done =='OUI'">
-                Le contrôle de {{collecte.cible_nom}} (#{{collecte.id}}) est enregistré et n'est plus modifiable. <br>
-                Vous pourrez le retrouver via le menu consultation.<br>
-                Souhaitez-vous programmer un nouveau contrôle rattaché?
+                <div class="d-flex flex-column">
+                    <div class="my-2">
+                        Le contrôle #{{collecte.id}} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> est enregistré et n'est plus modifiable. <br>
+                        Vous pourrez le retrouver via le menu consultation.<br>
+                    </div>
+                    <div v-if="!collecte.following_id">
+                         <strong>Souhaitez-vous programmer la prochaine veille?</strong> 
+                        <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
+                            <a class="btn btn-outline-primary ms-3" :href="href" @click="navigate">
+                                <i class="bi bi-plus-square me-2"></i>
+                                Programmer une veille
+                            </a>
+                        </router-link>
+
+                    </div>
+                </div>
+                <div >
+                </div>
             </alert-message>
             
             <consultation-collecte-resume :collecte="collecte" :readonly="false" :timeline="false" v-if="collecte"></consultation-collecte-resume>
@@ -27,7 +42,7 @@
                 </div>
             </FooterToolbar>
             <FooterToolbar v-else wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center" v-if="!collecte.following_id">
                     <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
                         <a class="btn btn-lg btn-primary" :href="href" @click="navigate">
                             <i class="bi bi-plus-square me-2"></i>

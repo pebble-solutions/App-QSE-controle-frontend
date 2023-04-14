@@ -217,7 +217,8 @@ export default {
 				'consultationFormCollecte',
 				'consultationProjet',
 				'consultationProjetList',
-				'consultationProjetCollecte'
+				'consultationProjetCollecte',
+				'newCollecte'
 				]
 				.includes(this.$route.name)) {
 				return 'consultation';
@@ -475,7 +476,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone }, 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone  }, //SearchHab
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

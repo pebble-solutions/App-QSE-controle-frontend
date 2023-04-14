@@ -22,7 +22,7 @@
                 </h4>
                 <div class="text-primary border border-primary badge rounded-pill text-bg-light" v-if="collecte.date_done">
                     <i class="bi bi-calendar-check me-1"></i>
-                    <span class="d-none d-sm-inline">Terminé le</span>
+                    <span class="d-none d-sm-inline">Clôturé le</span>
                     {{changeFormatDateLit(collecte.date_done)}}
                 </div>
             </div>
@@ -33,8 +33,11 @@
             :collecte="{id: collecte.following_id, result_var: collecte.following_result}" 
             direction="following"
             v-if="collecte.following_id" />
-        <div v-else></div>
+            <!-- <div v-else>Veille?</div> -->
+       <!-- <TimelineProgElementVue v-else></TimelineProgElementVue> -->
 
+        <TimelineProgElement :collecte="collecte" v-else-if="this.$route.name.includes('consultation')"/>
+        <div v-else></div>
     </div>
     
 
@@ -72,6 +75,7 @@
 
 import {classNameFromSAMI, dateFormat} from '../../js/collecte.js';
 import TimelineNavElement from './TimelineNavElement.vue';
+import TimelineProgElement from './TimelineProgElement.vue';
 
 export default {
     props: {
@@ -81,6 +85,7 @@ export default {
             default: 'consultation'
         }
     },
+    
     methods: {
         /**
          * Retourne une classe CSS par rapport à une réponse S A M I
@@ -111,10 +116,14 @@ export default {
          */
         hasResult(collecte) {
             return collecte.result_var && collecte.result_var != "null";
-        }
+        },
+
+       
+
     },
 
-    components: {  TimelineNavElement }
+    components: {  TimelineNavElement, TimelineProgElement },
+    
 }
 
 </script>

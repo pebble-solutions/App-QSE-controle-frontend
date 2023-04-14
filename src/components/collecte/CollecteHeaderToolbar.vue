@@ -2,7 +2,8 @@
 
     <div class="d-flex align-items-center">
         <UserImage class="me-2" :name="collecte.cible_nom"></UserImage>
-        <span class="me-2 d-none d-md-inline">{{collecte.cible_nom}}</span>
+        <span v-if='!collecte.cible_nom' class="me-2 d-none d-md-inline text-warning">Opérateur non renseigné</span>
+        <span v-else class="me-2 d-none d-md-inline">{{collecte.cible_nom}}</span>
         <span class="me-2 fw-lighter">#{{collecte.id}}</span>
         <projet-toggler :collecte="collecte" @projet-change="projetChange($event)" :readonly="!projetToggler" />
     </div>

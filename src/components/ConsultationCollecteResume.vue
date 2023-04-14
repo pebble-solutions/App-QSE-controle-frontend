@@ -2,9 +2,14 @@
     <div v-if="collecte">
         <div class="card my-2">
             <div class="card-header" v-if="timeline">
-                <Timeline :collecte="collecte" />
+                <Timeline :collecte="collecte" :route="route" />
             </div>
-
+            <alert-message
+                icon="bi-info-square-fill" 
+                className="" 
+                v-if="collecte.following_id">
+                Un contrôle de veille est programmé
+            </alert-message>
             <div class="card-body">
                 <div class="row">
                     <div class="mb-2 col">
@@ -71,6 +76,7 @@
                 
             </div>
         </div>
+       
         
  
         <div v-if="collecte.documents.length && (isReadable)" class="card my-3">
@@ -141,8 +147,9 @@
             icon="bi-exclamation-triangle-fill" 
             className="my-3" 
             variant="warning" v-else>
-                Ce contrôle n'est pas consultable car il n'est pas terminé.
+                Ce contrôle n'est pas consultable car il n'est pas clôturé.
         </alert-message>
+        
 
         <!-- <div class="text-center my-3" v-if="!readonly">
             <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">
@@ -166,10 +173,21 @@ export default {
         timeline: {
             type: Boolean,
             default: true
+        },
+        
+        
+        route: {
+            type: String,
+            default: 'consultation'
         }
+    
+               
     },
+   
 
     computed: {
+
+        
         /**
          * Racourcis vers la liste des blocs
          * @return {array}
