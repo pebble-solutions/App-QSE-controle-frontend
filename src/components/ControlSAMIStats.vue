@@ -1,4 +1,4 @@
-<template>
+<template v-if="collecte">
 
     <table class="table table-bordered bg-light">
         <thead>
@@ -10,13 +10,12 @@
 
         <tbody>
             <tr class="text-center" v-if="collecte.nb_reponse" >
-                <td scope="row">Total: {{collecte.nb_reponse}}/{{collecte.nb_question}}</td>
+                <td scope="row">Total : {{collecte.nb_reponse}}/{{collecte.nb_question}}</td>
                 <td scope="row" v-for="letter in samiDict" :key="letter">{{ getValue(letter) }}</td>
             </tr>
             <tr v-else >
                 <td scope="row" class="text-warning text-center">Aucune réponse enregistrée !</td>
                 <td scope="row" class="text-center" v-for="letter in samiDict" :key="letter">{{ getValue(letter) }}</td>
-
             </tr>
             
         </tbody>

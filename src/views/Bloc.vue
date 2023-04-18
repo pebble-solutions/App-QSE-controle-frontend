@@ -77,7 +77,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['refreshResponse']),
+        ...mapActions(['refreshResponse', 'refreshCollecte', 'refreshCollectes']),
 
 
         /**
@@ -87,11 +87,24 @@ export default {
          */
         navigate(to) {
             this.pending.bloc = true;
+            console.log(this.responses, 'reponses')
 
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',
             })
+            .then((data) => {
+                    return this.refreshCollectes([data]);
+                })
+                .then(() => {
+                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                        environnement: 'private'
+                    });
+                })
+                .then((collecte) => {
+                    this.refreshCollecte(collecte);
+                    this.getReponses(collecte);
+                })
             .then(() => {
                 if (to === 'end') {
                     this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});
@@ -135,6 +148,7 @@ export default {
     mounted() {
         this.bloc_id = this.$route.params.bloc;
         this.getReponses();
+        console.log(this.getReponses, 'get reposnes')
     }
 }
 </script>
