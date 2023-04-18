@@ -17,7 +17,6 @@
                 <td scope="row" class="text-warning text-center">Aucune réponse enregistrée !</td>
                 <td scope="row" class="text-center" v-for="letter in samiDict" :key="letter">{{ getValue(letter) }}</td>
             </tr>
-            
         </tbody>
     </table>
 
