@@ -60,7 +60,8 @@ export default {
          * Retourne à la vue précédente
          */
         routeToParent() {
-            this.$router.go(-1);
+            this.$router.push({name: 'consultationFormList'}, {params:this.$route.params.idFormulaire});
+
         }
     
     },

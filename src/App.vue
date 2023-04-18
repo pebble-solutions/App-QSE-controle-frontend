@@ -23,7 +23,7 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<AppMenuItem href="/qualite_1" look="dark" icon="bi bi-star">Qualité</AppMenuItem>
+				<AppMenuItem href="/qualite_1" look="dark" icon="bi bi-ui-checks">Habilitations</AppMenuItem>
 
 			</AppMenu>
 		</template>
@@ -98,7 +98,9 @@
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'qualite'">
 						<SearchHab/>
-						<AppMenuItem :active ='true' :look=" 'dark'">Habilitation H4</AppMenuItem>
+						<AppMenuItem class="bg-primary text-light"> 
+							<span>John DOE</span>
+						</AppMenuItem>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />

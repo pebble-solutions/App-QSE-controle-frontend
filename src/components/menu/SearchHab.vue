@@ -4,10 +4,10 @@
                 <h2 class="fs-5"></h2>
 
                 <div class="btn-group w-100" role="group" aria-label="filtre des habilitations">
-                    <button  class="btn btn-outline-secondary" type="button">
+                    <button  class="btn btn-secondary" type="button">
                         Agents
                     </button>
-                    <button class="btn btn-secondary">
+                    <button class="btn btn-outline-secondary">
                         Habilitations 
                     </button>
                 </div>

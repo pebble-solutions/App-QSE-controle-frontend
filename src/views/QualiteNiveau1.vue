@@ -246,7 +246,7 @@
             </div> -->
 <!-- finV3 -->
 <!-- V4 -->
-            <div class="card m-4">
+            <!-- <div class="card m-4">
             <h2 class="card-header">Liste des personnels habilités H4</h2>
                 <table class="table">
                     <thead>
@@ -256,7 +256,6 @@
                             <th>Echéance</th>
                             <th>10 derniers contrôles</th>
                             <th>Prochain KN sous :</th>
-                            <!-- <th class="text-center"></th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -269,7 +268,6 @@
                             </td>
                             <td >10.08.2023</td>
                             <td>
-                                <!-- 10 derniers kn -->
                                 <span class="badge bg-warning me-1">M</span>
                                 <span class="badge bg-warning me-1">M</span>
                                 <span class="badge bg-success me-1">S</span>
@@ -286,7 +284,6 @@
                                     <div class="progress-bar bg-danger" style="width: 90%">10 jours</div>
                             </div>
                             </td>
-                            <!-- <td class="table-danger text-center">25.04.2023</td> -->
                         </tr>
                         <tr>
                             <td >Mika DOE</td>
@@ -310,7 +307,6 @@
                                     <div class="progress-bar bg-danger" style="width:85%;">15 jours</div>
                                 </div>
                             </td>
-                            <!-- <td class="text-center">20.06.2023</td> -->
                         </tr>
                         <tr>
                             <td >Liby DOE</td>
@@ -334,7 +330,6 @@
                                     <div class="progress-bar bg-primary" style="width: 50%;">7 sem.</div>
                                 </div>
                             </td>
-                            <!-- <td class="table-danger text-center">05.05.2023</td> -->
                         </tr>
                         <tr>
                             <td >Pseu DOE</td>
@@ -358,7 +353,6 @@
                                     <div class="progress-bar bg-warning" style="width: 60%;">5 sem.</div>
                                 </div>
                             </td>
-                            <!-- <td class="text-center">10.06.2023</td> -->
                         </tr>
                         <tr>
                             <td >Quasi-Mo DOE</td>
@@ -382,7 +376,6 @@
                                     <div class="progress-bar bg-success" style="width: 25%;">10 sem.</div>
                                 </div>
                             </td>
-                            <!-- <td class="text-center">02.07.2023</td> -->
                         </tr>
                         <tr>
                             <td >Aïki DOE</td>
@@ -405,11 +398,10 @@
                                     <div class="progress-bar bg-primary" style="width: 45%;">8 sem</div>
                                 </div>
                             </td>
-                            <!-- <td class="table-warning text-center">22.05.2023</td> -->
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
 <!-- finv4 -->
 
 <!-- v1 opérateur -->
@@ -423,7 +415,6 @@
                             <th>Echéance</th>
                             <th>10 derniers contrôles</th>
                             <th>Prochain KN sous :</th>
-                            <!-- <th class="text-center"></th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -448,7 +439,6 @@
                                     <div class="progress-bar bg-primary" style="width: 45%;">8 sem</div>
                                 </div>
                             </td>
-                            <!-- <td class="table-danger text-center">25.04.2023</td> -->
                         </tr>
                         <tr>
                             <td >Habilitation H2</td>
@@ -472,7 +462,6 @@
                                     <div class="progress-bar bg-danger" style="width:85%;">15 jours</div>
                                 </div>
                             </td>
-                            <!-- <td class="text-center">20.06.2023</td> -->
                         </tr>
                         <tr>
                             <td >Habilitation H3</td>
@@ -498,7 +487,6 @@
                                     <div class="progress-bar bg-primary" style="width: 50%;">7 sem.</div>
                                 </div>
                             </td>
-                            <!-- <td class="table-danger text-center">05.05.2023</td> -->
                         </tr>
                         <tr>
                             <td >Habilitation H4</td>
@@ -509,7 +497,6 @@
                             </td>
                             <td >10.08.2023</td>
                             <td>
-                                <!-- 10 derniers kn -->
                                 <span class="badge bg-warning me-1">M</span>
                                 <span class="badge bg-warning me-1">M</span>
                                 <span class="badge bg-success me-1">S</span>
@@ -526,7 +513,6 @@
                                     <div class="progress-bar bg-danger" style="width: 90%">10 jours</div>
                             </div>
                             </td>
-                            <!-- <td class="text-center">10.06.2023</td> -->
                         </tr>
                         <tr>
                             <td >Habilitation H5</td>
@@ -550,7 +536,6 @@
                                     <div class="progress-bar bg-success" style="width: 25%;">10 sem.</div>
                                 </div>
                             </td>
-                            <!-- <td class="text-center">02.07.2023</td> -->
                         </tr>
                         <tr>
                             <td >Habilitation H6</td>
@@ -573,7 +558,6 @@
                                     <div class="progress-bar bg-primary" style="width: 45%;">8 sem</div>
                                 </div>
                             </td>
-                            <!-- <td class="table-warning text-center">22.05.2023</td> -->
                         </tr>
                     </tbody>
                 </table>
@@ -581,7 +565,14 @@
 
 <!-- fin v1 opérateur -->
 
-                
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br><br>
+            <br>
         <h3 class="m-3"> Habilitation TES D - HMT SEG Niveau 1</h3>
         <div class="card">
             <div class="card-header">
@@ -639,6 +630,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="card">
             <div class="card-header">
                 <h4 >
@@ -696,84 +688,11 @@
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <h4 >
-                    KN SE HMT1 Signaux
-                </h4>
-                <div>
-                    <span class="badge bg-info">controle à programmer avant le 12/05/2023</span>
-                    </div>
-
-            </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-baseline">
-                    <div>
-                        <span class="badge bg-success fs-6">S</span>
-                    </div>
-                    <div>
-                        <span>#542 du 13/02/2002</span>
-                    </div>
-                    <div class="btn-group progress progress-ht mb-2 mx-1 ">
-                        <div class="btn progress-bar bg-success" role="progressbar" style="width: 45%" >12</div>
-                        <div class="btn progress-bar bg-primary" role="progressbar" style="width: 30%" >6</div>
-                        <div class="btn progress-bar bg-warning" role="progressbar" style="width: 20%" >4</div>
-                        <div class="btn progress-bar bg-danger" role="progressbar" style="width: 5%" >2</div>
-                    </div>
-                </div>
-                <hr>
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <span class="badge bg-success fs-6">S</span>
-                    </div>
-                    <div>
-                        <span>#542 du 13/02/2002</span>
-                    </div>
-                     <div class="btn-group progress progress-ht mb-2 mx-1 ">
-                        <div class="btn progress-bar bg-success" role="progressbar" style="width: 45%" >8</div>
-                        <div class="btn progress-bar bg-primary" role="progressbar" style="width: 30%" >6</div>
-                        <div class="btn progress-bar bg-warning" role="progressbar" style="width: 20%" >4</div>
-                        <div class="btn progress-bar bg-danger" role="progressbar" style="width: 6%" >2</div>
-                    </div>
-                </div>
-                <hr>
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <span class="badge bg-success fs-6">S</span>
-                    </div>
-                    <div>
-                        <span>#542 du 13/02/2002</span>
-                    </div>
-                     <div class="btn-group progress progress-ht mb-2 mx-1 ">
-                        <div class="btn progress-bar bg-success" role="progressbar" style="width: 80%" >8</div>
-                        <div class="btn progress-bar bg-primary" role="progressbar" style="width: 10%" >1</div>
-                        <div class="btn progress-bar bg-warning" role="progressbar" style="width: 10%" >1</div>
-                        <!-- <div class="btn progress-bar bg-danger" role="progressbar" style="width: 0%" >0</div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         </div>
         </div>
         
-        <h4></h4>
-        <h4></h4>
-        {{ collecte }}
-
-        <hr>
-        <br>
-        <p>Affichage des stats possibles. </p>
-        <p>Note: 
-            <ul>
-                <li>Chaque partie d'une barre de visualisation est un bouton cliquable pouvant donc renvoyer à une liste.</li>
-                <li>ex toutes les évaluations générales ayant obtenu un I</li>
-                <li>idéalement l'api devra retourner les valeurs et les pourcentages</li>
-                <li>le modèle est déclinable par projets, par opérateur, par vérificateur...</li>
-                
-            </ul>
-            
-            
-        </p>
+    
         <h2 class="card-header">Contrôleur 1</h2>
         <div class="row g-2 m-2">
             <div class="card col-md-4">
@@ -847,22 +766,7 @@
                 </div>
             </div>
         </div>
-<div v-if="collecte">
-     <div class="timeline-label">
-            <span class="badge rounded-pill mb-1" :class="classNameFromSAMI(collecte.previous_result)">
-                <template v-if="collecte.previous_result">{{ collecte.previous_result}}</template>
-                <i class="bi bi-question-circle" v-else></i>
-            </span><br>
-            <span>
-                <i class="bi bi-arrow-left"></i>
-                <span class="fw-light ms-1">#{{collecte.previous_id}}</span> du
-                <span>{{ collecte.date }}</span>
-                
-            </span>
-        </div>
-    <!-- <Timeline :collecte="collecte" :route='qualite_1'></Timeline> -->
 
-</div>
 </template>
 <style lang="scss" scoped>
 .timeline {

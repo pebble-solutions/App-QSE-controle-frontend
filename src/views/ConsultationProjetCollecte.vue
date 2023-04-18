@@ -60,7 +60,7 @@ export default {
          * Retourne à la vue précédente
          */
         routeToParent() {
-            this.$router.go(-1);
+            this.$router.push({name: 'consultationProjetList'}, {params:this.$route.params.idProjet});
         }
     
     },
