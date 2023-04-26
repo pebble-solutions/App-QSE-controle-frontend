@@ -16,9 +16,13 @@
                         <span class="me-2">habilité  du {{ changeFormatDateLit(carac.dd) }} au  {{ changeFormatDateLit(carac.df)   }}</span>
                         
                     </div>
-                    <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                    <progress-bar
+                    :dd="carac.dd"
+                    :df="carac.df"
+                    ></progress-bar>
+                    <!-- <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
                          <div class="progress-bar" style="width: 25%">25%</div>
-                    </div>
+                    </div> -->
 
                 </div>
                 
@@ -36,11 +40,12 @@
 <script>
 import { mapState } from 'vuex';
 import {dateFormat} from '../js/collecte';
+import ProgressBar from '../components/ProgressBar.vue';
 
 import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
-    components: {Spinner},
+    components: {Spinner, ProgressBar},
 
     data() {
         return {

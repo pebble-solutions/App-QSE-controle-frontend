@@ -106,7 +106,7 @@
 				<AppMenuItem href="/habilitation/idAgent"> 
 					<span>liste agent habilité</span>
 				</AppMenuItem>
-				<SearchHab/>
+				<!-- <SearchHab /> -->
 						
 						<template v-for="hab in habilitationType" :key="hab.id" >
 							<AppMenuItem :href="'/habilitation/'+hab.id">
@@ -157,7 +157,7 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
-import SearchHab from './components/menu/SearchHab.vue'
+// import SearchHab from './components/menu/SearchHab.vue'
 
 export default {
 
@@ -513,7 +513,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, SearchHab  }, 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone }, //, SearchHab 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
