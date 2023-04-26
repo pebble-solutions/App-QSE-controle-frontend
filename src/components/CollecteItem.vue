@@ -136,7 +136,7 @@ export default {
 			// console.log (dateLockJ, 'date lock jour')
 
 			// const minutes = Math.round(dateLockSecond / 60 );
-			const daysBeforeLock = Math.floor(dateLockSecond / (60* 60 * 24));
+			const daysBeforeLock = Math.floor(dateLockSecond / (60* 60 * 24)+1);
 			console.log(daysBeforeLock, 'daysbefore')
 
 			return daysBeforeLock;

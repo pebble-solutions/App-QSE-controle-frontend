@@ -17,6 +17,7 @@ export default createStore({
 		responses:[],
 		formulaires: [],
 		listActifs: [],
+		habilitations:[],
 		collectes: [],
 		collecte: null,
 		searchResults: [],
@@ -148,6 +149,7 @@ export default createStore({
 		setListActifs(state, data) {
 			state.listActifs = data;
 		},
+
 		/**
 		 * Enregistre le résultat de la stat  dans le store
 		 * @param {Object} state State de Vuex
@@ -156,6 +158,7 @@ export default createStore({
 		stat (state, data) {
 			state.stat = data;
 		},
+
 		/**
 		 * Enregistre la requete de statistique  dans le store
 		 * @param {Object} state State de Vuex
@@ -268,6 +271,16 @@ export default createStore({
 		},
 
 		/**
+		 * Enregistre les types d'habilitations
+		 * @param	{Object}	state le state de VueX
+		 * @param	{Array}		habilitations	Liste des type d'habilitations
+		 */
+		setHabilitationType(state, habilitationType) {
+			state.habilitationType = habilitationType;
+		},
+
+
+		/**
 		 * Passe un formulaire en formulaire ouvert au niveau du state
 		 * @param {object} state Le state de VueX
 		 * @param {object} formulaire Le formulaire à charger
@@ -275,6 +288,7 @@ export default createStore({
 		formulaire(state, formulaire) {
 			state.formulaire = formulaire;
 		},
+
 
 		/**
 		 * Met à jour la collection de données des résultats de recherche
@@ -416,7 +430,14 @@ export default createStore({
 		refreshListActifs(context, data) {
 			context.commit('setListActifs', data);
 		},
-		
+		/**
+		 * met à jour la liste des types d'habilitation
+		 * @param {Object} context l'instance de VueX
+		 * @param {Array} data liste des types d'habilitations
+		 */
+		refreshHabilitationType(context, data){
+			context.commit('setHabilitationType', data);
+		},
 		/**
 		 * Met à jours les collectes stockées au niveau du store
 		 * 

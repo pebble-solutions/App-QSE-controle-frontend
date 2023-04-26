@@ -7,25 +7,24 @@
                 Le contrôle #{{ collecte.id }} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> n'est pas clôturé
             </alert-message>
             <alert-message icon="bi-info-square" v-else-if="collecte.done =='OUI'">
-                <div class="d-flex flex-column">
-                    <div class="my-2">
-                        Le contrôle #{{collecte.id}} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> est enregistré et n'est plus modifiable. <br>
-                        Vous pourrez le retrouver via le menu consultation.<br>
-                    </div>
-                    <div v-if="!collecte.following_id">
-                         <strong>Souhaitez-vous programmer la prochaine veille?</strong> 
+                <div class="my-2">
+                    Le contrôle #{{collecte.id}} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> est enregistré et n'est plus modifiable. <br>
+                    Vous pourrez le retrouver via le menu consultation.<br>
+                </div>
+            </alert-message>
+                <AlertMessage  icon="bi-question-square" variant="warning" v-if="!collecte.following_id & collecte.done=='OUI'">
+                         <strong>Souhaitez-vous programmer un contrôle de bouclage?</strong> 
                         <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
                             <a class="btn btn-outline-primary ms-3" :href="href" @click="navigate">
                                 <i class="bi bi-plus-square me-2"></i>
-                                Programmer une veille
+                                bouclage
                             </a>
                         </router-link>
-
-                    </div>
+                </AlertMessage>
+                <div class="d-flex flex-column">
                 </div>
                 <div >
                 </div>
-            </alert-message>
             
             <consultation-collecte-resume :collecte="collecte" :readonly="false" :timeline="false" v-if="collecte"></consultation-collecte-resume>
             
@@ -46,7 +45,7 @@
                     <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
                         <a class="btn btn-lg btn-primary" :href="href" @click="navigate">
                             <i class="bi bi-plus-square me-2"></i>
-                            Programmer une veille
+                            Programmer un bouclage
                         </a>
                     </router-link>
                 </div>

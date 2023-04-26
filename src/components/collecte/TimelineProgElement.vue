@@ -4,8 +4,8 @@
             <div class="timeline-label btn btn-primary">
                 <div class="d-flex">
                     <i class="bi bi-plus" ></i>
-                    <span class="d-none d-md-block ms-2">
-                        Programmer une veille
+                    <span class="d-none d-lg-block ms-2">
+                        Bouclage?
                     </span>
                 </div>
             </div>

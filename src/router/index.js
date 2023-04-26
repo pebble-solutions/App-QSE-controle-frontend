@@ -107,10 +107,10 @@ const routes = [
     name: 'consultationProjet',
     component: () => import("../views/ConsultationProjet.vue"),
   },
-    {
-    path:'/consultation/projet/:idProjet',
-    name: 'consultationProjetList',
-    component: () => import("../views/ConsultationProjetList.vue"),
+  {
+  path:'/consultation/projet/:idProjet',
+  name: 'consultationProjetList',
+  component: () => import("../views/ConsultationProjetList.vue"),
 
       children: [
         {
@@ -142,10 +142,32 @@ const routes = [
 
   },
   {
-    path: '/qualite_1',
-    name: 'qualite_1',
-    component: () => import("../views/QualiteNiveau1.vue"),
+    path: '/habilitation',
+    name: 'Habilitation',
+    component: () => import("../views/Habilitation.vue"),
+    // children: [
+    //   // {
+    //   //   path:':idAgent',
+    //   //   name: 'HabilitationAgent',
+    //   //   component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationAgent.vue')
+    //   // },
+    // ]
   },
+  {
+    path:'/habilitation/:id',
+    name: 'habilitationByHab',
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByHab.vue')
+  },
+  {
+      path:'/habilitation/idAgent',
+      name: 'HabilitationAgent',
+      component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationAgent.vue')
+  },
+  {
+    path:'/habilitation/idHabilitation',
+    name: 'HabilitationHabilitation',
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationHabilitation.vue')
+  }
 
 ]
 

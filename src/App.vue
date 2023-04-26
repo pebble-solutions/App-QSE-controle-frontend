@@ -23,7 +23,7 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<AppMenuItem href="/qualite_1" look="dark" icon="bi bi-ui-checks">Habilitations</AppMenuItem>
+				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-ui-checks">Habilitations</AppMenuItem>
 
 			</AppMenu>
 		</template>
@@ -96,11 +96,24 @@
 	
 				</template>
 			</AppMenu>
-			<AppMenu v-else-if="listMode === 'qualite'">
-						<SearchHab/>
-						<AppMenuItem class="bg-primary text-light"> 
-							<span>John DOE</span>
-						</AppMenuItem>
+			<AppMenu v-else-if="listMode == 'habilitation'">
+				<AppMenuItem href="/habilitation"> 
+					<span>à programmer</span>
+				</AppMenuItem>
+				<AppMenuItem href="/habilitation/idHabilitation"> 
+					<span>liste des habilitations</span>
+				</AppMenuItem>
+				<AppMenuItem href="/habilitation/idAgent"> 
+					<span>liste agent habilité</span>
+				</AppMenuItem>
+				<SearchHab/>
+						
+						<template v-for="hab in habilitationType" :key="hab.id" >
+							<AppMenuItem :href="'/habilitation/'+hab.id">
+								{{ hab.nom }}
+							</AppMenuItem>
+
+						</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
@@ -160,7 +173,8 @@ export default {
 				projets: true,
 				search: true,
 				actifs: true,
-				loadMore: false
+				loadMore: false,
+				habilitations :true,
 			},
 			isConnectedUser: false,
 			appMenu: [
@@ -201,7 +215,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults']),
+		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults','habilitationType']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -230,8 +244,8 @@ export default {
 				.includes(this.$route.name)) {
 				return 'consultation';
 			}
-			else if (['qualite_1'].includes(this.$route.name)) {
-				return 'qualite'
+			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab'].includes(this.$route.name)) {
+				return 'habilitation'
 			}
 			else if (['Home'].includes(this.$route.name)) {
 				return 'home';
@@ -282,7 +296,7 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults', 'addSearchResults']),
+		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults', 'addSearchResults', 'refreshHabilitationType']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -328,12 +342,28 @@ export default {
 
 			this.$app.apiGet(route, query)
 			.then((data) => {
+				console.log(data, 'projets')
 				this.refreshProjets(data);
 			})
 			.catch(this.$app.catchError)
 			.finally(() => {this.pending.projets = false});
 
 		},
+
+		/**
+		 * charge la liste des habilitations depuis le serveur et les charge dans le store
+		 */
+		loadHabilitationType(){
+			this.pending.habilitations = true;
+			this.$app.apiGet('v2/controle/habilitation/type')
+			.then ((data)=> {
+				console.log(data, 'habilitation');
+				this.refreshHabilitationType(data)
+			})
+			.catch(this.$app.catchError)
+			.finally(() => {this.pending.habilitations = false});
+		},
+		
 
 		/**
 		 * Charge une ressrouce depuis le serveur vers le store.
@@ -492,6 +522,7 @@ export default {
 				this.loadFormulaires();
 				this.loadAgent();
 				this.loadProjets();
+				this.loadHabilitationType();
 			}
 		});
 	}
