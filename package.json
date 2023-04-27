@@ -1,6 +1,6 @@
 {
   "name": "controle",
-  "version": "2.0.1-dev.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
