@@ -22,8 +22,7 @@ export default {
         ...mapState(['collectes','collecte']),
 
         nameRoute() {
-            if(this.$route.name == 'consultationFormCollecte' ){
-                console.log(this.$route.name, 'routename');
+            if(this.$route.name == 'consultationFormCollecte' ) {
                return 'consultation/formulaire/'+this.$route.params.idFormulaire;
             }
             return 'consultation';
@@ -70,7 +69,6 @@ export default {
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
     beforeRouteUpdate(to) {
-        console.log(to,'to');
         if (to.params.idCollecte != this.collecte?.id) {
             // this.resetResponses();
             this.loadCollecte(to.params.idCollecte);

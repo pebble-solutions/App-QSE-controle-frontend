@@ -23,7 +23,6 @@ export default {
 
         nameRoute() {
             if(this.$route.name == 'consultationProjetCollecte' ){
-                console.log(this.$route.name, 'routename');
                return 'consultation/projet/'+this.$route.params.idProjet;
             }
             return 'consultation';
@@ -69,7 +68,6 @@ export default {
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
     beforeRouteUpdate(to) {
-        console.log(to,'to');
         if (to.params.idCollecte != this.collecte?.id) {
             // this.resetResponses();
             this.loadCollecte(to.params.idCollecte);

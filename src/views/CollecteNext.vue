@@ -74,13 +74,10 @@ export default {
         routeToFormulaire(collecte) {
             let dateDay = new Date().toLocaleDateString('fr-FR')
             let dateCollecte = new Date(collecte.date).toLocaleDateString('fr-FR')
-             console.log(dateDay, dateCollecte, 'les deux')
             if(dateDay == dateCollecte){
-                console.log(collecte.id)
                 this.$router.push("/collecte/"+collecte.id);
             }
             else {
-                console.log(collecte.previous_id)
                 this.loadCollecte(collecte.previous_id)
                 this.$router.push("/collecte/"+collecte.previous_id);
                 // Fonction manquante !n'affiche pas la nouvelle collecte dans la timeline et pas de message indiquant que c'est crée 

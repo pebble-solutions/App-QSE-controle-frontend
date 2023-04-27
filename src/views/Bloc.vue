@@ -94,17 +94,17 @@ export default {
                 environnement:'private',
             })
             .then((data) => {
-                    return this.refreshCollectes([data]);
-                })
-                .then(() => {
-                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
-                        environnement: 'private'
-                    });
-                })
-                .then((collecte) => {
-                    this.refreshCollecte(collecte);
-                    this.getReponses(collecte);
-                })
+                return this.refreshCollectes([data]);
+            })
+            .then(() => {
+                return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                    environnement: 'private'
+                });
+            })
+            .then((collecte) => {
+                this.refreshCollecte(collecte);
+                this.getReponses(collecte);
+            })
             .then(() => {
                 if (to === 'end') {
                     this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});

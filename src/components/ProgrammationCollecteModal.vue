@@ -115,7 +115,6 @@ export default {
 
     mounted() {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
-        console.log(this.collecte)
     }
 
 
