@@ -43,7 +43,6 @@ import {dateFormat} from '../js/collecte';
 import ProgressBar from '../components/ProgressBar.vue';
 
 import Spinner from '../components/pebble-ui/Spinner.vue';
-import ConsultationProjetCollecte from './ConsultationProjetCollecte.vue';
 
 export default {
     components: {Spinner, ProgressBar},
