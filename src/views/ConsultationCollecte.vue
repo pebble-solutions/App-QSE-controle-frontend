@@ -3,8 +3,8 @@
         <spinner v-if="pending.collecte" />
         <template v-else>
             <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
+            <router-view></router-view>
         </template>
-        <router-view></router-view>
     </div>
 </template>
 
