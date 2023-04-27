@@ -77,7 +77,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['refreshResponse']),
+        ...mapActions(['refreshResponse', 'refreshCollecte', 'refreshCollectes']),
 
 
         /**
@@ -91,6 +91,18 @@ export default {
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',
+            })
+            .then((data) => {
+                return this.refreshCollectes([data]);
+            })
+            .then(() => {
+                return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                    environnement: 'private'
+                });
+            })
+            .then((collecte) => {
+                this.refreshCollecte(collecte);
+                this.getReponses(collecte);
             })
             .then(() => {
                 if (to === 'end') {
