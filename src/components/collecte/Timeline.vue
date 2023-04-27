@@ -33,10 +33,8 @@
             :collecte="{id: collecte.following_id, result_var: collecte.following_result}" 
             direction="following"
             v-if="collecte.following_id" />
-            <!-- <div v-else>Veille?</div> -->
-       <!-- <TimelineProgElementVue v-else></TimelineProgElementVue> -->
 
-        <TimelineProgElement :collecte="collecte" v-else-if="this.$route.name.includes('consultation')"/>
+        <TimelineProgElement :collecte="collecte" v-else-if="this.$route.fullPath.match(/consultation/)"/>
         <div v-else></div>
     </div>
     

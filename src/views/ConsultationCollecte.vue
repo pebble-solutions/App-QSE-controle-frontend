@@ -3,11 +3,9 @@
         <spinner v-if="pending.collecte" />
         <template v-else>
             <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
-            <router-view></router-view>
         </template>
+        <router-view></router-view>
     </div>
-    
-
 </template>
 
 <script>
@@ -29,7 +27,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['collectes','collecte']),
+        ...mapState(['collectes', 'collecte']),
 
 
         /**
@@ -67,7 +65,7 @@ export default {
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
     beforeRouteUpdate(to) {
-        if (to.params.idCollecte != this.collecte?.idCollecte) {
+        if (to.params.idCollecte != this.collecte?.id) {
             this.resetResponses();
             this.loadCollecte(to.params.idCollecte);
         }
