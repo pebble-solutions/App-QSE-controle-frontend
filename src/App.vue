@@ -342,7 +342,6 @@ export default {
 
 			this.$app.apiGet(route, query)
 			.then((data) => {
-				console.log(data, 'projets')
 				this.refreshProjets(data);
 			})
 			.catch(this.$app.catchError)
@@ -357,7 +356,6 @@ export default {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/controle/habilitation/type')
 			.then ((data)=> {
-				console.log(data, 'habilitation');
 				this.refreshHabilitationType(data)
 			})
 			.catch(this.$app.catchError)

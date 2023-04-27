@@ -87,7 +87,6 @@ export default {
          */
         navigate(to) {
             this.pending.bloc = true;
-            console.log(this.responses, 'reponses')
 
             this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
                 reponses: JSON.stringify(this.responses),
@@ -148,7 +147,6 @@ export default {
     mounted() {
         this.bloc_id = this.$route.params.bloc;
         this.getReponses();
-        console.log(this.getReponses, 'get reposnes')
     }
 }
 </script>

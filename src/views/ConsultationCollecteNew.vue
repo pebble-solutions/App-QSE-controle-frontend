@@ -30,7 +30,6 @@ export default {
             let collecte = JSON.parse(JSON.stringify(this.collecte));
             collecte.formulaire = collecte.information__groupe_id;
             
-            console.log(collecte)
             let newCollecte = {
                 formulaire: collecte.formulaire,
                 projet_id: collecte.projet_id,
@@ -40,7 +39,6 @@ export default {
                 previous_id: collecte.id,
                 previous_result: collecte.result_var,
             };
-           console.log(this.collecte);
             return newCollecte;
         }
     },
@@ -52,15 +50,7 @@ export default {
          * @param {object} //collecte
          */
         routeToFormulaire(collecte) {
-            // alert('le nouveau contrôle est programmé')
-            // let dateDay = new Date().toLocaleDateString('fr-FR')
-            // let dateCollecte = new Date(collecte.date).toLocaleDateString('fr-FR')
-            //  console.log(dateDay, dateCollecte, 'les deux')
-            // if(dateDay == dateCollecte){
-            //     this.$router.push("/consultation/"+collecte.id);
-            // }
-        
-            // else {}
+          
                 this.$router.push("/consultation/"+collecte.previous_id);
         },
     },

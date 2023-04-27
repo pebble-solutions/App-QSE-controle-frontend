@@ -48,9 +48,7 @@ export default {
 
             let time = nowTime-beginTime;
             let consoDays = Math.floor(time /(60*60*24));
-            console.log(consoDays, 'temps ercent');
             let  percent = Math.floor(consoDays/ 11);
-            console.log(percent, '%')
             return percent
         }
 
@@ -58,7 +56,6 @@ export default {
     methods: {
         classLabel(label){  
 
-                console.log(label, 'label')
                     if(label <= 0) return 'bg-danger text-light';
                     else if(label > 0 & label < 120) return 'bg-warning text-danger';
                     else if(label > 400) return 'bg-success'

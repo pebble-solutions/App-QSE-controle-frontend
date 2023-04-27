@@ -127,17 +127,10 @@ export default {
 			const nowS = now.getTime() /1000;
 			
 			const dateLockSecond =  datestartS - nowS + delayS;
-			// console.log(delayS,'delai secondes');
-			// console.log(datestartS, 'start');
-			// console.log(nowS, 'aujourdhui');
-			// console.log (dateLockSecond, 'datelock')
 			
-			// const dateLockJ = dateLockSecond /60/60/24;
-			// console.log (dateLockJ, 'date lock jour')
 
 			// const minutes = Math.round(dateLockSecond / 60 );
 			const daysBeforeLock = Math.floor(dateLockSecond / (60* 60 * 24)+1);
-			console.log(daysBeforeLock, 'daysbefore')
 
 			return daysBeforeLock;
 		},

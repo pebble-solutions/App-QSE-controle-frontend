@@ -14,8 +14,8 @@
                     <div class="d-flex justify-content-between">
                         <span class="me-2">{{ carac.personnel_id }}</span>
                         <span class="me-2">habilité  du {{ changeFormatDateLit(carac.dd) }} au  {{ changeFormatDateLit(carac.df)   }}</span>
-                        
                     </div>
+                    {{ list }}
                     <progress-bar
                     :dd="carac.dd"
                     :df="carac.df"
@@ -43,6 +43,7 @@ import {dateFormat} from '../js/collecte';
 import ProgressBar from '../components/ProgressBar.vue';
 
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import ConsultationProjetCollecte from './ConsultationProjetCollecte.vue';
 
 export default {
     components: {Spinner, ProgressBar},
@@ -61,28 +62,25 @@ export default {
         ...mapState(['habilitationType', 'listActifs']),
 
         /**
-         * filtre la list des types d'habilitation en fonction de l'id conserné
+         * filtre la list des types d'habilitation en fonction de l'id concerné
          * et retourne le type d'habilitation
          */
         filterhabilitationType() {
-            console.log (this.habilitationType, 'nom')
             let habilitationTypeId = this.habilitationType.filter((type) => type.id  == this.$route.params.id);
-            console.log(habilitationTypeId, habilitationTypeId[0], 'les deux')
             return habilitationTypeId[0]
         },
 
-        list() {
+        returnName(id) {
+            
+            let personelId = id;
+            let listAgents = this.listActifs;
+            listAgents.forEach(e =>{
+                if(e.id === personelId){
+                    return e.cache_nom
+                }
+            })
 
-            let agentHab = this.listPersonnelHabilite;
-            agentHab.forEach(element => {
-                let nom  = element.personnel_id;
-                return nom
-            });
 
-            let agent = this.listActifs
-
-            console.log(agent, agentHab, 'perso')
-            return agent , agentHab  ;
                
             }
         
@@ -107,14 +105,11 @@ export default {
         loadPersonelByHab(id) {
             this.pending.habilitation = true;
             // let habilitationId = id;
-            // console.log(habilitationId);
-            console.log(this.$route.params.id, 'habilitation id')
             
             this.$app.apiGet('v2/controle/habilitation', {
                 habilitation_id: id,
             })
             .then((data) =>{
-                console.log(data, 'listPersonnel');
                 this.listPersonnelHabilite = data;
                 
                 })
@@ -133,11 +128,10 @@ export default {
 
         searchName(){
         this.listActifs.forEach(agent => {
-                let nom = agent.id;
-                console.log(nom,'search')
-                return nom
+                let nom = agent.cache_nom;
+                console.log(nom,'nom')
             });
-           
+           console.log(this.nom)
         }
 
 
@@ -158,7 +152,6 @@ export default {
         /**
          * charge la list des personnels habilités correspondant à l'id du type d'habilitation
          */
-        // console.log(this.$route.params.id)
         this.loadPersonelByHab(this.$route.params.id);
 
     }
