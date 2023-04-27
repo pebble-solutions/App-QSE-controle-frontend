@@ -140,7 +140,6 @@ export default {
     beforeRouteUpdate(to) {
         if (to.params.id != this.collecte?.id) {
             this.resetResponses();
-            console.log(this.loadCollecte(to.params.id), 'collecte')
         }
     },
    
