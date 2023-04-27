@@ -22,7 +22,11 @@ export default {
         ...mapState(['collectes','collecte']),
 
         nameRoute() {
+<<<<<<< HEAD
             if(this.$route.name == 'consultationFormCollecte' ){
+=======
+            if(this.$route.name == 'consultationFormCollecte' ) {
+>>>>>>> 64eb3993ea5fd1f6873c81c9d297207d07850472
                return 'consultation/formulaire/'+this.$route.params.idFormulaire;
             }
             return 'consultation';

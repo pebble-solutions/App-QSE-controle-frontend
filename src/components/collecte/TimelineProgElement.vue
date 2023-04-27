@@ -1,14 +1,10 @@
 <template>
     <router-link :to="'/'+route+'/'+this.collecte.id+'/new'" v-slot="{navigate,href}" custom>
-        <a :href="href"  @click="navigate" class="timeline-el link-secondary">
-            <div class="timeline-label btn btn-primary">
-                <div class="d-flex">
-                    <i class="bi bi-plus" ></i>
-                    <span class="d-none d-lg-block ms-2">
-                        Bouclage?
-                    </span>
-                </div>
-            </div>
+        <a :href="href"  @click="navigate" class="timeline-el btn btn-light border rounded-pill btn-sm">
+            <i class="bi bi-plus" ></i>
+            <span class="d-none d-md-inline ms-1">
+                Bouclage?
+            </span>
         </a>
     </router-link>
 </template>

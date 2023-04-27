@@ -4,13 +4,13 @@
             <div class="card-header" v-if="timeline">
                 <Timeline :collecte="collecte" :route="route" />
             </div>
-            <alert-message
-                icon="bi-info-square-fill" 
-                className="" 
-                v-if="collecte.following_id">
-                Un contrôle de veille est programmé
-            </alert-message>
             <div class="card-body">
+                <alert-message
+                    icon="bi-info-square-fill" 
+                    className="mb-3" 
+                    v-if="collecte.following_id">
+                    Un contrôle de veille est programmé
+                </alert-message>
                 <div class="row">
                     <div class="mb-2 col">
                         <div class="d-flex align-items-center">
