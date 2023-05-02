@@ -3,19 +3,30 @@
     <div class="container py-2 px-2">
         <spinner v-if="pending.habilitation"></spinner>
         <template v-else>
-            <h2>{{ filterhabilitationType.nom }} </h2>
+            <h2>{{ filterhabilitationType}} </h2>
             <br>
             <h3> Personnels à contrôler</h3>
+            <div class="list-group">
+                <div class="list-group-item">
+                    échéance - nom de l'agent à contrôler - motif - bouton action
+                </div>
+            </div>
             <div></div>
             <h3>Personnels habilités</h3>
+            <div class="list-group">
+                <div class="list-group-item">
+                    Agent - échéance - indicateur de validité  - les contrôles - indicateur de veille
+                </div>
+            </div>
             <div class="list-group" >
                 <div class="list-group-item" v-for="carac in listPersonnelHabilite" :key="carac.id">
 
                     <div class="d-flex justify-content-between">
-                        <span class="me-2">{{ carac.personnel_id }}</span>
-                        <span class="me-2">habilité  du {{ changeFormatDateLit(carac.dd) }} au  {{ changeFormatDateLit(carac.df)   }}</span>
+                        <span  class="me-2">{{ returnName(carac.personnel_id) }} {{ carac.personnel_id }}</span>
+
+                        <!-- <span class="me-2">{{ carac.personnel_id }}</span> -->
+                        <span class="me-2">échéance le   {{ changeFormatDateLit(carac.df)   }}</span>
                     </div>
-                    {{ list }}
                     <progress-bar
                     :dd="carac.dd"
                     :df="carac.df"
@@ -25,15 +36,10 @@
                     </div> -->
 
                 </div>
-                
             </div>
-            <!-- <div> {{ listPersonnelHabilite }} </div> -->
-            <br>
-            <br><br>
-           list {{ list }}
-           searchName {{ searchName() }}
+           
 
-           {{ this.nom }}
+
         </template>
     </div>
 </template>
@@ -46,14 +52,18 @@ import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
     components: {Spinner, ProgressBar},
+    
+
 
     data() {
         return {
             pending: {
-                habilitation: false
+                habilitation: false,
+                agent:false,
             },
             listPersonnelHabilite : 'default',
-            nom:''
+            personnel:'',
+            
         }
     },
 
@@ -65,34 +75,14 @@ export default {
          * et retourne le type d'habilitation
          */
         filterhabilitationType() {
-            let habilitationTypeId = this.habilitationType.filter((type) => type.id  == this.$route.params.id);
-            return habilitationTypeId[0]
+            let habilitationTypeId = this.habilitationType.find((type) => type.id  == this.$route.params.id);
+            return habilitationTypeId.nom
         },
 
-        returnName(id) {
-            
-            let personelId = id;
-            let listAgents = this.listActifs;
-            listAgents.forEach(e =>{
-                if(e.id === personelId){
-                    return e.cache_nom
-                }
-            })
-
-
-               
-            }
+       
         
     },
 
-
-
-        
-        
-        
-
-    
-    
     methods: {
         /**
          * charge le personnel habilité en fonction du type d'habilitation recherché
@@ -103,16 +93,14 @@ export default {
         
         loadPersonelByHab(id) {
             this.pending.habilitation = true;
-            // let habilitationId = id;
             
             this.$app.apiGet('v2/controle/habilitation', {
                 habilitation_id: id,
             })
             .then((data) =>{
                 this.listPersonnelHabilite = data;
-                
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.habilitation = false);
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.habilitation = false);
 
         },
          /**
@@ -125,12 +113,43 @@ export default {
 			return dateFormat(el);
 		},
 
-        searchName(){
-        this.listActifs.forEach(agent => {
-                let nom = agent.cache_nom;
-                console.log(nom,'nom')
-            });
-           console.log(this.nom)
+    
+
+
+        returnName(id){
+            // console.log(id, 'id')
+            let personnel = this.listActifs.find((e) => e.id == id);
+            // console.log(personnel, 'perso');
+            if(!personnel) {
+                this.pending.agent = true;
+                this.$app.apiGet('structurePersonnel/GET/'+id, {
+                    environnement: 'private',
+                    // personne: id,
+                })
+                .then((data) =>{
+                    let personnel = data;
+                    console.log(personnel.id,personnel.cache_nom, data.cache_nom, 'personnel')
+                    let fullName = data.cache_nom;
+                    return fullName;
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.agent = false);
+
+                // return 'ce personnel n\'est pas dans la liste'
+            }
+            else {
+                return personnel.cache_nom
+            }
+            // if(personnel.length > 0){
+            //     console.log(personnel, 'personnel0');
+            //     // return 'pas de personnel'
+            //     return personnel[0].cache_nom;
+
+            // } 
+            // else {
+            //     console.log(personnel, 'personnelsinonpas trouvé');
+
+            //     return 'pas trouvé';
+            // }
         }
 
 

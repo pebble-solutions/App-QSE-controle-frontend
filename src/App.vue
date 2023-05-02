@@ -101,19 +101,29 @@
 					<span>à programmer</span>
 				</AppMenuItem>
 				<AppMenuItem href="/habilitation/idHabilitation"> 
-					<span>liste des habilitations</span>
+					<span>vue par habilitations</span>
 				</AppMenuItem>
 				<AppMenuItem href="/habilitation/idAgent"> 
-					<span>liste agent habilité</span>
+					<span>vue par agent habilité</span>
 				</AppMenuItem>
-				<!-- <SearchHab /> -->
+				<SearchHab v-model:mode=options.mode ></SearchHab>
+					<template v-if="options.mode == 'byAgent'" >
+						
+						<template v-for="agent in listActifs" :key="agent.id" >
+							<AppMenuItem :href="'/habilitationAgent/'+agent.id">
+								{{ agent.cache_nom }}
+							</AppMenuItem>
+						</template>
+					</template>
+					<template v-if="options.mode == 'byHab'" >
 						
 						<template v-for="hab in habilitationType" :key="hab.id" >
-							<AppMenuItem :href="'/habilitation/'+hab.id">
+							<AppMenuItem :href="'/habilitationHab/'+hab.id">
 								{{ hab.nom }}
 							</AppMenuItem>
-
 						</template>
+					</template>
+
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
@@ -157,7 +167,7 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
-// import SearchHab from './components/menu/SearchHab.vue'
+import SearchHab from './components/menu/SearchHab.vue'
 
 export default {
 
@@ -210,6 +220,9 @@ export default {
 				start: 0,
 				limit: 50,
 			},
+			options: {
+				mode: 'default'
+			}
 			
 		}
 	},
@@ -244,7 +257,7 @@ export default {
 				.includes(this.$route.name)) {
 				return 'consultation';
 			}
-			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab'].includes(this.$route.name)) {
+			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent'].includes(this.$route.name)) {
 				return 'habilitation'
 			}
 			else if (['Home'].includes(this.$route.name)) {
@@ -330,6 +343,10 @@ export default {
 		loadFormulaires() {
 			return this.loadRessources('formulaire')
 		},
+
+		// change(payload) {
+		// 	console.log(payload)
+		// },
 
 		/**
 		 * Charge l'ensemble des projets depuis le serveur et les stock dans le store
@@ -511,7 +528,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone }, //, SearchHab 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, SearchHab }, //,  
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

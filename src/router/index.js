@@ -154,14 +154,19 @@ const routes = [
     // ]
   },
   {
-    path:'/habilitation/:id',
+    path:'/habilitationHab/:id',
     name: 'habilitationByHab',
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByHab.vue')
   },
   {
-      path:'/habilitation/idAgent',
-      name: 'HabilitationAgent',
-      component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationAgent.vue')
+    path:'/habilitationAgent/:id',
+    name: 'habilitationByAgent',
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue')
+  },
+  {
+    path:'/habilitation/idAgent',
+    name: 'HabilitationAgent',
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationAgent.vue')
   },
   {
     path:'/habilitation/idHabilitation',

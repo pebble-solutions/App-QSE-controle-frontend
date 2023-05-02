@@ -30,24 +30,51 @@ export default {
     props: {
         mode:{
             type: String,
-            default: 'veille',
             required: true,
         }
     },
-
-    methods: {
-        setMode(mode){
-            if(mode ==='default'){
-                console.log(mode)
-            }
-            else if (mode ==='byHab'){
-                console.log(mode)
-
-            }
-            else if(mode ==='byAgent'){
-                console.log(mode)
-            }
+    data() {
+        return {
+            newMode: ''
         }
+    },
+    emits: ['update:mode'],
+
+    watch: {
+        newMode(){
+            console.log(this.newMode,'mode');
+            this.$emit('update:mode', this.newMode )
+        }
+
+        
+    },
+    
+    
+    
+    
+    
+    methods: {
+        // updateVal(mode){
+        //     console.log(mode, 'mode')
+        //     this.mode = mode;
+        //     this.$emit('update:'+mode);
+            
+        // },
+        
+        /**
+         * Observe le changement de valeur du choix des options de tri et émet un évènement
+         * 
+         * @param   {string} newVal
+         */
+         setMode(mode){
+            console.log(mode, 'setmode')
+            this.newMode = mode;
+
+        },
+    },
+
+    mounted() {
+        this.newMode = this.mode
     }
 }
 

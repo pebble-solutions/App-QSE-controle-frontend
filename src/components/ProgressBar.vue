@@ -3,10 +3,8 @@
         <div v-if="label >= 0 & label <= 600" class="progress-bar" :class="classLabel(label)" :style="stylePercent(percent)">reste {{label}} jours</div>
         <div v-else-if="label >= 600" class="progress-bar" :class="classLabel(label)" :style="stylePercent(percent)"></div>
         <div v-else class="progress-bar" :class="classLabel(label)" :style="stylePercent(percent)">expirée depuis {{Math.abs(label)}} jours</div>
-
-        
     </div> 
-
+<div>label:  {{ label }} percent: {{ percent }}</div>
 </template>
 
 <script>
@@ -57,8 +55,8 @@ export default {
         classLabel(label){  
 
                     if(label <= 0) return 'bg-danger text-light';
-                    else if(label > 0 & label < 120) return 'bg-warning text-danger';
-                    else if(label > 400) return 'bg-success'
+                    else if(label > 0 & label < 180) return 'bg-warning text-danger';
+                    else if(label > 500) return 'bg-success'
                 
             
         },

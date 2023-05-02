@@ -1,6 +1,7 @@
 <template>
     
         <h2 class="m-3">
+            
             Contrôles à programmer
         </h2>
         <div>
