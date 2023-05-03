@@ -309,7 +309,7 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults', 'addSearchResults', 'refreshHabilitationType']),
+		...mapActions(['refreshVeilleConfig','refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults', 'addSearchResults', 'refreshHabilitationType']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -378,7 +378,20 @@ export default {
 			.catch(this.$app.catchError)
 			.finally(() => {this.pending.habilitations = false});
 		},
-		
+		/** charge l'ensemble des veilles paramétrées
+         * 
+         */
+		LoadVeille() {
+            this.pending.habilitations = true;
+
+            this.$app.apiGet('v2/controle/veille')
+            .then((data) =>{
+                console.log(this.listVeille);
+				this.refreshVeilleConfig(data)
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+
+        },
 
 		/**
 		 * Charge une ressrouce depuis le serveur vers le store.
@@ -538,6 +551,7 @@ export default {
 				this.loadAgent();
 				this.loadProjets();
 				this.loadHabilitationType();
+				this.LoadVeille()
 			}
 		});
 	}

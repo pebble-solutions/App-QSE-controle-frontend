@@ -3,15 +3,32 @@
     <div class="container py-2 px-2">
         <spinner v-if="pending.habilitation"></spinner>
         <template v-else>
-            <h2>{{ filterhabilitationType}} </h2>
-            <h3  class="my-3"> Personnels à contrôler:</h3>
-            <div class="list-group">
-                <div class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        échéance - nom de l'agent à contrôler - motif - <button class="btn btn-outline-primary">Programmer</button>
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <h2>{{ filterhabilitationType}} </h2>
+
+                </div>
+                <div v-if="findVeilleConfig" class="col">
+                    <div class="card">
+                        <div class="card-header">veille n° {{ findVeilleConfig.id }}</div>
+                        <div class="card-body" >
+                                <div>pas de veille : {{ findVeilleConfig.control_step }} jours</div>
+                                <div>taux de veille : {{ findVeilleConfig.control_rate }} %</div>
+                        </div>
+                        <button class="btn btn-outline-primary">Modifier</button>
                     </div>
                 </div>
+                <alert-message v-else>la veille n'est pas configurée</alert-message>
+
+
+
             </div>
+            <h3  class="my-3"> Personnels à contrôler:</h3>
+            
+               
+                <vigil-control :idVeille="findVeilleConfig.id"></vigil-control>
+               
+            
             <h3  class="my-3">Personnels habilités:</h3>
             <div class="list-group">
                 <div class="list-group-item">
@@ -25,7 +42,7 @@
                         <span  class="me-2">{{ returnName(carac.personnel_id) }} {{ carac.personnel_id }}</span>
 
                         <!-- <span class="me-2">{{ carac.personnel_id }}</span> -->
-                        <span class="me-2">échéance le   {{ changeFormatDateLit(carac.df)   }}</span>
+                        <span class="me-2">échéance le   {{ changeFormatDateLit(carac.df)}}</span>
                     </div>
                     <progress-bar
                     :dd="carac.dd"
@@ -43,11 +60,13 @@
 import { mapState } from 'vuex';
 import {dateFormat} from '../js/collecte';
 import ProgressBar from '../components/ProgressBar.vue';
+import VigilControl from '../components/VigilControl.vue';
 
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 
 export default {
-    components: {Spinner, ProgressBar},
+    components: { Spinner, ProgressBar, AlertMessage, VigilControl},
     
 
 
@@ -64,16 +83,24 @@ export default {
     },
 
     computed: {
-        ...mapState(['habilitationType', 'listActifs']),
+        ...mapState(['habilitationType', 'listActifs','veilleConfig']),
 
         /**
-         * filtre la list des types d'habilitation en fonction de l'id concerné
-         * et retourne le type d'habilitation
+         * filtre la list des types d'habilitation en fonction de l'id de la route
+         * et retourne le nom de l'habilitation
          */
         filterhabilitationType() {
             let habilitationTypeId = this.habilitationType.find((type) => type.id  == this.$route.params.id);
             return habilitationTypeId.nom
         },
+        /**
+         * parcoure la list des configuraton de veille et retourne l'objet en fonction de l'id de la route
+         */
+
+        findVeilleConfig() {
+            let veilleConfigId = this.veilleConfig.find((e) => e.objet_id  == this.$route.params.id);
+            return veilleConfigId
+        }
 
        
         
@@ -81,9 +108,9 @@ export default {
 
     methods: {
         /**
-         * charge le personnel habilité en fonction du type d'habilitation recherché
-         * et l'enregistre dans le store
-         * 
+         * charge le personnel habilité en fonction du type d'habilitation renseigné
+         * et 
+         * t
          * @param   {number}    id  l'id du type d'habilitation
          */
         
@@ -99,6 +126,8 @@ export default {
             .catch(this.$app.catchError).finally(() => this.pending.habilitation = false);
 
         },
+
+        
          /**
 		 * Modifie le format de la date entrée en paramètre et la retourne 
 		 * sous le format 01 févr. 2021
@@ -108,6 +137,8 @@ export default {
 		changeFormatDateLit(el) {
 			return dateFormat(el);
 		},
+
+       
 
     
 
@@ -154,9 +185,10 @@ export default {
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
      beforeRouteUpdate(to) {
-        if (to.params.id != this.habilitation_id) {
+        if (to.params.id != this.$route.params.id) {
             
             this.loadPersonelByHab(to.params.id);
+
         }
     },
 

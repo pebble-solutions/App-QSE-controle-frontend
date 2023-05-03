@@ -24,6 +24,7 @@ export default createStore({
 		projets: [],
 		stat: null,
 		requeteStat: null,
+		veilleConfig: []
 	},
 	getters: {
 		activeStructure(state) {
@@ -279,6 +280,15 @@ export default createStore({
 			state.habilitationType = habilitationType;
 		},
 
+		/**
+		 * Enregistre la liste des veilles d'habilitations avec leurs paramètres
+		 * 
+		 * @param 	{Object}	state le state de VueX
+		 * @param	{Array}		
+		 */
+		setVeilleConfig(state, veilleConfig) {
+			state.veilleConfig = veilleConfig;
+		},
 
 		/**
 		 * Passe un formulaire en formulaire ouvert au niveau du state
@@ -438,6 +448,16 @@ export default createStore({
 		refreshHabilitationType(context, data){
 			context.commit('setHabilitationType', data);
 		},
+		/**
+		 * met à jour la liste des veilles d'habilitations avec leur paramètres
+		 * 
+		 * @param	{Object}	context	l'instance de vueX
+		 * @param	{Array}		data	la liste des veilles d'habilitations
+		 */
+		refreshVeilleConfig (context , data) {
+			context.commit('setVeilleConfig', data)
+		},
+
 		/**
 		 * Met à jours les collectes stockées au niveau du store
 		 * 
