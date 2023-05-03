@@ -4,7 +4,7 @@
         <div v-else-if="label >= 600" class="progress-bar" :class="classLabel(label)" :style="stylePercent(percent)"></div>
         <div v-else class="progress-bar" :class="classLabel(label)" :style="stylePercent(percent)">expirée depuis {{Math.abs(label)}} jours</div>
     </div> 
-<div>label:  {{ label }} percent: {{ percent }}</div>
+<!-- <div>label:  {{ label }} percent: {{ percent }}</div> -->
 </template>
 
 <script>

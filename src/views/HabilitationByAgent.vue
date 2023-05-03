@@ -7,7 +7,10 @@
             <h3>Habilitations à contrôler</h3>
             <div class="list-group">
                 <div class="list-group-item">
-                    échéance - nom de l'habilitation à contrôler - motif - bouton action
+                    <div class="d-flex justify-content-between align-items-center">
+
+                    échéance - nom de l'habilitation à contrôler - motif -<button class="btn btn-outline-primary">Programmer</button>
+                    </div>
                 </div>
             </div>
             <h3>Liste des habilitations</h3>

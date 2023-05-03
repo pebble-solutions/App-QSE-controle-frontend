@@ -4,15 +4,15 @@
         <spinner v-if="pending.habilitation"></spinner>
         <template v-else>
             <h2>{{ filterhabilitationType}} </h2>
-            <br>
-            <h3> Personnels à contrôler</h3>
+            <h3  class="my-3"> Personnels à contrôler:</h3>
             <div class="list-group">
                 <div class="list-group-item">
-                    échéance - nom de l'agent à contrôler - motif - bouton action
+                    <div class="d-flex justify-content-between align-items-center">
+                        échéance - nom de l'agent à contrôler - motif - <button class="btn btn-outline-primary">Programmer</button>
+                    </div>
                 </div>
             </div>
-            <div></div>
-            <h3>Personnels habilités</h3>
+            <h3  class="my-3">Personnels habilités:</h3>
             <div class="list-group">
                 <div class="list-group-item">
                     Agent - échéance - indicateur de validité  - les contrôles - indicateur de veille
@@ -31,10 +31,6 @@
                     :dd="carac.dd"
                     :df="carac.df"
                     ></progress-bar>
-                    <!-- <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                         <div class="progress-bar" style="width: 25%">25%</div>
-                    </div> -->
-
                 </div>
             </div>
            
