@@ -111,7 +111,7 @@
 						
 						<template v-for="agent in listActifs" :key="agent.id" >
 							<AppMenuItem :href="'/habilitationAgent/'+agent.id">
-								{{ agent.cache_nom }}
+								{{ agent.cache_nom }} {{ agent.id }}
 							</AppMenuItem>
 						</template>
 					</template>
@@ -386,7 +386,6 @@ export default {
 
             this.$app.apiGet('v2/controle/veille')
             .then((data) =>{
-                console.log(this.listVeille);
 				this.refreshVeilleConfig(data)
             })
             .catch(this.$app.catchError).finally(() => this.pending.habilitations = false);

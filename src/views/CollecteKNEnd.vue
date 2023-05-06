@@ -71,8 +71,6 @@ export default {
             }).then((data) => {
                 this.stats = data.stats;
                     if(this.stats.lenght == 0);
-                    
-
             }).catch(this.$app.catchError);
         },
         /**

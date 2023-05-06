@@ -1,5 +1,4 @@
 <template v-if="collecte">
-
     <table class="table table-bordered bg-light">
         <thead>
             <tr class="text-center text-light">
@@ -61,7 +60,9 @@ export default {
                 S: 'bg-success', A: 'bg-primary', M: 'bg-warning', I: 'bg-danger'
             };
             return classList[letter];
-        }
+        },
+
+        
     }
 }
 

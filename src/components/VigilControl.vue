@@ -1,18 +1,24 @@
 <template>
-    <div class="list-group">
+    <div class="list-group" v-if="idVeille">
         veille n° {{ idVeille }}
         <div class="list-group-item" v-for="control in listControl" :key="control.id">
             
             <div class="d-flex justify-content-between align-items-center" >
-                {{ control.personnel_id }}
-                <div>
-                    {{returnName(control.personnel_id)}}
+                <div class="d-flex justify-content-between align-items-center w-100 me-4" >
+                        
+                    <span v-if="returnName(control.personnel_id)">
+                        {{returnName(control.personnel_id)}}
+                        <!-- - dernier contrôle le {{changeFormatDateLit(control.date_last)}}  -->
+                    </span>
+                    <span v-else> {{ control.personnel_id }} 
+                        <!-- dernier contrôle le {{changeFormatDateLit(control.date_last)}} -->
+                    </span>
+                    <progress-bar :dd="control.date_last" :df="delay(control.date_last)"></progress-bar>
                 </div>
-                <div>
-                    contrôlé le {{changeFormatDateLit(control.date_last)}} 
 
-                </div>
-                <button class="btn btn-outline-primary" @click.prevent="program(returnName(control.personnel_id))">Programmer</button>
+                <button class="btn btn-outline-primary" @click.prevent="program(returnName(control.personnel_id))">
+                    <span class="d-none d-md-block">Programmer</span>
+                </button>
             </div>
         </div>
     </div>
@@ -20,6 +26,7 @@
 <script>
 import { mapState } from 'vuex';
 import { dateFormat } from '../js/collecte';
+import ProgressBar from './ProgressBar.vue';
 
 export default{
     props: {
@@ -28,6 +35,9 @@ export default{
             required: true
         }
     },
+
+    components: {ProgressBar},
+
     computed: {
         ...mapState(['habilitationType','listActifs','veilleConfig'])
     },
@@ -52,11 +62,11 @@ export default{
         loadControlTodo(id) {
             this.pending.control = true;
 
-            this.$app.apiGet('v2/controle/veille/'+id+'/todo', {CSP_min: 0, CSP_max: 500})
+            this.$app.apiGet('v2/controle/veille/'+id+'/todo', {CSP_min: 0, CSP_max: 100})
             .then((data) =>{
-                console.log(data)
+                // console.log(data)
                 this.listControl = data;
-                console.log(this.listControl, 'list')
+                // console.log(this.listControl, 'list')
             })
             .catch(this.$app.catchError).finally(() => this.pending.control = false);
 
@@ -74,29 +84,26 @@ export default{
 
         returnName(id){
             let personnel = this.listActifs.find((e) => e.id == id);
-            // if(!personnel) {
-            //     this.pending.agent = true;
-            //     this.$app.apiGet('structurePersonnel/GET/'+id, {
-            //         environnement: 'private',
-            //         // personne: id,
-            //     })
-            //     .then((data) =>{
-            //         let personnel = data;
-            //         console.log(personnel.id,personnel.cache_nom, data.cache_nom, 'personnel')
-            //         let fullName = data.cache_nom;
-            //         return fullName;
-            //     })
-            //     .catch(this.$app.catchError).finally(() => this.pending.agent = false);
-            // }
-            // else {
-            // }
+            
             return personnel.cache_nom
            
         },
 
         program(nom){
-            console.log(nom, 'formulaire')
+            // console.log(nom, 'formulaire')
             confirm('programmer le contrôle de '+nom);
+        }, 
+
+        delay(date){
+            // console.log(date, 'dd')
+            const dd = new Date(date);
+
+            dd.setDate(dd.getDate()+180);
+            // console.log(dd, typeof dd)
+            
+            return dd
+            
+
         }
 
     },

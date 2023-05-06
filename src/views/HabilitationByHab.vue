@@ -26,7 +26,8 @@
             <h3  class="my-3"> Personnels à contrôler:</h3>
             
                
-                <vigil-control :idVeille="findVeilleConfig.id"></vigil-control>
+                <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id"></vigil-control>
+                <template v-else>pas de veille</template>
                
             
             <h3  class="my-3">Personnels habilités:</h3>
@@ -85,20 +86,21 @@ export default {
     computed: {
         ...mapState(['habilitationType', 'listActifs','veilleConfig']),
 
-        /**
-         * filtre la list des types d'habilitation en fonction de l'id de la route
+        /* parcourt la list des types d'habilitation en fonction de l'id de la route
          * et retourne le nom de l'habilitation
          */
         filterhabilitationType() {
             let habilitationTypeId = this.habilitationType.find((type) => type.id  == this.$route.params.id);
+            console.log(habilitationTypeId, 'hab')
             return habilitationTypeId.nom
         },
         /**
-         * parcoure la list des configuraton de veille et retourne l'objet en fonction de l'id de la route
+         * parcourt la list des configuraton de veille et retourne celle correspondant à  l'id de la route
          */
 
         findVeilleConfig() {
             let veilleConfigId = this.veilleConfig.find((e) => e.objet_id  == this.$route.params.id);
+            console.log(veilleConfigId, 'veille')
             return veilleConfigId
         }
 
@@ -121,6 +123,7 @@ export default {
                 habilitation_id: id,
             })
             .then((data) =>{
+                console.log(data ,'list pers habilité')
                 this.listPersonnelHabilite = data;
             })
             .catch(this.$app.catchError).finally(() => this.pending.habilitation = false);
@@ -155,8 +158,8 @@ export default {
                 })
                 .then((data) =>{
                     let personnel = data;
-                    console.log(personnel.id,personnel.cache_nom, data.cache_nom, 'personnel')
-                    let fullName = data.cache_nom;
+                    // console.log(personnel.id,personnel.cache_nom, data.cache_nom, 'personnel')
+                    let fullName = personnel.cache_nom;
                     return fullName;
                 })
                 .catch(this.$app.catchError).finally(() => this.pending.agent = false);
