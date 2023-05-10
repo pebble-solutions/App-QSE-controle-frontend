@@ -156,7 +156,14 @@ const routes = [
   {
     path:'/habilitationHab/:id',
     name: 'habilitationByHab',
-    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByHab.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByHab.vue'),
+    children: [
+      {
+        path:'new',
+        name: 'NewCollecteVeille',
+        component: () => import(/* webpackChunkName: "about" */ '../views/VeilleCollecteNew.vue')
+      }
+  ]
   },
   {
     path:'/habilitationAgent/:id',

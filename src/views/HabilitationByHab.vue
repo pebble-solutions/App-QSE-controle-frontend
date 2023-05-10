@@ -6,7 +6,6 @@
             <div class="row">
                 <div class="col-12 col-lg-8">
                     <h2>{{ filterhabilitationType}} </h2>
-
                 </div>
                 <div v-if="findVeilleConfig" class="col">
                     <div class="card">
@@ -46,8 +45,8 @@
                         <span class="me-2">échéance le   {{ changeFormatDateLit(carac.df)}}</span>
                     </div>
                     <progress-bar
-                    :dd="carac.dd"
-                    :df="carac.df"
+                    :dd="new Date(carac.dd)"
+                    :df="new Date(carac.df)"
                     ></progress-bar>
                 </div>
             </div>
@@ -91,7 +90,7 @@ export default {
          */
         filterhabilitationType() {
             let habilitationTypeId = this.habilitationType.find((type) => type.id  == this.$route.params.id);
-            console.log(habilitationTypeId, 'hab')
+            // console.log(habilitationTypeId, 'hab')
             return habilitationTypeId.nom
         },
         /**

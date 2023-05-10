@@ -3,30 +3,43 @@
         veille n° {{ idVeille }}
         <div class="list-group-item" v-for="control in listControl" :key="control.id">
             
-            <div class="d-flex justify-content-between align-items-center" >
-                <div class="d-flex justify-content-between align-items-center w-100 me-4" >
-                        
-                    <span v-if="returnName(control.personnel_id)">
+            <div class="row" >
+                        {{ control }}
+                    <div class="col-3" v-if="returnName(control.personnel_id)">
                         {{returnName(control.personnel_id)}}
                         <!-- - dernier contrôle le {{changeFormatDateLit(control.date_last)}}  -->
-                    </span>
-                    <span v-else> {{ control.personnel_id }} 
+                    </div>
+                    <div class="col-3" v-else> {{ control.personnel_id }} 
                         <!-- dernier contrôle le {{changeFormatDateLit(control.date_last)}} -->
-                    </span>
-                    <progress-bar :dd="control.date_last" :df="delay(control.date_last)"></progress-bar>
-                </div>
+                    </div>
+                    <div class="col-6">
+                        <progress-bar :dd="new Date(control.date_last)" :df="delay(control.date_last)"></progress-bar>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-outline-primary" @click.prevent="program(control.personnel_id, control.habilitation_id)">
+                            <span class="d-none d-md-block">Programmer</span>
+                        </button>
 
-                <button class="btn btn-outline-primary" @click.prevent="program(returnName(control.personnel_id))">
-                    <span class="d-none d-md-block">Programmer</span>
-                </button>
+                    </div>
+                    <!-- <router-link :to="'habilitationHab'+this.$route.params.id+'/new'" v-slot="{navigate, href}">
+                        <a :href="href"  @click="navigate" class="timeline-el btn btn-light border rounded-pill btn-sm">
+                            <i class="bi bi-plus" ></i>
+                            <span class="d-none d-md-inline ms-1">
+                             Contrôler?
+                            </span>
+                        </a>
+                    </router-link> -->
+
             </div>
         </div>
+        <router-view></router-view>
     </div>
 </template>
 <script>
 import { mapState } from 'vuex';
 import { dateFormat } from '../js/collecte';
 import ProgressBar from './ProgressBar.vue';
+
 
 export default{
     props: {
@@ -36,7 +49,7 @@ export default{
         }
     },
 
-    components: {ProgressBar},
+    components: {ProgressBar, }, //RouterLink
 
     computed: {
         ...mapState(['habilitationType','listActifs','veilleConfig'])
@@ -89,14 +102,27 @@ export default{
            
         },
 
-        program(nom){
-            // console.log(nom, 'formulaire')
-            confirm('programmer le contrôle de '+nom);
+        program(id, hab_id){
+            console.log(id,hab_id, 'collecte modal')
+            // confirm('programmer un nouveau contrôle de '+id+'?');
+            this.$router.push("/habilitationHab/"+this.$route.params.id+'/new', { veille: false,
+                collecte: {
+                    formulaire: null,
+                    cible_personnel: id,
+                    date: null,
+                    enqueteur_personnel: null,
+                    environnement: "private",
+                    tlc: 'CharacteristicPersonnel',
+                    tli: hab_id
+                },  
+
+            });
+
         }, 
 
         delay(date){
             // console.log(date, 'dd')
-            const dd = new Date(date);
+            let dd = new Date(date);
 
             dd.setDate(dd.getDate()+180);
             // console.log(dd, typeof dd)

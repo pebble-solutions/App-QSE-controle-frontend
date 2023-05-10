@@ -16,6 +16,7 @@
                 :personnels="personnels"
                 :formulaires="formulaires"
                 :readonly="readonly"
+                :veille="veille"
 
                 @update-collecte="updateCollecte"
                 v-if="collecte" />
@@ -36,7 +37,8 @@ export default {
         collecte: Object,
         personnels: Array,
         formulaires: Array,
-        readonly: Array
+        readonly: Array,
+        veille: Boolean
     },
 
     data() {
@@ -97,6 +99,7 @@ export default {
             this.tmpCollecte.environnement = 'private';
             
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte).then(data => {
+                console.log(this.tmpCollecte, 'tmpcollecte')
                 this.refreshCollectes([data]);
                 this.refreshNbTodoFormulaires(data.information__groupe_id);
                 this.$emit('updated', data);

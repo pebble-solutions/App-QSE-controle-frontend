@@ -257,7 +257,7 @@ export default {
 				.includes(this.$route.name)) {
 				return 'consultation';
 			}
-			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent'].includes(this.$route.name)) {
+			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent','VeilleCollecteNew'].includes(this.$route.name)) {
 				return 'habilitation'
 			}
 			else if (['Home'].includes(this.$route.name)) {

@@ -1,11 +1,15 @@
 <template>
     <div class="progress progress-ht" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-        <!-- <div v-if="label >= 0 & label <= 600" class="progress-bar" :class="classLabel(label)" :style="stylePercent(percent)">reste {{label}} jours</div>
-        <div v-else-if="label >= 600" class="progress-bar" :class="classLabel(label)" :style="stylePercent(percent)"></div>
-        <div v-else class="progress-bar" :class="classLabel(label)" :style="stylePercent(percent)">expirée depuis {{Math.abs(label)}} jours</div> -->
-        <div class="progress-bar progress-ht" role="progressbar" :class="returnClass(varTime)" :style="returnStyle(varTime)"> {{ varTime }} </div>
+        <div class="progress-bar progress-ht overflow-visible text-light" role="progressbar"    :class="returnClass(varTime)" :style="returnStyle(varTime)" >
+            {{ returnLabel(varTime) }}
+            <!-- <span v-if="varTime.restinDays <= 0">
+                expiré depuis {{ varTime.restinDays }} jours
+            </span>
+            <span v-else-if="varTime.consoPerCent >= 71">
+                reste {{ varTime.restinDays }} jours
+            </span> -->
+            </div>
     </div> 
-    <!-- {{varTime}} -->
 </template>
 
 <script>
@@ -78,6 +82,18 @@ export default {
                return "width:"+data.consoPerCent +"%"
             }
             else return "width: 100%"
+        },
+
+        returnLabel(data){
+            if(data.restinDays <= 0) {
+                return 'expiré depuis '+Math.abs(data.restinDays)+' jours'
+            }
+            else{
+                if(data.consoPerCent >= 71){
+                    return 'reste '+data.restinDays+' jours'
+                }
+
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 <template>
     <div v-if="tmpCollecte">
+        <div v-if="veille">je programme une veille {{ collecte }}</div>
+        <div class="row g-2"></div>
+        
         <div class="row g-2">
             <div class="col mb-3">
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
@@ -46,7 +49,8 @@ export default {
         collecte: Object,
         personnels: Array,
         formulaires: Array,
-        readonly: Array
+        readonly: Array,
+        veille: Boolean
     },
 
     data() {

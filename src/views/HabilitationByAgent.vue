@@ -2,9 +2,13 @@
     <div class="container py-2 px-2">
         <Spinner v-if="pending.agent"></Spinner>
         <template v-else>
-            <h2>{{ filterListActifs }} </h2>
+            
+                    <h2>{{ filterListActifs }} </h2>
+               
             <br>
             <h3>Habilitations à contrôler</h3>
+                <VigilControl idVeille="8"></VigilControl>
+            
             <div class="list-group">
                 <div class="list-group-item">
                     <div class="d-flex justify-content-between align-items-center">
@@ -30,8 +34,8 @@
 
                     </div>
                     <ProgressBar
-                    :dd="hab.dd"
-                    :df="hab.df"
+                    :dd="new Date(hab.dd)"
+                    :df="new Date(hab.df)"
                     ></ProgressBar>
                 
                 </div>
@@ -45,9 +49,11 @@ import { mapState } from 'vuex';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import {dateFormat} from '../js/collecte';
 import ProgressBar from '../components/ProgressBar.vue';
+import VigilControl from '../components/VigilControl.vue';
+
 
 export default{
-    components: {Spinner, ProgressBar},
+    components: {Spinner, ProgressBar, VigilControl},
   
 
     data() {
@@ -62,7 +68,9 @@ export default{
     computed: {
         ...mapState(['habilitationType', 'listActifs']),
 
-
+        /**
+         * cherche dans la liste des Actifs le personnel à afficher et retourne le nom
+         */
         filterListActifs() {
             let agentId = this.listActifs.find((e) => e.id == this.$route.params.id);
             return agentId.cache_nom
@@ -72,6 +80,12 @@ export default{
     },
     
     methods: {
+
+        /**
+         * Envoie une requête pour charger la liste des habilitation d'un personnel
+         * en fonction de l'id fourni
+         * @param {Number} id du personnel 
+         */
         loadHabilitationFromPerso(id) {
             this.pending.agent =true;
             this.$app.apiGet('v2/controle/habilitation', {
