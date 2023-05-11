@@ -7,7 +7,7 @@
                 <div class="col-12 col-lg-8">
                     <h2>{{ filterhabilitationType}} </h2>
                 </div>
-                <div v-if="findVeilleConfig" class="col">
+                <!-- <div v-if="findVeilleConfig" class="col">
                     <div class="card">
                         <div class="card-header">veille n° {{ findVeilleConfig.id }}</div>
                         <div class="card-body" >
@@ -17,7 +17,7 @@
                         <button class="btn btn-outline-primary">Modifier</button>
                     </div>
                 </div>
-                <alert-message v-else>la veille n'est pas configurée</alert-message>
+                <alert-message v-else>la veille n'est pas configurée</alert-message> -->
 
 
 
@@ -25,15 +25,16 @@
             <h3  class="my-3"> Personnels à contrôler:</h3>
             
                
-                <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id"></vigil-control>
-                <template v-else>pas de veille</template>
+                <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
+                <alert-message v-else>pas de veille à prévoir pour cette habilitation</alert-message> 
+                
                
             
             <h3  class="my-3">Personnels habilités:</h3>
             <div class="list-group">
-                <div class="list-group-item">
+                <!-- <div class="list-group-item">
                     Agent - échéance - indicateur de validité  - les contrôles - indicateur de veille
-                </div>
+                </div> -->
             </div>
             <div class="list-group" >
                 <div class="list-group-item" v-for="carac in listPersonnelHabilite" :key="carac.id">
@@ -51,6 +52,7 @@
                 </div>
             </div>
            
+            <router-view></router-view>
 
 
         </template>
@@ -89,8 +91,8 @@ export default {
          * et retourne le nom de l'habilitation
          */
         filterhabilitationType() {
-            let habilitationTypeId = this.habilitationType.find((type) => type.id  == this.$route.params.id);
-            // console.log(habilitationTypeId, 'hab')
+            let habilitationTypeId = this.habilitationType.find((e) => e.id  == this.$route.params.id);
+            console.log(habilitationTypeId, 'hab')
             return habilitationTypeId.nom
         },
         /**
@@ -98,10 +100,17 @@ export default {
          */
 
         findVeilleConfig() {
-            let veilleConfigId = this.veilleConfig.find((e) => e.objet_id  == this.$route.params.id);
+            let veilleConfigId = this.veilleConfig.find((v) => v.objet_id  == this.$route.params.id);
             console.log(veilleConfigId, 'veille')
             return veilleConfigId
+        },
+        returnFormulaireId(){
+            let formulaireId = this.veilleConfig.find((f) => f.objet_id == this.$route.params.id);
+            console.log(formulaireId.formulaire_id, 'formulaire')
+            return formulaireId.formulaire_id
+
         }
+
 
        
         
@@ -119,7 +128,7 @@ export default {
             this.pending.habilitation = true;
             
             this.$app.apiGet('v2/controle/habilitation', {
-                habilitation_id: id,
+                habilitation_type_id: id,
             })
             .then((data) =>{
                 console.log(data ,'list pers habilité')

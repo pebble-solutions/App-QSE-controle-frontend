@@ -23,7 +23,7 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-ui-checks">Habilitations</AppMenuItem>
+				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-ui-checks">Veille Habilitations</AppMenuItem>
 
 			</AppMenu>
 		</template>
@@ -97,34 +97,38 @@
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'habilitation'">
-				<AppMenuItem href="/habilitation"> 
-					<span>à programmer</span>
-				</AppMenuItem>
-				<AppMenuItem href="/habilitation/idHabilitation"> 
+				<!-- <AppMenuItem href="/habilitation"> 
+					<span></span>
+				</AppMenuItem> -->
+				<!-- <AppMenuItem href="/habilitation/idHabilitation"> 
 					<span>vue par habilitations</span>
 				</AppMenuItem>
 				<AppMenuItem href="/habilitation/idAgent"> 
 					<span>vue par agent habilité</span>
-				</AppMenuItem>
-				<SearchHab v-model:mode=options.mode ></SearchHab>
-					<template v-if="options.mode == 'byAgent'" >
+				</AppMenuItem> -->
+				<!-- <SearchHab v-model:mode=options.mode ></SearchHab> -->
+					<!-- <template v-if="options.mode == 'byAgent'" >
 						
 						<template v-for="agent in listActifs" :key="agent.id" >
 							<AppMenuItem :href="'/habilitationAgent/'+agent.id">
 								{{ agent.cache_nom }} {{ agent.id }}
 							</AppMenuItem>
 						</template>
-					</template>
-					<template v-if="options.mode == 'byHab'" >
-						
+					</template> -->
+					<!-- <template v-if="options.mode == 'byHab'" >
+					</template> -->
+						<!-- <template v-for="veille in veilleConfig" :key="veille.id">
+							<AppMenuItem :href="'/habilitationHab/'+veille.id">
+								{{ veille.nom }}
+							</AppMenuItem>
+						</template> -->
 						<template v-for="hab in habilitationType" :key="hab.id" >
 							<AppMenuItem :href="'/habilitationHab/'+hab.id">
 								{{ hab.nom }}
 							</AppMenuItem>
 						</template>
-					</template>
-
 			</AppMenu>
+
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
@@ -167,7 +171,7 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
-import SearchHab from './components/menu/SearchHab.vue'
+// import SearchHab from './components/menu/SearchHab.vue'
 
 export default {
 
@@ -211,7 +215,14 @@ export default {
 					icon: 'bi bi-eye-fill',
 					key: 'consultation',
 					href: '/consultation'
-				}
+				},
+				{
+					label: 'Veille Habilitations',
+					icon: 'bi bi-eye-fill',
+					key: 'habilitation',
+					href: '/habilitation'
+				},
+
 			],
 			searchOptions: {
 				dd: null,
@@ -228,7 +239,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults','habilitationType']),
+		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults','habilitationType', 'veilleConfig']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -257,7 +268,7 @@ export default {
 				.includes(this.$route.name)) {
 				return 'consultation';
 			}
-			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent','VeilleCollecteNew'].includes(this.$route.name)) {
+			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent','NewCollecteVeille'].includes(this.$route.name)) {
 				return 'habilitation'
 			}
 			else if (['Home'].includes(this.$route.name)) {
@@ -540,7 +551,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, SearchHab }, //,  
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, //,  , SearchHab 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

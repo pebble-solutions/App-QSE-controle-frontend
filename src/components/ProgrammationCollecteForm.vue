@@ -1,10 +1,16 @@
 <template>
     <div v-if="tmpCollecte">
-        <div v-if="veille">je programme une veille {{ collecte }}</div>
+       
+        <div class="row g-2" v-if="veille">
+            <p>Veille <span class="me-3"> tli:{{ collecte.tli }}</span> <span class="me-3"> tlc:{{ collecte.tlc }}</span> </p>
+            {{ tmpCollecte }}
+            
+            
+        </div>
         <div class="row g-2"></div>
         
         <div class="row g-2">
-            <div class="col mb-3">
+            <div v-if="!veille" class="col mb-3">
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
                 <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="tmpCollecte.formulaire" required :disabled="isReadonly('formulaire')">
                     <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>

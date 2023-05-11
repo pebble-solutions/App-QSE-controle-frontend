@@ -1,14 +1,16 @@
 <template>
     <div>
-    
+    {{ collecte }}
     </div>
     <programmation-collecte-modal
     
         :collecte="collecte"
         :formulaires="formulaires"
         :personnels="listActifs"
-        :veille= false
-        
+        :readonly="['cible_personnel']"
+
+        :veille= true
+        v-if="inited"
         @updated="routeToParent"/>
 </template>
 
@@ -28,8 +30,11 @@ export default {
                 cible_personnel: null,
                 date: null,
                 enqueteur_personnel: null,
-                environnement: "private"
+                environnement: "private",
+                tlc: '',
+                tli:''
             },
+            inited: false
         }
     },
 
@@ -44,6 +49,7 @@ export default {
          * @param {object} collecte
          */
         routeToParent() {
+            alert("Votre contrôle est programmé. Vous pouvez le retrouver depuis le menu Contrôle ou Programmation.");
             this.$router.go(-1);
         },
     },
@@ -51,7 +57,12 @@ export default {
     components: {ProgrammationCollecteModal}, //ProgrammationCollecteModal, ProgrammationCollecteForm
 
     mounted() {
-
+        this.collecte.tli = this.$route.params.idHab;
+        this.collecte.tlc = 'CharacteristicPersonnel';
+        this.collecte.cible_personnel = this.$route.params.idOperateur;
+        this.collecte.formulaire = this.$route.params.idForm;
+        this.inited = true
+        
     }
 }
 

@@ -2,32 +2,18 @@
     <div class="container py-2 px-2">
         <Spinner v-if="pending.veille"></Spinner>
         <template v-else>
-            
-            <h2 class="my-3">
-                Veille habilitation
-            </h2>
-            <div v-if="veilleConfig">
-                <h3>Configurations</h3>
-                <div class="list-group" v-for="veille in veilleConfig" :key = veille.id>
-                    <div class="list-group-item">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span>{{ veille.nom }} </span>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="me-3">pas de {{ veille.control_step}} jours </span>
-                                <span class="me-3">taux de  {{ veille.control_rate }}% </span>
-                            </div>
-                        </div>
-                        <!-- <button class="float-end">Modifier</button> -->
-                    </div>
-                </div>
+            <div>
+                <img class="img-fluid"  src="../assets/programmationKN.png" alt="">
             </div>
+            VEILLE{{ veilleConfig }}
+            
             <div v-if="listControlTodo">
                 <h3>Controles à programmer</h3>
                 <div class="list-group" v-for="controlTodo in listControlTodo" :key="controlTodo.habilitation_id" >
                     <div class="list-group-item">
                         <div class="d-flex justify-content-start">
-                            <span class="me-4">veille# {{controlTodo.habilitation_id}}</span>
-                            <span class="me-4">hablitation : {{controlTodo.habilitation_type_id}}</span> 
+                            <span class="me-4">hab# {{controlTodo.habilitation_id}}</span>
+                            <span class="me-4">  {{ filterhabilitationType(controlTodo.habilitation_type_id) }} {{controlTodo.habilitation_type_id}}</span> 
                             <span class="me-4">{{returnName(controlTodo.personnel_id)}}</span>
                             <span class="me-4">dernier contrôle le {{changeFormatDateLit(controlTodo.date_last)}}</span>
 
@@ -37,28 +23,22 @@
                 </div>
             </div>
             <AlertMessage v-else>Pas de controle à programmer</AlertMessage>
-            <div class="list-group">
-                <h3>veilles à 90 jours de l'échéance</h3>
+            <div v-if="veilleConfig" class="list-group">
+                <h3>veilles</h3>
                 <div class="list-group-item" v-for="veille in veilleConfig" :key=veille.id>
-                    {{ veille.nom}} {{ veille.id }}
+                    #{{ veille.id }} veille {{ veille.nom}} 
                     <button class="btn btn-outline-primary float-end" @click.prevent = loadVeille(veille.id)> charger</button>
-                    <!-- <div class="list-group" v-for="controlTodo in listControlTodo" :key="controlTodo.habilitation_id" >
-                        <div class="list-group-item">
-                            <span class="me-4">{{controlTodo.personnel_id}}perso</span>
-                            <span class="me-4">{{controlTodo.habilitation_type_id}}habType</span>
-                            <span class="me-4">{{controlTodo.habilitation_id}}HabId</span>
-                            <span class="me-4">{{controlTodo.date_last}}date</span>
-                        </div>
-                    </div> -->
+                    <div class="">
+                        <span class="me-3">pas de {{ veille.control_step}} jours </span>
+                        <span class="me-3">taux de  {{ veille.control_rate }}% </span>
+                    </div>
+                   
                 </div>
             </div>
+           
             
-            <div>
-                <img class="img-fluid"  src="../assets/programmationKN.png" alt="">
-            </div>
             
             TABLEAU{{ listControlTodo }}
-            VEILLE CONFIG{{ veilleConfig }}
         </template>
     </div>
 
@@ -87,14 +67,6 @@ export default {
     computed: {
         ...mapState(['habilitationType','listActifs','veilleConfig']),
 
-         /* parcourt la list des types d'habilitation en fonction de l'id entré en paramètre
-         * et retourne le nom de l'habilitation
-         */
-         filterhabilitationType(id) {
-            let habilitationTypeId = this.habilitationType.find((type) => type.id  == id);
-            // console.log(habilitationTypeId, 'hab')
-            return habilitationTypeId.nom
-        },
         
         
     },
@@ -122,17 +94,25 @@ export default {
                     console.log(this.listControlTodo, 'listControl')
                 }
                 else {
-                    confirm('pas de contrôle à programmer sous 90 jours')
+                    confirm('veille à jour')
                 }
                 // this.listControlTodo.push(data);
             })
             .catch(this.$app.catchError).finally(() => this.pending.listControlTodo = false);
         },
-
-         /**
-		 * Modifie le format de la date entrée en paramètre et la retourne 
-		 * sous le format 01 févr. 2021
-		 * @param {string} date 
+        
+        /* parcourt la list des types d'habilitation en fonction de l'id entré en paramètre
+        * et retourne le nom de l'habilitation
+        */
+        filterhabilitationType(id) {
+           let habilitationTypeId = this.habilitationType.find((type) => type.id  == id);
+           // console.log(habilitationTypeId, 'hab')
+           return habilitationTypeId.nom
+       },
+        /**
+         * Modifie le format de la date entrée en paramètre et la retourne 
+         * sous le format 01 févr. 2021
+         * @param {string} date 
 		 */
 
 		changeFormatDateLit(el) {

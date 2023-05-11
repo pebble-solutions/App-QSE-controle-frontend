@@ -159,7 +159,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByHab.vue'),
     children: [
       {
-        path:'new',
+        path:'new/:idHab/:idForm/:idOperateur:',
         name: 'NewCollecteVeille',
         component: () => import(/* webpackChunkName: "about" */ '../views/VeilleCollecteNew.vue')
       }
