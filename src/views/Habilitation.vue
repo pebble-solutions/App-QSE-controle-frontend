@@ -80,18 +80,14 @@ export default {
          */
         loadVeille(id){
             this.pending.listControlTodo = true
-            let veille = this.veilleConfig;
-            console.log(veille, typeof veille, 'veille')
-            console.log(veille, 'veilleConfig')
+            // let veille = this.veilleConfig;
             this.$app.apiGet('v2/controle/veille/'+id+'/todo', {
                 CSP_min : 50,
                 CSP_max :100,
             })
             .then((data) =>{
-                console.log(data, 'data');
                 if(data.length){
                     this.listControlTodo = this.listControlTodo.concat(data)
-                    console.log(this.listControlTodo, 'listControl')
                 }
                 else {
                     confirm('veille à jour')
@@ -106,7 +102,6 @@ export default {
         */
         filterhabilitationType(id) {
            let habilitationTypeId = this.habilitationType.find((type) => type.id  == id);
-           // console.log(habilitationTypeId, 'hab')
            return habilitationTypeId.nom
        },
         /**
@@ -124,9 +119,7 @@ export default {
          * @param {Number} id 
          */
         returnName(id){
-            // console.log(id, 'id')
             let personnel = this.listActifs.find((e) => e.id == id);
-            // console.log(personnel, 'perso');
             if(!personnel) {
                 this.pending.agent = true;
                 this.$app.apiGet('structurePersonnel/GET/'+id, {
@@ -135,7 +128,6 @@ export default {
                 })
                 .then((data) =>{
                     let personnel = data;
-                    // console.log(personnel.id,personnel.cache_nom, data.cache_nom, 'personnel')
                     let fullName = personnel.cache_nom;
                     return fullName;
                 })
@@ -146,17 +138,7 @@ export default {
             else {
                 return personnel.cache_nom
             }
-            // if(personnel.length > 0){
-            //     console.log(personnel, 'personnel0');
-            //     // return 'pas de personnel'
-            //     return personnel[0].cache_nom;
-
-            // } 
-            // else {
-            //     console.log(personnel, 'personnelsinonpas trouvé');
-
-            //     return 'pas trouvé';
-            // }
+            
         }
 
     },

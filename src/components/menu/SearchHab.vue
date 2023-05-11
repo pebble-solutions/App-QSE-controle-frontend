@@ -42,7 +42,6 @@ export default {
 
     watch: {
         newMode(){
-            console.log(this.newMode,'mode');
             this.$emit('update:mode', this.newMode )
         }
 
@@ -54,12 +53,7 @@ export default {
     
     
     methods: {
-        // updateVal(mode){
-        //     console.log(mode, 'mode')
-        //     this.mode = mode;
-        //     this.$emit('update:'+mode);
-            
-        // },
+        
         
         /**
          * Observe le changement de valeur du choix des options de tri et émet un évènement
@@ -67,9 +61,7 @@ export default {
          * @param   {string} newVal
          */
          setMode(mode){
-            console.log(mode, 'setmode')
             this.newMode = mode;
-
         },
     },
 

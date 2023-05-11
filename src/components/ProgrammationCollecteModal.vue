@@ -100,7 +100,6 @@ export default {
             this.tmpCollecte.environnement = 'private';
             
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte).then(data => {
-                console.log(this.tmpCollecte, 'tmpcollecte')
                 this.refreshCollectes([data]);
                 this.refreshNbTodoFormulaires(data.information__groupe_id);
                 this.$emit('updated', data);

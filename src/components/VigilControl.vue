@@ -82,9 +82,7 @@ export default{
 
             this.$app.apiGet('v2/controle/veille/'+id+'/todo', {CSP_min: 50, CSP_max: 100})
             .then((data) =>{
-                // console.log(data)
                 this.listControl = data;
-                // console.log(this.listControl, 'list')
             })
             .catch(this.$app.catchError).finally(() => this.pending.control = false);
 
@@ -109,42 +107,12 @@ export default{
            
         },
 
-        program(id, hab_id){
-            console.log(id,hab_id, 'collecte modal')
-            // confirm('programmer un nouveau contrôle de '+id+'?');
-            // this.$router.push("/habilitationHab/"+this.$route.params.id+'/new', { veille: false,
-            //     collecte: {
-            //         formulaire: null,
-            //         cible_personnel: id,
-            //         date: null,
-            //         enqueteur_personnel: null,
-            //         environnement: "private",
-            //         tlc: 'CharacteristicPersonnel',
-            //         tli: hab_id
-            //     },  
-            // });
-            // this.$router.push({name: 'NewCollecteVeille', 
-            // params:{
-            //     collecte: {
-            //         formulaire: null,
-            //         cible_personnel: id,
-            //         date: null,
-            //         enqueteur_personnel: null,
-            //         environnement: "private",
-            //         tlc: 'CharacteristicPersonnel',
-            //         tli: hab_id
-            //      }
-            // });
-
-
-        }, 
+        
 
         delay(date){
-            // console.log(date, 'dd')
             let dd = new Date(date);
 
             dd.setDate(dd.getDate()+180);
-            // console.log(dd, typeof dd)
             
             return dd
             

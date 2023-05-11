@@ -31,11 +31,7 @@
                
             
             <h3  class="my-3">Personnels habilités:</h3>
-            <div class="list-group">
-                <!-- <div class="list-group-item">
-                    Agent - échéance - indicateur de validité  - les contrôles - indicateur de veille
-                </div> -->
-            </div>
+            
             <div class="list-group" >
                 <div class="list-group-item" v-for="carac in listPersonnelHabilite" :key="carac.id">
 
@@ -92,7 +88,6 @@ export default {
          */
         filterhabilitationType() {
             let habilitationTypeId = this.habilitationType.find((e) => e.id  == this.$route.params.id);
-            console.log(habilitationTypeId, 'hab')
             return habilitationTypeId.nom
         },
         /**
@@ -101,12 +96,10 @@ export default {
 
         findVeilleConfig() {
             let veilleConfigId = this.veilleConfig.find((v) => v.objet_id  == this.$route.params.id);
-            console.log(veilleConfigId, 'veille')
             return veilleConfigId
         },
         returnFormulaireId(){
             let formulaireId = this.veilleConfig.find((f) => f.objet_id == this.$route.params.id);
-            console.log(formulaireId.formulaire_id, 'formulaire')
             return formulaireId.formulaire_id
 
         }
@@ -131,7 +124,6 @@ export default {
                 habilitation_type_id: id,
             })
             .then((data) =>{
-                console.log(data ,'list pers habilité')
                 this.listPersonnelHabilite = data;
             })
             .catch(this.$app.catchError).finally(() => this.pending.habilitation = false);
@@ -155,9 +147,7 @@ export default {
 
 
         returnName(id){
-            // console.log(id, 'id')
             let personnel = this.listActifs.find((e) => e.id == id);
-            // console.log(personnel, 'perso');
             if(!personnel) {
                 this.pending.agent = true;
                 this.$app.apiGet('structurePersonnel/GET/'+id, {
@@ -166,7 +156,6 @@ export default {
                 })
                 .then((data) =>{
                     let personnel = data;
-                    // console.log(personnel.id,personnel.cache_nom, data.cache_nom, 'personnel')
                     let fullName = personnel.cache_nom;
                     return fullName;
                 })
@@ -177,17 +166,7 @@ export default {
             else {
                 return personnel.cache_nom
             }
-            // if(personnel.length > 0){
-            //     console.log(personnel, 'personnel0');
-            //     // return 'pas de personnel'
-            //     return personnel[0].cache_nom;
-
-            // } 
-            // else {
-            //     console.log(personnel, 'personnelsinonpas trouvé');
-
-            //     return 'pas trouvé';
-            // }
+            
         }
 
 
