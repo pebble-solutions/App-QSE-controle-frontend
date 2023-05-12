@@ -23,7 +23,7 @@
                             </a>
                         </router-link>
                         
-                        <small>{{control}}</small>  
+                        <!-- <small>{{control}}</small>   -->
                     </div>
                     
                 </div>

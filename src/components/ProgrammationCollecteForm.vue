@@ -2,12 +2,9 @@
     <div v-if="tmpCollecte">
        
         <div class="row g-2" v-if="veille">
-            <p>Veille <span class="me-3"> tli:{{ collecte.tli }}</span> <span class="me-3"> tlc:{{ collecte.tlc }}</span> </p>
-            {{ tmpCollecte }}
-            
+            <h5>Veille habilitation</h5>
             
         </div>
-        <div class="row g-2"></div>
         
         <div class="row g-2">
             <div v-if="!veille" class="col mb-3">
@@ -18,7 +15,7 @@
             </div>
         </div>
 
-        <div class="col mb-3">
+        <div v-if="!veille" class="col mb-3">
             <label for="collecteProjet" class="form-label">Projet</label>
             <select class="form-select" id="collecteProjet" name="projet" v-model="tmpCollecte.projet_id" :disabled="isReadonly('projet')">
                 <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
