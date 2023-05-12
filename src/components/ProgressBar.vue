@@ -1,15 +1,10 @@
 <template>
-    <div class="progress progress-ht" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+    <div v-if="varTime" class="progress progress-ht" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         <div class="progress-bar progress-ht overflow-visible text-light" role="progressbar"    :class="returnClass(varTime)" :style="returnStyle(varTime)" >
             {{ returnLabel(varTime) }}
-            <!-- <span v-if="varTime.restinDays <= 0">
-                expiré depuis {{ varTime.restinDays }} jours
-            </span>
-            <span v-else-if="varTime.consoPerCent >= 71">
-                reste {{ varTime.restinDays }} jours
-            </span> -->
-            </div>
+        </div>
     </div> 
+    <!-- <div>{{ varTime }}</div> -->
 </template>
 
 <script>
@@ -73,7 +68,10 @@ export default {
             else if(85>=data.consoPerCent && data.consoPerCent>=71){
                 return 'bg-warning'
             }
-            else return 'bg-danger text-light'
+            else if(100>data.consoPerCent && data.consoPerCent>=86){
+                return 'bg-danger text-light'
+            }
+            else return 'bg-secondary text-light'
             
         },
 

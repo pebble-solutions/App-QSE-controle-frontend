@@ -6,7 +6,7 @@
     
         :collecte="collecte"
         :formulaires="formulaires"
-        :personnels="listActifs"
+        :personnels="mergedPersonnels"
         :readonly="['cible_personnel']"
 
         :veille= true
@@ -39,7 +39,21 @@ export default {
     },
 
     computed: {
-        ...mapState(['formulaires', 'listActifs'])
+        ...mapState(['formulaires', 'personnels','listActifs']),
+
+        /**
+         * fusionne la liste du personnnel et la listActifs
+         */
+        mergedPersonnels() {
+            let list = this.personnels;
+            this.listActifs.forEach(personnel => {
+                const found = list.find(e => e.id == personnel.id);
+                if (!found) {
+                    list.push(personnel);
+                }
+            });
+            return list;
+        }
     },
 
     methods: {

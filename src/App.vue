@@ -171,6 +171,7 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
+import { AssetsCollectionController } from './js/app/controllers/AssetsCollectionController'
 // import SearchHab from './components/menu/SearchHab.vue'
 
 export default {
@@ -364,7 +365,6 @@ export default {
 		 */
 		loadProjets() {
 			this.pending.projets = true;
-
 			let route = 'projet/GET/list';
 			let query = {'in_production' : true}
 
@@ -428,6 +428,7 @@ export default {
 					this[refreshMethod](data);
 					return data;
 				})
+                           
 				.catch(this.$app.catchError)
 				.finally(() => this.pending[pending] = false)
 		},
@@ -448,7 +449,19 @@ export default {
 			})
 			.catch(this.$app.catchError)
 			.finally(this.pending.actifs = false);
+
+			try {
+				this.$assets.getCollection('personnels');
+			} catch {
+				let collection = new AssetsCollectionController(this, {
+					assetName: 'personnels',
+					updateAction: 'updatePersonnels',
+					apiRoute: 'v2/personnel'
+				});
+				this.$assets.addCollection('personnels', collection);
+			}
         },
+
 
 		/**
 		 * Teste si la variable passé en argument n'a pas de valeur (0, null, [], "")

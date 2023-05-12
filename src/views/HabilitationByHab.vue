@@ -1,70 +1,55 @@
 <template>
     
     <div class="container py-2 px-2">
-        <spinner v-if="pending.habilitation"></spinner>
-        <template v-else>
+        <!-- <spinner v-if="pending.habilitation"></spinner> -->
+        <template v-if="findVeilleConfig">
             <div class="row">
                 <div class="col-12 col-lg-8">
-                    <h2>{{ filterhabilitationType}} </h2>
+                    <h2>
+                        <small class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </small>
+                        Veille sur {{ filterhabilitationType}}
+                    </h2>
                 </div>
-                <!-- <div v-if="findVeilleConfig" class="col">
-                    <div class="card">
-                        <div class="card-header">veille n° {{ findVeilleConfig.id }}</div>
-                        <div class="card-body" >
-                                <div>pas de veille : {{ findVeilleConfig.control_step }} jours</div>
-                                <div>taux de veille : {{ findVeilleConfig.control_rate }} %</div>
-                        </div>
-                        <button class="btn btn-outline-primary">Modifier</button>
-                    </div>
-                </div>
-                <alert-message v-else>la veille n'est pas configurée</alert-message> -->
-
-
-
             </div>
             <h3  class="my-3"> Personnels à contrôler:</h3>
             
-               
-                <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
-                <alert-message v-else>pas de veille à prévoir pour cette habilitation</alert-message> 
+            <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
+            
+            
+            
+            <!-- <h3  class="my-3">Personnels habilités:</h3>
                 
-               
-            
-            <h3  class="my-3">Personnels habilités:</h3>
-            
-            <div class="list-group" >
-                <div class="list-group-item" v-for="carac in listPersonnelHabilite" :key="carac.id">
+                <div class="list-group" >
+                    <div class="list-group-item" v-for="carac in listPersonnelHabilite" :key="carac.id">
 
-                    <div class="d-flex justify-content-between">
-                        <span  class="me-2">{{ returnName(carac.personnel_id) }} {{ carac.personnel_id }}</span>
-
-                        <!-- <span class="me-2">{{ carac.personnel_id }}</span> -->
-                        <span class="me-2">échéance le   {{ changeFormatDateLit(carac.df)}}</span>
+                        <div class="d-flex justify-content-between">
+                            <span  class="me-2">{{ returnName(carac.personnel_id) }} {{ carac.personnel_id }}</span>
+                            
+                            <span class="me-2">échéance le   {{ changeFormatDateLit(carac.df)}}</span>
+                        </div>
+                        <progress-bar
+                        :dd="new Date(carac.dd)"
+                        :df="new Date(carac.df)"
+                        ></progress-bar>
                     </div>
-                    <progress-bar
-                    :dd="new Date(carac.dd)"
-                    :df="new Date(carac.df)"
-                    ></progress-bar>
-                </div>
-            </div>
-           
+                </div> -->
+                
+            </template>
+            <alert-message v-else>Il n'y pas de veille configurée pour cette habilitation </alert-message>
             <router-view></router-view>
-
-
-        </template>
     </div>
 </template>
 <script>
 import { mapState } from 'vuex';
 import {dateFormat} from '../js/collecte';
-import ProgressBar from '../components/ProgressBar.vue';
 import VigilControl from '../components/VigilControl.vue';
-
-import Spinner from '../components/pebble-ui/Spinner.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 
+// import ProgressBar from '../components/ProgressBar.vue';
+// import Spinner from '../components/pebble-ui/Spinner.vue';
+
 export default {
-    components: { Spinner, ProgressBar, AlertMessage, VigilControl},
+    components: { AlertMessage, VigilControl}, //ProgressBar, Spinner
     
 
 
@@ -76,7 +61,6 @@ export default {
             },
             listPersonnelHabilite : 'default',
             personnel:'',
-            
         }
     },
 
@@ -90,10 +74,10 @@ export default {
             let habilitationTypeId = this.habilitationType.find((e) => e.id  == this.$route.params.id);
             return habilitationTypeId.nom
         },
+
         /**
          * parcourt la list des configuraton de veille et retourne celle correspondant à  l'id de la route
          */
-
         findVeilleConfig() {
             let veilleConfigId = this.veilleConfig.find((v) => v.objet_id  == this.$route.params.id);
             return veilleConfigId
@@ -104,8 +88,6 @@ export default {
 
         }
 
-
-       
         
     },
 
@@ -141,6 +123,24 @@ export default {
 			return dateFormat(el);
 		},
 
+        /**
+         * charge les contrôles à réaliser pour l'id veille renseignée via l'API
+         * 
+         * @param   {number}    id  l'id de la veille
+         * 
+         */
+         loadControlTodo(id) {
+            this.pending.control = true;
+
+            this.$app.apiGet('v2/controle/veille/'+id+'/todo', {CSP_min: 50, CSP_max: 600})
+            .then((data) =>{
+                console.log(data)
+                this.listControl = data;
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.control = false);
+
+        },
+
        
 
     
@@ -174,12 +174,12 @@ export default {
     /**
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
-     beforeRouteUpdate(to) {
-        if (to.params.id != this.$route.params.id) {
+     beforeRouteUpdate() {
+        // if (to.params.id != this.$route.params.id) {
             
-            this.loadPersonelByHab(to.params.id);
+        //     this.loadPersonelByHab(to.params.id);
 
-        }
+        // }
     },
 
 
@@ -188,7 +188,8 @@ export default {
         /**
          * charge la list des personnels habilités correspondant à l'id du type d'habilitation
          */
-        this.loadPersonelByHab(this.$route.params.id);
+        // this.loadPersonelByHab(this.$route.params.id);
+
 
     }
 

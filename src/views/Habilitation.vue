@@ -2,12 +2,35 @@
     <div class="container py-2 px-2">
         <Spinner v-if="pending.veille"></Spinner>
         <template v-else>
-            <div>
-                <img class="img-fluid"  src="../assets/programmationKN.png" alt="">
-            </div>
-            VEILLE{{ veilleConfig }}
+        <div class="container py-2">
             
-            <div v-if="listControlTodo">
+            <h1 class="fs-3 my-3">Consultation des contrôles réalisés</h1>
+            <div class="card my-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 col-lg-4 col-12">
+                            <img src="../assets/veilleHabilitation.jpg" class="img-fluid" alt="veille sur habilitation" />
+                        </div>
+                        <div class="col display-6 ">
+                            <p class="fs-4 text-center">Utilisez cet espace pour veiller les contrôles à réaliser</p>
+                            <ul>
+                                <li class="fs-5 mb-2">Sélectionnez une habilitation dans la liste pour consulter les personnels à contrôler</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+        
+        
+    </template>
+        
+            <!-- <div>
+                <img class="img-fluid"  src="../assets/veilleHabilitation.jpg" alt="">
+            </div> -->
+            <!-- VEILLE{{ veilleConfig }} -->
+            
+            <!-- <div v-if="listControlTodo">
                 <h3>Controles à programmer</h3>
                 <div class="list-group" v-for="controlTodo in listControlTodo" :key="controlTodo.habilitation_id" >
                     <div class="list-group-item">
@@ -22,8 +45,8 @@
                     </div>
                 </div>
             </div>
-            <AlertMessage v-else>Pas de controle à programmer</AlertMessage>
-            <div v-if="veilleConfig" class="list-group">
+            <AlertMessage v-else>Pas de controle à programmer</AlertMessage> -->
+            <!-- <div v-if="veilleConfig" class="list-group">
                 <h3>veilles</h3>
                 <div class="list-group-item" v-for="veille in veilleConfig" :key=veille.id>
                     #{{ veille.id }} veille {{ veille.nom}} 
@@ -34,12 +57,12 @@
                     </div>
                    
                 </div>
-            </div>
+            </div> -->
            
             
             
-            TABLEAU{{ listControlTodo }}
-        </template>
+            <!-- TABLEAU{{ listControlTodo }} -->
+        
     </div>
 
     
@@ -47,12 +70,12 @@
 <script>
 import {mapState} from 'vuex';
 import Spinner from '../components/pebble-ui/Spinner.vue';
-import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
+// import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import {dateFormat} from '../js/collecte';
 
 
 export default {
-    components: {Spinner,AlertMessage},
+    components: {Spinner,},//AlertMessage
 
     data(){
         return {
@@ -118,28 +141,28 @@ export default {
          * s'il ne trouve pas envoie une requête 
          * @param {Number} id 
          */
-        returnName(id){
-            let personnel = this.listActifs.find((e) => e.id == id);
-            if(!personnel) {
-                this.pending.agent = true;
-                this.$app.apiGet('structurePersonnel/GET/'+id, {
-                    environnement: 'private',
-                    // personne: id,
-                })
-                .then((data) =>{
-                    let personnel = data;
-                    let fullName = personnel.cache_nom;
-                    return fullName;
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.agent = false);
+        // returnName(id){
+        //     let personnel = this.listActifs.find((e) => e.id == id);
+        //     if(!personnel) {
+        //         this.pending.agent = true;
+        //         this.$app.apiGet('structurePersonnel/GET/'+id, {
+        //             environnement: 'private',
+        //             // personne: id,
+        //         })
+        //         .then((data) =>{
+        //             let personnel = data;
+        //             let fullName = personnel.cache_nom;
+        //             return fullName;
+        //         })
+        //         .catch(this.$app.catchError).finally(() => this.pending.agent = false);
 
-                // return 'ce personnel n\'est pas dans la liste'
-            }
-            else {
-                return personnel.cache_nom
-            }
+        //         // return 'ce personnel n\'est pas dans la liste'
+        //     }
+        //     else {
+        //         return personnel.cache_nom
+        //     }
             
-        }
+        // }
 
     },
     
