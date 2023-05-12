@@ -23,7 +23,7 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-ui-checks">Veille Habilitations</AppMenuItem>
+				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille</AppMenuItem>
 
 			</AppMenu>
 		</template>
@@ -219,7 +219,7 @@ export default {
 				},
 				{
 					label: 'Veille Habilitations',
-					icon: 'bi bi-eye-fill',
+					icon: 'bi bi-hourglass-split',
 					key: 'habilitation',
 					href: '/habilitation'
 				},
