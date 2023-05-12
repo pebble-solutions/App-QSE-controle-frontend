@@ -135,7 +135,6 @@ export default {
 
             this.$app.apiGet('v2/controle/veille/'+id+'/todo', {CSP_min: 50, CSP_max: 600})
             .then((data) =>{
-                console.log(data)
                 this.listControl = data;
             })
             .catch(this.$app.catchError).finally(() => this.pending.control = false);

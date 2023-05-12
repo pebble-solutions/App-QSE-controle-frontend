@@ -24,6 +24,7 @@ export function classNameFromSAMI(reponse) {
  * @param {string} date 
  */
 export function dateFormat(el) {
+    if (!el) return 'Date non définie';
     date.locale(fr);
     return date.format(new Date(el.replace(' ', 'T')), 'DD MMM YYYY')
 }

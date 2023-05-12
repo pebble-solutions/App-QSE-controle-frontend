@@ -79,7 +79,6 @@ export default{
 
             this.$app.apiGet('v2/controle/veille/'+this.idVeille+'/todo', {CSP_min: 50, CSP_max: 600})
             .then(async (data) => {
-                console.log(data);
                 let assembler = new AssetsAssembler(data);
                 await assembler.joinAsset(this.$assets.getCollection('personnels'), 'personnel_id', 'personnel');
                 this.listControl = assembler.getResult();
