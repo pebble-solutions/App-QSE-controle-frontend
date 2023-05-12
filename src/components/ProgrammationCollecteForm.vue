@@ -1,10 +1,10 @@
 <template>
     <div v-if="tmpCollecte">
        
-        <div class="row g-2" v-if="veille">
+        <!-- <div class="row g-2" v-if="veille">
             <p>Veille: </p>
             
-        </div>
+        </div> -->
         
         <div class="row g-2">
             <div v-if="!veille" class="col mb-3">

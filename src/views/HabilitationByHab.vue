@@ -3,14 +3,10 @@
     <div class="container py-2 px-2">
         <!-- <spinner v-if="pending.habilitation"></spinner> -->
         <template v-if="findVeilleConfig">
-            <div class="row mb-3">
-                <div class="col-12 col-lg-8">
-                    <h2>
-                        <small class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </small>
-                        Veille sur {{ filterhabilitationType}}
-                    </h2>
-                </div>
-            </div>
+            <h2>
+                <span class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </span>
+                Veille sur {{ filterhabilitationType}}
+            </h2>
             <!-- <alert-message v-if="!listControl">Il n'y pas de personnel à contrôler pour cette habilitation</alert-message> -->
             <!-- <h3  class="my-3"> Personnels à contrôler:</h3> -->
             
