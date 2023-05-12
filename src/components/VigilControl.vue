@@ -1,5 +1,5 @@
 <template>
-    <div class="list-group" v-if="listControl">
+    <div class="list-group" v-if="listControl.length">
         <!-- veille n° {{ idVeille }} formulaire {{ idForm }} -->
         <div class="list-group-item" v-for="control in listControl" :key="control.id">
             <div class="row align-items-center">
@@ -26,11 +26,14 @@
             </div>
         </div>
     </div>
+    <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de personnel à contrôler pour cette habilitation</alert-message>
+
 </template>
 <script>
 import { mapState } from 'vuex';
 import { dateFormat } from '../js/collecte';
 import ProgressBar from './ProgressBar.vue';
+import AlertMessage from './pebble-ui/AlertMessage.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 
 
@@ -46,7 +49,7 @@ export default{
         }
     },
 
-    components: {ProgressBar, }, //RouterLink
+    components: {ProgressBar, AlertMessage}, //RouterLink
 
     computed: {
         ...mapState(['habilitationType','listActifs','veilleConfig'])

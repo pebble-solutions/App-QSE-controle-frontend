@@ -2,7 +2,7 @@
     <div v-if="tmpCollecte">
        
         <div class="row g-2" v-if="veille">
-            <h5>Veille habilitation</h5>
+            <p>Veille: </p>
             
         </div>
         

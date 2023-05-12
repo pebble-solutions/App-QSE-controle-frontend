@@ -4,7 +4,7 @@
         <template v-else>
         <div class="container py-2">
             
-            <h1 class="fs-3 my-3">Consultation des contrôles réalisés</h1>
+            <h1 class="fs-3 my-3">Veille sur habilitation</h1>
             <div class="card my-2">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -12,9 +12,9 @@
                             <img src="../assets/veilleHabilitation.jpg" class="img-fluid" alt="veille sur habilitation" />
                         </div>
                         <div class="col display-6 ">
-                            <p class="fs-4 text-center">Utilisez cet espace pour veiller les contrôles à réaliser</p>
+                            <p class="fs-4 text-start">Utilisez cet espace pour veiller les habilitations</p>
                             <ul>
-                                <li class="fs-5 mb-2">Sélectionnez une habilitation dans la liste pour consulter les personnels à contrôler</li>
+                                <li class="fs-5 mb-2">Sélectionnez une habilitation dans la liste de gauche pour visualiser les personnels concernés </li>
                             </ul>
                         </div>
                     </div>

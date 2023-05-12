@@ -1,7 +1,4 @@
 <template>
-    <div>
-    {{ collecte }}
-    </div>
     <programmation-collecte-modal
     
         :collecte="collecte"

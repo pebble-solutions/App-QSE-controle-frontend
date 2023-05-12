@@ -3,7 +3,7 @@
     <div class="container py-2 px-2">
         <!-- <spinner v-if="pending.habilitation"></spinner> -->
         <template v-if="findVeilleConfig">
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-12 col-lg-8">
                     <h2>
                         <small class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </small>
@@ -11,7 +11,8 @@
                     </h2>
                 </div>
             </div>
-            <h3  class="my-3"> Personnels à contrôler:</h3>
+            <!-- <alert-message v-if="!listControl">Il n'y pas de personnel à contrôler pour cette habilitation</alert-message> -->
+            <!-- <h3  class="my-3"> Personnels à contrôler:</h3> -->
             
             <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
             
@@ -35,7 +36,7 @@
                 </div> -->
                 
             </template>
-            <alert-message v-else>Il n'y pas de veille configurée pour cette habilitation </alert-message>
+            <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de veille configurée pour cette habilitation </alert-message>
             <router-view></router-view>
     </div>
 </template>
