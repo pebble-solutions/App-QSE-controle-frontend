@@ -48,16 +48,8 @@ export default {
          * @param {object} //collecte
          */
         routeToFormulaire(collecte) {
-            // alert('le nouveau contrôle est programmé')
-            // let dateDay = new Date().toLocaleDateString('fr-FR')
-            // let dateCollecte = new Date(collecte.date).toLocaleDateString('fr-FR')
-            //  console.log(dateDay, dateCollecte, 'les deux')
-            // if(dateDay == dateCollecte){
-            //     this.$router.push("/consultation/"+collecte.id);
-            // }
-        
-            // else {}
-            this.$router.push("/consultation/"+collecte.previous_id);
+      
+                this.$router.push("/consultation/"+collecte.previous_id);
         },
     },
 

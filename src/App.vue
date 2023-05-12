@@ -23,7 +23,7 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<!-- <AppMenuItem href="/qualite_1" look="dark" icon="bi bi-star">Qualité</AppMenuItem> -->
+				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille</AppMenuItem>
 
 			</AppMenu>
 		</template>
@@ -96,6 +96,43 @@
 	
 				</template>
 			</AppMenu>
+			<AppMenu v-else-if="listMode == 'habilitation'">
+				<!-- <AppMenuItem href="/habilitation"> 
+					<span></span>
+				</AppMenuItem> -->
+				<!-- <AppMenuItem href="/habilitation/idHabilitation"> 
+					<span>vue par habilitations</span>
+				</AppMenuItem>
+				<AppMenuItem href="/habilitation/idAgent"> 
+					<span>vue par agent habilité</span>
+				</AppMenuItem> -->
+				<!-- <SearchHab v-model:mode=options.mode ></SearchHab> -->
+					<!-- <template v-if="options.mode == 'byAgent'" >
+						
+						<template v-for="agent in listActifs" :key="agent.id" >
+							<AppMenuItem :href="'/habilitationAgent/'+agent.id">
+								{{ agent.cache_nom }} {{ agent.id }}
+							</AppMenuItem>
+						</template>
+					</template> -->
+					<!-- <template v-if="options.mode == 'byHab'" >
+					</template> -->
+						<!-- <template v-for="veille in veilleConfig" :key="veille.id">
+							<AppMenuItem :href="'/habilitationHab/'+veille.id">
+								{{ veille.nom }}
+							</AppMenuItem>
+						</template> -->
+						<template v-for="hab in habilitationType" :key="hab.id" >
+							<AppMenuItem :href="'/habilitationHab/'+hab.id">
+								{{ hab.nom }}
+							</AppMenuItem>
+						</template>
+
+						<div class="alert alert-info m-2" v-if="!habilitationType?.length">
+							Il n'y a pas de type d'habilitation en enregistrées
+						</div>
+			</AppMenu>
+
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
@@ -138,6 +175,8 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
+import { AssetsCollectionController } from './js/app/controllers/AssetsCollectionController'
+// import SearchHab from './components/menu/SearchHab.vue'
 
 export default {
 
@@ -153,7 +192,8 @@ export default {
 				projets: true,
 				search: true,
 				actifs: true,
-				loadMore: false
+				loadMore: false,
+				habilitations :true,
 			},
 			isConnectedUser: false,
 			appMenu: [
@@ -180,7 +220,14 @@ export default {
 					icon: 'bi bi-eye-fill',
 					key: 'consultation',
 					href: '/consultation'
-				}
+				},
+				{
+					label: 'Veille Habilitations',
+					icon: 'bi bi-hourglass-split',
+					key: 'habilitation',
+					href: '/habilitation'
+				},
+
 			],
 			searchOptions: {
 				dd: null,
@@ -189,12 +236,15 @@ export default {
 				start: 0,
 				limit: 50,
 			},
+			options: {
+				mode: 'default'
+			}
 			
 		}
 	},
 
 	computed: {
-		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults']),
+		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults','habilitationType', 'veilleConfig']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -223,8 +273,8 @@ export default {
 				.includes(this.$route.name)) {
 				return 'consultation';
 			}
-			else if (['qualite_1'].includes(this.$route.name)) {
-				return 'qualite'
+			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent','NewCollecteVeille'].includes(this.$route.name)) {
+				return 'habilitation'
 			}
 			else if (['Home'].includes(this.$route.name)) {
 				return 'home';
@@ -275,7 +325,7 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults', 'addSearchResults']),
+		...mapActions(['refreshVeilleConfig','refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults', 'addSearchResults', 'refreshHabilitationType']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -310,12 +360,15 @@ export default {
 			return this.loadRessources('formulaire')
 		},
 
+		// change(payload) {
+		// 	console.log(payload)
+		// },
+
 		/**
 		 * Charge l'ensemble des projets depuis le serveur et les stock dans le store
 		 */
 		loadProjets() {
 			this.pending.projets = true;
-
 			let route = 'projet/GET/list';
 			let query = {'in_production' : true}
 
@@ -327,6 +380,32 @@ export default {
 			.finally(() => {this.pending.projets = false});
 
 		},
+
+		/**
+		 * charge la liste des habilitations depuis le serveur et les charge dans le store
+		 */
+		loadHabilitationType(){
+			this.pending.habilitations = true;
+			this.$app.apiGet('v2/controle/habilitation/type')
+			.then ((data)=> {
+				this.refreshHabilitationType(data)
+			})
+			.catch(this.$app.catchError)
+			.finally(() => {this.pending.habilitations = false});
+		},
+		/** charge l'ensemble des veilles paramétrées
+         * 
+         */
+		LoadVeille() {
+            this.pending.habilitations = true;
+
+            this.$app.apiGet('v2/controle/veille')
+            .then((data) =>{
+				this.refreshVeilleConfig(data)
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+
+        },
 
 		/**
 		 * Charge une ressrouce depuis le serveur vers le store.
@@ -353,6 +432,7 @@ export default {
 					this[refreshMethod](data);
 					return data;
 				})
+                           
 				.catch(this.$app.catchError)
 				.finally(() => this.pending[pending] = false)
 		},
@@ -373,7 +453,19 @@ export default {
 			})
 			.catch(this.$app.catchError)
 			.finally(this.pending.actifs = false);
+
+			try {
+				this.$assets.getCollection('personnels');
+			} catch {
+				let collection = new AssetsCollectionController(this, {
+					assetName: 'personnels',
+					updateAction: 'updatePersonnels',
+					apiRoute: 'v2/personnel'
+				});
+				this.$assets.addCollection('personnels', collection);
+			}
         },
+
 
 		/**
 		 * Teste si la variable passé en argument n'a pas de valeur (0, null, [], "")
@@ -476,7 +568,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone  }, //SearchHab
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, //,  , SearchHab 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
@@ -485,6 +577,8 @@ export default {
 				this.loadFormulaires();
 				this.loadAgent();
 				this.loadProjets();
+				this.loadHabilitationType();
+				this.LoadVeille()
 			}
 		});
 	}

@@ -1,7 +1,13 @@
 <template>
     <div v-if="tmpCollecte">
+       
+        <!-- <div class="row g-2" v-if="veille">
+            <p>Veille: </p>
+            
+        </div> -->
+        
         <div class="row g-2">
-            <div class="col mb-3">
+            <div v-if="!veille" class="col mb-3">
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
                 <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="tmpCollecte.formulaire" required :disabled="isReadonly('formulaire')">
                     <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>
@@ -9,7 +15,7 @@
             </div>
         </div>
 
-        <div class="col mb-3">
+        <div v-if="!veille" class="col mb-3">
             <label for="collecteProjet" class="form-label">Projet</label>
             <select class="form-select" id="collecteProjet" name="projet" v-model="tmpCollecte.projet_id" :disabled="isReadonly('projet')">
                 <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
@@ -46,10 +52,12 @@ export default {
         collecte: Object,
         personnels: Array,
         formulaires: Array,
-        readonly: Array
+        readonly: Array,
+        veille: Boolean
     },
 
     data() {
+				
         return {
             tmpCollecte: null
         }

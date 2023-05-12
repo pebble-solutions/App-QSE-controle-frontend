@@ -18,12 +18,29 @@
                     </template>
                 </span>
                 <h4 class="fs-5 card-title">
-                    <span>#{{ collecte.id }} <span class="fw-lighter"> {{collecte.formulaire.groupe}} </span> du {{changeFormatDateLit(collecte.date)}}</span>
+                    <span class="me-1">#{{ collecte.id }}</span>
+                    <span class="fw-lighter me-1"> {{collecte.formulaire.groupe}} </span>
+                    <span v-if="collecte.date_start">commencé le {{changeFormatDateLit(collecte.date_start)}} </span>
+                    <span v-else-if="collecte.date"> du {{changeFormatDateLit(collecte.date)}}</span>
+                    <span v-else> date non définie</span>
                 </h4>
                 <div class="text-primary border border-primary badge rounded-pill text-bg-light" v-if="collecte.date_done">
                     <i class="bi bi-calendar-check me-1"></i>
                     <span class="d-none d-sm-inline">Clôturé le</span>
                     {{changeFormatDateLit(collecte.date_done)}}
+                </div>
+                <div v-if="collecte.date_start"> 
+                    <span v-if="collecte.unlocked" class="bg-danger"><i class="bi bi-lock-fill"></i></span>
+                    <span class="badge rounded-pill ms-1 bg-secondary"  v-else-if="collecte.date_start && !collecte.unlocked">
+                       <span v-if="remainingLock >= 0 & !collecte.date_done">
+                        <i  class="bi bi-unlock-fill"></i> verrouillage dans {{ remainingLock }} J
+                       </span> 
+                       <!-- <span v-else >pas de délai</span> -->
+                       <!-- <span   v-else-if="remainingLock <= 0">
+                        <i  class="bi bi-lock-fill"></i> verrouillé depuis {{ remainingLock }} J
+                       </span>  -->
+                    </span>
+                    <span v-else></span>
                 </div>
             </div>
         </div>
@@ -83,7 +100,39 @@ export default {
             default: 'consultation'
         }
     },
-    
+    computed: {
+        /**
+		 * Retourne le nombre de jours restants avant le verrouillage automatique
+		 * @return	{number}
+		 */
+		remainingLock(){
+			const now = new Date();
+			const collecteDateStart = new Date(this.collecte.date_start);
+             if(this.collecte.groupe_lock_timeout){
+                 const delay = this.collecte.groupe_lock_timeout
+                 
+                 const datestartS = collecteDateStart.getTime()/ 1000;
+                 const delayS = delay*24*60*60;
+                 const nowS = now.getTime() /1000;
+                 
+                 const dateLockSecond =  datestartS - nowS + delayS;
+                 const daysBeforeLock = Math.floor(dateLockSecond / (60* 60 * 24) +1);
+     
+                 return daysBeforeLock;
+             }
+             else {
+                 return  'pas de délai';
+
+             }
+            // const dayBeforeLock = 'pas de délai'  
+		},
+        /**
+         * Retourne la classe à appliquer au bage verrouillage
+         */
+		lockClass(){
+			return this.getLockClass()
+		},
+    },
     methods: {
         /**
          * Retourne une classe CSS par rapport à une réponse S A M I
@@ -95,6 +144,15 @@ export default {
         classNameFromSAMI(reponse) {
             return classNameFromSAMI(reponse);
         },
+
+        /**
+         * retourne une classe CSS en fonction du nombre de jours restants avant verrouillage
+         */
+        getLockClass() {
+			if(this.remainingLock > 10) return 'bg-success';
+			else if (this.remainingLock > 5) return 'bg-primary';
+			else if (this.remainingLock >2) return 'bg-warning';
+		},
 
         /**
          * Modifie le format de la date entrée en paramètre et la retourne

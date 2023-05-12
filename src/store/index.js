@@ -17,12 +17,15 @@ export default createStore({
 		responses:[],
 		formulaires: [],
 		listActifs: [],
+		habilitations:[],
 		collectes: [],
 		collecte: null,
 		searchResults: [],
 		projets: [],
 		stat: null,
 		requeteStat: null,
+		veilleConfig: [],
+		personnels: []
 	},
 	getters: {
 		activeStructure(state) {
@@ -148,6 +151,7 @@ export default createStore({
 		setListActifs(state, data) {
 			state.listActifs = data;
 		},
+
 		/**
 		 * Enregistre le résultat de la stat  dans le store
 		 * @param {Object} state State de Vuex
@@ -156,6 +160,7 @@ export default createStore({
 		stat (state, data) {
 			state.stat = data;
 		},
+
 		/**
 		 * Enregistre la requete de statistique  dans le store
 		 * @param {Object} state State de Vuex
@@ -204,6 +209,7 @@ export default createStore({
 				state.collectes = collectes;
 			}
 		},
+		
 
 
 		/**
@@ -268,6 +274,25 @@ export default createStore({
 		},
 
 		/**
+		 * Enregistre les types d'habilitations
+		 * @param	{Object}	state le state de VueX
+		 * @param	{Array}		habilitations	Liste des type d'habilitations
+		 */
+		setHabilitationType(state, habilitationType) {
+			state.habilitationType = habilitationType;
+		},
+
+		/**
+		 * Enregistre la liste des veilles d'habilitations avec leurs paramètres
+		 * 
+		 * @param 	{Object}	state le state de VueX
+		 * @param	{Array}		
+		 */
+		setVeilleConfig(state, veilleConfig) {
+			state.veilleConfig = veilleConfig;
+		},
+
+		/**
 		 * Passe un formulaire en formulaire ouvert au niveau du state
 		 * @param {object} state Le state de VueX
 		 * @param {object} formulaire Le formulaire à charger
@@ -275,6 +300,7 @@ export default createStore({
 		formulaire(state, formulaire) {
 			state.formulaire = formulaire;
 		},
+
 
 		/**
 		 * Met à jour la collection de données des résultats de recherche
@@ -337,7 +363,49 @@ export default createStore({
 			if (['set', 'append'].includes(mode)) {
 				state.collecte.documents.push(document);
 			}
-		}
+		},
+
+		/**
+		 * Met à jour une collection du state
+		 * 
+		 * @param {object} state State de VueX
+		 * @param {object} collectionsOptions 
+		 * - action				'set', 'update', 'remove'
+		 * - data				une collection d'objets à intégrer au state
+		 * - key				clé du state dans laquelle sont stockées les données
+		 */
+		stateCollection(state, collectionOptions) {
+			let key = collectionOptions.key;
+			let action = collectionOptions.action ?? 'update';
+			let inputData = collectionOptions.data;
+
+			if (action == 'update') {
+
+				inputData.forEach(data => {
+					let found = state[key].find(e => e.id == data.id);
+					if (found) {
+						for (const key in data) {
+							found[key] = data[key];
+						}
+					}
+					else {
+						state[key].push(data);
+					}
+				})
+			}
+			else if (action == 'remove') {
+				inputData.forEach(data => {
+					let index = state[key].findIndex(e => e.id == data.id);
+					if (index !== -1) {
+						state[key].splice(index, 1);
+					}
+				});
+			}
+			
+			else {
+				state[key] = inputData;
+			}
+		},
 	
 	},
 	actions: {
@@ -416,7 +484,24 @@ export default createStore({
 		refreshListActifs(context, data) {
 			context.commit('setListActifs', data);
 		},
-		
+		/**
+		 * met à jour la liste des types d'habilitation
+		 * @param {Object} context l'instance de VueX
+		 * @param {Array} data liste des types d'habilitations
+		 */
+		refreshHabilitationType(context, data){
+			context.commit('setHabilitationType', data);
+		},
+		/**
+		 * met à jour la liste des veilles d'habilitations avec leur paramètres
+		 * 
+		 * @param	{Object}	context	l'instance de vueX
+		 * @param	{Array}		data	la liste des veilles d'habilitations
+		 */
+		refreshVeilleConfig (context , data) {
+			context.commit('setVeilleConfig', data)
+		},
+
 		/**
 		 * Met à jours les collectes stockées au niveau du store
 		 * 
@@ -619,6 +704,20 @@ export default createStore({
 			context.commit('documentToCollecte', {
 				mode: 'remove',
 				document
+			});
+		},
+
+		/**
+		 * met à jour ou ajoute la collection de personnels dans le state
+		 * 
+		 * @param {object} context instance vuex
+		 * @param {array} data collection de personnels à mettre à jour
+		 */
+		updatePersonnels(context, data) {
+			context.commit('stateCollection', {
+				action: 'update', 
+				key: 'personnels',
+				data
 			});
 		}
 	},

@@ -71,7 +71,9 @@ export default {
             },
             
 
+
         }
+
     },
 
     emits: ['update:dd', 'update:df', 'update:mode', 'update:pendingSearch', 'search-result'],
@@ -152,9 +154,8 @@ export default {
          * Lance une recherche, met à jour les informations sur le store.
          */
         search() {
-            this.updateVal('pendingSearch', true);
-
-            searchConsultation({
+            this.updateVal('pendingSearch', true)
+                      searchConsultation({
                 dd: this.searchDd,
                 df: this.searchDf,
                 mode: this.searchMode,

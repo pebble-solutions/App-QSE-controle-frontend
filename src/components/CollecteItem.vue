@@ -1,6 +1,7 @@
 <template>
 
 	<div class="d-flex align-items-center">
+		
 		<div class="me-2">
 			<UserImage :name="personnelName"></UserImage>
 		</div>
@@ -11,12 +12,16 @@
 				
 				<date-badge :collecte="collecte" />
 
-				<span v-if="collecte.date"
+				<!-- <span v-if="collecte.date"
 					class="badge rounded-pill ms-1"
 					:class="badgeClassName">
 					<i class="bi" :class="remaningIcon"></i>
 					{{ remaningLabel }}
-				</span>
+				</span> -->
+				
+				<span v-if="collecte.unlocked" class="bg-danger"><i class="bi bi-lock-fill"></i></span>
+				<span class="badge rounded-pill ms-1" :class="lockClass" v-else-if="collecte.date_start && !collecte.unlocked"><i class="bi bi-unlock-fill"></i> {{ remainingLock }} J</span>
+				<span v-else></span>
 			</div>
 
 			<personnel-name :personnel-name="collecte.cible_nom" :personnel-id="collecte.cible__structure__personnel_id" />
@@ -108,6 +113,30 @@ export default {
 
 			return days;
 		},
+		/**
+		 * Retourne le nombre de jours restants avant le verrouillage automatique
+		 * @return	{number}
+		 */
+		remainingLock(){
+			const now = new Date();
+			const collecteDateStart = new Date(this.collecte.date_start);
+			const delay = this.collecte.groupe_lock_timeout
+			
+			const datestartS = collecteDateStart.getTime()/ 1000;
+			const delayS = delay*24*60*60;
+			const nowS = now.getTime() /1000;
+			
+			const dateLockSecond =  datestartS - nowS + delayS;
+			
+
+			// const minutes = Math.round(dateLockSecond / 60 );
+			const daysBeforeLock = Math.floor(dateLockSecond / (60* 60 * 24)+1);
+
+			return daysBeforeLock;
+		},
+		lockClass(){
+			return this.getLockClass()
+		},
 
 		/**
 		 * Retourne l'icon bootstrap à utiliser en fonction du nombre de jours entre aujourd'hui
@@ -115,6 +144,8 @@ export default {
 		 */
 		remaningIcon() {
 			return this.getRemaningString("bi-calendar-event-fill", "bi-calendar-x-fill", "bi-calendar-check-fill");
+			// return this.getRemaningString("bi bi-lock-fill", "bi bi-unlock-fill", "bi bi-unlock-fill");
+
 		},
 
 		/**
@@ -157,6 +188,11 @@ export default {
 			else return strFuture;
 		},
 
+		getLockClass() {
+			if(this.remainingLock > 10) return 'bg-success';
+			else if (this.remainingLock > 5) return 'bg-primary';
+			else if (this.remainingLock >2) return 'bg-warning';
+		},
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
 		 * 
@@ -177,10 +213,10 @@ export default {
 
 	components: {
 		UserImage, DateBadge,
-PersonnelName,
-FormulaireName,
-ProjetName
-	}
+		PersonnelName,
+		FormulaireName,
+		ProjetName
+		}
 }
 
 </script>

@@ -16,6 +16,7 @@ import {mapState, mapActions} from 'vuex'; //
 import AppModal from '../components/pebble-ui/AppModal.vue';
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 export default {
+
     components:{AppModal,ConsultationCollecteResume}, //
 
     computed:{
@@ -59,7 +60,7 @@ export default {
          * Retourne à la vue précédente
          */
         routeToParent() {
-            this.$router.go(-1);
+            this.$router.push({name: 'consultationProjetList'}, {params:this.$route.params.idProjet});
         }
     
     },

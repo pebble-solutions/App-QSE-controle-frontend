@@ -3,10 +3,6 @@
         <div class="card-header">
             <div class="d-flex align-items-center justify-content-center mb-3">
                 <h2 class="card-title">Bilan du contrôle</h2>
-                <div class="">
-                </div>
-
-                
                 
             </div>
             

@@ -12,7 +12,8 @@
             
             <div class="mt-3 text-end" v-if="collecte.formulaire?.blocs?.length">
                 <button type="button" class="btn btn-primary" @click.prevent="startControl()" :disabled="pending.collecte">
-                    Commencer
+                    <span v-if="collecte.date_start" >Modifier</span>
+                    <span v-else >Commencer</span>
                     <span v-if="pending.collecte" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     <i v-else class="bi bi-chevron-right"></i>
                 </button>

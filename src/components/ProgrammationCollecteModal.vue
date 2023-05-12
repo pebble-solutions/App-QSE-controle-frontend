@@ -12,10 +12,12 @@
         :pending="pending.collecte"
         :pending-delete="pending.delete">
             <FormCollecte
+            
                 :collecte="collecte"
                 :personnels="personnels"
-                :formulaires="formulaires"
+                :formulaires="formulaires" 
                 :readonly="readonly"
+                :veille="veille"
 
                 @update-collecte="updateCollecte"
                 v-if="collecte" />
@@ -36,7 +38,8 @@ export default {
         collecte: Object,
         personnels: Array,
         formulaires: Array,
-        readonly: Array
+        readonly: Array,
+        veille: Boolean
     },
 
     data() {
@@ -115,6 +118,7 @@ export default {
 
     mounted() {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
+
     }
 
 
