@@ -9,9 +9,18 @@
         <div class="row g-2">
             <div v-if="!veille" class="col mb-3">
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
-                <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="tmpCollecte.formulaire" required :disabled="isReadonly('formulaire')">
+                <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="formulaire" required :disabled="isReadonly('formulaire')">
                     <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>
                 </select>
+                <div class="text-danger mt-2" v-if="!currentFormTli && formulaire">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    Aucune habilitation n'est liée à ce type de contrôle. L'ensemble du personnel peut être contrôlé. Les fonctions de veille 
+                    ne seront pas disponibles.
+                </div>
+                <div class="text-success mt-2" v-else-if="currentFormTli">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Les fonctions de veille sont disponibles pour ce type de contrôle.
+                </div>
             </div>
         </div>
 
@@ -29,9 +38,13 @@
         <div class="row g-2">
             <div class="col-12 col-md-6 mb-3">
                 <label for="collecteCible" class="form-label">Opérateur </label>
-                <select class="form-select" id="collecteCible" name="cible_personnel" v-model="tmpCollecte.cible_personnel" :disabled="isReadonly('cible_personnel')">
-                    <option v-for="(agent) in personnels" :value="agent.id" :key="agent.id" > {{agent.cache_nom}} </option>
+                <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.habilitations">
+                    <option v-for="(agent) in operateurs" :value="agent.id" :key="agent.id" > {{agent.cache_nom}} </option>
                 </select>
+                <div class="text-secondary py-1" v-else>
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Chargement...
+                </div>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
@@ -46,6 +59,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 
 export default {
     props: {
@@ -56,15 +70,27 @@ export default {
         veille: Boolean
     },
 
-    data() {
-				
+    data() {	
         return {
-            tmpCollecte: null
+            tmpCollecte: null,
+            operateurs: [],
+            habilitations: [],
+            inited: false,
+            pending: {
+                habilitations: false
+            },
+            formulaire: null,
+            cible_personnel: null
         }
     },
 
     computed: {
-        ...mapState(['projets'])
+        ...mapState(['projets']),
+
+        currentFormTli() {
+            let formulaire = this.getFormulaireById(this.formulaire);
+            return formulaire?.tli;
+        }
     },
 
     emits:['delete-collecte', 'update-collecte'],
@@ -80,6 +106,65 @@ export default {
                 this.$emit('update-collecte', newVal);
             },
             deep: true
+        },
+
+        /**
+         * Modifie le formulaire sélectionné sur tmpCollecte
+         * 
+         * @param {number} newVal Formulaire sélectionné
+         */
+        async formulaire(newVal) {
+            if (this.inited) {
+                this.tmpCollecte.formulaire = newVal;
+            }
+
+            if (newVal) {
+                let formulaire = this.getFormulaireById(newVal);
+
+                if (formulaire.tli) {
+                    this.pending.habilitations = true;
+
+                    try {
+                        this.habilitations = await this.$app.api.get('v2/controle/habilitation', {
+                            habilitation_type_id: formulaire.tli,
+                            active: 1
+                        });
+
+                        let assembler = new AssetsAssembler(this.habilitations);
+                        await assembler.joinAsset(this.$assets.getCollection('personnels'), 'personnel_id', 'personnel');
+                        this.operateurs = assembler.getResult('personnel');
+                    }
+                    catch (e) {
+                        this.$app.catchError(e);
+                    }
+                    finally {
+                        this.pending.habilitations = false
+                    }
+
+                }
+                else {
+                    this.operateurs = this.personnels;
+                }
+            }
+            else {
+                this.operateurs = this.personnels;
+            }
+        },
+
+        /**
+         * Modifie le personnel cible sélectionné et synchronise tmpCollecte
+         * 
+         * @param {number} newVal Nouveau personnel cible sélectionné
+         */
+        cible_personnel(newVal) {
+            if (this.inited) {
+
+                this.tmpCollecte.cible_personnel = newVal;
+
+                let hab = this.getHabilitationByPersonnelId(newVal);
+                this.tmpCollecte.tlc = hab ? "CharacteristicPersonnel" : null;
+                this.tmpCollecte.tli = hab ? hab.id : null;
+            }
         }
     },
     
@@ -101,16 +186,43 @@ export default {
          */
         isReadonly(field) {
             return this.readonly?.includes(field);
+        },
+
+        /**
+         * Retourne un formulaire depuis son ID
+         * 
+         * @param {number} id L'ID du formulaire
+         * 
+         * @return {object}
+         */
+        getFormulaireById(id) {
+            return this.formulaires.find(e => e.id == id);
+        },
+
+        /**
+         * Retourne les informations d'une habilitation depuis l'ID d'un personnel
+         * 
+         * @param {number} id ID d'un personnel
+         * 
+         * @return {object}
+         */
+        getHabilitationByPersonnelId(id) {
+            return this.habilitations.find(e => e.personnel_id == id);
         }
     
     },
 
     mounted() {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
+
+        this.formulaire = this.tmpCollecte.formulaire;
+        this.cible_personnel = this.tmpCollecte.cible_personnel;
+
         if (this.tmpCollecte.date) {
             let part = this.tmpCollecte.date.split(" ");
             this.tmpCollecte.date = part[0];
         }
+        this.inited = true;
     },
 }
 

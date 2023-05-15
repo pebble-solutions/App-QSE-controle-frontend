@@ -396,7 +396,7 @@ export default {
 		/** charge l'ensemble des veilles paramétrées
          * 
          */
-		LoadVeille() {
+		loadVeille() {
             this.pending.habilitations = true;
 
             this.$app.apiGet('v2/controle/veille')
@@ -578,7 +578,7 @@ export default {
 				this.loadAgent();
 				this.loadProjets();
 				this.loadHabilitationType();
-				this.LoadVeille()
+				this.loadVeille()
 			}
 		});
 	}
