@@ -39,7 +39,7 @@
             <div class="col-12 col-md-6 mb-3">
                 <label for="collecteCible" class="form-label">Opérateur </label>
                 <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.habilitations">
-                    <option v-for="(agent) in operateurs" :value="agent.id" :key="agent.id" > {{agent.cache_nom}} </option>
+                    <option v-for="(agent) in sortedOperateurs" :value="agent.id" :key="agent.id" > {{agent.cache_nom}} </option>
                 </select>
                 <div class="text-secondary py-1" v-else>
                     <span class="spinner-border spinner-border-sm"></span>
@@ -90,6 +90,24 @@ export default {
         currentFormTli() {
             let formulaire = this.getFormulaireById(this.formulaire);
             return formulaire?.tli;
+        },
+
+        /**
+         * Retourne la liste des opérateurs par ordre alphabétique
+         * 
+         * @return {array}
+         */
+        sortedOperateurs() {
+            let list = JSON.parse(JSON.stringify(this.operateurs));
+            return list.sort(function (a, b) {
+                if (a.cache_nom < b.cache_nom) {
+                    return -1;
+                }
+                if (a.cache_nom > b.cache_nom) {
+                    return 1;
+                }
+                return 0;
+            });
         }
     },
 
