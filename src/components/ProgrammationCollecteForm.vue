@@ -100,11 +100,13 @@ export default {
         sortedOperateurs() {
             let list = JSON.parse(JSON.stringify(this.operateurs));
             return list.sort(function (a, b) {
-                if (a.cache_nom < b.cache_nom) {
-                    return -1;
-                }
-                if (a.cache_nom > b.cache_nom) {
-                    return 1;
+                if (a && b) {
+                    if (a.cache_nom < b.cache_nom) {
+                        return -1;
+                    }
+                    if (a.cache_nom > b.cache_nom) {
+                        return 1;
+                    }
                 }
                 return 0;
             });
