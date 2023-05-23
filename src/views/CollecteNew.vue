@@ -1,10 +1,13 @@
 <template>
     <programmation-collecte-modal
-        :collecte="collecte"
-        :formulaires="formulaires"
-        :personnels="listActifs"
-        
-        @updated="routeToFormulaire" />
+    :collecte="collecte"
+    :formulaires="formulaires"
+    :personnels="mergedPersonnels"
+    :veille =true
+    
+    v-if="inited"
+    
+    @updated="routeToFormulaire" />
 </template>
 
 <script>
@@ -17,17 +20,32 @@ export default {
     data() {
         return {
             collecte: {
-                formulaire: null,
+                formulaire:'',
                 cible_personnel: null,
                 date: null,
                 enqueteur_personnel: null,
-                environnement: "private"
-            }
+                environnement: "private",
+                tlc: '',
+                tli: ''
+                
+            },
+            inited: false
         }
     },
 
     computed: {
-        ...mapState(['formulaires', 'listActifs'])
+        ...mapState(['formulaires', 'listActifs', 'personnels','habilitationType','veilleConfig']),
+
+        mergedPersonnels() {
+            let list = this.personnels;
+            this.listActifs.forEach(personnel => {
+                const found = list.find(e => e.id == personnel.id);
+                if (!found) {
+                    list.push(personnel);
+                }
+            });
+            return list;
+        }
     },
 
     methods: {
@@ -44,6 +62,8 @@ export default {
     components: { ProgrammationCollecteModal },
 
     mounted() {
+        this.collecte.formulaire =this.habilitationType;
+        this.inited = true
 
     }
 }

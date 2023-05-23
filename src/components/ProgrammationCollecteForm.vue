@@ -1,6 +1,6 @@
 <template>
     <div v-if="tmpCollecte">
-       
+        {{ tmpCollecte }}
         <div class="row g-2" v-if="veille">
             <p>Veille: </p>
             
