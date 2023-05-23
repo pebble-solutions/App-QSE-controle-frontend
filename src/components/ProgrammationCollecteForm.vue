@@ -49,7 +49,11 @@
             <div class="col-12 col-md-6 mb-3">
                 <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
                 <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')">
-                    <option  v-for="(controleur) in personnels" :value="controleur.id" :key="controleur.id">{{controleur.cache_nom}}</option>
+                            <option  v-for="(controleur) in controleurs" :value="controleur.id" :key="controleur.id">
+                                <span v-if="listHabControl">{{getPersonnelById(controleur)}} </span>
+                                <span v-else>  {{controleur.cache_nom}} </span>
+                            </option>
+                    
                 </select>
             </div>
         </div>
@@ -74,13 +78,15 @@ export default {
         return {
             tmpCollecte: null,
             operateurs: [],
+            controleurs: [],
             habilitations: [],
             inited: false,
             pending: {
                 habilitations: false
             },
             formulaire: null,
-            cible_personnel: null
+            cible_personnel: null,
+            listHabControl: false,
         }
     },
 
@@ -117,11 +123,12 @@ export default {
             if (this.inited) {
                 this.tmpCollecte.formulaire = newVal;
             }
-
+            console.log(newVal, 'newVal')
             if (newVal) {
                 let formulaire = this.getFormulaireById(newVal);
-
+                console.log(formulaire,'form')
                 if (formulaire.tli) {
+                    console.log(formulaire.id ,'formulaire')
                     this.pending.habilitations = true;
 
                     try {
@@ -129,16 +136,29 @@ export default {
                             habilitation_type_id: formulaire.tli,
                             active: 1
                         });
-
+                        console.log(this.habilitations, 'habilitation')
                         let assembler = new AssetsAssembler(this.habilitations);
                         await assembler.joinAsset(this.$assets.getCollection('personnels'), 'personnel_id', 'personnel');
                         this.operateurs = assembler.getResult('personnel');
+                        console.log(this.operateurs, 'operateur')
+                        
+                        let control = await this.$app.api.get('v2/controle/formulaire/'+formulaire.id+'/controleur');
+                            console.log(control, 'control')
+                            if (control.restricted){
+                                this.listHabControl =true;
+                                this.controleurs = control.personnel_ids;
+                            }
+                            else{
+                                this.listHabControl=false;
+                                this.controleurs = this.personnels
+                            }
+                        
                     }
                     catch (e) {
                         this.$app.catchError(e);
                     }
                     finally {
-                        this.pending.habilitations = false
+                        this.pending.habilitations = false;
                     }
 
                 }
@@ -198,7 +218,18 @@ export default {
         getFormulaireById(id) {
             return this.formulaires.find(e => e.id == id);
         },
-
+        /**
+         * Retourne les informations d'un personnel depuis l'ID d'un personnel
+         * 
+         * @param {number} id ID d'un personnel
+         * 
+         * @return {object}
+         */
+         getPersonnelById(id) {
+            let personnel = this.personnels.find(e => e.id == id);
+            return personnel.cache_nom
+        },
+    
         /**
          * Retourne les informations d'une habilitation depuis l'ID d'un personnel
          * 
