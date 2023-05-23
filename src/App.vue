@@ -127,6 +127,10 @@
 								{{ hab.nom }}
 							</AppMenuItem>
 						</template>
+
+						<div class="alert alert-info m-2" v-if="!habilitationType?.length">
+							Il n'y a pas de type d'habilitation en enregistrées
+						</div>
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'home'">
