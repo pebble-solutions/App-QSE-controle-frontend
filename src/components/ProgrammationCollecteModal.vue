@@ -1,5 +1,4 @@
 <template>
-    <div>{{ collecte }}X</div>
     <AppModal size="lg" 
     :title="title" 
     @submit="record()"  
