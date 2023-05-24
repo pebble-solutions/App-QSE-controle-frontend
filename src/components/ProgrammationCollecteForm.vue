@@ -47,14 +47,39 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 mb-3">
-                <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
-                <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')">
-                            <option  v-for="(controleur) in controleurs" :value="controleur.id" :key="controleur.id">
-                                <span v-if="listHabControl">{{getPersonnelById(controleur)}} </span>
-                                <span v-else>  {{controleur.cache_nom}} </span>
-                            </option>
-                    
-                </select>
+                <template v-if="listHabControl">
+                    <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
+                    <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')" v-if="!pending.habilitations">
+                                <option  v-for="(controleur) in controleurs" :value="controleur" :key="controleur">
+                                    {{getPersonnelById(controleur)}}
+                                </option>
+                    </select>
+                    <div class="text-secondary py-1" v-else>
+                        <span class="spinner-border spinner-border-sm"></span>
+                        Chargement...
+                    </div>
+                    <div class="text-success mt-2">
+                        <i class="bi bi-check-circle-fill"></i>
+                        La liste des contrôleurs habilités est configurée
+                    </div>
+
+                </template>
+                <template v-else>
+                    <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
+                    <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')" v-if="!pending.habilitations">
+                        <option  v-for="(controleur) in controleurs" :value="controleur.id" :key="controleur.id">
+                            {{ controleur.cache_nom }}
+                        </option>
+                    </select>
+                    <div class="text-secondary py-1" v-else>
+                        <span class="spinner-border spinner-border-sm"></span>
+                        Chargement...
+                    </div>
+                    <div class="text-danger mt-2" v-if="!listHabControl">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                        La liste des contrôleurs habilités n'est pas configurée
+                    </div>
+                </template>
             </div>
         </div>
     </div>
@@ -123,12 +148,9 @@ export default {
             if (this.inited) {
                 this.tmpCollecte.formulaire = newVal;
             }
-            console.log(newVal, 'newVal')
             if (newVal) {
                 let formulaire = this.getFormulaireById(newVal);
-                console.log(formulaire,'form')
                 if (formulaire.tli) {
-                    console.log(formulaire.id ,'formulaire')
                     this.pending.habilitations = true;
 
                     try {
@@ -136,14 +158,11 @@ export default {
                             habilitation_type_id: formulaire.tli,
                             active: 1
                         });
-                        console.log(this.habilitations, 'habilitation')
                         let assembler = new AssetsAssembler(this.habilitations);
                         await assembler.joinAsset(this.$assets.getCollection('personnels'), 'personnel_id', 'personnel');
                         this.operateurs = assembler.getResult('personnel');
-                        console.log(this.operateurs, 'operateur')
                         
                         let control = await this.$app.api.get('v2/controle/formulaire/'+formulaire.id+'/controleur');
-                            console.log(control, 'control')
                             if (control.restricted){
                                 this.listHabControl =true;
                                 this.controleurs = control.personnel_ids;
@@ -152,7 +171,6 @@ export default {
                                 this.listHabControl=false;
                                 this.controleurs = this.personnels
                             }
-                        
                     }
                     catch (e) {
                         this.$app.catchError(e);
