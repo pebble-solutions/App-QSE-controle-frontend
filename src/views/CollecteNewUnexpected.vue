@@ -1,15 +1,16 @@
 <template>
     <programmation-collecte-modal
-        :collecte="collecte"
-        :formulaires="formulaires"
-        :personnels="listActifs"
+    :collecte="collecte"
+    :formulaires="formulaires"
+    :personnels="listActifs"
+    :readonly="['enqueteur_personnel']"
+    :noHab="true"
+    
+    @updated="routeToCollecte" 
+    v-if="inited"
+    />
 
-        :readonly="['enqueteur_personnel']"
 
-        @updated="routeToCollecte" 
-
-        v-if="inited"
-        />
     </template>
 
 <script>

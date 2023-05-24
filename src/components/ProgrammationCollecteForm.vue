@@ -61,6 +61,7 @@
                     <div class="text-success mt-2">
                         <i class="bi bi-check-circle-fill"></i>
                         La liste des contrôleurs habilités est configurée
+                        <span v-if="noHab" class="ms-1">et vous n'êtes pas habilité</span>
                     </div>
 
                 </template>
@@ -75,7 +76,7 @@
                         <span class="spinner-border spinner-border-sm"></span>
                         Chargement...
                     </div>
-                    <div class="text-danger mt-2" v-if="!listHabControl">
+                    <div class="text-danger mt-2" v-if="!listHabControl && currentFormTli">
                     <i class="bi bi-exclamation-triangle-fill"></i>
                         La liste des contrôleurs habilités n'est pas configurée
                     </div>
@@ -96,7 +97,8 @@ export default {
         personnels: Array,
         formulaires: Array,
         readonly: Array,
-        veille: Boolean
+        veille: Boolean,
+        noHab: Boolean
     },
 
     data() {	

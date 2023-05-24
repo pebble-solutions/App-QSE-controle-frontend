@@ -18,7 +18,7 @@
                 :formulaires="formulaires" 
                 :readonly="readonly"
                 :veille="veille"
-
+                :noHab="noHab"
                 @update-collecte="updateCollecte"
                 v-if="collecte" />
         
@@ -39,7 +39,8 @@ export default {
         personnels: Array,
         formulaires: Array,
         readonly: Array,
-        veille: Boolean
+        veille: Boolean,
+        noHab: Boolean
     },
 
     data() {
