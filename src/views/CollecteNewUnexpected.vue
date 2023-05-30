@@ -4,7 +4,6 @@
     :formulaires="formulaires"
     :personnels="listActifs"
     :readonly="['enqueteur_personnel']"
-    :noHab="true"
     
     @updated="routeToCollecte" 
     v-if="inited"

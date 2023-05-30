@@ -18,7 +18,6 @@
                 :formulaires="formulaires" 
                 :readonly="readonly"
                 :veille="veille"
-                :noHab="noHab"
                 @update-collecte="updateCollecte"
                 v-if="collecte" />
         
@@ -40,7 +39,6 @@ export default {
         formulaires: Array,
         readonly: Array,
         veille: Boolean,
-        noHab: Boolean
     },
 
     data() {
@@ -99,12 +97,15 @@ export default {
         record() {
             this.pending.collecte = true;
             this.tmpCollecte.environnement = 'private';
+            console.log(this.tmpCollecte, 'collecte')
             
-            this.$app.apiPost('data/POST/collecte', this.tmpCollecte).then(data => {
+            this.$app.apiPost('data/POST/collecte', this.tmpCollecte)
+            .then(data => {
                 this.refreshCollectes([data]);
                 this.refreshNbTodoFormulaires(data.information__groupe_id);
                 this.$emit('updated', data);
-            }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
 
         /**
