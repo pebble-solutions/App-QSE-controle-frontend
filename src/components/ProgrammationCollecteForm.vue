@@ -37,9 +37,10 @@
         </div>
         <div class="row g-2">
             <div class="col-12 col-md-6 mb-3">
+                {{ operateurs }}
                 <label for="collecteCible" class="form-label">Opérateur </label>
                 <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.habilitations">
-                    <option v-for="(agent) in operateurs" :value="agent.id" :key="agent.id" > {{agent.cache_nom}} </option>
+                    <option v-for="(agent) in operateurs" :value="agent.id" :key="agent.id" > {{agent.cache_nom}} {{ agent.personnel.cache_nom }}</option>
                 </select>
                 <div class="text-secondary py-1" v-else>
                     <span class="spinner-border spinner-border-sm"></span>
@@ -53,7 +54,8 @@
                                 <option  v-for="(controleur) in controleurs" :value="controleur" :key="controleur">
                                     {{getPersonnelById(controleur)}}
                                 </option>
-                    </select>
+                    </select>abControl =true;
+                                this.contr
                     <div class="text-secondary py-1" v-else>
                         <span class="spinner-border spinner-border-sm"></span>
                         Chargement...
@@ -163,11 +165,13 @@ export default {
                         let assembler = new AssetsAssembler(this.habilitations);
                         await assembler.joinAsset(this.$assets.getCollection('personnels'), 'personnel_id', 'personnel');
                         this.operateurs = assembler.getResult('personnel');
+                        console.log(this.operateurs,'liste operateurs')
                         
                         let control = await this.$app.api.get('v2/controle/formulaire/'+formulaire.id+'/controleur');
                             if (control.restricted){
                                 this.listHabControl =true;
                                 this.controleurs = control.personnel_ids;
+                                console.log(this.controleurs, 'list controleur')
                             }
                             else{
                                 this.listHabControl=false;
