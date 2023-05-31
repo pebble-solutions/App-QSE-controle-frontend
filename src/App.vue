@@ -23,7 +23,9 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille</AppMenuItem>
+				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille par habilitations</AppMenuItem>
+				<AppMenuItem href="/operateur" look="dark" icon="bi bi-hourglass-split">Validité des habilitations</AppMenuItem>
+
 
 			</AppMenu>
 		</template>
@@ -97,40 +99,44 @@
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'habilitation'">
-				<!-- <AppMenuItem href="/habilitation"> 
-					<span></span>
-				</AppMenuItem> -->
-				<!-- <AppMenuItem href="/habilitation/idHabilitation"> 
-					<span>vue par habilitations</span>
+				<AppMenuItem href="/habilitation/Habilitation"> 
+					<span class="fst-italic fw-lighter">Vue modèle par habilitations</span>
 				</AppMenuItem>
-				<AppMenuItem href="/habilitation/idAgent"> 
-					<span>vue par agent habilité</span>
-				</AppMenuItem> -->
-				<!-- <SearchHab v-model:mode=options.mode ></SearchHab> -->
-					<!-- <template v-if="options.mode == 'byAgent'" >
-						
-						<template v-for="agent in listActifs" :key="agent.id" >
-							<AppMenuItem :href="'/habilitationAgent/'+agent.id">
-								{{ agent.cache_nom }} {{ agent.id }}
-							</AppMenuItem>
-						</template>
-					</template> -->
-					<!-- <template v-if="options.mode == 'byHab'" >
-					</template> -->
-						<!-- <template v-for="veille in veilleConfig" :key="veille.id">
-							<AppMenuItem :href="'/habilitationHab/'+veille.id">
-								{{ veille.nom }}
-							</AppMenuItem>
-						</template> -->
-						<template v-for="hab in habilitationType" :key="hab.id" >
-							<AppMenuItem :href="'/habilitationHab/'+hab.id">
-								{{ hab.nom }}
-							</AppMenuItem>
-						</template>
-
-						<div class="alert alert-info m-2" v-if="!habilitationType?.length">
-							Il n'y a pas de type d'habilitation en enregistrées
-						</div>
+				
+				<!--
+				<SearchHab v-model:mode=options.mode ></SearchHab> -->
+				<!-- <template v-if="options.mode == 'byAgent'" >
+					
+				</template> -->
+				<!-- <template v-if="options.mode == 'byHab'" >
+				</template> -->
+				<!-- <template v-for="veille in veilleConfig" :key="veille.id">
+					<AppMenuItem :href="'/habilitationHab/'+veille.id">
+						{{ veille.nom }}
+					</AppMenuItem>
+				</template> -->
+				<template v-for="hab in habilitationType" :key="hab.id" >
+					<AppMenuItem :href="'/habilitationHab/'+hab.id">
+						{{ hab.nom }}
+					</AppMenuItem>
+				</template>
+				
+				<div class="alert alert-info m-2" v-if="!habilitationType?.length">
+					Il n'y a pas de type d'habilitation enregistré
+				</div>
+			</AppMenu>
+			<AppMenu v-else-if="listMode == 'operateur'">
+				<AppMenuItem href="/habilitation/Agent"> 
+					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
+				</AppMenuItem>
+					<template v-for="agent in listActifs" :key="agent.id" >
+						<AppMenuItem :href="'/habilitationAgent/'+agent.id">
+							{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
+						</AppMenuItem>
+					</template>
+					<div class="alert alert-info m-2" v-if="!listActifs?.length">
+						Il n'y a pas de personnels concernés
+					</div>
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'home'">
@@ -227,6 +233,12 @@ export default {
 					key: 'habilitation',
 					href: '/habilitation'
 				},
+				{
+					label: 'Veille operateurs',
+					icon: 'bi bi-hourglass-split',
+					key: 'habilitation',
+					href: '/operateur'
+				},
 
 			],
 			searchOptions: {
@@ -273,8 +285,18 @@ export default {
 				.includes(this.$route.name)) {
 				return 'consultation';
 			}
-			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent','NewCollecteVeille'].includes(this.$route.name)) {
-				return 'habilitation'
+			else if (['Habilitation',
+				'HabilitationHabilitation',
+				'habilitationByHab',
+				'NewCollecteVeille']
+				.includes(this.$route.name)) {
+					return 'habilitation'
+				}
+				else if (['Operateur',
+				'habilitationByAgent',
+				'HabilitationAgent']
+				.includes(this.$route.name)) {
+				return 'operateur'
 			}
 			else if (['Home'].includes(this.$route.name)) {
 				return 'home';
