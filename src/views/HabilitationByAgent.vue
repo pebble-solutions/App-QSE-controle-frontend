@@ -25,8 +25,8 @@
                                 :dd="new Date(hab.dd)"
                                 :df="new Date(hab.df)"
                                 ></ProgressBar>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <button class="btn btn-outline-primary mt-2" @click.prevent="loadCollecte(hab.id)"></button>
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button class="btn btn-sm btn-outline-primary mt-2" @click.prevent="loadCollecte(hab.id)">Veille</button>
                                     <!-- #{{ hab.id}} - {{ hab.habilitation_type_id }} -->
                                 </div>
                             </div>
@@ -34,16 +34,26 @@
                     </div>
                     <div class="col">
                         <div v-if="listControlDone">
+                        <h3 class="mx-2">Historique des contrôles </h3>
                             <div class="list-group">
-                                <div class="list-group-item d-flex flex-column justify-content-between align-items-center" v-for="control in listControlDone" :key="control.id">
-                                    <span class="badge bg-success">{{ control.result_var}}</span>
-                                    <span> {{ control.date_done }}</span>
-                                    <span>{{ control.rapport }} </span>
-                                    <span>{{ control.nb_reponse }} / {{ control.nb_question }}</span>
+                                <div class="list-group-item d-flex flex-column justify-content-between align-items-between" v-for="control in listControlDone" :key="control.id">
+                                    <div class="d-flex justify-content-between alignt-items-center">
+                                        <span v-if="control.result_var" class="badge bg-success text-center">{{ control.result_var}}</span> <span v-else>Pas d'évaluation générale</span>
+                                        <span class="fw-lighter">le {{ changeFormatDateLit(control.date_done)}}</span>
+                                    </div>
+                                    <span v-if="control.rapport">{{ control.rapport }} </span>
+                                    <span v-else>Pas de rapport final</span>
+                                    <span v-if="control.nb_question & control.nb_reponse">{{ control.nb_reponse }} réponses sur  {{ control.nb_question }} questions</span>
+                                    <span v-else>Pas de bilan chiffré</span>
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <!-- <a class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a> -->
+                                        <span class="text-end fw-lighter">Contrôle réalisé par {{ control.enqueteur_nom }}</span>
+
+                                    </div>
                                 </div>
-            
                             </div>
                         </div>
+                        <AlertMessage v-else>Aucun contrôle enregistré</AlertMessage>
                         
                     </div>
                 </div>
@@ -140,8 +150,8 @@ export default{
                 done: 'OUI'
             })
             .then((data) => {
-                console.log(data)
                 this.listControlDone = data;
+                console.log(data, 'listcontroldone')
             })
             .catch(this.$app.catchError).finally(() => this.pending.agent = false);
         },
@@ -173,6 +183,7 @@ export default{
      */
      beforeRouteUpdate(to) {
         if (to.params.id != this.personnel_id) {
+            this.listControlDone =''
             
             this.loadHabilitationFromPerso (to.params.id);
 
