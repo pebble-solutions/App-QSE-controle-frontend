@@ -177,9 +177,16 @@ const routes = [
       {
         path:':idHab',
         name: 'ControlHistory',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
+        children: [
+          {
+            path:':idCollecte',
+            name: 'ControlView',
+            component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
+          }
+        ]
       }
-  ]
+    ]
   },
   {
     path:'/habilitation/Agent',

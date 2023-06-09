@@ -295,7 +295,8 @@ export default {
 				else if (['Operateur',
 				'habilitationByAgent',
 				'HabilitationAgent',
-				'ControlHistory']
+				'ControlHistory',
+				'ControlView']
 				.includes(this.$route.name)) {
 				return 'operateur'
 			}

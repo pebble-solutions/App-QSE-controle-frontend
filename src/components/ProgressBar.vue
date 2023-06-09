@@ -4,7 +4,6 @@
             {{ returnLabel(varTime) }}
         </div>
     </div> 
-    {{ varTime }}
     <!-- <div>{{ varTime }}</div> -->
 </template>
 

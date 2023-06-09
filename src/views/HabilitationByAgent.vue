@@ -10,7 +10,7 @@
             </div>
 
                 <div class="row">
-                    <div class="col-6" >
+                    <div class="col-12 col-md-6" >
                         <h3 class="mx-2">Liste des habilitations</h3>
                         <div class="list-group" v-for="hab in habilitationFromPerso" :key="hab.id">
                             <RouterLink :to="'/operateur/'+$route.params.id+'/'+hab.id" custom v-slot="{ navigate, href, isActive }">
@@ -27,7 +27,6 @@
                                     ></ProgressBar>
                                 </a>
                             </RouterLink>
-                            {{ hab }}
                             
                         </div>
                     </div>
