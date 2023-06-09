@@ -156,7 +156,7 @@ const routes = [
         name: 'NewCollecteVeille',
         component: () => import(/* webpackChunkName: "about" */ '../views/VeilleCollecteNew.vue')
       }
-  ]
+    ]
   },
   {
     path:'/habilitation/Habilitation',
@@ -168,12 +168,18 @@ const routes = [
     path: '/operateur',
     name: 'Operateur',
     component: () => import("../views/Operateur.vue"),
-    
   },
   {
-    path:'/habilitationAgent/:id',
+    path:'/operateur/:id',
     name: 'habilitationByAgent',
-    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
+    children: [
+      {
+        path:':idHab',
+        name: 'ControlHistory',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue')
+      }
+  ]
   },
   {
     path:'/habilitation/Agent',

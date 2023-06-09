@@ -4,6 +4,7 @@
             {{ returnLabel(varTime) }}
         </div>
     </div> 
+    {{ varTime }}
     <!-- <div>{{ varTime }}</div> -->
 </template>
 
@@ -63,7 +64,7 @@ export default {
                 return 'bg-success'
             }
             else if(70>=data.consoPerCent && data.consoPerCent>=51){
-                return 'bg-primary'
+                return 'bg-info'
             } 
             else if(85>=data.consoPerCent && data.consoPerCent>=71){
                 return 'bg-warning'

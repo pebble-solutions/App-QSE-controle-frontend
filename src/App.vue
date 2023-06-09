@@ -24,7 +24,7 @@
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
 				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille par habilitations</AppMenuItem>
-				<AppMenuItem href="/operateur" look="dark" icon="bi bi-hourglass-split">Validité des habilitations</AppMenuItem>
+				<AppMenuItem href="/operateur" look="dark" icon="bi bi-person-check-fill">Veille par opérateurs</AppMenuItem>
 
 
 			</AppMenu>
@@ -130,7 +130,7 @@
 					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
 				</AppMenuItem>
 					<template v-for="agent in listActifs" :key="agent.id" >
-						<AppMenuItem :href="'/habilitationAgent/'+agent.id">
+						<AppMenuItem :href="'/operateur/'+agent.id">
 							{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
 						</AppMenuItem>
 					</template>
@@ -235,7 +235,7 @@ export default {
 				},
 				{
 					label: 'Veille operateurs',
-					icon: 'bi bi-hourglass-split',
+					icon: 'bi bi-person-check-fill',
 					key: 'habilitation',
 					href: '/operateur'
 				},
@@ -294,7 +294,8 @@ export default {
 				}
 				else if (['Operateur',
 				'habilitationByAgent',
-				'HabilitationAgent']
+				'HabilitationAgent',
+				'ControlHistory']
 				.includes(this.$route.name)) {
 				return 'operateur'
 			}
