@@ -73,7 +73,11 @@
                         <strong class="d-block">Aucune action corrective proposée</strong>
                     </div>
                 </template>
-                
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
+                    Exporter
+                </button>
             </div>
         </div>
        
@@ -150,7 +154,6 @@
                 Ce contrôle n'est pas consultable car il n'est pas clôturé.
         </alert-message>
         
-
         <!-- <div class="text-center my-3" v-if="!readonly">
             <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">
                 Modifier les informations
@@ -336,6 +339,19 @@ export default {
             let reponse = this.reponses.find(e => e.question == question.id);
             return reponse?.documents?.length ? reponse.documents : null;
         },
+
+        /**
+         * envoie une requete au serveur pour créer un pdf et obtenir l'url
+         * 
+         * @param   {number}    id id de la collecte à exporter
+         */
+
+         exportToPdf(id) {
+           if (confirm ('export de la collecte #'+id)) {
+                this.$app.apiGet('v2/controle/enquete/'+id+'/pdf')
+                 .then((data) => {console.log(data,'pdf')})
+           }
+         }
     },
 
     components: { UserImage, FileItem, Timeline, AlertMessage }
