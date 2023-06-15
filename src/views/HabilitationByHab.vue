@@ -2,35 +2,78 @@
     
     <div class="container py-2 px-2">
         <!-- <spinner v-if="pending.habilitation"></spinner> -->
-        <template v-if="findVeilleConfig">
-            <h2 class="mb-3">
-                <span class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </span>
-                Veille {{ filterhabilitationType}}
-            </h2>
-            
-            <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
-            <div v-if="listCollecte.length">{{ collecte }}</div>
-            
-            <!-- <h3  class="my-3">Personnels habilités:</h3> -->
-                
-                <!-- <div class="list-group" >
-                    <div class="list-group-item" v-for="carac in listPersonnelHabilite" :key="carac.id">
+        
 
-                        <div class="d-flex justify-content-between">
-                            <span  class="me-2">{{ returnName(carac.personnel_id) }} {{ carac.personnel_id }}</span>
-                            
-                            <span class="me-2">échéance le   {{ changeFormatDateLit(carac.df)}}</span>
+            <div v-if="findVeilleConfig">
+                <h2 class="mb-3">
+                    <span class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </span>
+                    Veille {{ filterhabilitationType}}
+                </h2>
+                <div class="row">
+                        <h3>Échéances contrôles à programmer</h3>
+                        <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
+                </div>
+            </div>
+            <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de veille configurée pour cette habilitation </alert-message>
+            <!-- <router-view></router-view> -->
+            <hr>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <h3>Liste des personnels habilités</h3>
+                    <div v-if="listPersonnelHabilite">
+                    
+                        <div  class="list-group" v-for="perso in listPersonnelHabilite" :key="perso.id">
+                            <router-link :to="'/habilitationHab/'+$route.params.id+'/'+perso.id" custom v-slot="{navigate,href,isActive}">
+                                <a :href="href" @click="navigate" :class="{'active': isActive}" class="list-group-item list-group-item-action mb-2">
+                                    <div class="d-flex justify-content-between">
+                                        <span>
+                                            {{ returnName(perso) }}
+                                        </span>
+                                        <span>
+                                            {{ perso.id }}
+                                        </span>
+                                        <span>
+                                            échéance le {{ changeFormatDateLit(perso.df) }}
+                                        </span>
+                                    </div>
+                                
+                                    
+                                    <progress-bar
+                                    :dd="new Date(perso.dd)"
+                                    :df="new Date(perso.df)"
+                                    ></progress-bar>
+                                    <!-- <button class="btn btn-sm btn-outline-primary" @click.prevent="loadCollecte(perso.id)">
+                                        controles
+                                    </button> -->
+                                </a>
+                            </router-link>
                         </div>
-                        <progress-bar
-                        :dd="new Date(carac.dd)"
-                        :df="new Date(carac.df)"
-                        ></progress-bar>
+                    </div>
+                </div>
+                        <div class="col">
+                            <router-view></router-view>
+                        </div>
+                <!-- <div v-if="listCollecte" class="col my-3">
+                    <h3>Liste des contrôles</h3>
+                    <div class="list-group" v-for="col in listCollecte" :key="col.id">
+                        <div class="list-group-item list-group-item-action d-flex flex-column justify-content-between align-items-center mb-2" >
+                            <div v-if="col.result_var" class="badge" :class="classNameFromSAMI(col.result_var)">{{ col.result_var}}</div>
+                            <span class="text-danger" v-else><i class="bi bi-exclamation-square me-2"></i>Pas d'évaluation générale</span>
+                            <span class="fw-lighter">le {{ changeFormatDateLit(col.date_done)}}</span>
+                            <span v-if="col.rapport" class="fw-lighter me-2"><i class="bi bi-check-square me-2"></i>{{ col.rapport }} </span>
+                            <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de rapport final</span>
+                            <span v-if="col.nb_question & col.nb_reponse" class="fw-lighter me-2"><i class="bi bi-check-square me-2"></i>{{ col.nb_reponse }} réponses sur  {{ col.nb_question }} questions</span>
+                            <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de bilan chiffré</span>
+                            <div class="d-flex justify-content-end align-items-center mt-2">
+                                <span class="fw-lighter me-2">Contrôle</span><span class="fw-lighter me-2">#{{ col.id }}</span><span class="fw-lighter me-2">
+                                    réalisé par </span><span class="fw-lighter me-1">{{ col.enqueteur_nom }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div> -->
-                
-            </template>
-            <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de veille configurée pour cette habilitation </alert-message>
-            <router-view></router-view>
+                    
+            </div>
+        
     </div>
 </template>
 <script>
@@ -38,12 +81,14 @@ import { mapState } from 'vuex';
 import {dateFormat} from '../js/collecte';
 import VigilControl from '../components/VigilControl.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
+import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
+import ProgressBar from '../components/ProgressBar.vue';
 
 // import ProgressBar from '../components/ProgressBar.vue';
 // import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
-    components: { AlertMessage, VigilControl}, //ProgressBar, Spinner
+    components: { AlertMessage, VigilControl, ProgressBar }, // Spinner
     
 
 
@@ -53,9 +98,10 @@ export default {
                 habilitation: false,
                 agent:false,
             },
-            listPersonnelHabilite : 'default',
+            listPersonnelHabilite : '',
             personnel:'',
-            listCollecte:''
+            listCollecte:'',
+            listControl:''
         }
     },
 
@@ -88,6 +134,22 @@ export default {
 
     methods: {
         /**
+         * Retourne une classe CSS par rapport à une réponse S A M I
+         * 
+         * @param {string} reponse S A M I
+         * 
+         * @return {string}
+         */
+		classNameFromSAMI(reponse) {
+            if (typeof reponse === 'string') {
+                if (reponse.toLowerCase() == 's') return 'text-bg-success';
+                else if (reponse.toLowerCase() == 'a') return 'text-bg-primary';
+                else if (reponse.toLowerCase() == 'm') return 'text-bg-warning';
+                else if (reponse.toLowerCase() == 'i') return 'text-bg-danger';
+            }
+            return 'text-bg-secondary';
+        },
+        /**
          * charge le personnel habilité en fonction du type d'habilitation renseigné
          * et 
          * t
@@ -99,9 +161,12 @@ export default {
             
             this.$app.apiGet('v2/controle/habilitation', {
                 habilitation_type_id: id,
+                active: 1,
             })
-            .then((data) =>{
-                this.listPersonnelHabilite = data;
+            .then(async (data) =>{
+                let assembler =new AssetsAssembler(data);
+                await assembler.joinAsset(this.$assets.getCollection('personnels'), 'personnel_id', 'personnel');
+                this.listPersonnelHabilite = assembler.getResult();
             })
             .catch(this.$app.catchError).finally(() => this.pending.habilitation = false);
 
@@ -109,7 +174,7 @@ export default {
          /**
          * Envoie une requête pour charger la liste des collectes 
          * en fonction de l'id fourni
-         * @param {Number} id du 
+         * @param {Number} id de l'habilitation du personnel
          */
          loadCollecte(id) {
             this.pending.agent =true;
@@ -135,54 +200,38 @@ export default {
 			return dateFormat(el);
 		},
 
+        
         /**
-         * charge les contrôles à réaliser pour l'id veille renseignée via l'API
+         * retourne le nom du personnel ou bine personnel non trouvé
          * 
-         * @param   {number}    id  l'id de la veille
+         * @param {object}  perso objet contenant cle personnel et personnel_id
          * 
+         * @return {string}
          */
-         loadControlTodo(id) {
-            this.pending.control = true;
-
-            this.$app.apiGet('v2/controle/veille/'+id+'/todo', {CSP_min: 50, CSP_max: 600})
-            .then((data) =>{
-                this.listControl = data;
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.control = false);
-
+         returnName(perso){
+            if (!perso.personnel) {
+                return perso.personnel_id ? `Personnel non trouvé ${perso.personnel_id}` : `Personnel non défini`; 
+            }
+            return perso.personnel.cache_nom;
         },
-
-       
-
-    
-
-
-        returnName(id){
-            let personnel = this.listActifs.find((e) => e.id == id);
-            if(!personnel) {
-                this.pending.agent = true;
-                this.$app.apiGet('structurePersonnel/GET/'+id, {
-                    environnement: 'private',
-                    // personne: id,
-                })
-                .then((data) =>{
-                    let personnel = data;
-                    let fullName = personnel.cache_nom;
-                    return fullName;
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.agent = false);
-
-                // return 'ce personnel n\'est pas dans la liste'
-            }
-            else {
-                return personnel.cache_nom
-            }
-            
-        }
-
-
+        
+        
+        
+        
+        
     },
-    
+    beforeRouteUpdate(to) {
+        console.log(to.params.id, 'before route')
+        if(to.params.id != this.habilitation_type_id) {
+            this.loadPersonelByHab(to.params.id)
+        }
+    },
+    mounted(){
+        this.loadPersonelByHab(this.$route.params.id)
+    }
+
+   
+  
     
 
     

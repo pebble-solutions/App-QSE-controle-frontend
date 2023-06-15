@@ -19,8 +19,8 @@
 					{{ remaningLabel }}
 				</span> -->
 				
-				<span v-if="collecte.unlocked" class="bg-danger"><i class="bi bi-lock-fill"></i></span>
-				<span class="badge rounded-pill ms-1" :class="lockClass" v-else-if="collecte.date_start && !collecte.unlocked"><i class="bi bi-unlock-fill"></i> {{ remainingLock }} J</span>
+				<span v-if="collecte.unlocked" class="badge text-danger bg-info ms-1"><i class="bi bi-unlock-fill me-1"></i>à compléter</span>
+				<span class="badge text-light bg-secondary rounded-pill ms-1"  v-else-if="collecte.date_start && !collecte.unlocked"><i class="bi bi-unlock-fill"></i> {{ remainingLock }} J</span>
 				<span v-else></span>
 			</div>
 

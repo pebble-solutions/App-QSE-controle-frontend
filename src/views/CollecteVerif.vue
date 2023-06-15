@@ -4,7 +4,7 @@
         <template v-else>
             
             <alert-message icon="bi-info-square" class="mt-2" v-if="collecte.done =='NON'">
-                Le contrôle #{{ collecte.id }} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> n'est pas clôturé
+                Le contrôle  <span class="m-1 fw-lighter">#{{ collecte.id }}</span> <span v-if="collecte.cible_nom" class="m-1 fw-lighter">de {{collecte.cible_nom}}</span>n'est pas clôturé
             </alert-message>
             <alert-message icon="bi-info-square" v-else-if="collecte.done =='OUI'">
                 <div class="my-2">
@@ -114,11 +114,13 @@ export default {
         validate() {
             if (confirm('Une fois clôturé, le contrôle ne sera plus modifiable.')){
                 this.pending.validation = true;
-                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
-                    environnement: 'private',
-                    done: 'OUI'
-                })
+                this.$app.apiPost('v2/collecte/'+this.collecte.id+'/validate')
+                // this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
+                //     environnement: 'private',
+                //     done: 'OUI'
+                // })
                 .then((data) => {
+                    console.log(data,'retour validate')
                     return this.refreshCollectes([data]);
                 })
                 .then(() => {

@@ -6,7 +6,7 @@
 
                 <div class="col-3">
                     {{returnName(control)}}
-                    <!-- - dernier contrôle le {{changeFormatDateLit(control.date_last)}}  -->
+                    - dernier contrôle le {{changeFormatDateLit(control.date_last)}} 
                 </div>
                 <div class="col">
                     <progress-bar :dd="new Date(control.date_last)" :df="delay(control.date_last)"></progress-bar>

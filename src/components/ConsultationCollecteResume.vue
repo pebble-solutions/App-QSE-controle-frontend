@@ -5,6 +5,10 @@
                 <Timeline :collecte="collecte" :route="route" />
             </div>
             <div class="card-body">
+                <alert-message v-if="collecte.locked && readonly">
+                    Souhaitez vous dévérouiller ce contrôle?
+                    <button @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-primary ms-2">déverouiller</button>
+                </alert-message>
                 <alert-message
                     icon="bi-info-square-fill" 
                     className="mb-3" 
@@ -74,7 +78,7 @@
                     </div>
                 </template>
             </div>
-            <div class="card-footer">
+            <div v-if="readonly" class="card-footer">
                 <button class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
                     Exporter
                 </button>
@@ -170,6 +174,15 @@ import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 
 export default {
+    
+    data() {
+        return {
+            pending: {
+                unlock: false
+            }
+        }
+    },
+
     props: {
         collecte: Object,
         readonly: Boolean,
@@ -341,7 +354,27 @@ export default {
         },
 
         /**
-         * envoie une requete au serveur pour créer un pdf et obtenir l'url
+         * envoie une requete API pour dévérouiller la collecte
+         * 
+         * @param {id}  id de la collecte à déverouiller
+         */
+
+        unlock(id){
+            this.pending.unlock = true
+            if (confirm ('déverouillage de la collecte #'+id)){
+                console.log(id);
+                this.$app.apiPost('v2/collecte/'+id+'/unlock', {
+                    comment: 'deverouillage admin'
+                })
+                .then((data) =>{
+                    console.log(data,'retour unlock')
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.unlock = false);
+            }
+        },
+
+        /**
+         * envoie une requete API  pour créer un pdf et obtenir l'url
          * 
          * @param   {number}    id id de la collecte à exporter
          */

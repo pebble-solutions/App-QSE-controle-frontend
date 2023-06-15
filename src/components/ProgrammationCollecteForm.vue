@@ -136,7 +136,7 @@ export default {
         async formulaire(newVal) {
             if (this.inited) {
                 this.tmpCollecte.formulaire = newVal;
-            }
+            } 
             if (newVal) {
                 let formulaire = this.getFormulaireById(newVal);
                 if (formulaire.tli) {

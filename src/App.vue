@@ -288,7 +288,8 @@ export default {
 			else if (['Habilitation',
 				'HabilitationHabilitation',
 				'habilitationByHab',
-				'NewCollecteVeille']
+				'NewCollecteVeille',
+				'ControlHistory2']
 				.includes(this.$route.name)) {
 					return 'habilitation'
 				}
