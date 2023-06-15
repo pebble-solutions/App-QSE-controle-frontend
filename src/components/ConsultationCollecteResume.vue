@@ -6,82 +6,89 @@
             </div>
             <div class="card-body">
                 <alert-message v-if="collecte.locked && readonly">
-                    Souhaitez vous dévérouiller ce contrôle?
-                    <button @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-primary ms-2">déverouiller</button>
+                    
                 </alert-message>
                 <alert-message
-                    icon="bi-info-square-fill" 
-                    className="mb-3" 
-                    v-if="collecte.following_id">
-                    Un contrôle de veille est programmé
-                </alert-message>
-                <div class="row">
-                    <div class="mb-2 col">
-                        <div class="d-flex align-items-center">
-                            <user-image :name="operateur" />
-                            <div class="w-100 ps-2">
-                                <strong class="d-block">Opérateur :</strong>
-                                <span class="fw-lighter">{{operateur}}</span>
-                            </div>
+                icon="bi-info-square-fill" 
+                className="mb-3" 
+                v-if="collecte.following_id">
+                Un contrôle de veille est programmé
+            </alert-message>
+            <div class="row">
+                <div class="mb-2 col">
+                    <div class="d-flex align-items-center">
+                        <user-image :name="operateur" />
+                        <div class="w-100 ps-2">
+                            <strong class="d-block">Opérateur :</strong>
+                            <span class="fw-lighter">{{operateur}}</span>
                         </div>
                     </div>
-
-                    <div class="mb-2 col border-start border-dark">
-
-                        <div class="d-flex align-items-center">
-                            <user-image :name="controleur" />
-                            <div class="w-100 ps-2">
-                                <strong class="d-block">Contrôleur :</strong>
-                                <span class="fw-lighter">{{controleur}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="my-2">
-                    <strong>Projet :</strong>
-                    <span class="fw-lighter ms-1">
-                        <template v-if="collecte.projet_label">{{ collecte.projet_label }}</template>
-                        <template v-else>Non renseigné</template>
-                    </span>
                 </div>
                 
-                <template v-if="isReadable">
-                    <div class="my-2" v-if="collecte.commentaire != 'null' && collecte.commentaire">
-                        <strong class="d-block">Contexte:</strong>
-                        <div class="ms-2 fw-lighter">
-                            {{collecte.commentaire}}
+                <div class="mb-2 col border-start border-dark">
+                    
+                    <div class="d-flex align-items-center">
+                        <user-image :name="controleur" />
+                        <div class="w-100 ps-2">
+                            <strong class="d-block">Contrôleur :</strong>
+                            <span class="fw-lighter">{{controleur}}</span>
                         </div>
                     </div>
-                    <div v-else>
-                        <strong class="d-block">Pas d'éléments de contexte</strong>
-                    </div>
-    
-                    <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
-                        <strong class="d-block">Commentaire final :</strong>
-                        <div class="ms-2 fw-lighter">
-                            {{collecte.rapport}}
-                        </div>
-                    </div>
-                    <div v-else>
-                        <strong class="d-block">Aucun commentaire final</strong>
-                    </div>
-    
-                    <div class="my-2" v-if="collecte.actions != 'null' && collecte.actions">
-                        <strong class="d-block">Actions correctives proposées :</strong>
-                        <div class="ms-2 fw-lighter">
-                            {{collecte.actions}}
-                        </div>
-                    </div>
-                    <div v-else>
-                        <strong class="d-block">Aucune action corrective proposée</strong>
-                    </div>
-                </template>
+                </div>
             </div>
-            <div v-if="readonly" class="card-footer">
-                <button class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
-                    Exporter
-                </button>
+            
+            <div class="my-2">
+                <strong>Projet :</strong>
+                <span class="fw-lighter ms-1">
+                    <template v-if="collecte.projet_label">{{ collecte.projet_label }}</template>
+                    <template v-else>Non renseigné</template>
+                </span>
+            </div>
+            
+            <template v-if="isReadable">
+                <div class="my-2" v-if="collecte.commentaire != 'null' && collecte.commentaire">
+                    <strong class="d-block">Contexte:</strong>
+                    <div class="ms-2 fw-lighter">
+                        {{collecte.commentaire}}
+                    </div>
+                </div>
+                <div v-else>
+                    <strong class="d-block">Pas d'éléments de contexte</strong>
+                </div>
+                
+                <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
+                    <strong class="d-block">Commentaire final :</strong>
+                    <div class="ms-2 fw-lighter">
+                        {{collecte.rapport}}
+                    </div>
+                </div>
+                <div v-else>
+                    <strong class="d-block">Aucun commentaire final</strong>
+                </div>
+                
+                <div class="my-2" v-if="collecte.actions != 'null' && collecte.actions">
+                    <strong class="d-block">Actions correctives proposées :</strong>
+                    <div class="ms-2 fw-lighter">
+                        {{collecte.actions}}
+                    </div>
+                </div>
+                <div v-else>
+                    <strong class="d-block">Aucune action corrective proposée</strong>
+                </div>
+            </template>
+        </div>
+        <div v-if="readonly" class="card-footer d-flex justify-content-between align-items-center">
+            <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-outline-admin">
+                <span>
+                    <i class="bi bi-lock-fill fs-6 me-2"></i>Déverrouiller
+                </span>
+            </button>
+            <span v-if="collecte.unlocked || !locked">
+                <i class="bi bi-unlock-fill"></i>
+            </span>
+            <button class="btn btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
+                Exporter
+            </button>
             </div>
         </div>
        
@@ -172,6 +179,7 @@ import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
 import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
+import { mapActions } from 'vuex';
 
 export default {
     
@@ -179,7 +187,8 @@ export default {
         return {
             pending: {
                 unlock: false
-            }
+            },
+            locked: true
         }
     },
 
@@ -257,6 +266,8 @@ export default {
     },
 
     methods: {
+
+        ...mapActions(['refreshCollecte']),
 
         /**
 		 * Modifie le format de la date entrée en paramètre et la retourne 
@@ -361,15 +372,21 @@ export default {
 
         unlock(id){
             this.pending.unlock = true
-            if (confirm ('déverouillage de la collecte #'+id)){
+            let comment = prompt ('indiquer le motif de dévérouillage de la collecte #'+id);
+            if (comment){
                 console.log(id);
                 this.$app.apiPost('v2/collecte/'+id+'/unlock', {
-                    comment: 'deverouillage admin'
+                    comment
                 })
                 .then((data) =>{
-                    console.log(data,'retour unlock')
+                    console.log(data,'retour unlock');
+                    
+                    this.locked = false
                 })
                 .catch(this.$app.catchError).finally(() => this.pending.unlock = false);
+            }
+            else {
+                alert("Commentaire obligatoire ! La collecte n'est pas déverrouillé")
             }
         },
 
@@ -380,7 +397,7 @@ export default {
          */
 
          exportToPdf(id) {
-           if (confirm ('export de la collecte #'+id)) {
+           if (confirm ('Souhaitez-vous exporter la collecte #'+id)) {
                 this.$app.apiGet('v2/controle/enquete/'+id+'/pdf')
                  .then((data) => {console.log(data,'pdf')})
            }

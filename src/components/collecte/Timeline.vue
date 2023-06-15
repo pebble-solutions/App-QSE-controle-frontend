@@ -29,11 +29,18 @@
                     <span class="d-none d-sm-inline">Clôturé le</span>
                     {{changeFormatDateLit(collecte.date_done)}}
                 </div>
-                <div v-if="collecte.date_start || collecte.date"> 
-                    <span v-if="collecte.unlocked" class="badge text-danger bg-info ms-1"><i class="bi bi-unlock-fill me-1"></i>à compléter</span>
-                    <span class="badge rounded-pill ms-1 bg-secondary"  v-else-if="collecte.date_start && !collecte.unlocked">start et unlocked</span>
-                    <span v-else-if="remainingLock >= 0 & !collecte.date_done"><i  class="bi bi-unlock-fill"></i> verrouillage dans {{ remainingLock }}</span> 
-                    <span v-else>autre</span>
+                    <div v-if="collecte.date_start || collecte.date" class="mb-2"> 
+                        <span v-if="collecte.unlocked" class="badge text-danger bg-info ms-1"><i class="bi bi-unlock-fill me-1"></i>à compléter</span>
+                        <span class="badge rounded-pill ms-1 bg-secondary"  v-else-if="collecte.date_start && !collecte.unlocked">start et unlocked</span>
+                        <span v-else-if="remainingLock >= 0 & !collecte.date_done"><i  class="bi bi-unlock-fill"></i> verrouillage dans {{ remainingLock }}</span> 
+                        <span v-else>autre</span>
+                    </div>
+                <div v-if="collecte.notes" class="mb-2">
+                    <button class="btn btn-sm btn-outline-primary" @click.prevent="displayNotes()">Notifications</button>
+                </div>
+                <div v-if="readNotes" class="list-group">
+                    <div class ="list-group-item" v-for="note in collecte.notes" :key="note.id">{{ note.note}}</div>
+
                 </div>
             </div>
         </div>
@@ -86,6 +93,13 @@ import TimelineNavElement from './TimelineNavElement.vue';
 import TimelineProgElement from './TimelineProgElement.vue';
 
 export default {
+
+    data() {
+        return {
+            readNotes: false
+        }
+    },
+
     props: {
         collecte: Object,
         route: {
@@ -127,6 +141,11 @@ export default {
 		},
     },
     methods: {
+
+        displayNotes(){
+            this.readNotes =!this.readNotes
+
+        },
         /**
          * Retourne une classe CSS par rapport à une réponse S A M I
          *

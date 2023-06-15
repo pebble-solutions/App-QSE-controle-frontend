@@ -20,6 +20,9 @@
                                 <!-- <a class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a> -->
                                 <span class="fw-lighter me-2">Contrôle</span><span class="fw-lighter me-2">#{{ control.id }}</span><span class="fw-lighter me-2">réalisé par </span><span class="fw-lighter me-1">{{ control.enqueteur_nom }}</span>
                             </div>
+                            <div v-if="control.done == 'OUI'">clôturé</div>
+                            <div v-else-if="control.done == 'NON'">en cours</div>
+                            <div v-else>autre</div>
 
                         </a>
                     </RouterLink>

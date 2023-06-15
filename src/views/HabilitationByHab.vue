@@ -180,7 +180,7 @@ export default {
             this.pending.agent =true;
             this.$app.apiGet('data/GET/collecte', {
                 tli : id,
-                done: 'OUI'
+                // done: 'OUI'
             })
             .then((data) => {
                 console.log(data)
