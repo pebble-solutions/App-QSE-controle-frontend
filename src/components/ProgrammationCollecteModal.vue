@@ -97,7 +97,6 @@ export default {
         record() {
             this.pending.collecte = true;
             this.tmpCollecte.environnement = 'private';
-            console.log(this.tmpCollecte, 'collecte')
             
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte)
             .then(data => {

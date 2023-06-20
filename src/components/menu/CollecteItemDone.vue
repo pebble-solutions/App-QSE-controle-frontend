@@ -9,7 +9,7 @@
 			<div class="d-flex align-items-center">
 				<small class="fw-lighter me-2">#{{collecte.id}}</small>
 				<date-badge :collecte="collecte" />
-				<span v-if="collecte.date_start  && !collecte.unlocked"	class="badge rounded-pill ms-1 bg-warning">
+				<span v-if="collecte.locked"	class="badge rounded-pill ms-1 text-bg-secondary">
 					<i class="bi bi-lock-fill" ></i>
 				</span>
 			</div>

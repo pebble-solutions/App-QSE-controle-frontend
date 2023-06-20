@@ -198,11 +198,8 @@ export default {
          */
         cible_personnel(newVal) {
             if (this.inited) {
-
                 this.tmpCollecte.cible_personnel = newVal;
-
                 let hab = this.getHabilitationByPersonnelId(newVal);
-                console.log(this.getHabilitationByPersonnelId(newVal), 'gethab')
                 this.tmpCollecte.tlc = hab ? "CharacteristicPersonnel" : null;
                 this.tmpCollecte.tli = hab ? hab.id : null;
             }
