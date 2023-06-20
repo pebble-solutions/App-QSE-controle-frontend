@@ -289,7 +289,8 @@ export default {
 				'HabilitationHabilitation',
 				'habilitationByHab',
 				'NewCollecteVeille',
-				'ControlHistory2']
+				'ControlHistory2',
+				'ControlView2']
 				.includes(this.$route.name)) {
 					return 'habilitation'
 				}
@@ -385,9 +386,7 @@ export default {
 			return this.loadRessources('formulaire')
 		},
 
-		// change(payload) {
-		// 	console.log(payload)
-		// },
+		
 
 		/**
 		 * Charge l'ensemble des projets depuis le serveur et les stock dans le store

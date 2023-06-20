@@ -30,7 +30,7 @@
                             
                         </div>
                     </div>
-                    <div class="col-auto"> 
+                    <div class="col"> 
                       <RouterView></RouterView>
                     </div>
                 </div>

@@ -48,29 +48,13 @@
                                 </a>
                             </router-link>
                         </div>
+                        {{ listPersonnelHabilite }}
                     </div>
                 </div>
                         <div class="col">
                             <router-view></router-view>
                         </div>
-                <!-- <div v-if="listCollecte" class="col my-3">
-                    <h3>Liste des contrôles</h3>
-                    <div class="list-group" v-for="col in listCollecte" :key="col.id">
-                        <div class="list-group-item list-group-item-action d-flex flex-column justify-content-between align-items-center mb-2" >
-                            <div v-if="col.result_var" class="badge" :class="classNameFromSAMI(col.result_var)">{{ col.result_var}}</div>
-                            <span class="text-danger" v-else><i class="bi bi-exclamation-square me-2"></i>Pas d'évaluation générale</span>
-                            <span class="fw-lighter">le {{ changeFormatDateLit(col.date_done)}}</span>
-                            <span v-if="col.rapport" class="fw-lighter me-2"><i class="bi bi-check-square me-2"></i>{{ col.rapport }} </span>
-                            <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de rapport final</span>
-                            <span v-if="col.nb_question & col.nb_reponse" class="fw-lighter me-2"><i class="bi bi-check-square me-2"></i>{{ col.nb_reponse }} réponses sur  {{ col.nb_question }} questions</span>
-                            <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de bilan chiffré</span>
-                            <div class="d-flex justify-content-end align-items-center mt-2">
-                                <span class="fw-lighter me-2">Contrôle</span><span class="fw-lighter me-2">#{{ col.id }}</span><span class="fw-lighter me-2">
-                                    réalisé par </span><span class="fw-lighter me-1">{{ col.enqueteur_nom }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
+                
                     
             </div>
         
@@ -183,7 +167,6 @@ export default {
                 // done: 'OUI'
             })
             .then((data) => {
-                console.log(data)
                 this.listCollecte = data;
             })
             .catch(this.$app.catchError).finally(() => this.pending.agent = false);
@@ -221,7 +204,6 @@ export default {
         
     },
     beforeRouteUpdate(to) {
-        console.log(to.params.id, 'before route')
         if(to.params.id != this.habilitation_type_id) {
             this.loadPersonelByHab(to.params.id)
         }

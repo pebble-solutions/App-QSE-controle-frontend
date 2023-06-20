@@ -1,5 +1,5 @@
 <template>
-
+    
     <div class="timeline d-flex align-items-start justify-content-between">
         <timeline-nav-element 
             :route="route" 
@@ -23,6 +23,7 @@
                     <span v-if="collecte.date_start">commencé le {{changeFormatDateLit(collecte.date_start)}} </span>
                     <span v-else-if="collecte.date"> du {{changeFormatDateLit(collecte.date)}}</span>
                     <span v-else> date non définie</span>
+                    
                 </h4>
                 <div class="text-primary border border-primary badge rounded-pill text-bg-light" v-if="collecte.date_done">
                     <i class="bi bi-calendar-check me-1"></i>
@@ -31,16 +32,24 @@
                 </div>
                     <div v-if="collecte.date_start || collecte.date" class="mb-2"> 
                         <span v-if="collecte.unlocked" class="badge text-danger bg-info ms-1"><i class="bi bi-unlock-fill me-1"></i>à compléter</span>
-                        <span class="badge rounded-pill ms-1 bg-secondary"  v-else-if="collecte.date_start && !collecte.unlocked">start et unlocked</span>
+                        <!-- <span class="badge rounded-pill ms-1 bg-secondary"  v-else-if="collecte.date_start && !collecte.unlocked">start et unlocked</span>
                         <span v-else-if="remainingLock >= 0 & !collecte.date_done"><i  class="bi bi-unlock-fill"></i> verrouillage dans {{ remainingLock }}</span> 
-                        <span v-else>autre</span>
+                        <span v-else>autre</span> -->
                     </div>
-                <div v-if="collecte.notes" class="mb-2">
-                    <button class="btn btn-sm btn-outline-primary" @click.prevent="displayNotes()">Notifications</button>
+                <div v-if="collecte.notes.length >= 1" class="m-3">
+                    <button class=" position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()">
+                        <i class="bi bi-card-list me-2"></i>Étapes
+                        <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
+                    </button>
                 </div>
                 <div v-if="readNotes" class="list-group">
-                    <div class ="list-group-item" v-for="note in collecte.notes" :key="note.id">{{ note.note}}</div>
-
+                    <div class ="list-group-item" v-for="note in collecte.notes" :key="note.id">
+                        <div class="d-flex flex-column">
+                            <span>{{changeFormatDateLit(note.date)}}</span>
+                            <span>{{ note.titre }}</span>
+                            <span>{{note.note}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

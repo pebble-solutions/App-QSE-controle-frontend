@@ -155,6 +155,13 @@ const routes = [
         path:':idHab',
         name: 'ControlHistory2',
         component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory2.vue'),
+        children: [
+          {
+            path:':idCollecte',
+            name: 'ControlView2',
+            component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue2.vue')
+          }
+        ]
       },
       {
         path:'new/:idHab/:idForm/:idOperateur:',

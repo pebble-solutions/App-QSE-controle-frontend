@@ -120,7 +120,6 @@ export default {
                 //     done: 'OUI'
                 // })
                 .then((data) => {
-                    console.log(data,'retour validate')
                     return this.refreshCollectes([data]);
                 })
                 .then(() => {

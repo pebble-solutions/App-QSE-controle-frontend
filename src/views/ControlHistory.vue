@@ -16,9 +16,15 @@
                                 <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de rapport final</span>
                                 <span v-if="control.nb_question & control.nb_reponse" class="fw-lighter me-2"><i class="bi bi-check-square me-2"></i>{{ control.nb_reponse }} réponses sur  {{ control.nb_question }} questions</span>
                                 <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de bilan chiffré</span>
-                                <div class="d-flex justify-content-end align-items-center mt-2">
-                                    <!-- <a class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a> -->
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div>
+                                    <span v-if="control.locked"> <i class="bi bi-lock-fill fs-6 me-2 text-success"></i></span>
+                                    <span v-else><i class="bi bi-unlock-fill fs-6 me-2 text-warning"></i></span>
+                                    </div>
+                                <div>
                                     <span class="fw-lighter me-2">Contrôle</span><span class="fw-lighter me-2">#{{ control.id }}</span><span class="fw-lighter me-2">réalisé par </span><span class="fw-lighter me-1">{{ control.enqueteur_nom }}</span>
+                                </div>
+                                
                                 </div>
     
                             </a>
@@ -81,11 +87,10 @@ export default{
             this.pending.control=true;
             this.$app.apiGet('data/GET/collecte', {
                 tli : id,
-                done: 'OUI'
+                // done: 'OUI'
             })
             .then((data) => {
                 this.listControlDone = data;
-                console.log(data, 'listcontroldone')
             })
             .catch(this.$app.catchError).finally(() => this.pending.control= false);
         },
