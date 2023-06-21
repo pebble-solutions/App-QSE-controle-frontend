@@ -12,10 +12,10 @@
                     Vous pourrez le retrouver via le menu consultation.<br>
                 </div>
             </alert-message>
-                <AlertMessage  icon="bi-question-square" variant="warning" v-if="!collecte.following_id & collecte.done=='OUI'">
-                         <strong>Souhaitez-vous programmer un contrôle de bouclage?</strong> 
+                <AlertMessage  icon="bi-question-square" :class="classFromSAMI()" v-if="!collecte.following_id & collecte.done=='OUI'">
+                         <strong >Souhaitez-vous programmer un contrôle de bouclage?</strong> 
                         <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
-                            <a class="btn btn-outline-primary ms-3" :href="href" @click="navigate">
+                            <a class="btn btn-outline-light ms-3" :href="href" @click="navigate">
                                 <i class="bi bi-plus-square me-2"></i>
                                 bouclage
                             </a>
@@ -98,15 +98,31 @@ export default {
 
     computed: {
         ...mapState(['collectes','collecte']),
+
     },
     methods: {
-
+        
         ...mapActions(['refreshCollectes','refreshCollecte']),
         /**
          * retourne à la vue précédente de bilan
          */
         routeToBilan(){
             this.$router.go(-1);
+        },
+        classFromSAMI(){
+            if(this.collecte.result_var == 'S') {
+                return 'text-light bg-success'
+            }
+            else if(this.collecte.result_var =='A') {
+                return 'text-light bg-primary'
+            }
+            else if(this.collecte.result_var == 'M') {
+                return 'text-light bg-warning'
+            }
+            else if(this.collecte.result_var == 'I') {
+                return 'text-light bg-danger'
+            }
+            else return 'bg-secondary'
         },
          /**
          * Envoie les données a l'api pour valider le KN
