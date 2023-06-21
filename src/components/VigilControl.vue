@@ -2,17 +2,17 @@
     <div class="list-group" v-if="listControl.length">
         <!-- veille n° {{ idVeille }} formulaire {{ idForm }} -->
         <div class="list-group-item" v-for="control in listControl" :key="control.id">
+            
             <div class="row align-items-center">
-
                 <div class="col-3">
                     {{returnName(control)}}
-                    - dernier contrôle le {{changeFormatDateLit(control.date_last)}} 
+                    
                 </div>
-                <div class="col">
+                <div class="col-4">
+                    {{ changeFormatDateLit(control.date_last) }}-{{ delay(control.date_last) }}
                     <progress-bar :dd="new Date(control.date_last)" :df="delay(control.date_last)"></progress-bar>
-    
                 </div>
-                <div class="col-auto text-end">
+                <div class="col text-end">
                     <router-link :to="'/habilitationHab/'+this.$route.params.id+'/new/'+control.habilitation_id+'/'+idForm+'/'+control.personnel_id" v-slot="{navigate, href}">
                         <a :href="href"  @click="navigate" class="btn btn btn-sm btn-outline-primary">
                             <i class="bi bi-plus" ></i>
@@ -119,11 +119,9 @@ export default{
             let dd = new Date(date);
 
             dd.setDate(dd.getDate()+180);
-            
             return dd
-            
-
-        }
+        },
+        
 
     },
 

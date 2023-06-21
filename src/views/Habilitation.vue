@@ -38,19 +38,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <div v-if="listControlTodo">
-                <h3>Controles à programmer</h3>
-                <div class="list-group" v-for="controlTodo in listControlTodo" :key="controlTodo.habilitation_id" >
-                    <div class="list-group-item">
-                        <div class="d-flex justify-content-start">
-                            <span class="me-4">hab# {{controlTodo.habilitation_id}}</span>
-                            <span class="me-4">  {{ filterhabilitationType(controlTodo.habilitation_type_id) }} {{controlTodo.habilitation_type_id}}</span> 
-                            <span class="me-4">{{returnName(controlTodo.personnel_id)}}</span>
-                            <span class="me-4">dernier contrôle le {{changeFormatDateLit(controlTodo.date_last)}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+           
         </template>
     </div>
 </template>

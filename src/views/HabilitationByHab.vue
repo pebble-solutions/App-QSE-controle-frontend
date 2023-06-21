@@ -48,7 +48,6 @@
                                 </a>
                             </router-link>
                         </div>
-                        {{ listPersonnelHabilite }}
                     </div>
                 </div>
                         <div class="col">

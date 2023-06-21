@@ -7,26 +7,37 @@
                 <div v-for="control in listControlDone" :key="control.id">
                     <RouterLink :to="'/habilitationHab/'+$route.params.id+'/'+$route.params.idHab+'/'+control.id" custom v-slot="{navigate, href, isActive}">
                         <a :href="href" @click="navigate" :class="{'active':isActive}" class="list-group-item list-group-item-action d-flex flex-column justify-content-between align-items-between mb-2">
-                            <div class="list-group-item list-group-item-action d-flex flex-column justify-content-between align-items-center mb-2" >
-                                <div v-if="control.result_var" class="badge" :class="classNameFromSAMI(control.result_var)">{{ control.result_var}}</div>
-                                <span class="text-danger" v-else><i class="bi bi-exclamation-square me-2"></i>Pas d'évaluation générale</span>
-                                <span class="fw-lighter">le {{ changeFormatDateLit(control.date_done)}}</span>
-                            </div>
-                            <span v-if="control.rapport" class="fw-lighter me-2"><i class="bi bi-check-square me-2"></i>{{ control.rapport }} </span>
-                            <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de rapport final</span>
-                            <span v-if="control.nb_question & control.nb_reponse" class="fw-lighter me-2"><i class="bi bi-check-square me-2"></i>{{ control.nb_reponse }} réponses sur  {{ control.nb_question }} questions</span>
-                            <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de bilan chiffré</span>
-                            <div class="d-flex justify-content-between align-items-center mt-2">
-                                <div>
-                                    <span v-if="control.locked"> <i class="bi bi-lock-fill fs-6 me-2"></i></span>
-                                    <span v-else><i class="bi bi-unlock-fill fs-6 me-2"></i></span>
+                                <div v-if="!control.locked">
+                                    <div>
+                                        <span class="me-2">Contrôle :</span><span class="fw-lighter me-2">#{{ control.id }}</span>
+                                        <span> <i class="bi bi-unlock-fill fs-6 me-2"></i></span>
+                                    </div>
+                                    <span class="me-2">Contrôleur: </span><span class="fw-lighter me-1">{{ control.enqueteur_nom }}</span>
+                                    <div>
+                                        programmé le<span class="fw-lighter ms-2">{{ changeFormatDateLit(control.date)}}</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span class="fw-lighter me-2">Contrôle</span><span class="fw-lighter me-2">#{{ control.id }}</span><span class="fw-lighter me-2">réalisé par </span><span class="fw-lighter me-1">{{ control.enqueteur_nom }}</span>
+                                <div v-else>
+                                    <div>
+                                        <div>
+                                            <span class="me-2">Contrôle :</span><span class="fw-lighter me-2">#{{ control.id }}</span>
+                                            <span v-if="control.locked"> <i class="bi bi-lock-fill fs-6 me-2"></i></span>
+                                        </div>
+                                        <span class="me-2">Contrôleur: </span><span class="fw-lighter me-1">{{ control.enqueteur_nom }}</span>
+                                        <div class="d-flex align-items-center my-1">
+                                            <span v-if="control.result_var" class="badge me-2" :class="classNameFromSAMI(control.result_var)">{{ control.result_var}}</span>
+                                            <span v-else class="text-danger" ><i class="bi bi-exclamation-square me-2"></i>Pas d'évaluation générale</span>
+                                            <span class="fw-lighter">le {{ changeFormatDateLit(control.date_done)}}</span><br>
+                                        </div>
+                                        <div>
+                                            <span v-if="control.rapport" class="fw-lighter me-2"><i class="bi bi-check-square me-2"></i>{{ control.rapport }} </span>
+                                            <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de rapport final</span><br>
+                                            <span v-if="control.nb_question & control.nb_reponse" class="fw-lighter me-2"><i class="bi bi-check-square me-2"></i>{{ control.nb_reponse }} réponses sur  {{ control.nb_question }} questions</span>
+                                            <span class="text-warning" v-else><i class="bi bi-exclamation-square me-2"></i>Pas de bilan chiffré</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-
-                        </a>
+                            </a>
                         
                     </RouterLink>
                 </div>

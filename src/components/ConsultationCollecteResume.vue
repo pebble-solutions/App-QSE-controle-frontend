@@ -1,15 +1,14 @@
 <template>
     <div v-if="collecte">
+        <HabMonitor v-if="collecte.tli" :habId ="collecte.tli"></HabMonitor>
         <div class="card my-2">
             <div class="card-header" v-if="timeline">
+                <br>
                 <Timeline :collecte="collecte" :route="route" />
+                
             </div>
             <div class="card-body">
-                <div class="row" v-if="collecte.tli">
-                    <div class="border">
-                        composant habilitation #{{ collecte.tli }} nouvelle APi?
-                    </div>
-                </div>
+               
                 
                 <alert-message
                     icon="bi-info-square-fill" 
@@ -169,11 +168,7 @@
                 Ce contrôle n'est pas consultable car il n'est pas clôturé.
         </alert-message>
         
-        <!-- <div class="text-center my-3" v-if="!readonly">
-            <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">
-                Modifier les informations
-            </button>
-        </div> -->
+        
     </div>
 </template>
 
@@ -182,6 +177,7 @@ import {classNameFromSAMI, dateFormat} from '../js/collecte';
 import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
 import Timeline from './collecte/Timeline.vue';
+import HabMonitor from './collecte/HabMonitor.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 import { mapActions } from 'vuex';
 
@@ -408,6 +404,6 @@ export default {
          }
     },
 
-    components: { UserImage, FileItem, Timeline, AlertMessage }
+    components: { UserImage, FileItem, Timeline, AlertMessage, HabMonitor }
 }
 </script>
