@@ -413,8 +413,11 @@ export default {
 
          exportToPdf(id) {
            if (confirm ('Souhaitez-vous exporter la collecte #'+id)) {
+            this.pending.pdf = true
                 this.$app.apiGet('v2/controle/enquete/'+id+'/pdf')
                  .then((data) => {console.log(data,'pdf')})
+                .catch(this.$app.catchError).finally(() => this.pending.pdf = false);
+
            }
          }
     },
