@@ -79,8 +79,8 @@
             </div>
             <div v-if="readonly" class="card-footer ">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div v-if="collecte.notes.length >= 1" class="m-3">
-                        <button class=" position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()">
+                    <div>
+                        <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()" v-if="collecte.notes.length >= 1">
                             Historique
                             <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
                         </button>
