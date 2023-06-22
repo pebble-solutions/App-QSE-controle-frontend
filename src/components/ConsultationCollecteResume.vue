@@ -75,7 +75,7 @@
                 </template>
             </div>
             <div class="card-footer">
-                <button class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
+                <button class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)" :disabled="pending.pdf">
                     Exporter
                 </button>
             </div>
@@ -170,6 +170,14 @@ import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 
 export default {
+
+    data() {
+        return {
+            pending: {
+                pdf: false
+            }
+        }
+    },
     props: {
         collecte: Object,
         readonly: Boolean,
@@ -347,13 +355,13 @@ export default {
          */
 
          exportToPdf(id) {
-           if (confirm ('export de la collecte #'+id)) {
+                this.pending.pdf = true
                 this.$app.apiGet('v2/controle/enquete/'+id+'/pdf')
-                 .then((data) => {console.log(data,'pdf')})
-           }
+                .then((data) => {window.open(data.url, "_blank")})
+                .catch(this.$app.catchError).finally(() => this.pending.pdf = false);
          }
     },
 
     components: { UserImage, FileItem, Timeline, AlertMessage }
 }
-</script>
+</script> 
