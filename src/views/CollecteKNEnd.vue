@@ -80,7 +80,7 @@ export default {
 
             this.pending.validation = true;
             this.itemResponse.done = 'NON';
-            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, this.itemResponse,)
+            this.$app.apiPost('data/POST/collecte/'+this.collecte.id, JSON.stringify(this.itemResponse),)
                 .then((data) => {
                     return this.refreshCollectes([data]);
                 })
