@@ -1,24 +1,53 @@
 <template>
     <div class="list-group">
-        <h2>
-            hab ........# {{ habId }}
-        </h2>
-        <div class="list-group-item mb-2">
-            échéance habilitation: {{hab.df }}
-            <progress-bar :dd=hab.dd :df=hab.df></progress-bar>
-        </div>
-        <div class="list-group-item mb-2">
-            précédents contrôles: {{ results.val3 }}
+        <h3>
+            hab ........
+            <span class="fw-lighter" >#{{habId}}</span>
             
-        </div>
-        <div class="list-group-item mb-2">
-            échéance controle:  {{ control.delay }}
-            <progress-bar :dd="control.date_last" :df="control.delay"></progress-bar>
+        </h3>
+        <div class="row">
+            <div class="col">
+                <div class="list-group-item mb-2">
+                    échéance habilitation: {{formatDayDate(hab.df)  }}
+                    <progress-bar :dd=hab.dd :df=hab.df></progress-bar>
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="list-group-item mb-2">
+                    précédents contrôles:
+                    <div>
+                        <span class="badge text-bg-success me-1">S</span>
+                        <span class="badge text-bg-success me-1">S</span>
+                        <span class="badge text-bg-success me-1">S</span>
+                        <span class="badge text-bg-success me-1">S</span>
+                        <span class="badge text-bg-success me-1">S</span>
+                        <span class="badge text-bg-success me-1">S</span>
+                        <span class="badge text-bg-success me-1">S</span>
+                        <span class="badge text-bg-success me-1">S</span>
+                        <span class="badge text-bg-success me-1">S</span>
+                       
+                        
+
+                    </div>
+                    
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="list-group-item mb-2">
+                    échéance controle:  {{formatDayDate(control.delay)  }}
+                    <progress-bar :dd="control.date_last" :df="control.delay"></progress-bar>
+                </div>
+
+            </div>
+
         </div>
     </div>
 </template>
 <script>
 import ProgressBar from '../ProgressBar.vue';
+
 export default {
     components: { ProgressBar },
 
@@ -48,6 +77,15 @@ export default {
                    
 
         }
+    },
+
+    methods: {
+        formatDayDate(date) {
+            let newDate = new Date(date);
+            let formatDay =newDate.toLocaleDateString('fr-FR');
+            return formatDay;
+        }  
     }
+    
 }
 </script>

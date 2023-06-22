@@ -8,93 +8,105 @@
                 
             </div>
             <div class="card-body">
-               
-                
                 <alert-message
                     icon="bi-info-square-fill" 
                     className="mb-3" 
                     v-if="collecte.following_id">
                         Un contrôle de veille est programmé
                 </alert-message>
-            <div class="row">
-                <div class="mb-2 col">
-                    <div class="d-flex align-items-center">
-                        <user-image :name="operateur" />
-                        <div class="w-100 ps-2">
-                            <strong class="d-block">Opérateur :</strong>
-                            <span class="fw-lighter">{{operateur}}</span>
+                <div class="row">
+                    <div class="mb-2 col">
+                        <div class="d-flex align-items-center">
+                            <user-image :name="operateur" />
+                            <div class="w-100 ps-2">
+                                <strong class="d-block">Opérateur :</strong>
+                                <span class="fw-lighter">{{operateur}}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="mb-2 col border-start border-dark">
                     
-                    <div class="d-flex align-items-center">
-                        <user-image :name="controleur" />
-                        <div class="w-100 ps-2">
-                            <strong class="d-block">Contrôleur :</strong>
-                            <span class="fw-lighter">{{controleur}}</span>
+                    <div class="mb-2 col border-start border-dark">
+                        
+                        <div class="d-flex align-items-center">
+                            <user-image :name="controleur" />
+                            <div class="w-100 ps-2">
+                                <strong class="d-block">Contrôleur :</strong>
+                                <span class="fw-lighter">{{controleur}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             
-            <div class="my-2">
-                <strong>Projet :</strong>
-                <span class="fw-lighter ms-1">
-                    <template v-if="collecte.projet_label">{{ collecte.projet_label }}</template>
-                    <template v-else>Non renseigné</template>
-                </span>
-            </div>
+                <div class="my-2">
+                    <strong>Projet :</strong>
+                    <span class="fw-lighter ms-1">
+                        <template v-if="collecte.projet_label">{{ collecte.projet_label }}</template>
+                        <template v-else>Non renseigné</template>
+                    </span>
+                </div>
             
-            <template v-if="isReadable">
-                <div class="my-2" v-if="collecte.commentaire != 'null' && collecte.commentaire">
-                    <strong class="d-block">Contexte:</strong>
-                    <div class="ms-2 fw-lighter">
-                        {{collecte.commentaire}}
+                <template v-if="isReadable">
+                    <div class="my-2" v-if="collecte.commentaire != 'null' && collecte.commentaire">
+                        <strong class="d-block">Contexte:</strong>
+                        <div class="ms-2 fw-lighter">
+                            {{collecte.commentaire}}
+                        </div>
+                    </div>
+                    <div v-else>
+                        <strong class="d-block">Pas d'éléments de contexte</strong>
+                    </div>
+                    
+                    <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
+                        <strong class="d-block">Commentaire final :</strong>
+                        <div class="ms-2 fw-lighter">
+                            {{collecte.rapport}}
+                        </div>
+                    </div>
+                    <div v-else>
+                        <strong class="d-block">Aucun commentaire final</strong>
+                    </div>
+                    
+                    <div class="my-2" v-if="collecte.actions != 'null' && collecte.actions">
+                        <strong class="d-block">Actions correctives proposées :</strong>
+                        <div class="ms-2 fw-lighter">
+                            {{collecte.actions}}
+                        </div>
+                    </div>
+                    <div v-else>
+                        <strong class="d-block">Aucune action corrective proposée</strong>
+                    </div>
+                </template>
+            </div>
+            <div v-if="readonly" class="card-footer ">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div v-if="collecte.notes.length >= 1" class="m-3">
+                        <button class=" position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()">
+                            Historique
+                            <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
+                        </button>
+                    </div>
+                    <div>
+                        <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-4">
+                            <i class="bi bi-lock-fill"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
+                            Exporter
+                        </button>
                     </div>
                 </div>
-                <div v-else>
-                    <strong class="d-block">Pas d'éléments de contexte</strong>
-                </div>
-                
-                <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
-                    <strong class="d-block">Commentaire final :</strong>
-                    <div class="ms-2 fw-lighter">
-                        {{collecte.rapport}}
+                <div>
+                    <div v-if="readNotes" class="list-group">
+                    <div class ="list-group-item" v-for="note in collecte.notes" :key="note.id">
+                        <div class="d-flex flex-column">
+                            <span>{{changeFormatDateLit(note.date)}}</span>
+                            <span>{{ note.titre }}</span>
+                            <span>{{note.note}}</span>
+                        </div>
                     </div>
                 </div>
-                <div v-else>
-                    <strong class="d-block">Aucun commentaire final</strong>
                 </div>
-                
-                <div class="my-2" v-if="collecte.actions != 'null' && collecte.actions">
-                    <strong class="d-block">Actions correctives proposées :</strong>
-                    <div class="ms-2 fw-lighter">
-                        {{collecte.actions}}
-                    </div>
-                </div>
-                <div v-else>
-                    <strong class="d-block">Aucune action corrective proposée</strong>
-                </div>
-            </template>
-        </div>
-        <div v-if="readonly" class="card-footer d-flex justify-content-between align-items-center">
-            <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-outline-admin">
-                <span>
-                    <i class="bi bi-lock-fill fs-6 me-2"></i>Déverrouiller
-                </span>
-            </button>
-            <span v-if="collecte.unlocked || !locked">
-                <i class="bi bi-unlock-fill"></i>
-            </span>
-            <button class="btn btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
-                Exporter
-            </button>
             </div>
         </div>
-       
-        
  
         <div v-if="collecte.documents.length && (isReadable)" class="card my-3">
             <div class="card-body">
@@ -144,22 +156,19 @@
                                     <div>
                                         <span class="fw-lighter">{{getCommentFromQestion(question)}}</span>
                                     </div>
-    
+
                                     <div v-if="getQuestionDocuments(question)" class="my-3">
                                         <h6 class="mb-2"><i class="bi bi-cloud-check"></i> Fichiers joints</h6>
                                         <div class="list-group">
                                             <file-item :document="document" v-for="document in getQuestionDocuments(question)" :key="document.id" />
                                         </div>
                                     </div>
-    
                                 </div>
-                                
                             </template>
                         </div>
                     </div>
                 </div>
             </div>
-           
         </div>
         <alert-message 
             icon="bi-exclamation-triangle-fill" 
@@ -167,7 +176,6 @@
             variant="warning" v-else>
                 Ce contrôle n'est pas consultable car il n'est pas clôturé.
         </alert-message>
-        
         
     </div>
 </template>
@@ -185,6 +193,7 @@ export default {
     
     data() {
         return {
+            readNotes : false,
             pending: {
                 unlock: false
             },
@@ -268,6 +277,12 @@ export default {
     methods: {
 
         ...mapActions(['refreshCollecte']),
+        
+        
+        displayNotes(){
+            this.readNotes =!this.readNotes
+
+        },
 
         /**
 		 * Modifie le format de la date entrée en paramètre et la retourne 

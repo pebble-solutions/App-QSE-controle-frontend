@@ -3,8 +3,9 @@
      v-if="collecte"
      size="lg"
      @modal-hide="routeToParent()"
-     :pending="pending.collecte">
-        <ConsultationCollecteResume :collecte="collecte"></ConsultationCollecteResume>
+     :pending="pending.collecte"
+     >
+        <ConsultationCollecteResume :collecte="collecte" readonly="true"></ConsultationCollecteResume>
     </AppModal>
     
 </template>
