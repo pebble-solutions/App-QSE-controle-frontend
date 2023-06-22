@@ -182,7 +182,10 @@ import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
 import { AssetsCollectionController } from './js/app/controllers/AssetsCollectionController'
+import {ROUTES_NAMES} from './js/route';
 // import SearchHab from './components/menu/SearchHab.vue'
+
+
 
 export default {
 
@@ -265,45 +268,7 @@ export default {
 		 * @return {string}
 		 */
 		listMode() {
-			if (['collecte', 'CollecteNext','collecteKN', 'collecteKnBloc', 'CollectKnEnd','UnexpectedCollecte','CollecteVerif'].includes(this.$route.name)) {
-				return 'collecte';
-			}
-			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
-				return 'programmation';
-			}
-			else if (['consultation',
-				'consultationFormulaire',
-				'consultationCollecte',
-				'consultationForm',
-				'consultationFormList',
-				'consultationFormCollecte',
-				'consultationProjet',
-				'consultationProjetList',
-				'consultationProjetCollecte',
-				'newCollecte'
-				]
-				.includes(this.$route.name)) {
-				return 'consultation';
-			}
-			else if (['Habilitation',
-				'HabilitationHabilitation',
-				'habilitationByHab',
-				'NewCollecteVeille']
-				.includes(this.$route.name)) {
-					return 'habilitation'
-				}
-				else if (['Operateur',
-				'habilitationByAgent',
-				'HabilitationAgent',
-				'ControlHistory',
-				'ControlView']
-				.includes(this.$route.name)) {
-				return 'operateur'
-			}
-			else if (['Home'].includes(this.$route.name)) {
-				return 'home';
-			}
-			return null;
+			return this.getRouteGroupName(this.$route.name);
 		},
 
 		/**
@@ -590,6 +555,24 @@ export default {
 			let route = mode === 'collecte' ? '/consultation' : '/consultation/'+mode;
             this.$router.push(route);
         },
+
+		/**
+		 * Retourne le nom du groupe auquel appartient la route à analyser.
+		 * 
+		 * @param {string} routeName Nom de la route à analyser
+		 * 
+		 * @return {string}
+		 */
+		getRouteGroupName(routeName) {
+			for (const groupName in ROUTES_NAMES) {
+				const names = ROUTES_NAMES[groupName];
+
+				if (names.includes(routeName)) {
+					return groupName;
+				}
+			}
+			return null;
+		}
 	},
 
 	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, //,  , SearchHab 
