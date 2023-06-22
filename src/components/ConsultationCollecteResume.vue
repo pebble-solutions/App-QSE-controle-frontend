@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <div>
-                    <div v-if="readNotes" class="list-group">
+                    <div v-if="readNotes" class="list-group col-12 col-md-6">
                     <div class ="list-group-item" v-for="note in collecte.notes" :key="note.id">
                         <div class="d-flex flex-column">
                             <span>{{changeFormatDateLit(note.date)}}</span>

@@ -36,21 +36,7 @@
                         <span v-else-if="remainingLock >= 0 & !collecte.date_done"><i  class="bi bi-unlock-fill"></i> verrouillage dans {{ remainingLock }}</span> 
                         <span v-else>autre</span> -->
                     </div>
-                <!-- <div v-if="collecte.notes.length >= 1" class="m-3">
-                    <button class=" position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()">
-                        <i class="bi bi-card-list me-2"></i>Historique
-                        <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
-                    </button>
-                </div>
-                <div v-if="readNotes" class="list-group">
-                    <div class ="list-group-item" v-for="note in collecte.notes" :key="note.id">
-                        <div class="d-flex flex-column">
-                            <span>{{changeFormatDateLit(note.date)}}</span>
-                            <span>{{ note.titre }}</span>
-                            <span>{{note.note}}</span>
-                        </div>
-                    </div>
-                </div> -->
+                
             </div>
         </div>
 
@@ -151,10 +137,7 @@ export default {
     },
     methods: {
 
-        displayNotes(){
-            this.readNotes =!this.readNotes
-
-        },
+        
         /**
          * Retourne une classe CSS par rapport à une réponse S A M I
          *
