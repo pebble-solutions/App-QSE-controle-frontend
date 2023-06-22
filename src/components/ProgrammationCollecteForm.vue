@@ -1,8 +1,5 @@
 <template>
     <div v-if="tmpCollecte">
-       {{  }}
-       
-        
         <div class="row g-2">
             <div v-if="!veille" class="col mb-3">
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
@@ -239,17 +236,7 @@ export default {
         getFormulaireById(id) {
             return this.formulaires.find(e => e.id == id);
         },
-        /**
-         * Retourne les informations d'un personnel depuis l'ID d'un personnel
-         * 
-         * @param {number} id ID d'un personnel
-         * 
-         * @return {object}
-         */
-         getPersonnelById(id) {
-            let personnel = this.personnels.find(e => e.id == id);
-            return personnel.cache_nom
-        },
+       
     
         /**
          * Retourne les informations d'une habilitation depuis l'ID d'un personnel

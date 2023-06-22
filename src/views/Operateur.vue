@@ -77,12 +77,13 @@ export default {
             .catch(this.$app.catchError).finally(() => this.pending.listControlTodo = false);
         },
         
-        /* parcourt la list des types d'habilitation en fonction de l'id entré en paramètre
-        * et retourne le nom de l'habilitation
-        */
+        /**
+         * parcourt la list des types d'habilitation en fonction de l'id entré en paramètre
+         * et retourne le nom de l'habilitation
+         */
         filterhabilitationType(id) {
-           let habilitationTypeId = this.habilitationType.find((type) => type.id  == id);
-           return habilitationTypeId.nom
+           let habilitationType = this.habilitationType.find((type) => type.id  == id);
+           return habilitationType.nom
        },
         /**
          * Modifie le format de la date entrée en paramètre et la retourne 

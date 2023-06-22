@@ -5,7 +5,7 @@
             <div class="d-flex align-items-baseline">
                 <span class="me-3 fw-lighter"># {{ $route.params.id }}</span>
                 <h2 class="mb-3">
-                     {{filterListActifs.cache_nom }}
+                     {{currentPersonnel.cache_nom }}
                 </h2>
             </div>
 
@@ -66,11 +66,10 @@ export default{
         ...mapState(['habilitationType', 'listActifs']),
 
         /**
-         * cherche dans la liste des Actifs le personnel à afficher et retourne le nom
+         * retourne les informations du personnel depuis l'id passé dans l'url
          */
-        filterListActifs() {
-            let agentId = this.listActifs.find((e) => e.id == this.$route.params.id);
-            return agentId
+        currentPersonnel() {
+            return this.listActifs.find((e) => e.id == this.$route.params.id);
         }
 
         
@@ -83,15 +82,15 @@ export default{
          * en fonction de l'id fourni
          * @param {Number} id du personnel 
          */
-        loadHabilitationFromPerso(id) {
-            this.pending.agent=true;
+        loadHabilitationFromPersonnel(id) {
+            this.pending.agent = true;
             this.$app.apiGet('v2/controle/habilitation', {
                 personnel_id : id,
             })
             .then((data) => {
                 this.habilitationFromPerso = data;
             })
-            .catch(this.$app.catchError).finally(() => this.pending.agent=false);
+            .catch(this.$app.catchError).finally(() => this.pending.agent = false);
         },
        
 
@@ -125,7 +124,7 @@ export default{
      */
      beforeRouteUpdate(to) {
         if (to.params.id != this.personnel_id) {
-            this.loadHabilitationFromPerso (to.params.id);
+            this.loadHabilitationFromPersonnel (to.params.id);
 
         }
     },
@@ -134,7 +133,7 @@ export default{
         /**
          * charge la list des habilitations du personnel concerné
          */
-        this.loadHabilitationFromPerso(this.$route.params.id);
+        this.loadHabilitationFromPersonnel(this.$route.params.id);
     }
     
 }
