@@ -444,11 +444,13 @@ export default {
 			.finally(this.pending.actifs = false);
 
 			try {
-				this.$assets.getCollection('personnels');
+				let collection = this.$assets.getCollection('personnels');
+				collection.reset();
 			} catch {
 				let collection = new AssetsCollectionController(this, {
 					assetName: 'personnels',
 					updateAction: 'updatePersonnels',
+					resetAction: 'resetPersonnels',
 					apiRoute: 'v2/personnel'
 				});
 				this.$assets.addCollection('personnels', collection);

@@ -377,7 +377,7 @@ export default createStore({
 		stateCollection(state, collectionOptions) {
 			let key = collectionOptions.key;
 			let action = collectionOptions.action ?? 'update';
-			let inputData = collectionOptions.data;
+			let inputData = collectionOptions.data ?? [];
 
 			if (action == 'update') {
 
@@ -718,6 +718,18 @@ export default createStore({
 				action: 'update', 
 				key: 'personnels',
 				data
+			});
+		},
+
+		/**
+		 * Ré-initialise la collection du personnel
+		 * 
+		 * @param {object} context Instance vuex
+		 */
+		resetPersonnels(context) {
+			context.commit('stateCollection', {
+				action: 'reset', 
+				key: 'personnels'
 			});
 		}
 	},
