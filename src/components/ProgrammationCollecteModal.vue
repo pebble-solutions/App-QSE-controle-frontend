@@ -1,28 +1,27 @@
 <template>
-    
     <AppModal size="lg" 
-        :title="title" 
-        @submit="record()"  
-        @modal-hide="routeToParent()" 
-        @delete="deleteCollecte()"
+    :title="title" 
+    @submit="record()"  
+    @modal-hide="routeToParent()" 
+    @delete="deleteCollecte()"
+    
+    :submit-btn="true" 
+    :cancel-btn="true" 
+    :delete-btn="collecte.id ? true : false"
+    :pending="pending.collecte"
+    :pending-delete="pending.delete">
+    <FormCollecte
+        :collecte="collecte"
+        :personnels="personnels"
+        :formulaires="formulaires" 
+        :readonly="readonly"
+        :veille="veille"
         
-        :submit-btn="true" 
-        :cancel-btn="true" 
-        :delete-btn="collecte.id ? true : false"
-        :pending="pending.collecte"
-        :pending-delete="pending.delete">
-            <FormCollecte
-            
-                :collecte="collecte"
-                :personnels="personnels"
-                :formulaires="formulaires" 
-                :readonly="readonly"
-                :veille="veille"
-                @update-collecte="updateCollecte"
-                v-if="collecte" />
+        @update-collecte="updateCollecte"
+        v-if="collecte" />
         
     </AppModal>
-
+            
 </template>
 
 <script>
