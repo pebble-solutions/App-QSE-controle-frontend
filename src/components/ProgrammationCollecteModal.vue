@@ -1,5 +1,4 @@
 <template>
-    <div>{{ collecte }}X</div>
     <AppModal size="lg" 
     :title="title" 
     @submit="record()"  
@@ -12,16 +11,16 @@
     :pending="pending.collecte"
     :pending-delete="pending.delete">
     <FormCollecte
-                :collecte="collecte"
-                :personnels="personnels"
-                :formulaires="formulaires" 
-                :readonly="readonly"
-                :veille="veille"
-                
-                @update-collecte="updateCollecte"
-                v-if="collecte" />
-                
-            </AppModal>
+        :collecte="collecte"
+        :personnels="personnels"
+        :formulaires="formulaires" 
+        :readonly="readonly"
+        :veille="veille"
+        
+        @update-collecte="updateCollecte"
+        v-if="collecte" />
+        
+    </AppModal>
             
 </template>
 
@@ -38,7 +37,7 @@ export default {
         personnels: Array,
         formulaires: Array,
         readonly: Array,
-        veille: Boolean
+        veille: Boolean,
     },
 
     data() {
@@ -97,12 +96,15 @@ export default {
         record() {
             this.pending.collecte = true;
             this.tmpCollecte.environnement = 'private';
+            console.log(this.tmpCollecte, 'collecte')
             
-            this.$app.apiPost('data/POST/collecte', this.tmpCollecte).then(data => {
+            this.$app.apiPost('data/POST/collecte', this.tmpCollecte)
+            .then(data => {
                 this.refreshCollectes([data]);
                 this.refreshNbTodoFormulaires(data.information__groupe_id);
                 this.$emit('updated', data);
-            }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
 
         /**

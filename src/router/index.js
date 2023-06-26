@@ -145,13 +145,6 @@ const routes = [
     path: '/habilitation',
     name: 'Habilitation',
     component: () => import("../views/Habilitation.vue"),
-    // children: [
-    //   // {
-    //   //   path:':idAgent',
-    //   //   name: 'HabilitationAgent',
-    //   //   component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationAgent.vue')
-    //   // },
-    // ]
   },
   {
     path:'/habilitationHab/:id',
@@ -163,23 +156,43 @@ const routes = [
         name: 'NewCollecteVeille',
         component: () => import(/* webpackChunkName: "about" */ '../views/VeilleCollecteNew.vue')
       }
-  ]
+    ]
   },
   {
-    path:'/habilitationAgent/:id',
+    path:'/habilitation/Habilitation',
+    name: 'HabilitationHabilitation',
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationHabilitation.vue')
+  },
+  
+  {
+    path: '/operateur',
+    name: 'Operateur',
+    component: () => import("../views/Operateur.vue"),
+  },
+  {
+    path:'/operateur/:id',
     name: 'habilitationByAgent',
-    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
+    children: [
+      {
+        path:':idHab',
+        name: 'ControlHistory',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
+        children: [
+          {
+            path:':idCollecte',
+            name: 'ControlView',
+            component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
+          }
+        ]
+      }
+    ]
   },
   {
-    path:'/habilitation/idAgent',
+    path:'/habilitation/Agent',
     name: 'HabilitationAgent',
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationAgent.vue')
   },
-  {
-    path:'/habilitation/idHabilitation',
-    name: 'HabilitationHabilitation',
-    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationHabilitation.vue')
-  }
 
 ]
 

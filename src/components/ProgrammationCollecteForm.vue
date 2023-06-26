@@ -1,11 +1,5 @@
 <template>
     <div v-if="tmpCollecte">
-       
-        <!-- <div class="row g-2" v-if="veille">
-            <p>Veille: </p>
-            
-        </div> -->
-        
         <div class="row g-2">
             <div v-if="!veille" class="col mb-3">
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
@@ -48,9 +42,29 @@
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
-                <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')">
-                    <option  v-for="(controleur) in personnels" :value="controleur.id" :key="controleur.id">{{controleur.cache_nom}}</option>
+                <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')" v-if="!pending.personnels">
+                    <option  v-for="(controleur) in controleurs" :value="controleur.id" :key="controleur.id">
+                        {{ controleur.cache_nom }}
+                    </option>
                 </select>
+                <div class="text-secondary py-1" v-else>
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Chargement...
+                </div>
+                
+                <div class="text-success mt-2" v-if="veilleControleurs && currentFormTli">
+                    <i class="bi bi-check-circle-fill"></i>
+                    La liste des contrôleurs est restreinte aux controleurs habilités
+                    
+                </div>
+                <div class="text-info mt-2" v-if="!veilleControleurs && currentFormTli">
+                    <i class="bi bi-info-circle-fill"></i>
+                    La liste des contrôleurs est libre
+                </div>
+                <span class="text-warning mt-2" v-if="!habControl && currentFormTli">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    Vous n'êtes pas habilité
+                </span>
             </div>
         </div>
     </div>
@@ -67,20 +81,23 @@ export default {
         personnels: Array,
         formulaires: Array,
         readonly: Array,
-        veille: Boolean
+        veille: Boolean,
     },
-
+    
     data() {	
         return {
             tmpCollecte: null,
             operateurs: [],
+            controleurs: [],
             habilitations: [],
             inited: false,
             pending: {
-                habilitations: false
+                personnels: false
             },
             formulaire: null,
-            cible_personnel: null
+            cible_personnel: null,
+            veilleControleurs: false,
+            habControl: true
         }
     },
 
@@ -142,28 +159,49 @@ export default {
             if (this.inited) {
                 this.tmpCollecte.formulaire = newVal;
             }
-
+            
             if (newVal) {
                 let formulaire = this.getFormulaireById(newVal);
-
                 if (formulaire.tli) {
-                    this.pending.habilitations = true;
+                    this.pending.personnels = true;
 
                     try {
                         this.habilitations = await this.$app.api.get('v2/controle/habilitation', {
                             habilitation_type_id: formulaire.tli,
                             active: 1
                         });
-
+                        let personnelsCollection = this.$assets.getCollection('personnels');
                         let assembler = new AssetsAssembler(this.habilitations);
-                        await assembler.joinAsset(this.$assets.getCollection('personnels'), 'personnel_id', 'personnel');
+                        await assembler.joinAsset(personnelsCollection, 'personnel_id', 'personnel');
                         this.operateurs = assembler.getResult('personnel');
+                        
+                        let control = await this.$app.api.get('v2/controle/formulaire/'+formulaire.id+'/controleur');
+                        if (control.restricted) {
+                            if(this.tmpCollecte.enqueteur_personnel){
+                                let controleur = this.controleurs.find(e => e.id == this.tmpCollecte.enqueteur_personnel);
+                                if(!controleur){
+                                    this.habControl = false
+                                }
+                                
+                            }
+                            await personnelsCollection.load({
+                                id: control.personnel_ids.join(',')
+                            });
+                            this.controleurs = personnelsCollection.collection.filter(e => control.personnel_ids.includes(e.id));
+                            this.veilleControleurs = true
+                        }
+                        else {
+                            this.controleurs = this.personnels
+                            this.veilleControleurs= false
+                            this.habControl=true
+                            
+                        }
                     }
                     catch (e) {
                         this.$app.catchError(e);
                     }
                     finally {
-                        this.pending.habilitations = false
+                        this.pending.personnels = false;
                     }
 
                 }
@@ -187,6 +225,7 @@ export default {
                 this.tmpCollecte.cible_personnel = newVal;
 
                 let hab = this.getHabilitationByPersonnelId(newVal);
+                console.log(this.getHabilitationByPersonnelId(newVal), 'gethab')
                 this.tmpCollecte.tlc = hab ? "CharacteristicPersonnel" : null;
                 this.tmpCollecte.tli = hab ? hab.id : null;
             }
@@ -223,7 +262,8 @@ export default {
         getFormulaireById(id) {
             return this.formulaires.find(e => e.id == id);
         },
-
+       
+    
         /**
          * Retourne les informations d'une habilitation depuis l'ID d'un personnel
          * 
