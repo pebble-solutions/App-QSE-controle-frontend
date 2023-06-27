@@ -92,16 +92,7 @@ export default{
 		},
     },
 
-    // /**
-    //  * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
-    //  */
-    //  beforeRouteUpdate(to,from) {
-    //     if (to.params.idHab != from.params.idHab) {
-    //         console.log(to.params.idHab, 'av charge')
-    //         // this.loadCollecte(to.params.idHab);
-
-    //     }
-    // },
+    
 
     mounted () {
         /**

@@ -74,7 +74,7 @@
                     </div>
                 </template>
             </div>
-            <div class="card-footer" v-if="readonly">
+            <div class="card-footer" v-if="collecte.locked">
                 <button class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)" :disabled="pending.pdf">
                     Exporter
                 </button>

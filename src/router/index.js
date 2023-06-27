@@ -193,6 +193,9 @@ const routes = [
     name: 'HabilitationAgent',
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationAgent.vue')
   },
+  
+
+
 
 ]
 

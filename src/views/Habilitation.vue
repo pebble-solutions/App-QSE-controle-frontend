@@ -21,7 +21,7 @@
                 </div>
             </div>  
             
-            <div v-if="veilleConfig" class="my-4">
+            <!-- <div v-if="veilleConfig" class="my-4">
                 <h3>Configuration des veilles</h3>
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                     <div class="col" v-for="veille in veilleConfig" :key=veille.id>
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- <div v-if="listControlTodo">
                 <h3>Controles à programmer</h3>
                 <div class="list-group" v-for="controlTodo in listControlTodo" :key="controlTodo.habilitation_id" >

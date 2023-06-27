@@ -292,10 +292,7 @@ export default {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
         this.formulaire = this.tmpCollecte.formulaire;
         
-        this.$nextTick(() => {
-            this.cible_personnel = this.tmpCollecte.cible_personnel;
-            
-        })
+        
         
         if (this.tmpCollecte.date) {
             let part = this.tmpCollecte.date.split(" ");

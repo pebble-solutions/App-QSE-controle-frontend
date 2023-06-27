@@ -21,7 +21,7 @@ export default {
                 collecte: false
             },
             
-            read : ['formulaire','enqueteur_personnel','cible_personnel']              //,'cible_personnel'
+            read : ['formulaire','enqueteur_personnel','cible_personnel']   
             }
     },
     
