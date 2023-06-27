@@ -23,12 +23,15 @@
 				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille</AppMenuItem>
+				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille par habilitations</AppMenuItem>
+				<AppMenuItem href="/operateur" look="dark" icon="bi bi-person-check-fill">Veille par opérateurs</AppMenuItem>
+
 
 			</AppMenu>
 		</template>
 
 		<template v-slot:list>
+			
 			<AppMenu v-if="listMode === 'collecte'">
 				<template v-if="pending.collectes">
 					<Spinner />
@@ -92,50 +95,55 @@
 							Charger +
 						</button>
 					</div>
-					
 	
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'habilitation'">
-				<!-- <AppMenuItem href="/habilitation"> 
-					<span></span>
+				<!-- <AppMenuItem href="/habilitation/Habilitation"> 
+					<span class="fst-italic fw-lighter">Vue modèle par habilitations</span>
 				</AppMenuItem> -->
-				<!-- <AppMenuItem href="/habilitation/idHabilitation"> 
-					<span>vue par habilitations</span>
-				</AppMenuItem>
-				<AppMenuItem href="/habilitation/idAgent"> 
-					<span>vue par agent habilité</span>
-				</AppMenuItem> -->
-				<!-- <SearchHab v-model:mode=options.mode ></SearchHab> -->
-					<!-- <template v-if="options.mode == 'byAgent'" >
-						
-						<template v-for="agent in listActifs" :key="agent.id" >
-							<AppMenuItem :href="'/habilitationAgent/'+agent.id">
-								{{ agent.cache_nom }} {{ agent.id }}
-							</AppMenuItem>
-						</template>
-					</template> -->
-					<!-- <template v-if="options.mode == 'byHab'" >
-					</template> -->
-						<!-- <template v-for="veille in veilleConfig" :key="veille.id">
-							<AppMenuItem :href="'/habilitationHab/'+veille.id">
-								{{ veille.nom }}
-							</AppMenuItem>
-						</template> -->
-						<template v-for="hab in habilitationType" :key="hab.id" >
-							<AppMenuItem :href="'/habilitationHab/'+hab.id">
-								{{ hab.nom }}
-							</AppMenuItem>
-						</template>
-
-						<div class="alert alert-info m-2" v-if="!habilitationType?.length">
-							Il n'y a pas de type d'habilitation en enregistrées
-						</div>
+				
+				<!--
+				<SearchHab v-model:mode=options.mode ></SearchHab> -->
+				<!-- <template v-if="options.mode == 'byAgent'" >
+					
+				</template> -->
+				<!-- <template v-if="options.mode == 'byHab'" >
+				</template> -->
+				<!-- <template v-for="veille in veilleConfig" :key="veille.id">
+					<AppMenuItem :href="'/habilitationHab/'+veille.id">
+						{{ veille.nom }}
+					</AppMenuItem>
+				</template> -->
+				<template v-for="hab in habilitationType" :key="hab.id" >
+					<AppMenuItem :href="'/habilitationHab/'+hab.id">
+						{{ hab.nom }}
+					</AppMenuItem>
+				</template>
+				
+				<div class="alert alert-info m-2" v-if="!habilitationType?.length">
+					Il n'y a pas de type d'habilitation enregistré
+				</div>
 			</AppMenu>
+			<AppMenu v-else-if="listMode == 'operateur'">
+				<!-- <AppMenuItem href="/habilitation/Agent"> 
+					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
+				</AppMenuItem> -->
+					<template v-for="agent in listActifs" :key="agent.id" >
+						<AppMenuItem :href="'/operateur/'+agent.id">
+							{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
+						</AppMenuItem>
+					</template>
+					<div class="alert alert-info m-2" v-if="!listActifs?.length">
+						Il n'y a pas de personnels concernés
+					</div>
+			</AppMenu>
+			
 
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
+			
 		</template>
 		
 		<template v-slot:core v-if="isConnectedUser">
@@ -176,7 +184,10 @@ import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
 import { AssetsCollectionController } from './js/app/controllers/AssetsCollectionController'
+import {ROUTES_NAMES} from './js/route';
 // import SearchHab from './components/menu/SearchHab.vue'
+
+
 
 export default {
 
@@ -227,6 +238,12 @@ export default {
 					key: 'habilitation',
 					href: '/habilitation'
 				},
+				{
+					label: 'Veille operateurs',
+					icon: 'bi bi-person-check-fill',
+					key: 'habilitation',
+					href: '/operateur'
+				},
 
 			],
 			searchOptions: {
@@ -238,7 +255,7 @@ export default {
 			},
 			options: {
 				mode: 'default'
-			}
+			},
 			
 		}
 	},
@@ -253,33 +270,7 @@ export default {
 		 * @return {string}
 		 */
 		listMode() {
-			if (['collecte', 'CollecteNext','collecteKN', 'collecteKnBloc', 'CollectKnEnd','UnexpectedCollecte','CollecteVerif'].includes(this.$route.name)) {
-				return 'collecte';
-			}
-			else if (['Programmation', 'CollectesByType', 'EditCollecte', 'NewCollecte'].includes(this.$route.name)) {
-				return 'programmation';
-			}
-			else if (['consultation',
-				'consultationFormulaire',
-				'consultationCollecte',
-				'consultationForm',
-				'consultationFormList',
-				'consultationFormCollecte',
-				'consultationProjet',
-				'consultationProjetList',
-				'consultationProjetCollecte',
-				'newCollecte'
-				]
-				.includes(this.$route.name)) {
-				return 'consultation';
-			}
-			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent','NewCollecteVeille'].includes(this.$route.name)) {
-				return 'habilitation'
-			}
-			else if (['Home'].includes(this.$route.name)) {
-				return 'home';
-			}
-			return null;
+			return this.getRouteGroupName(this.$route.name);
 		},
 
 		/**
@@ -360,9 +351,7 @@ export default {
 			return this.loadRessources('formulaire')
 		},
 
-		// change(payload) {
-		// 	console.log(payload)
-		// },
+		
 
 		/**
 		 * Charge l'ensemble des projets depuis le serveur et les stock dans le store
@@ -384,7 +373,7 @@ export default {
 		/**
 		 * charge la liste des habilitations depuis le serveur et les charge dans le store
 		 */
-		loadHabilitationType(){
+		loadHabilitationType() {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/controle/habilitation/type')
 			.then ((data)=> {
@@ -396,7 +385,7 @@ export default {
 		/** charge l'ensemble des veilles paramétrées
          * 
          */
-		LoadVeille() {
+		loadVeille() {
             this.pending.habilitations = true;
 
             this.$app.apiGet('v2/controle/veille')
@@ -437,7 +426,18 @@ export default {
 				.finally(() => this.pending[pending] = false)
 		},
 
-		/**
+		/**<AppMenu v-else-if="listMode == 'operateur'">
+				<!-- <AppMenuItem href="/habilitation/Agent"> 
+					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
+				</AppMenuItem> -->
+					<template v-for="agent in listActifs" :key="agent.id" >
+						<AppMenuItem :href="'/operateur/'+agent.id">
+							{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
+						</AppMenuItem>
+					</template>
+					<div class="alert alert-info m-2" v-if="!listActifs?.length">
+						Il n'y a pas de personnels concernés
+					</div>
 		 * Charge le personnel actifs
 		 */
 		loadAgent() {
@@ -455,11 +455,13 @@ export default {
 			.finally(this.pending.actifs = false);
 
 			try {
-				this.$assets.getCollection('personnels');
+				let collection = this.$assets.getCollection('personnels');
+				collection.reset();
 			} catch {
 				let collection = new AssetsCollectionController(this, {
 					assetName: 'personnels',
 					updateAction: 'updatePersonnels',
+					resetAction: 'resetPersonnels',
 					apiRoute: 'v2/personnel'
 				});
 				this.$assets.addCollection('personnels', collection);
@@ -566,6 +568,24 @@ export default {
 			let route = mode === 'collecte' ? '/consultation' : '/consultation/'+mode;
             this.$router.push(route);
         },
+
+		/**
+		 * Retourne le nom du groupe auquel appartient la route à analyser.
+		 * 
+		 * @param {string} routeName Nom de la route à analyser
+		 * 
+		 * @return {string}
+		 */
+		getRouteGroupName(routeName) {
+			for (const groupName in ROUTES_NAMES) {
+				const names = ROUTES_NAMES[groupName];
+
+				if (names.includes(routeName)) {
+					return groupName;
+				}
+			}
+			return null;
+		}
 	},
 
 	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, //,  , SearchHab 
@@ -578,7 +598,7 @@ export default {
 				this.loadAgent();
 				this.loadProjets();
 				this.loadHabilitationType();
-				this.LoadVeille()
+				this.loadVeille();
 			}
 		});
 	}

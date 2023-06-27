@@ -3,9 +3,6 @@
     :collecte="collecte"
     :formulaires="formulaires"
     :personnels="mergedPersonnels"
-    :veille =true
-    
-    v-if="inited"
     
     @updated="routeToFormulaire" />
 </template>
@@ -27,9 +24,7 @@ export default {
                 environnement: "private",
                 tlc: '',
                 tli: ''
-                
-            },
-            inited: false
+            }
         }
     },
 
@@ -59,13 +54,7 @@ export default {
         },
     },
 
-    components: { ProgrammationCollecteModal },
-
-    mounted() {
-        this.collecte.formulaire =this.habilitationType;
-        this.inited = true
-
-    }
+    components: { ProgrammationCollecteModal }
 }
 
 </script>

@@ -21,7 +21,6 @@
         </div>  
     </div>
     
-    
 </template>
 <style scoped>
 .progress-ht{
