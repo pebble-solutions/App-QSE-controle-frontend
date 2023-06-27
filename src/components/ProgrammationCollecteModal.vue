@@ -1,4 +1,5 @@
 <template>
+
     <AppModal size="lg" 
     :title="title" 
     @submit="record()"  
@@ -11,17 +12,17 @@
     :pending="pending.collecte"
     :pending-delete="pending.delete">
     <FormCollecte
-        :collecte="collecte"
-        :personnels="personnels"
-        :formulaires="formulaires" 
-        :readonly="readonly"
-        :veille="veille"
-        
-        @update-collecte="updateCollecte"
-        v-if="collecte" />
-        
-    </AppModal>
-            
+    :collecte="collecte"
+    :personnels="personnels"
+    :formulaires="formulaires" 
+    :readonly="readonly"
+    :veille="veille"
+    
+    @update-collecte="updateCollecte"
+    v-if="collecte" />
+    
+</AppModal>
+
 </template>
 
 <script>
@@ -96,7 +97,6 @@ export default {
         record() {
             this.pending.collecte = true;
             this.tmpCollecte.environnement = 'private';
-            console.log(this.tmpCollecte, 'collecte')
             
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte)
             .then(data => {
@@ -119,6 +119,7 @@ export default {
 
     mounted() {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
+        
 
     }
 

@@ -91,31 +91,7 @@ export default {
          configVeille(id) {
             alert("souhaitez-vous modifier la veille #"+id)
          },
-        // /**
-        //  * charge les veilles à réaliser en fonction d'un id de veille
-        //  * 
-        //  * @param {Number} id id de la veille
-        //  * 
-        //  */
-        // loadVeille(id){
-        //     this.pending.listControlTodo = true
-        //     // let veille = this.veilleConfig;
-        //     this.$app.apiGet('v2/controle/veille/'+id+'/todo', {
-        //         CSP_min : 50,
-        //         CSP_max :100,
-        //     })
-        //     .then((data) =>{
-        //         console.log(data, 'donées veille')
-        //         if(data){
-        //             this.listControlTodo = this.listControlTodo.concat(data)
-        //         }
-        //         else {
-        //             confirm('veille à jour')
-        //         }
-        //         // this.listControlTodo.push(data);
-        //     })
-        //     .catch(this.$app.catchError).finally(() => this.pending.listControlTodo = false);
-        // },
+       
         
         /* parcourt la list des types d'habilitation en fonction de l'id entré en paramètre
         * et retourne le nom de l'habilitation

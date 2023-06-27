@@ -99,9 +99,9 @@
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'habilitation'">
-				<AppMenuItem href="/habilitation/Habilitation"> 
+				<!-- <AppMenuItem href="/habilitation/Habilitation"> 
 					<span class="fst-italic fw-lighter">Vue modèle par habilitations</span>
-				</AppMenuItem>
+				</AppMenuItem> -->
 				
 				<!--
 				<SearchHab v-model:mode=options.mode ></SearchHab> -->
@@ -126,9 +126,9 @@
 				</div>
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'operateur'">
-				<AppMenuItem href="/habilitation/Agent"> 
+				<!-- <AppMenuItem href="/habilitation/Agent"> 
 					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
-				</AppMenuItem>
+				</AppMenuItem> -->
 					<template v-for="agent in listActifs" :key="agent.id" >
 						<AppMenuItem :href="'/operateur/'+agent.id">
 							{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
@@ -349,9 +349,7 @@ export default {
 			return this.loadRessources('formulaire')
 		},
 
-		// change(payload) {
-		// 	console.log(payload)
-		// },
+		
 
 		/**
 		 * Charge l'ensemble des projets depuis le serveur et les stock dans le store

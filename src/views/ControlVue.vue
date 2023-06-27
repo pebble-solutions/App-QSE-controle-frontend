@@ -39,7 +39,6 @@ export default {
                 afficher_corbeille: 'aussi'
             })
             .then((data) => {
-                console.log(data)
                 this.collecte = data
                 // this.setCollecte(data);
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);

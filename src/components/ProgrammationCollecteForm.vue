@@ -8,13 +8,10 @@
                 </select>
                 <div class="text-danger mt-2" v-if="!currentFormTli && formulaire">
                     <i class="bi bi-exclamation-triangle-fill"></i>
-                    Aucune habilitation n'est liée à ce type de contrôle. L'ensemble du personnel peut être contrôlé. Les fonctions de veille 
+                    Aucune habilitation n'est liée à ce type de contrôle. Les fonctions de veille 
                     ne seront pas disponibles.
                 </div>
-                <div class="text-success mt-2" v-else-if="currentFormTli">
-                    <i class="bi bi-check-circle-fill"></i>
-                    Les fonctions de veille sont disponibles pour ce type de contrôle.
-                </div>
+                
             </div>
         </div>
 
@@ -33,17 +30,25 @@
             <div class="col-12 col-md-6 mb-3">
                 <label for="collecteCible" class="form-label">Opérateur </label>
                 <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.habilitations">
-                    <option v-for="(agent) in sortedOperateurs" :value="agent.id" :key="agent.id"> {{agent.cache_nom}} </option>
+                    <option v-for="(agent) in sortedOperateurs" :value="agent.id" :key="'agent-'+agent.id"> {{agent.cache_nom}} </option>
                 </select>
                 <div class="text-secondary py-1" v-else>
                     <span class="spinner-border spinner-border-sm"></span>
                     Chargement...
                 </div>
+                <div class="text-success mt-2" v-if="formulaire && currentFormTli">
+                    <i class="bi bi-check-circle-fill"></i>
+                    La liste est restreinte aux opérateurs habilités
+                </div>
+                <div class="text-info mt-2" v-else>
+                    <i class="bi bi-check-circle-fill"></i>
+                    La liste des opérateurs est libre
+                </div>
             </div>
             <div class="col-12 col-md-6 mb-3">
                 <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
                 <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')" v-if="!pending.personnels">
-                    <option  v-for="(controleur) in controleurs" :value="controleur.id" :key="controleur.id">
+                    <option  v-for="(controleur) in controleurs" :value="controleur.id" :key="'controleur-'+controleur.id">
                         {{ controleur.cache_nom }}
                     </option>
                 </select>
@@ -54,10 +59,9 @@
                 
                 <div class="text-success mt-2" v-if="veilleControleurs && currentFormTli">
                     <i class="bi bi-check-circle-fill"></i>
-                    La liste des contrôleurs est restreinte aux controleurs habilités
-                    
+                    La liste est restreinte aux controleurs habilités
                 </div>
-                <div class="text-info mt-2" v-if="!veilleControleurs && currentFormTli">
+                <div class="text-info mt-2" v-else>
                     <i class="bi bi-info-circle-fill"></i>
                     La liste des contrôleurs est libre
                 </div>
@@ -97,7 +101,9 @@ export default {
             formulaire: null,
             cible_personnel: null,
             veilleControleurs: false,
-            habControl: true
+            habControl: true,
+            tlc: null,
+            tli: null
         }
     },
 
@@ -119,7 +125,10 @@ export default {
 
             this.operateurs.forEach(e => {
                 if (typeof e === 'object' && e)  {
-                    list.push(e);
+                    const found = list.find(o => o.id == e.id);
+                    if (!found) {
+                        list.push(e);
+                    }
                 }
             });
 
@@ -182,7 +191,6 @@ export default {
                                 if(!controleur){
                                     this.habControl = false
                                 }
-                                
                             }
                             await personnelsCollection.load({
                                 id: control.personnel_ids.join(',')
@@ -207,10 +215,16 @@ export default {
                 }
                 else {
                     this.operateurs = this.personnels;
+                    this.controleurs = this.personnels;
+                    this.veilleControleurs= false
+
                 }
             }
             else {
                 this.operateurs = this.personnels;
+                this.controleurs = this.personnels;
+                this.veilleControleurs= false
+
             }
         },
 
@@ -221,11 +235,8 @@ export default {
          */
         cible_personnel(newVal) {
             if (this.inited) {
-
                 this.tmpCollecte.cible_personnel = newVal;
-
                 let hab = this.getHabilitationByPersonnelId(newVal);
-                console.log(this.getHabilitationByPersonnelId(newVal), 'gethab')
                 this.tmpCollecte.tlc = hab ? "CharacteristicPersonnel" : null;
                 this.tmpCollecte.tli = hab ? hab.id : null;
             }
@@ -279,10 +290,13 @@ export default {
 
     mounted() {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
-
         this.formulaire = this.tmpCollecte.formulaire;
-        this.cible_personnel = this.tmpCollecte.cible_personnel;
-
+        
+        this.$nextTick(() => {
+            this.cible_personnel = this.tmpCollecte.cible_personnel;
+            
+        })
+        
         if (this.tmpCollecte.date) {
             let part = this.tmpCollecte.date.split(" ");
             this.tmpCollecte.date = part[0];
