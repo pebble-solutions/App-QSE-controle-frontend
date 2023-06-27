@@ -31,6 +31,7 @@
 		</template>
 
 		<template v-slot:list>
+			
 			<AppMenu v-if="listMode === 'collecte'">
 				<template v-if="pending.collectes">
 					<Spinner />
@@ -94,14 +95,13 @@
 							Charger +
 						</button>
 					</div>
-					
 	
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'habilitation'">
-				<AppMenuItem href="/habilitation/Habilitation"> 
+				<!-- <AppMenuItem href="/habilitation/Habilitation"> 
 					<span class="fst-italic fw-lighter">Vue modèle par habilitations</span>
-				</AppMenuItem>
+				</AppMenuItem> -->
 				
 				<!--
 				<SearchHab v-model:mode=options.mode ></SearchHab> -->
@@ -126,9 +126,9 @@
 				</div>
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'operateur'">
-				<AppMenuItem href="/habilitation/Agent"> 
+				<!-- <AppMenuItem href="/habilitation/Agent"> 
 					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
-				</AppMenuItem>
+				</AppMenuItem> -->
 					<template v-for="agent in listActifs" :key="agent.id" >
 						<AppMenuItem :href="'/operateur/'+agent.id">
 							{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
@@ -138,10 +138,12 @@
 						Il n'y a pas de personnels concernés
 					</div>
 			</AppMenu>
+			
 
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
+			
 		</template>
 		
 		<template v-slot:core v-if="isConnectedUser">
@@ -253,7 +255,7 @@ export default {
 			},
 			options: {
 				mode: 'default'
-			}
+			},
 			
 		}
 	},
@@ -349,9 +351,7 @@ export default {
 			return this.loadRessources('formulaire')
 		},
 
-		// change(payload) {
-		// 	console.log(payload)
-		// },
+		
 
 		/**
 		 * Charge l'ensemble des projets depuis le serveur et les stock dans le store
@@ -373,7 +373,7 @@ export default {
 		/**
 		 * charge la liste des habilitations depuis le serveur et les charge dans le store
 		 */
-		loadHabilitationType(){
+		loadHabilitationType() {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/controle/habilitation/type')
 			.then ((data)=> {
@@ -426,7 +426,18 @@ export default {
 				.finally(() => this.pending[pending] = false)
 		},
 
-		/**
+		/**<AppMenu v-else-if="listMode == 'operateur'">
+				<!-- <AppMenuItem href="/habilitation/Agent"> 
+					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
+				</AppMenuItem> -->
+					<template v-for="agent in listActifs" :key="agent.id" >
+						<AppMenuItem :href="'/operateur/'+agent.id">
+							{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
+						</AppMenuItem>
+					</template>
+					<div class="alert alert-info m-2" v-if="!listActifs?.length">
+						Il n'y a pas de personnels concernés
+					</div>
 		 * Charge le personnel actifs
 		 */
 		loadAgent() {
@@ -587,7 +598,7 @@ export default {
 				this.loadAgent();
 				this.loadProjets();
 				this.loadHabilitationType();
-				this.loadVeille()
+				this.loadVeille();
 			}
 		});
 	}

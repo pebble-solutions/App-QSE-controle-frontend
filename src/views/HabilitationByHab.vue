@@ -118,7 +118,6 @@ export default {
                 done: 'OUI'
             })
             .then((data) => {
-                console.log(data)
                 this.listCollecte = data;
             })
             .catch(this.$app.catchError).finally(() => this.pending.agent = false);

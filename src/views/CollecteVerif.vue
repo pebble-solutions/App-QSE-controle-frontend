@@ -4,11 +4,11 @@
         <template v-else>
             
             <alert-message icon="bi-info-square" class="mt-2" v-if="collecte.done =='NON'">
-                Le contrôle #{{ collecte.id }} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> n'est pas clôturé
+                Le contrôle #{{ collecte.id }} <span v-if="collecte.cible_nom" class="mx-1">de {{collecte.cible_nom}}</span> n'est pas clôturé
             </alert-message>
             <alert-message icon="bi-info-square" v-else-if="collecte.done =='OUI'">
                 <div class="my-2">
-                    Le contrôle #{{collecte.id}} <span v-if="collecte.cible_nom">de {{collecte.cible_nom}}</span> est enregistré et n'est plus modifiable. <br>
+                    Le contrôle #{{collecte.id}}<span v-if="collecte.cible_nom" class="mx-1">de {{collecte.cible_nom}}</span> est enregistré et n'est plus modifiable. <br>
                     Vous pourrez le retrouver via le menu consultation.<br>
                 </div>
             </alert-message>

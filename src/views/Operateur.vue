@@ -94,34 +94,7 @@ export default {
 		changeFormatDateLit(el) {
 			return dateFormat(el);
 		},
-        /**
-         * retourne le nom d'un personnel en fonction de l'id
-         * s'il ne trouve pas envoie une requête 
-         * @param {Number} id 
-         */
-        // returnName(id){
-        //     let personnel = this.listActifs.find((e) => e.id == id);
-        //     if(!personnel) {
-        //         this.pending.agent = true;
-        //         this.$app.apiGet('structurePersonnel/GET/'+id, {
-        //             environnement: 'private',
-        //             // personne: id,
-        //         })
-        //         .then((data) =>{
-        //             let personnel = data;
-        //             let fullName = personnel.cache_nom;
-        //             return fullName;
-        //         })
-        //         .catch(this.$app.catchError).finally(() => this.pending.agent = false);
-
-        //         // return 'ce personnel n\'est pas dans la liste'
-        //     }
-        //     else {
-        //         return personnel.cache_nom
-        //     }
-            
-        // }
-
+       
     },
     
 }
