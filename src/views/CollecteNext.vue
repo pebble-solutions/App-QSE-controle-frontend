@@ -21,7 +21,7 @@ export default {
                 collecte: false
             },
             
-            read : ['formulaire','enqueteur_personnel','cible_personnel']              
+            read : ['formulaire','enqueteur_personnel','cible_personnel']   
             }
     },
     
@@ -44,6 +44,8 @@ export default {
                 enqueteur_personnel: collecte.enqueteur_personnel,
                 previous_id: collecte.id,
                 previous_result: collecte.result_var,
+                tlc: collecte.tlc,
+                tli: collecte.tli
             };
             return nextCollecte;
         }

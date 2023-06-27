@@ -4,6 +4,7 @@
         :collecte="collecte"
         :formulaires="formulaires"
         :personnels="listActifs"
+        :readonly="['formulaire']"
         
         @updated="routeToFormulaire"
         @deleted="routeToFormulaire"

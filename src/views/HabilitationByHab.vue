@@ -3,20 +3,17 @@
     <div class="container py-2 px-2">
         <!-- <spinner v-if="pending.habilitation"></spinner> -->
         <template v-if="findVeilleConfig">
-            <h2>
+            <h2 class="mb-3">
                 <span class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </span>
-                Veille sur {{ filterhabilitationType}}
+                Veille {{ filterhabilitationType}}
             </h2>
-            <!-- <alert-message v-if="!listControl">Il n'y pas de personnel à contrôler pour cette habilitation</alert-message> -->
-            <!-- <h3  class="my-3"> Personnels à contrôler:</h3> -->
             
             <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
+            <div v-if="listCollecte.length">{{ collecte }}</div>
             
-            
-            
-            <!-- <h3  class="my-3">Personnels habilités:</h3>
+            <!-- <h3  class="my-3">Personnels habilités:</h3> -->
                 
-                <div class="list-group" >
+                <!-- <div class="list-group" >
                     <div class="list-group-item" v-for="carac in listPersonnelHabilite" :key="carac.id">
 
                         <div class="d-flex justify-content-between">
@@ -58,6 +55,7 @@ export default {
             },
             listPersonnelHabilite : 'default',
             personnel:'',
+            listCollecte:''
         }
     },
 
@@ -107,6 +105,22 @@ export default {
             })
             .catch(this.$app.catchError).finally(() => this.pending.habilitation = false);
 
+        },
+         /**
+         * Envoie une requête pour charger la liste des collectes 
+         * en fonction de l'id fourni
+         * @param {Number} id du 
+         */
+         loadCollecte(id) {
+            this.pending.agent =true;
+            this.$app.apiGet('data/GET/collecte', {
+                tli : id,
+                done: 'OUI'
+            })
+            .then((data) => {
+                this.listCollecte = data;
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.agent = false);
         },
 
         
@@ -167,27 +181,8 @@ export default {
 
 
     },
-    /**
-     * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
-     */
-     beforeRouteUpdate() {
-        // if (to.params.id != this.$route.params.id) {
-            
-        //     this.loadPersonelByHab(to.params.id);
-
-        // }
-    },
-
-
-    beforeMount() {
-
-        /**
-         * charge la list des personnels habilités correspondant à l'id du type d'habilitation
-         */
-        // this.loadPersonelByHab(this.$route.params.id);
-
-
-    }
+    
+    
 
     
 }
