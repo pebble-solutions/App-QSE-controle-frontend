@@ -36,10 +36,13 @@ export default {
         collecteObject() {
             let collecte = JSON.parse(JSON.stringify(this.collecte));
             collecte.formulaire = collecte.information__groupe_id;
+            let now = new Date().toLocaleDateString('fr-FR')
+            console.log(now)
+
             let nextCollecte = {
                 formulaire: collecte.formulaire,
                 projet_id: collecte.projet_id,
-                date:collecte.date,
+                date: now,
                 cible_personnel: collecte.cible_personnel,
                 enqueteur_personnel: collecte.enqueteur_personnel,
                 previous_id: collecte.id,
@@ -47,6 +50,7 @@ export default {
                 tlc: collecte.tlc,
                 tli: collecte.tli
             };
+            console.log(nextCollecte, 'next')
             return nextCollecte;
         }
     },
