@@ -2,6 +2,7 @@
     <div v-if="tmpCollecte">
         <div class="row g-2">
             <div v-if="!veille" class="col mb-3">
+                
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
                 <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="formulaire" required :disabled="isReadonly('formulaire')">
                     <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>

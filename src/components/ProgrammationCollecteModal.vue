@@ -1,5 +1,4 @@
 <template>
-
     <AppModal size="lg" 
     :title="title" 
     @submit="record()"  
