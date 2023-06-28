@@ -73,36 +73,45 @@
 
 
 
-                <!-- Zone ADRESSE ET CARTE -->
-                <div class="col-12 col-md-12 col-lg-6">
-                    <!-- Contenu de la zone 2 -->
-                    <div class="card h-100">
-                        <div class="card-body h-100">
-                            <div class="row h-100">
-                                <div class="col-6 h-100">
-                                    <div class="row col-12">
-                                        <div class="col-4">21.02.23</div>
-                                        <div class="col-4">RAV</div>
-                                        <div class="col-4">LORIENT</div>
-                                    </div>
-                                    <div class="row col-12">3 rue des Pruniers</div>
-                                    <div class="row col-12">56100 LORIENT</div>
-                                </div>
-
-                                <div class="card col-6 h-100">
-                                    <div class="p-2 h-100">
-                                        <div>ici la carte</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <!-- Zone ADRESSE ET CARTE -->
+  <div class="col-12 col-md-12 col-lg-6">
+  <!-- Contenu de la zone 2 -->
+  <div class="card h-100">
+  <div class="card-body h-100">
+  <div class="row h-100">
+  <div class="col-6 h-100">
+      <div class="row col-12">
+          <div class="col-4">21.02.23</div>
+          <div class="col-4">RAV</div>
+          <div class="col-4">LORIENT</div>
+      </div>
+      <div class="row col-12">3 rue des Pruniers</div>
+      <div class="row col-12">56100 LORIENT</div>
+      <div>Latitude en %  : {{ latitude }}</div>
+    <div>Longitude en %: {{ longitude }}</div>
+  </div>
+        <div class="col-6 h-100">
+          <div class="h-100">
+            <div id="map-container" style="position: relative;">
+              <img src="../assets/Map-France.png" style="width: 100%; height: auto;">
+              <div class="dot" :style="{ left: `${longitude}%`, top: `${latitude}%` }"></div>
+                <!-- Ajout des impressions de latitude et de longitude pour le débogage -->
+    
             </div>
-
+          </div>
         </div>
-    </div>
-</div>
+
+
+
+
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
 
 
     <!-- bloc de controle entier -->
@@ -121,11 +130,20 @@
   import { dateFormat } from '../js/collecte';
   import SuiviHabilitation from '../components/SuiviHabilitation.vue';
 
-
   export default {
     data() {
       return {
         dates: [],
+        imageBounds: {
+          left: -5.684968390884571,
+          right: 8.971890223001154,
+          top: 51.670669181924744,
+          bottom: 41.71645783266676,
+        },
+        location: {
+          lat: 50.62,
+          lng: 3.04,
+        },
       };
     },
     mounted() {
@@ -134,7 +152,7 @@
     methods: {
       generateDates() {
         const today = new Date();
-        const daysInMilliseconds = 24 * 60 * 60 * 1000; // Nombre de millisecondes dans une journée
+        const daysInMilliseconds = 24 * 60 * 60 * 1000; 
         for (let i = 0; i < 8; i++) {
           const date = new Date(today.getTime() + i * daysInMilliseconds);
           const formattedDate = this.formatDate(date);
@@ -157,7 +175,7 @@
       ...mapState(['stat', 'requeteStat', 'listActifs']),
       stats() {
         let stats = null;
-  
+
         if (this.stat) {
           for (const key in this.stat.stats) {
             stats = this.stat.stats[key];
@@ -173,13 +191,32 @@
         }
         return "Sans nom";
       },
+      latitude() {
+  const latDifference = this.imageBounds.top - this.imageBounds.bottom;
+  const percentage = 100 * (this.imageBounds.top - this.location.lat) / latDifference;
+  return percentage;
+},
+longitude() {
+  const lngDifference = this.imageBounds.right - this.imageBounds.left;
+  return 100 * (this.location.lng - this.imageBounds.left) / lngDifference;
+},
     },
     components: {
-        Charts,
-        AlertMessage,
-        UserImage,
-        SuiviHabilitation,
+      Charts,
+      AlertMessage,
+      UserImage,
+      SuiviHabilitation,
     },
   };
-  </script>
-  
+</script>
+
+<style scoped>
+  .dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>
