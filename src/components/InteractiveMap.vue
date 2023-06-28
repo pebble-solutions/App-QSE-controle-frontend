@@ -1,15 +1,19 @@
 <template>
-    <div class="h-100">
+    <div>
         <div id="map-container" style="position: relative;">
             <img src="../assets/Map-France.png" style="width: 100%; height: auto;">
             <div class="dot" :style="{ left: `${longitude}%`, top: `${latitude}%` }"></div>
         </div>
     </div>
+
+<!-- POSITION en pourcentage pour debug
     <div class="card text-center">
-        <div class="fw-bold my-auto"><br>Position du pin : </div>
+        <div class="fw-bold"><br>Position du pin : </div>
         <div>Latitude en % : {{ 100 - latitude }}</div>
         <div>Longitude en %: {{ longitude }}</div>
     </div>
+
+-->
 </template>
 
 <script>
@@ -45,6 +49,7 @@ return 100 * (this.location.lng - this.imageBounds.left) / lngDifference;
 </script>
 
 <style scoped>
+
 .dot {
   position: absolute;
   width: 10px;
