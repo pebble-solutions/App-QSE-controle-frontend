@@ -1,32 +1,36 @@
 <template>
-    <div class="list-group" v-if="listControl.length">
-        <!-- veille n° {{ idVeille }} formulaire {{ idForm }} -->
-        <div class="list-group-item" v-for="control in listControl" :key="control.id">
-            <div class="row align-items-center">
-
-                <div class="col-3">
-                    {{returnName(control)}}
-                    <!-- - dernier contrôle le {{changeFormatDateLit(control.date_last)}}  -->
-                </div>
-                <div class="col">
-                    <progress-bar :dd="new Date(control.date_last)" :df="delay(control.date_last)"></progress-bar>
-    
-                </div>
-                <div class="col-auto text-end">
-                    <router-link :to="'/habilitationHab/'+this.$route.params.id+'/new/'+control.habilitation_id+'/'+idForm+'/'+control.personnel_id" v-slot="{navigate, href}">
-                        <a :href="href"  @click="navigate" class="btn btn btn-sm btn-outline-primary">
-                            <i class="bi bi-plus" ></i>
-                            <span class="d-none d-md-inline ms-1">
-                                Programmer
-                            </span>
-                        </a>
-                    </router-link>
-                    <!-- <small>{{control}}</small>   -->
+        <spinner v-if="pending.control"></spinner>
+        <template v-else>
+            <div class="list-group" v-if="listControl.length">
+                <div class="list-group-item" v-for="control in listControl" :key="control.id">
+                    <div class="row align-items-center">
+        
+                        <div class="col-3">
+                            {{returnName(control)}}
+                            <!-- - dernier contrôle le {{changeFormatDateLit(control.date_last)}}  -->
+                        </div>
+                        <div class="col">
+                            <progress-bar :dd="new Date(control.date_last)" :df="delay(control.date_last)"></progress-bar>
+            
+                        </div>
+                        <div class="col-auto text-end">
+                            <router-link :to="'/habilitationHab/'+this.$route.params.id+'/new/'+control.habilitation_id+'/'+idForm+'/'+control.personnel_id" v-slot="{navigate, href}">
+                                <a :href="href"  @click="navigate" class="btn btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-plus" ></i>
+                                    <span class="d-none d-md-inline ms-1">
+                                        Programmer
+                                    </span>
+                                </a>
+                            </router-link>
+                            <!-- <small>{{control}}</small>   -->
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de personnel à contrôler pour cette habilitation</alert-message>
+            <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de personnel à contrôler pour cette habilitation</alert-message>
+
+        </template>
+
 
 </template>
 <script>
@@ -35,6 +39,7 @@ import { dateFormat } from '../js/collecte';
 import ProgressBar from './ProgressBar.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
+import Spinner from '../components/pebble-ui/Spinner.vue';
 
 
 export default{
@@ -49,7 +54,7 @@ export default{
         }
     },
 
-    components: {ProgressBar, AlertMessage}, //RouterLink
+    components: {ProgressBar, AlertMessage, Spinner}, //RouterLink
 
     computed: {
         ...mapState(['habilitationType','listActifs','veilleConfig'])
