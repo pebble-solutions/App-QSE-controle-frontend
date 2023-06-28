@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="map-container" style="position: relative;">
-            <img src="../assets/Map-France.png" style="width: 100%; height: auto;">
+            <img src="../assets/Map-France2.png" style="width: 100%; height: auto;">
             <div class="dot" :style="{ left: `${longitude}%`, top: `${latitude}%` }"></div>
         </div>
     </div>
