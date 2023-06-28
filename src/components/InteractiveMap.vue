@@ -28,8 +28,8 @@ export default {
         bottom: 41.71645783266676,
       },
       location: {
-        lat: 50.62,
-        lng: 3.04,
+        lat: 48.3,
+        lng: -3.77,
       },
     };
   },
