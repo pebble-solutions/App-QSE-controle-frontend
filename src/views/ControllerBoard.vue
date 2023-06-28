@@ -31,7 +31,13 @@
     </div>
   </div>
 
-  <!-- bloc de controle entier -->
+
+
+
+
+
+
+  <!-- bloc de controle par jour -->
   <div class="container p-2">
     <div class="col-12 col-md-6 col-lg-4">
     </div>
@@ -43,54 +49,69 @@
           </div>
         </div>
 
-        <div class="row hoverable">
-          <!-- Zone KN ET INFOS -->
-          <div class="col-12 col-md-12 col-lg-6">
-            <!-- Contenu de la ligne 1 -->
-            <div class="p-2">
-              <div class="row align-items-center">
-                <div class="col-2">
-                  <!-- Icône carrée -->
-                  <span class="badge bg-secondary">?</span>
-                </div>
-                <div class="col-6 text-center">
-                  <!-- Texte "KN ANNONCEUR" centré -->
-                  <div class="kn-annonceur">KN ANNONCEUR</div>
-                </div>
-                <div class="col-4">
-                  <!-- Bouton "Controller" -->
-                  <button class="btn btn-primary mt-2 w-100">Controller</button>
+
+          <!-- bloc de controle par controle -->
+          <div class="row bg-light rounded p-4 m-2 mb-3">
+            <!-- Zone KN ET INFOS -->
+            <div class="col-12 col-md-12 col-lg-6">
+              <!-- Contenu de la ligne 1 -->
+              <div class="p-2 d-flex justify-content-center">
+                <div class="row align-items-center">
+                  <div class="col-2">
+                    <!-- Icône carrée -->
+                    <span class="badge bg-secondary">?</span>
+                  </div>
+                  <div class="col-10 text-center fw-bold d-flex align-items-center">
+                    <!-- Texte "KN ANNONCEUR" centré -->
+                    <div class="kn-annonceur">KN ANNONCEUR</div>
+                  </div>
                 </div>
               </div>
+              <!-- COMPOSANT HABILITATION -->
+              <SuiviHabilitation></SuiviHabilitation>
+              <!-- Bouton "Controller" -->
+              <div class="text-center mt-2">
+                <button class="btn btn-primary w-100 mb-3">Controller</button>
+              </div>
             </div>
-            <!--COMPOSANT HABILITATION -->
-            <SuiviHabilitation></SuiviHabilitation>
-          </div>
 
-          <!-- Zone ADRESSE ET CARTE -->
-          <div class="col-12 col-md-12 col-lg-6">
-            <!-- Contenu de la zone 2 -->
-            <div class="card h-100">
-              <div class="card-body h-100">
-                <div class="row h-100">
-                  <div class="col-6 h-100">
-                    <div class="row col-12">
-                      <div class="col-4">21.02.23</div>
-                      <div class="col-4">RAV</div>
-                      <div class="col-4">LORIENT</div>
+            <!-- Zone ADRESSE ET CARTE -->
+            <div class="col-12 col-md-12 col-lg-6">
+              <!-- Contenu de la zone 2 -->
+              <div class="bg-white h-100 rounded shadow">
+                <div class="card-body h-100 d-flex align-items-center justify-content-center">
+                  <div class="row">
+                    <div class="col-12 text-center mb-3">
+                      <div class="row fw-bold">
+                        <div class="col-12">21.02.23</div>
+                        <div class="col-12">RAV LORIENT</div>
+                      </div>
                     </div>
-                    <div class="row col-12">3 rue des Pruniers</div>
-                    <div class="row col-12">56100 LORIENT</div>
+                    <div class="col-12 text-center">
+                      <div class="row">
+                        <div class="col-12">3 rue des Pruniers</div>
+                        <div class="col-12">56100 LORIENT</div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-6 custom-map-container">
-
-                    <InteractiveMap></InteractiveMap>
+                  <div class="col-6 col-md-6 mt-2 mt-md-0">
+                    <div class="d-flex justify-content-center">
+                      <InteractiveMap></InteractiveMap>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+
+
+        <!--  fin de bloc de controle par controle -->
+        
+        
+        
+
+
+
       </div>
     </div>
   </div>
@@ -195,8 +216,5 @@
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }
-  .custom-map-container {
-  max-width: 30%; /* Réglez la largeur maximale selon vos besoins */
-  /* Ajoutez d'autres styles personnalisés si nécessaire */
-}
+ 
 </style>
