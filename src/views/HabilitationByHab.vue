@@ -1,7 +1,7 @@
 <template>
     
     <div class="container py-2 px-2">
-        <!-- <spinner v-if="pending.habilitation"></spinner> -->
+        <spinner v-if="pending.habilitation"></spinner>
         <template v-if="findVeilleConfig">
             <h2 class="mb-3">
                 <span class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </span>
