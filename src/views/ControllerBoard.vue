@@ -87,7 +87,9 @@
       </div>
       <div class="row col-12">3 rue des Pruniers</div>
       <div class="row col-12">56100 LORIENT</div>
-      <div>Latitude en %  : {{ latitude }}</div>
+
+      <div class="fw-bold"><br>Position du pin : </div>
+      <div>Latitude en %  : {{ 100 - latitude }}</div>
     <div>Longitude en %: {{ longitude }}</div>
   </div>
         <div class="col-6 h-100">
