@@ -1,0 +1,56 @@
+<template>
+    <div class="h-100">
+        <div id="map-container" style="position: relative;">
+            <img src="../assets/Map-France.png" style="width: 100%; height: auto;">
+            <div class="dot" :style="{ left: `${longitude}%`, top: `${latitude}%` }"></div>
+        </div>
+    </div>
+    <div class="card text-center">
+        <div class="fw-bold my-auto"><br>Position du pin : </div>
+        <div>Latitude en % : {{ 100 - latitude }}</div>
+        <div>Longitude en %: {{ longitude }}</div>
+    </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      dates: [],
+      imageBounds: {
+        left: -5.684968390884571,
+        right: 8.971890223001154,
+        top: 51.670669181924744,
+        bottom: 41.71645783266676,
+      },
+      location: {
+        lat: 50.62,
+        lng: 3.04,
+      },
+    };
+  },
+
+  computed: {
+    latitude() {
+const latDifference = this.imageBounds.top - this.imageBounds.bottom;
+const percentage = 100 * (this.imageBounds.top - this.location.lat) / latDifference;
+return percentage;
+},
+longitude() {
+const lngDifference = this.imageBounds.right - this.imageBounds.left;
+return 100 * (this.location.lng - this.imageBounds.left) / lngDifference;
+},
+  },
+};
+</script>
+
+<style scoped>
+.dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>

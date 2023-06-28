@@ -45,7 +45,7 @@
                     <div class="fw-light text-secondary text-center mb-3 fw-bold">{{ date }}</div>
                 </div>
             </div>
-            
+            <InteractiveMap></InteractiveMap>
             <div class="row hoverable">
                 <!-- Zone KN ET INFOS -->
                 <div class="col-12 col-md-12 col-lg-6">
@@ -87,7 +87,7 @@
       </div>
       <div class="row col-12">3 rue des Pruniers</div>
       <div class="row col-12">56100 LORIENT</div>
-
+     <!-- Ajout des impressions de latitude et de longitude pour le débogage -->
       <div class="fw-bold"><br>Position du pin : </div>
       <div>Latitude en %  : {{ 100 - latitude }}</div>
     <div>Longitude en %: {{ longitude }}</div>
@@ -97,15 +97,9 @@
             <div id="map-container" style="position: relative;">
               <img src="../assets/Map-France.png" style="width: 100%; height: auto;">
               <div class="dot" :style="{ left: `${longitude}%`, top: `${latitude}%` }"></div>
-                <!-- Ajout des impressions de latitude et de longitude pour le débogage -->
-    
             </div>
           </div>
         </div>
-
-
-
-
   </div>
   </div>
   </div>
@@ -131,6 +125,7 @@
   import UserImage from '../components/pebble-ui/UserImage.vue';
   import { dateFormat } from '../js/collecte';
   import SuiviHabilitation from '../components/SuiviHabilitation.vue';
+  import InteractiveMap from '../components/InteractiveMap.vue';
 
   export default {
     data() {
@@ -208,6 +203,7 @@ longitude() {
       AlertMessage,
       UserImage,
       SuiviHabilitation,
+      InteractiveMap,
     },
   };
 </script>
