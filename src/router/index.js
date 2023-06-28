@@ -196,6 +196,13 @@ const routes = [
   
 
 
+  {
+    path:'/controllerBoard',
+    name: 'ControllerBoard',
+    component: () => import(/* webpackChunkName: "about" */ '../views/ControllerBoard.vue')
+  },
+  
+
 
 ]
 

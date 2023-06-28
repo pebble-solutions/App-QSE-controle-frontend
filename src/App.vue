@@ -25,6 +25,8 @@
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
 				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille par habilitations</AppMenuItem>
 				<AppMenuItem href="/operateur" look="dark" icon="bi bi-person-check-fill">Veille par opérateurs</AppMenuItem>
+				<AppMenuItem href="/controllerBoard" look="dark" icon="bi bi-menu-button-wide">Tableau de bord</AppMenuItem>
+				
 
 
 			</AppMenu>
