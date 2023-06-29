@@ -9,8 +9,7 @@
 					<div class="card-body">
 						<div class="row align-items-center">
 							<div class="col display-6 fs-4 text-center">
-								Retrouvez ici tes les Controles KN à effectuer. cliquez sur un des tickets pour lancer le
-								controle
+								Retrouvez ici tes les Controles KN à effectuer. Cliquez sur la map pour lancer l'itinéraire ! 
 							</div>
 						</div>
 					</div>
