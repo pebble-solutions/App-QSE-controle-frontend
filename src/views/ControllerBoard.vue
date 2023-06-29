@@ -1,46 +1,50 @@
 <template>
-<div>
-<div class="container py-2">
-<template v-if="!stats">
-<h1 class="fs-3 my-3 text-center">Tableau de bord</h1>
-<alert-message variant="warning" icon="bi-exclamation-circle me-2" v-if="stat">Aucun résultat pour cette recherche.</alert-message>
-<div class="card my-3">
-<div class="card-body">
-<div class="row align-items-center">
-<div class="col display-6 fs-4 text-center">
-Retrouvez ici tes les Controles KN à effectuer. cliquez sur un des tickets pour lancer le controle
-</div>
-</div>
-</div>
-</div>
-</template>
-<template v-else>
-<div class="d-flex align-items-center my-3">
-<div class="d-flex align-items-center">
-<user-image :name="personnelNom" className="me-2" />
-<h1 class="fs-3 m-0 me-3">{{personnelNom}}</h1>
-</div>
-<div class="fw-light text-secondary text-end">du {{changeFormatDateLit(requeteStat.dd)}} au {{changeFormatDateLit(requeteStat.df)}}</div>
-</div>
-<charts :stats="stats" v-if="stats" />
-</template>
-</div>
+	<div>
+		<div class="container py-2">
+			<template v-if="!stats">
+				<h1 class="fs-3 my-3 text-center">Tableau de bord</h1>
+				<alert-message variant="warning" icon="bi-exclamation-circle me-2" v-if="stat">Aucun résultat pour cette
+					recherche.</alert-message>
+				<div class="card my-3">
+					<div class="card-body">
+						<div class="row align-items-center">
+							<div class="col display-6 fs-4 text-center">
+								Retrouvez ici tes les Controles KN à effectuer. cliquez sur un des tickets pour lancer le
+								controle
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+			<template v-else>
+				<div class="d-flex align-items-center my-3">
+					<div class="d-flex align-items-center">
+						<user-image :name="personnelNom" className="me-2" />
+						<h1 class="fs-3 m-0 me-3">{{ personnelNom }}</h1>
+					</div>
+					<div class="fw-light text-secondary text-end">du {{ changeFormatDateLit(requeteStat.dd) }} au
+						{{ changeFormatDateLit(requeteStat.df) }}</div>
+				</div>
+				<charts :stats="stats" v-if="stats" />
+			</template>
+		</div>
 
-<!-- bloc de controle par jour -->
-<div class="container p-2">
-<div class="card my-3" v-for="(date, index) in dates" :key="index">
-<div class="card-body">
-<div class="row align-items-center">
-<div class="col-12">
-<div class="fw-light text-secondary text-center mb-3 fw-bold">{{ date }}</div>
-</div>
-</div>
-<CarteDeControle></CarteDeControle>
-</div>
-</div>
-</div>
-</div>
-</template>
+		<!-- bloc de controle par jour -->
+		<div class="container p-2">
+			<div class="card my-3" v-for="(date, index) in dates" :key="index">
+				<div class="card-body">
+					<div class="row align-items-center">
+						<div class="col-12">
+							<div class="fw-light text-secondary text-center mb-3 fw-bold">{{ date }}</div>
+						</div>
+					</div>
+					<CarteDeControle></CarteDeControle>
+					<CarteDeControle></CarteDeControle>
+					<CarteDeControle></CarteDeControle>
+				</div>
+			</div>
+		</div>
+</div></template>
 
 <script>
 	import { mapActions, mapState } from 'vuex';
