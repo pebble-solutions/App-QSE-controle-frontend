@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="map-container" style="position: relative;">
-            <img src="../assets/Map-France2.png" style="width: 100%; height: auto;">
+            <img src="../assets/Map-FranceCustom.png" style="width: 100%; height: auto;">
             <div class="dot" :style="{ left: `${longitude}%`, top: `${latitude}%` }"></div>
         </div>
     </div>
@@ -28,8 +28,8 @@ export default {
         bottom: 41.71645783266676,
       },
       location: {
-        lat: 48.3,
-        lng: -3.77,
+        lat: 43.49826028152966,
+        lng: -1.4620330485201356,
       },
     };
   },

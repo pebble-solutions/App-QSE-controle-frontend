@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="p-2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex justify-content-between align-items-center my-4">
                 <div class="fw-bold">Habilitation ASP</div>
                 <div>{{ dd }} - {{ df }}</div>
             </div>
             <ProgressBar :dd="dd" :df="df" />
-            <div class="d-flex justify-content-start my-3 ">
+            <div class="d-flex justify-content-start my-4 ">
                 <span class="badge bg-success me-1">S</span>
                 <span class="badge bg-success me-1">S</span>
                 <span class="badge bg-primary me-1">A</span>
