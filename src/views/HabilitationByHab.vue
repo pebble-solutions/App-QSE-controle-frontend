@@ -1,36 +1,15 @@
 <template>
     
     <div class="container py-2 px-2">
-        <!-- <spinner v-if="pending.habilitation"></spinner> -->
         <template v-if="findVeilleConfig">
             <h2 class="mb-3">
                 <span class="me-3 fw-lighter"># {{ findVeilleConfig.id }} </span>
                 Veille {{ filterhabilitationType}}
             </h2>
-            
             <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
-            <div v-if="listCollecte.length">{{ collecte }}</div>
-            
-            <!-- <h3  class="my-3">Personnels habilités:</h3> -->
-                
-                <!-- <div class="list-group" >
-                    <div class="list-group-item" v-for="carac in listPersonnelHabilite" :key="carac.id">
-
-                        <div class="d-flex justify-content-between">
-                            <span  class="me-2">{{ returnName(carac.personnel_id) }} {{ carac.personnel_id }}</span>
-                            
-                            <span class="me-2">échéance le   {{ changeFormatDateLit(carac.df)}}</span>
-                        </div>
-                        <progress-bar
-                        :dd="new Date(carac.dd)"
-                        :df="new Date(carac.df)"
-                        ></progress-bar>
-                    </div>
-                </div> -->
-                
-            </template>
-            <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de veille configurée pour cette habilitation </alert-message>
-            <router-view></router-view>
+        </template>
+        <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de veille configurée pour cette habilitation </alert-message>
+        <router-view></router-view>
     </div>
 </template>
 <script>
@@ -66,20 +45,20 @@ export default {
          * et retourne le nom de l'habilitation
          */
         filterhabilitationType() {
-            let habilitationTypeId = this.habilitationType.find((e) => e.id  == this.$route.params.id);
-            return habilitationTypeId.nom
+            let habilitationType = this.habilitationType.find((e) => e.id  == this.$route.params.id);
+            return habilitationType.nom
         },
 
         /**
          * parcourt la list des configuraton de veille et retourne celle correspondant à  l'id de la route
          */
         findVeilleConfig() {
-            let veilleConfigId = this.veilleConfig.find((v) => v.objet_id  == this.$route.params.id);
-            return veilleConfigId
+            let veilleConfig = this.veilleConfig.find((v) => v.objet_id  == this.$route.params.id);
+            return veilleConfig
         },
         returnFormulaireId(){
-            let formulaireId = this.veilleConfig.find((f) => f.objet_id == this.$route.params.id);
-            return formulaireId.formulaire_id
+            let formulaire = this.veilleConfig.find((f) => f.objet_id == this.$route.params.id);
+            return formulaire.formulaire_id
 
         }
 
