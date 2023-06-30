@@ -12,8 +12,8 @@
             </button>
 
             <button class="btn btn-primary" @click.prevent="check()" >
-                <i class="bi bi-save me-2"></i>
-                Vérifier
+                <span v-if="pending.validation">pending</span>
+                <span v-else><i class="bi bi-save me-2"></i>Vérifier</span>
             </button>
         </div>
     </FooterToolbar>
