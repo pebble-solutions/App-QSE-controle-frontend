@@ -51,7 +51,7 @@
             direction="following"
             v-if="collecte.following_id" />
 
-        <TimelineProgElement :collecte="collecte" v-else-if="this.$route.fullPath.match(/consultation/)"/>
+        <TimelineProgElement :collecte="collecte" v-else-if="this.$route.fullPath.match(/consultation/) && this.collecte.locked"/>
         <div v-else></div>
     </div>
     
