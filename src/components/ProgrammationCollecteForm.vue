@@ -11,7 +11,6 @@
                     Aucune habilitation n'est liée à ce type de contrôle. Les fonctions de veille 
                     ne seront pas disponibles.
                 </div>
-                
             </div>
         </div>
 

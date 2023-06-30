@@ -1,10 +1,10 @@
 <template>
-
     <div class="accordion-item" v-if="inited">
 
         <h3 class="accordion-header" :id="headerId">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#'+bodyId" aria-expanded="true" :aria-controls="bodyId">
-                <span>{{question.ligne}}</span>
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#' + bodyId"
+                aria-expanded="true" :aria-controls="bodyId">
+                <span>{{ question.ligne }}</span>
                 <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
 
                 <FormModuleSAMIHeader :value="value" v-if="question.type == 'sami'" />
@@ -17,30 +17,24 @@
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
 
                 <FormModuleSAMI :question="question" v-model:value="value" v-if="question.type == 'sami'" />
-                <form-module-text :question="question" v-model:value="value" v-else-if="['text', 'textarea'].includes(question.type)" />
-                <form-module-number :question="question" v-model:value="value" v-else-if="['integer', 'float'].includes(question.type)" />
-                <form-module-date :question="question" v-model:value="value" v-else-if="['date', 'datetime'].includes(question.type)" />
+                <form-module-text :question="question" v-model:value="value"
+                    v-else-if="['text', 'textarea'].includes(question.type)" />
+                <form-module-number :question="question" v-model:value="value"
+                    v-else-if="['integer', 'float'].includes(question.type)" />
+                <form-module-date :question="question" v-model:value="value"
+                    v-else-if="['date', 'datetime'].includes(question.type)" />
                 <FormModuleNone v-else />
 
-                <textarea rows="3" class="form-control mt-3"  placeholder="Votre commentaire" v-model="commentaire" v-if="acceptComment"></textarea>
+                <textarea rows="3" class="form-control mt-3" placeholder="Votre commentaire" v-model="commentaire"
+                    v-if="acceptComment"></textarea>
 
-                <dropzone-comp 
-                    :dropzoneId="dzId" 
-                    :toolbar="['open']" 
-                    :params="dzParams" 
-                    :url="dzUrl" 
-                    :documents="itemResponse.documents" 
-                    
-                    @upload-success="addDocument($event)"
-                    @removed-document="removeDocument($event)"
-
-                    v-if="inited"
-                    />
+                <dropzone-comp :dropzoneId="dzId" :toolbar="['open']" :params="dzParams" :url="dzUrl"
+                    :documents="itemResponse.documents" @upload-success="addDocument($event)"
+                    @removed-document="removeDocument($event)" v-if="inited" />
 
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -71,7 +65,8 @@ export default {
             },
             value: null,
             commentaire: '',
-            inited: false
+            inited: false,
+            formModified: false
         }
     },
 
@@ -90,6 +85,7 @@ export default {
          */
         value(val) {
             this.refreshValue(val);
+            this.formModified = true;
         }
     },
 
@@ -136,7 +132,7 @@ export default {
          * @return {string}
          */
         dzUrl() {
-            return this.$app.licence.apiBaseURL+'data/POST/collecte/'+this.collecte.id+'/file';
+            return this.$app.licence.apiBaseURL + 'data/POST/collecte/' + this.collecte.id + '/file';
         },
 
         /**
@@ -186,7 +182,7 @@ export default {
          */
         initValues() {
             this.inited = false;
-            
+
             const response = this.responses.find(e => e.question == this.question.id);
 
             let val = response ? response.reponse : null;
@@ -197,7 +193,7 @@ export default {
             if (this.question.type === 'integer') {
                 val = parseInt(val);
             }
-            
+
             this.itemResponse = {
                 question: this.question.id,
                 reponse: response ? val : null,
@@ -233,11 +229,25 @@ export default {
                 this.itemResponse.documents.splice(index, 1);
                 this.refreshResponse(this.itemResponse);
             }
+        },
+
+        confirmExit(event) {
+            console.log(event);
+            if (this.formModified) {
+                window.confirm("Les informations n'ont pas été enregistrées, confirmez-vous quitter ?");
+            }
         }
     },
 
     mounted() {
         this.initValues();
+        console.log("truc");
+        window.addEventListener("locationchange", (event) => {
+            console.log("oui", event);
+        });
+    },
+    beforeUnmount() {
+        window.removeEventListener("hashchange", this.confirmExit);
     },
 
     components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate }
