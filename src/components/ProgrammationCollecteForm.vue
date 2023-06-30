@@ -1,4 +1,5 @@
 <template>
+
     <div v-if="tmpCollecte">
         <div class="row g-2">
             <div v-if="!veille" class="col mb-3">
@@ -33,6 +34,7 @@
                 <label for="collecteCible" class="form-label">Opérateur </label>
                 <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.personnels">
                     <option v-for="(agent) in sortedOperateurs" :value="agent.id" :key="'agent-'+agent.id"> {{agent.cache_nom}} </option>
+
                 </select>
                 <div class="text-secondary py-1" v-else>
                     <span class="spinner-border spinner-border-sm"></span>
@@ -293,6 +295,7 @@ export default {
     mounted() {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
         this.formulaire = this.tmpCollecte.formulaire;
+        this.cible_personnel = this.tmpCollecte.cible_personnel
         
         
         
