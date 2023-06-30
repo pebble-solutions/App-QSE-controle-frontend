@@ -197,7 +197,7 @@ export default {
                             await personnelsCollection.load({
                                 id: control.personnel_ids.join(',')
                             });
-                            this.controleurs = personnelsCollection.collection.filter(e => control.personnel_ids.includes(e.id));
+                            this.controleurs = personnelsCollection.getCollection().filter(e => control.personnel_ids.includes(e.id));
                             this.veilleControleurs = true
                         }
                         else {
