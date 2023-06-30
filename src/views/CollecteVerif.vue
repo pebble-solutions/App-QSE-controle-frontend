@@ -34,9 +34,9 @@
                         <i class="bi bi-box-arrow-left me-2"></i>
                         Modifier
                     </button>
-                    <button class="btn btn-success btn-lg" @click.prevent="validate()" >
-                        <i class="bi bi-check-square me-2"></i>
-                        Clôturer
+                    <button class="btn" :class="classFromSAMI(collecte.result)"  @click.prevent="validate()" >
+                        <Spinner v-if="pending.validation"></Spinner>
+                        <span v-else><i class="bi bi-check-square me-2"></i>Clôturer</span>
                     </button>
                 </div>
             </FooterToolbar>
