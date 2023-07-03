@@ -66,7 +66,8 @@ export default {
             value: null,
             commentaire: '',
             inited: false,
-            formModified: false
+            formModified: false,
+            allowedRoutes: ['/collecte/3/bloc/1', '/collecte/3/bloc/2']
         }
     },
 
@@ -231,23 +232,24 @@ export default {
             }
         },
 
-        confirmExit(event) {
-            console.log(event);
+        confirmExit() {
             if (this.formModified) {
-                window.confirm("Les informations n'ont pas été enregistrées, confirmez-vous quitter ?");
+                this.$router.beforeEach((to, from) => {
+                    console.log(from);
+                    if (!this.allowedRoutes.includes(to)) {
+                        window.confirm("Les informations n'ont pas été enregistrées, confirmez-vous quitter ?");
+                    }
+                });
             }
         }
     },
 
     mounted() {
         this.initValues();
-        console.log("truc");
-        window.addEventListener("locationchange", (event) => {
-            console.log("oui", event);
-        });
+        window.addEventListener("hashchange", this.confirmExit());
     },
     beforeUnmount() {
-        window.removeEventListener("hashchange", this.confirmExit);
+        window.removeEventListener("hashchange", this.confirmExit());
     },
 
     components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate }

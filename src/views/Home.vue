@@ -43,7 +43,6 @@
 <script>
 
 import { mapActions, mapState } from 'vuex';
-import Charts from '../components/Charts.vue';
 
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import UserImage from '../components/pebble-ui/UserImage.vue';
@@ -84,7 +83,7 @@ export default {
 		}
 	},
 
-	components: {Charts, AlertMessage, UserImage},
+	components: {AlertMessage, UserImage},
 
 	methods: {
 		...mapActions(['refreshStat']),
