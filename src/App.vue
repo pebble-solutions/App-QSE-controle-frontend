@@ -246,6 +246,13 @@ export default {
 					key: 'habilitation',
 					href: '/operateur'
 				},
+				{
+					label: 'Tableau de bord',
+					icon: 'bi bi-menu-button-wide',
+					key: 'tableau',
+					href: '/ControllerBoard'
+				},
+
 
 			],
 			searchOptions: {

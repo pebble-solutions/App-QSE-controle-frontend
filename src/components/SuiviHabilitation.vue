@@ -5,32 +5,30 @@
                 <div class="fw-bold">Habilitation ASP</div>
                 <div>{{ dd }} - {{ df }}</div>
             </div>
+
             <ProgressBar :dd="dd" :df="df" />
-            <div class="d-flex justify-content-start my-4 ">
-                <span class="badge bg-success me-1">S</span>
-                <span class="badge bg-success me-1">S</span>
-                <span class="badge bg-primary me-1">A</span>
-                <span class="badge bg-warning me-1">M</span>
-                <span class="badge bg-warning me-1">M</span>
-                <span class="badge bg-warning me-1">M</span>
-                <span class="badge bg-primary me-1">A</span>
-                <span class="badge bg-success me-1">S</span>
-            </div>
+            <ProgressBar :dd="ddveille" :df="dfveille" />
+            <GroupResult></GroupResult>
+            
         </div>
     </div>
 </template>
 
 <script>
 import ProgressBar from './ProgressBar.vue';
+import GroupResult from './GroupResult.vue';
 export default {
     components: {
-        ProgressBar
+        ProgressBar,
+        GroupResult,
     },
 
     data() {
         return {
             dd: '2022-02-23',
-            df: '2024-05-23'
+            df: '2024-05-23',
+            ddveille: '2022-02-23',
+            dfveille: '2022-08-23',
         }
     }
 }
