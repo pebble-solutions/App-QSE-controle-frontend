@@ -48,7 +48,7 @@
                             Programmer un bouclage
                         </a>
                     </router-link>
-                    <router-link :to="'/collecte'" custom v-slot="{ navigate, href }"> 
+                    <router-link :to="'/collecte/'+collecte.id" custom v-slot="{ navigate, href }"> 
                         <a class="btn btn-info" :href="href" @click="navigate">
                             <i class="bi bi-plus-square me-2"></i>
                             retour à la liste

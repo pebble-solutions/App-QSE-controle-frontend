@@ -1,7 +1,8 @@
 <template>
     
     <div>
-        <ControlResultForm :stats="stats" @update="updateItem($event)"></ControlResultForm>
+        <Spinner v-if="pending.validation"></Spinner>
+        <ControlResultForm :stats="stats" @update="updateItem($event)" v-else></ControlResultForm>
     </div>
 
     <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
