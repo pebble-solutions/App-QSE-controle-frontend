@@ -17,7 +17,7 @@
         "href": null
     },
     "cfgSlots": {
-        "menu": true,
+        "menu": false,
         "list": true,
         "core": true,
         "header": true,

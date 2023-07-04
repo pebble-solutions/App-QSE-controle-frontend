@@ -1,7 +1,9 @@
 <template>
+
     <div v-if="tmpCollecte">
         <div class="row g-2">
             <div v-if="!veille" class="col mb-3">
+                
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
                 <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="formulaire" required :disabled="isReadonly('formulaire')">
                     <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>
@@ -27,10 +29,12 @@
             <input type="date" class="form-control" id="collecteDate" name="date" v-model="tmpCollecte.date" :disabled="isReadonly('date')">
         </div>
         <div class="row g-2">
+           
             <div class="col-12 col-md-6 mb-3">
                 <label for="collecteCible" class="form-label">Opérateur </label>
-                <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.habilitations">
+                <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.personnels">
                     <option v-for="(agent) in sortedOperateurs" :value="agent.id" :key="'agent-'+agent.id"> {{agent.cache_nom}} </option>
+
                 </select>
                 <div class="text-secondary py-1" v-else>
                     <span class="spinner-border spinner-border-sm"></span>
@@ -195,7 +199,7 @@ export default {
                             await personnelsCollection.load({
                                 id: control.personnel_ids.join(',')
                             });
-                            this.controleurs = personnelsCollection.collection.filter(e => control.personnel_ids.includes(e.id));
+                            this.controleurs = personnelsCollection.getCollection().filter(e => control.personnel_ids.includes(e.id));
                             this.veilleControleurs = true
                         }
                         else {
@@ -291,6 +295,7 @@ export default {
     mounted() {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
         this.formulaire = this.tmpCollecte.formulaire;
+        this.cible_personnel = this.tmpCollecte.cible_personnel
         
         
         

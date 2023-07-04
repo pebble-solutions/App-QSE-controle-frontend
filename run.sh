@@ -12,5 +12,5 @@ if [ -n "$container_id" ]; then
     container_name="$container_name$nb"
 fi
 
-docker run --name "$container_name" --rm -it -w /app -v "$PWD:/app" node:19-alpine sh -c "yarn install && yarn run serve --port 80"
+docker run --name "$container_name" --rm -it -w /app -v "$PWD:/app" node:19 sh -c "npm install && npm run serve -- --port 80"
 
