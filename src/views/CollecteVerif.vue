@@ -43,13 +43,13 @@
             <FooterToolbar v-else wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
                 <div class="d-flex justify-content-between align-items-center" v-if="!collecte.following_id">
                     <router-link :to="'/collecte/'+this.$route.params.id+'/collecte-verif/next'" custom v-slot="{ navigate, href }"> 
-                        <a class="btn btn-primary" :href="href" @click="navigate">
+                        <a class="btn btn-secondary" :href="href" @click="navigate">
                             <i class="bi bi-plus-square me-2"></i>
                             Programmer un bouclage
                         </a>
                     </router-link>
                     <router-link :to="'/collecte'" custom v-slot="{ navigate, href }"> 
-                        <a class="btn btn-secondary" :href="href" @click="navigate">
+                        <a class="btn btn-info" :href="href" @click="navigate">
                             <i class="bi bi-plus-square me-2"></i>
                             retour à la liste
                         </a>
