@@ -185,7 +185,7 @@ import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
-import { AssetsCollectionController } from './js/app/controllers/AssetsCollectionController'
+import { AssetsCollection } from './js/app/services/AssetsCollection'
 import {ROUTES_NAMES} from './js/route';
 // import SearchHab from './components/menu/SearchHab.vue'
 
@@ -467,7 +467,7 @@ export default {
 				let collection = this.$assets.getCollection('personnels');
 				collection.reset();
 			} catch {
-				let collection = new AssetsCollectionController(this, {
+				let collection = new AssetsCollection(this, {
 					assetName: 'personnels',
 					updateAction: 'updatePersonnels',
 					resetAction: 'resetPersonnels',
@@ -597,7 +597,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, //,  , SearchHab 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone,}, //,  , SearchHab 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
