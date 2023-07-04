@@ -1,17 +1,7 @@
 <template>
-
-	<div class="d-flex justify-content-start my-4">
-		<span class="badge me-1"  v-for="result in results" :key="result">{{result.result}}</span>
-	</div>
-	<div class="d-flex justify-content-start my-4 ">
-		
-		<span class="badge text-bg-success me-1">S</span>
-		<span class="badge bg-primary me-1">A</span>
-		<span class="badge bg-warning me-1">M</span>
-		<span class="badge bg-warning me-1">M</span>
-		<span class="badge bg-warning me-1">M</span>
-		<span class="badge bg-primary me-1">A</span>
-		<span class="badge bg-success me-1">S</span>
+	<div class="d-flex justify-content-start my-2">
+		<span v-for="result in results" :key="result" :class="['badge', getBadgeClass(result.result), 'me-2']">{{
+			result.result }}</span>
 	</div>
 </template>
 
@@ -25,7 +15,6 @@ export default {
 					label: 'Satisfaisant',
 					color: 'success',
 				},
-			
 				2: {
 					result: 'S',
 					label: 'Satisfaisant',
@@ -41,14 +30,24 @@ export default {
 					label: 'Insuffisant',
 					color: 'danger',
 				},
+			},
+		};
+	},
+	methods: {
+		getBadgeClass(result) {
+			switch (result) {
+				case 'A':
+					return 'bg-success text-light';
+				case 'S':
+					return 'bg-success text-light';
+				case 'M':
+					return 'bg-warning text-dark';
+				case 'I':
+					return 'bg-danger text-light';
+				default:
+					return 'bg-secondary text-light';
 			}
-		}
-
-	}
-}
-
-
-
-
-
+		},
+	},
+};
 </script>

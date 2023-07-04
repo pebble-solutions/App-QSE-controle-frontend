@@ -1,9 +1,11 @@
 <template>
     <div>
-        <div id="map-container" style="position: relative;">
-            <img src="../assets/Map-FranceCustom.png" style="width: 100%; height: auto;">
-            <div class="dot" :style="{ left: `${longitude}%`, top: `${latitude}%` }"></div>
-        </div>
+    <div id="map-container" style="position: relative; display: flex; justify-content: flex-end; width: 80%;">
+    <div id="map">
+    <img src="../assets/Map-FranceCustom.png" style="width: 100%; height: auto;">
+    <div class="dot" :style="{ left: `${longitude}%`, top: `${latitude}%` }"></div>
+    </div>
+    </div>
     </div>
 
 <!-- POSITION en pourcentage pour debug

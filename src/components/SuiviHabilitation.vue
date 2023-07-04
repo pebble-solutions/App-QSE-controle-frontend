@@ -1,13 +1,18 @@
 <template>
     <div>
-        <div class="p-2">
-            <div class="d-flex justify-content-between align-items-center my-4">
-                <div class="fw-bold">Habilitation ASP</div>
+        <div >
+            <div class="d-flex justify-content-between align-items-center my-1">
+                <div class="fw-bold">Habilitation ASP (3 ans)</div>
                 <div>{{ dd }} - {{ df }}</div>
+                
             </div>
-
             <ProgressBar :dd="dd" :df="df" />
-            <ProgressBar :dd="ddveille" :df="dfveille" />
+            <div class="d-flex justify-content-between align-items-center my-1">
+                <div class="fw-bold">Habilitation VEILLE (6 mois)</div>
+                <div>{{ ddveille }} - {{ dfveille }}</div>
+                 
+            </div>
+             <ProgressBar :dd="ddveille" :df="dfveille" /> 
             <GroupResult></GroupResult>
             
         </div>
@@ -27,8 +32,8 @@ export default {
         return {
             dd: '2022-02-23',
             df: '2024-05-23',
-            ddveille: '2022-02-23',
-            dfveille: '2022-08-23',
+            ddveille: '2023-02-23',
+            dfveille: '2023-08-23',
         }
     }
 }
