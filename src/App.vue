@@ -20,7 +20,7 @@
 		<template v-slot:menu>
 			<AppMenu>
 				<AppMenuItem href="/programmation" look="dark" icon="bi bi-calendar-event-fill">Programmation</AppMenuItem>
-				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
+				<AppMenuItem href="/statistiques" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
 				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille par habilitations</AppMenuItem>
@@ -218,7 +218,7 @@ export default {
 					label: 'Statistiques',
 					icon: 'bi bi-bar-chart-line-fill',
 					key: 'stats',
-					href: '/'
+					href: '/statistiques'
 				},
 				{
 					label: 'Contrôle',

@@ -8,37 +8,42 @@ const routes = [
     component: Home
   },
   {
+    path: '/statistiques',
+    name: 'Statistiques',
+    component: () => import('../views/Statistiques.vue')
+  },
+  {
     path: '/programmation',
     name: 'Programmation',
     component: () => import(/* webpackChunkName: "about" */ '../views/Programmation.vue'),
     children: [
-        {
-          path:'new',
-          name: 'NewCollecte',
-          component: () => import(/* webpackChunkName: "about" */ '../views/CollecteNew.vue')
-        }
+      {
+        path: 'new',
+        name: 'NewCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/CollecteNew.vue')
+      }
     ]
   },
   {
-    path:'/programmation/:id',
+    path: '/programmation/:id',
     name: 'CollectesByType',
     component: () => import(/* webpackChunkName: "about" */ '../views/ProgrammationCollectes.vue'),
     children: [
-        {
-          path:':idCollecte/edit',
-          name: 'EditCollecte',
-          component: () => import(/* webpackChunkName: "about" */ '../views/CollecteEdit.vue')
-        }
+      {
+        path: ':idCollecte/edit',
+        name: 'EditCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/CollecteEdit.vue')
+      }
     ]
   },
 
   {
     path: '/collecte',
-    name: 'collecte', 
+    name: 'collecte',
     component: () => import(/* webpackChunkName: "about" */ '../views/Collecte.vue'),
     children: [
       {
-        path:'new',
+        path: 'new',
         name: 'UnexpectedCollecte',
         component: () => import(/* webpackChunkName: "about" */ '../views/CollecteNewUnexpected.vue')
       }
@@ -46,8 +51,8 @@ const routes = [
   },
 
   {
-    path:'/collecte/:id',
-    name:'collecteKN',
+    path: '/collecte/:id',
+    name: 'collecteKN',
     component: () => import(/* webpackChunkName: "about" */ '../views/CollecteKN.vue'),
     children: [
       {
@@ -56,7 +61,7 @@ const routes = [
         component: () => import('../views/Bloc.vue')
       },
       {
-        path:'collecte-end',
+        path: 'collecte-end',
         name: 'CollectKnEnd',
         component: () => import('../views/CollecteKNEnd.vue'),
         // children: [
@@ -68,12 +73,12 @@ const routes = [
         // ],
       },
       {
-        path:'collecte-verif',
+        path: 'collecte-verif',
         name: 'CollecteVerif',
         component: () => import('../views/CollecteVerif.vue'),
         children: [
           {
-            path:'next',
+            path: 'next',
             name: 'CollecteNext',
             component: () => import('../views/CollecteNext.vue')
           },
@@ -95,7 +100,7 @@ const routes = [
     component: () => import("../views/ConsultationCollecte.vue"),
     children: [
       {
-        path:'new',
+        path: 'new',
         name: 'newCollecte',
         component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteNew.vue')
       }
@@ -108,37 +113,37 @@ const routes = [
     component: () => import("../views/ConsultationProjet.vue"),
   },
   {
-  path:'/consultation/projet/:idProjet',
-  name: 'consultationProjetList',
-  component: () => import("../views/ConsultationProjetList.vue"),
+    path: '/consultation/projet/:idProjet',
+    name: 'consultationProjetList',
+    component: () => import("../views/ConsultationProjetList.vue"),
 
-      children: [
-        {
-          path:':idCollecte',
-          name: 'consultationProjetCollecte',
-          component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationProjetCollecte.vue')
-        }
-      ]
+    children: [
+      {
+        path: ':idCollecte',
+        name: 'consultationProjetCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationProjetCollecte.vue')
+      }
+    ]
 
   },
-  
+
   {
     path: '/consultation/formulaire',
     name: 'consultationForm',
     component: () => import("../views/ConsultationForm.vue"),
   },
   {
-    path:'/consultation/formulaire/:idFormulaire',
+    path: '/consultation/formulaire/:idFormulaire',
     name: 'consultationFormList',
     component: () => import("../views/ConsultationFormList.vue"),
-    
-      children: [
-        {
-          path:':idCollecte',
-          name: 'consultationFormCollecte',
-          component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationFormCollecte.vue')
-        }
-      ]
+
+    children: [
+      {
+        path: ':idCollecte',
+        name: 'consultationFormCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationFormCollecte.vue')
+      }
+    ]
 
   },
   {
@@ -147,40 +152,40 @@ const routes = [
     component: () => import("../views/Habilitation.vue"),
   },
   {
-    path:'/habilitationHab/:id',
+    path: '/habilitationHab/:id',
     name: 'habilitationByHab',
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByHab.vue'),
     children: [
       {
-        path:'new/:idHab/:idForm/:idOperateur:',
+        path: 'new/:idHab/:idForm/:idOperateur:',
         name: 'NewCollecteVeille',
         component: () => import(/* webpackChunkName: "about" */ '../views/VeilleCollecteNew.vue')
       }
     ]
   },
   {
-    path:'/habilitation/Habilitation',
+    path: '/habilitation/Habilitation',
     name: 'HabilitationHabilitation',
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationHabilitation.vue')
   },
-  
+
   {
     path: '/operateur',
     name: 'Operateur',
     component: () => import("../views/Operateur.vue"),
   },
   {
-    path:'/operateur/:id',
+    path: '/operateur/:id',
     name: 'habilitationByAgent',
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
     children: [
       {
-        path:':idHab',
+        path: ':idHab',
         name: 'ControlHistory',
         component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
         children: [
           {
-            path:':idCollecte',
+            path: ':idCollecte',
             name: 'ControlView',
             component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
           }
@@ -189,11 +194,11 @@ const routes = [
     ]
   },
   {
-    path:'/habilitation/Agent',
+    path: '/habilitation/Agent',
     name: 'HabilitationAgent',
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationAgent.vue')
   },
-  
+
 
 
 
