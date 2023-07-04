@@ -179,6 +179,12 @@ const routes = [
     path:'/habilitation/idHabilitation',
     name: 'HabilitationHabilitation',
     component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationHabilitation.vue')
+  },
+
+  {
+    path:'/echeancier',
+    name: 'Echeancier',
+    component: () => import(/* webpackChunkName: "about" */ '../views/VeilleHabilitations.vue')
   }
 
 ]

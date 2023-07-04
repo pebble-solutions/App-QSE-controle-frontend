@@ -24,6 +24,7 @@
 				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
 				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
 				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille</AppMenuItem>
+				<AppMenuItem href="/echeancier" look="dark" icon="bi bi-calendar2-check-fill">Echéancier</AppMenuItem>
 
 			</AppMenu>
 		</template>
@@ -133,6 +134,10 @@
 						</div>
 			</AppMenu>
 
+			<AppMenu v-else-if="listMode === 'echeancier'">
+				<FormEcheancier/>
+			</AppMenu>
+
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
@@ -163,6 +168,7 @@ import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapActions, mapState } from 'vuex'
 import CONFIG from "@/config.json"
 import FormStats from './components/FormStats.vue'
+import FormEcheancier from './components/FormEcheancier.vue'
 import CollecteItem from './components/CollecteItem.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
@@ -276,7 +282,9 @@ export default {
 			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent','NewCollecteVeille'].includes(this.$route.name)) {
 				return 'habilitation'
 			}
-			else if (['Home'].includes(this.$route.name)) {
+			else if(['Echeancier'].includes(this.$route.name)){
+				return 'echeancier';
+			}else if (['Home'].includes(this.$route.name)) {
 				return 'home';
 			}
 			return null;
@@ -568,7 +576,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, //,  , SearchHab 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, //,  , SearchHab 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
