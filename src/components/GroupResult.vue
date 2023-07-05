@@ -11,15 +11,17 @@ export default {
 		return {
 			results: {
 				1: {
-					result: 'A',
-					label: 'Satisfaisant',
-					color: 'success',
-				},
-				2: {
 					result: 'S',
 					label: 'Satisfaisant',
 					color: 'success',
 				},
+				
+				2: {
+					result: 'A',
+					label: 'Satisfaisant',
+					color: 'primary',
+				},
+				
 				3: {
 					result: 'M',
 					label: 'Moyen',
@@ -36,10 +38,10 @@ export default {
 	methods: {
 		getBadgeClass(result) {
 			switch (result) {
-				case 'A':
-					return 'bg-success text-light';
 				case 'S':
 					return 'bg-success text-light';
+				case 'A':
+					return 'bg-primary text-light';
 				case 'M':
 					return 'bg-warning text-dark';
 				case 'I':
