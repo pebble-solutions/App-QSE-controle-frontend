@@ -6,31 +6,24 @@
 
 
 		<div class="col-12 col-lg-6 mb-3 mb-lg-0 d-flex flex-column justify-content-between">
-  <div class="row my-auto gx-lg-5 align-items-center">
-    <div class="col-12">
-      <div class="rounded shadow-sm d-flex bg-white align-items-center p-2">
-        <div style="height: calc(3em + 1rem); width: 70px; margin-right: 7px;">
-          <img src="../assets/profilePicture.webp" class="rounded" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <div>
-          <div>
-            <div class="fw-bold">Zhatar LAFOUTAH</div>
-            <div>0675543451</div>
-            <div>zhatar@fer-expert.fr</div>
-          </div>
-        </div>
-      </div>
-    </div>
+			<div class="row my-auto gx-lg-5 align-items-center">
 
-    <div class="my-auto">
-      <SuiviHabilitation></SuiviHabilitation>
-    </div>
-  </div>
+				<RouterLink to="agent" v-slot="{ navigate, href }" custom>
+					<a :href="href" @click="navigate" class="router-link text-decoration-none text-dark">
+						<MiniInfosAgent></MiniInfosAgent>
+					</a>
+				</RouterLink>
 
-  <div class="text-center mt-2 d-none d-lg-block">
-    <button class="btn w-100 mb-sm-3 my-md-3" style="background-color: #F78C6B; color: white;">Controller</button>
-  </div>
-</div>
+				<div class="my-auto">
+					<SuiviHabilitation></SuiviHabilitation>
+				</div>
+			</div>
+
+			<div class="text-center mt-2 d-none d-lg-block">
+				<button class="btn w-100 mb-sm-3 my-md-3"
+					style="background-color: #F78C6B; color: white;">Controller</button>
+			</div>
+		</div>
 
 
 		<div class="col-12 col-lg-6 p-0 p-sm-0">
@@ -69,11 +62,13 @@
 <script>
 import SuiviHabilitation from '../components/SuiviHabilitation.vue';
 import InteractiveMap from '../components/InteractiveMap.vue';
+import MiniInfosAgent from '../components/MiniInfosAgent.vue';
 
 export default {
 	components: {
 		SuiviHabilitation,
 		InteractiveMap,
+		MiniInfosAgent,
 	},
 };
 </script>

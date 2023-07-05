@@ -1,11 +1,5 @@
 <template>
 	<div>
-		<div>
-			<RouterLink to="agent" v-slot="{navigate,href}" custom>
-				<a :href="href" @click="navigate" class="btn btn-primary">Voir les agents</a>
-			</RouterLink>
-		</div>
-
 		<div class="container py-2">
 			<template v-if="!stats">
 				<h1 class="fs-3 my-3 text-center">Tableau de bord</h1>
