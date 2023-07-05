@@ -199,8 +199,18 @@ const routes = [
   {
     path:'/controllerBoard',
     name: 'ControllerBoard',
-    component: () => import(/* webpackChunkName: "about" */ '../views/ControllerBoard.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/ControllerBoard.vue'),
+
+    children: [
+      {
+        path:'/agent',
+        name: 'InfosAgent',
+        component: () => import(/* webpackChunkName: "about" */ '../views/InfosAgent.vue')
+      }
+    ]
+    
   },
+
   
 
 

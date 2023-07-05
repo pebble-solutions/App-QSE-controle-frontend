@@ -3,13 +3,13 @@
         <div >
             <div class="d-flex justify-content-between align-items-center my-1">
                 <div class="fw-bold">Habilitation ASP (3 ans)</div>
-                <div>{{ dd }} - {{ df }}</div>
+                <div>{{ dd }} / {{ df }}</div>
                 
             </div>
             <ProgressBar :dd="dd" :df="df" />
             <div class="d-flex justify-content-between align-items-center my-1">
                 <div class="fw-bold">Habilitation VEILLE (6 mois)</div>
-                <div>{{ ddveille }} - {{ dfveille }}</div>
+                <div>{{ ddveille }} / {{ dfveille }}</div>
                  
             </div>
              <ProgressBar :dd="ddveille" :df="dfveille" /> 

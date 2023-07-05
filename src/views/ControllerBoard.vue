@@ -1,5 +1,11 @@
 <template>
 	<div>
+		<div>
+			<RouterLink to="agent" v-slot="{navigate,href}" custom>
+				<a :href="href" @click="navigate" class="btn btn-primary">Voir les agents</a>
+			</RouterLink>
+		</div>
+
 		<div class="container py-2">
 			<template v-if="!stats">
 				<h1 class="fs-3 my-3 text-center">Tableau de bord</h1>
@@ -38,12 +44,12 @@
 						</div>
 					</div>
 					<CarteDeControle></CarteDeControle>
-					<CarteDeControle></CarteDeControle>
-					<CarteDeControle></CarteDeControle>
 				</div>
 			</div>
-		</div>
-</div></template>
+		</div><RouterView></RouterView>
+</div>
+
+</template>
 
 <script>
 	import { mapActions, mapState } from 'vuex';
@@ -52,6 +58,8 @@
 	import UserImage from '../components/pebble-ui/UserImage.vue';
 	import { dateFormat } from '../js/collecte';
 	import CarteDeControle from '../components/CarteDeControle.vue';
+	
+
 
 	export default {
 		data() {
