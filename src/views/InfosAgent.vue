@@ -1,7 +1,7 @@
 <template>
     <div>
-        <AppModal>
-        LA voila ma modaaaaaaale    
+        <AppModal @modal-hide="routeToParent()">
+            LA voila ma modaaaaaaale
         </AppModal>
 
     </div>
@@ -13,8 +13,18 @@ export default {
     components: {
         AppModal,
     },
+
+
+    methods: {
+
+        /**
+         * Retourne à la vue précédente
+         */
+        routeToParent() {
+            this.$router.push({ name: 'ControllerBoard' },);
+
+        }
+
+    },
 }
-
-
-
 </script>
