@@ -1,6 +1,9 @@
 <template>
+    <div v-if="pending.bloc">
+        <spinner></spinner>
+    </div>
 
-    <div class="card my-3" v-if="bloc">
+    <div class="card my-3" v-else-if="bloc">
         <div  class="card-header">
             <div class="d-flex justify-content-between">
                 <h2 class="card-title">{{ bloc.bloc }}</h2>
@@ -13,14 +16,8 @@
                 Questions :  {{nbAnswers}} / {{lignes?.length}}
             </div>
         </div>
-        
-
         <form-section :questions="lignes" :collecte="collecte" />
-        
-        
-        
     </div>
-
     <div v-else>
         <spinner></spinner>
     </div>

@@ -15,7 +15,7 @@ export default {
 
     data() {
         return {
-            read : ['formulaire', 'cible_personnel']
+            read : ['formulaire','cible_personnel']
         }
     },
 
@@ -30,11 +30,13 @@ export default {
             let newCollecte = {
                 formulaire: this.collecte.information__groupe_id,
                 projet_id: this.collecte.projet_id,
-                date:this.collecte.date,
+                date:'',
                 cible_personnel: this.collecte.cible_personnel,
                 enqueteur_personnel: this.collecte.enqueteur_personnel,
                 previous_id: this.collecte.id,
                 previous_result: this.collecte.result_var,
+                tlc: this.collecte.tlc,
+                tli: this.collecte.tli
             };
 
             return newCollecte;
@@ -48,8 +50,8 @@ export default {
          * @param {object} //collecte
          */
         routeToFormulaire(collecte) {
-      
-                this.$router.push("/consultation/"+collecte.previous_id);
+            this.$router.push("/consultation/"+collecte.id);
+            alert('vous avez crée le controle'+collecte.id)
         },
     },
 

@@ -41,7 +41,7 @@ export default {
             let nextCollecte = {
                 formulaire: collecte.formulaire,
                 projet_id: collecte.projet_id,
-                date: now,
+                date: '',
                 cible_personnel: collecte.cible_personnel,
                 enqueteur_personnel: collecte.enqueteur_personnel,
                 previous_id: collecte.id,
