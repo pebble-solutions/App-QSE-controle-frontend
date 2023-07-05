@@ -150,22 +150,7 @@ export default {
         },
 
 
-        classFromSAMI(){
-            if(this.collecte.result_var == 'S') {
-                return 'text-light bg-success'
-            }
-            else if(this.collecte.result_var =='A') {
-                return 'text-light bg-primary'
-            }
-            else if(this.collecte.result_var == 'M') {
-                return 'text-light bg-warning'
-            }
-            else if(this.collecte.result_var == 'I') {
-                return 'text-light bg-danger'
-            }
-            else return 'bg-secondary'
-        },
-
+      
       
     },
     
