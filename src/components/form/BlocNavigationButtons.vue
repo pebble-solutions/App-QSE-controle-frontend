@@ -12,7 +12,7 @@
             <i v-else class="bi bi-box-arrow-right ms-2"></i>
         </button>
 
-        <button v-else class="btn btn-primary ms-auto" @click.prevent="navigate('end')" :disabled="pending.bloc">
+        <button v-else class="btn btn-info ms-auto" @click.prevent="navigate('end')" :disabled="pending.bloc">
             <span v-if="pending.bloc" class="spinner-border spinner-border-sm" role="status"></span>
             <i v-else class="bi bi-file-earmark-text me-2"></i>
             Finaliser
