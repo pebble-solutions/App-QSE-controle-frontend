@@ -1,6 +1,6 @@
 <template>
     <div class="container py-2 px-0">
-        <spinner v-if="pending.collecte" />
+        <spinner v-if="pending.validation" />
         <template v-else>
             
             <alert-message icon="bi-info-square" class="mt-2" v-if="collecte.done =='NON'">
@@ -21,10 +21,8 @@
                             </a>
                         </router-link>
                 </AlertMessage>
-                <div class="d-flex flex-column">
-                </div>
-                <div >
-                </div>
+               
+                
             
             <consultation-collecte-resume :collecte="collecte" :readonly="false" :timeline="false" v-if="collecte"></consultation-collecte-resume>
             
@@ -55,7 +53,6 @@
                         </a>
                     </router-link>
                 </div>
-                
             </FooterToolbar>
         </template>
     </div>
