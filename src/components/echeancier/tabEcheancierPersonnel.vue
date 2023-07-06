@@ -212,7 +212,7 @@ export default {
         },
 
         getWeekContrat(){
-            for(let contrat in this.contrats){
+            for(let contrat of this.contrats){
                 let query;
             
                 if ( !contrat.dsortie){
