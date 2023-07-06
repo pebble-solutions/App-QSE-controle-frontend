@@ -21,7 +21,7 @@
 
 			<div class="text-center mt-2 d-none d-lg-block">
 				<button class="btn w-100 mb-sm-3 my-md-3"
-					style="background-color: #F78C6B; color: white;">Controller</button>
+					style="background-color: #F78C6B; color: white;">Contrôler</button>
 			</div>
 		</div>
 

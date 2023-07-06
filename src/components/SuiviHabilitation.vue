@@ -7,13 +7,14 @@
                 
             </div>
             <ProgressBar :dd="dd" :df="df" />
+            <GroupResult></GroupResult>
             <div class="d-flex justify-content-between align-items-center my-1">
                 <div class="fw-bold">Habilitation VEILLE (6 mois)</div>
                 <div>{{ ddveille }} / {{ dfveille }}</div>
                  
             </div>
              <ProgressBar :dd="ddveille" :df="dfveille" /> 
-            <GroupResult></GroupResult>
+            
             
         </div>
     </div>

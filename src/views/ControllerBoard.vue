@@ -34,7 +34,7 @@
 				<div class="card-body">
 					<div class="row align-items-center">
 						<div class="col-12">
-							<div class="fw-light text-secondary text-center mb-3 fw-bold">{{ date }}</div>
+							<div class="fw-light text-secondary text-center mb-1 fw-bold">{{ date.dayName }} {{ date.date }}</div>
 						</div>
 					</div>
 					<CarteDeControle></CarteDeControle>
@@ -59,16 +59,7 @@
 		data() {
 			return {
 				dates: [],
-				imageBounds: {
-					left: -5.684968390884571,
-					right: 8.971890223001154,
-					top: 51.670669181924744,
-					bottom: 41.71645783266676,
-				},
-				location: {
-					lat: 50.62,
-					lng: 3.04,
-				},
+			
 			};
 		},
 		mounted() {
@@ -76,18 +67,25 @@
 		},
 		methods: {
 			generateDates() {
-				const today = new Date();
-				const daysInMilliseconds = 24 * 60 * 60 * 1000;
-				for (let i = 0; i < 8; i++) {
-					const date = new Date(today.getTime() + i * daysInMilliseconds);
-					const formattedDate = this.formatDate(date);
-					this.dates.push(formattedDate);
-				}
-			},
+    const today = new Date();
+    const daysInMilliseconds = 24 * 60 * 60 * 1000;
+    for (let i = 0; i < 8; i++) {
+      const date = new Date(today.getTime() + i * daysInMilliseconds);
+      const formattedDate = this.formatDate(date); // Format "01 janvier 2023"
+      const dayName = this.getDayName(date); // Nom du jour de la semaine (par exemple, "Jeudi")
+      this.dates.push({ date: formattedDate, dayName: dayName });
+    }
+  },
 			formatDate(date) {
 				const options = { year: 'numeric', month: 'long', day: 'numeric' };
 				return date.toLocaleDateString('fr-FR', options);
 			},
+			getDayName(date) {
+    const joursSemaine = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+    const dayIndex = date.getDay();
+    const dayName = joursSemaine[dayIndex];
+    return dayName;
+  },
 			...mapActions(['refreshStat']),
 			changeFormatDateLit(el) {
 				return dateFormat(el);

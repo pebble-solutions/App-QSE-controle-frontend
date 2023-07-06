@@ -12,6 +12,9 @@
                     <div>zhatar@fer-expert.fr</div>
                 </div>
             </div>
+            <div style="margin-left: auto;">
+                <div style="text-align: right; font-size: 14px;">#1234</div>
+            </div>
         </div>
     </div>
 </template>
