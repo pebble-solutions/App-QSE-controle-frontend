@@ -4,7 +4,7 @@
             {{ returnLabel(varTime) }}
         </div>
     </div> 
-    <!-- <div>{{ varTime }}</div> -->
+  <!-- <div>{{ varTime }}</div>  -->
 </template>
 
 <script>
