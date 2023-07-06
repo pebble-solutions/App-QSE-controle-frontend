@@ -50,7 +50,7 @@ import CarteChoisirChantier from '../components/CarteChoisirChantier.vue';
 export default {
 	data() {
 		return {
-			chantier: null, // Remplacez par votre propriété de chantier réel "lorient"
+			chantier: "Lorient", // Remplacez par votre propriété de chantier réel "lorient"
 			dfCritique: '2023-07-01',
 
 			// todo : donne à dfCritique la valeur la plus faible parmis : la difference entre dfveille et date du jour ou la diffrence entre df et la date du jour
