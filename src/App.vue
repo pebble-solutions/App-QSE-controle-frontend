@@ -419,7 +419,6 @@ export default {
 
 			return this.$app.apiGet(route, query)
 				.then(data => {
-					console.log(data,'ressources',route,query)
 					this[refreshMethod](data);
 					return data;
 				})
@@ -526,7 +525,6 @@ export default {
 			}
 
             searchConsultation(this.searchOptions, this.$app).then(data => {
-				console.log(data, 'searchconsultation')
 				if(this.searchOptions.mode == 'collecte') {
 					if(mode == 'append') {
 						if(!data.length) {

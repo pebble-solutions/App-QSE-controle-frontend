@@ -195,6 +195,7 @@ import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
 import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
+import { mapActions } from 'vuex';
 
 export default {
 
@@ -283,6 +284,8 @@ export default {
 
     methods: {
 
+        ...mapActions(['refreshCollecte']),
+
         /**
          * change la valeur de readNotes permettant la visualisation ou non des notes
          */
@@ -301,12 +304,12 @@ export default {
             this.pending.unlock = true
             let comment = prompt ('indiquer le motif de dévérouillage de la collecte #'+id);
             if (comment){
-                console.log(id);
                 this.$app.apiPost('v2/collecte/'+id+'/unlock', {
                     comment
                 })
                 .then((data) =>{
-                    console.log(data,'retour unlock');
+                    this.refreshCollecte(data);
+                    
                     this.locked = false
                 })
                 .catch(this.$app.catchError).finally(() => this.pending.unlock = false);

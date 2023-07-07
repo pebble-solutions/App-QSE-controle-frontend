@@ -10,7 +10,7 @@
 			<div class="d-flex align-items-center">
 				<small class="fw-lighter me-2">#{{collecte.id}}</small>
 				<date-badge :collecte="collecte" />
-				<span v-if="collecte.unlocked" class="badge text-danger bg-info ms-1"><i class="bi bi-unlock-fill">à compléter</i></span>
+				<span v-if="collecte.unlocked" class="badge text-danger bg-info ms-2"><i class="bi bi-unlock-fill me-1"></i>à compléter</span>
 				<!-- <span class="badge rounded-pill ms-1" :class="lockClass" v-else-if="collecte.date_start && !collecte.unlocked"><i class="bi bi-unlock-fill"></i> {{ remainingLock }} J</span>
 				<span v-else></span> -->
 			</div>
