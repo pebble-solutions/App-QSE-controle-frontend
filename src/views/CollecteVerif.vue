@@ -110,10 +110,7 @@ export default {
         validate() {
             if (confirm('Une fois clôturé, le contrôle ne sera plus modifiable.')){
                 this.pending.validation = true;
-                this.$app.apiPost('data/POST/collecte/'+this.collecte.id, {
-                    environnement: 'private',
-                    done: 'OUI'
-                })
+                this.$app.apiPost('v2/collecte/'+this.collecte.id+'/validate')
                 .then((data) => {
                     return this.refreshCollectes([data]);
                 })

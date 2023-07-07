@@ -9,19 +9,10 @@
 		<div class="d-flex flex-column align-content-between">
 			<div class="d-flex align-items-center">
 				<small class="fw-lighter me-2">#{{collecte.id}}</small>
-				
 				<date-badge :collecte="collecte" />
-
-				<!-- <span v-if="collecte.date"
-					class="badge rounded-pill ms-1"
-					:class="badgeClassName">
-					<i class="bi" :class="remaningIcon"></i>
-					{{ remaningLabel }}
-				</span> -->
-				
-				<span v-if="collecte.unlocked" class="bg-danger"><i class="bi bi-lock-fill"></i></span>
-				<span class="badge rounded-pill ms-1" :class="lockClass" v-else-if="collecte.date_start && !collecte.unlocked"><i class="bi bi-unlock-fill"></i> {{ remainingLock }} J</span>
-				<span v-else></span>
+				<span v-if="collecte.unlocked" class="badge text-danger bg-info ms-1"><i class="bi bi-unlock-fill">à compléter</i></span>
+				<!-- <span class="badge rounded-pill ms-1" :class="lockClass" v-else-if="collecte.date_start && !collecte.unlocked"><i class="bi bi-unlock-fill"></i> {{ remainingLock }} J</span>
+				<span v-else></span> -->
 			</div>
 
 			<personnel-name :personnel-name="collecte.cible_nom" :personnel-id="collecte.cible__structure__personnel_id" />
@@ -189,9 +180,11 @@ export default {
 		},
 
 		getLockClass() {
-			if(this.remainingLock > 10) return 'bg-success';
-			else if (this.remainingLock > 5) return 'bg-primary';
-			else if (this.remainingLock >2) return 'bg-warning';
+			if(this.remainingLock > 10) return 'text-bg-success';
+			else if (this.remainingLock > 5) return 'text-bg-primary';
+			else if (this.remainingLock >2) return 'text-bg-warning';
+			else if (this.remainingLock <= 0) return 'text-bg-danger';
+			else return 'text-bg-secondary';
 		},
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de

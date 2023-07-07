@@ -250,6 +250,7 @@ export default {
 				dd: null,
 				df: null,
 				mode: 'collecte',
+				locked: true,
 				start: 0,
 				limit: 50,
 			},
@@ -339,7 +340,7 @@ export default {
 		 * @return {Promise<object>}
 		 */
 		loadCollectes() {
-			return this.loadRessources('collecte', {enqueteur_login: 'self', done: 'NON'});
+			return this.loadRessources('collecte', {enqueteur_login: 'self', locked: 0});
 		},
 
 		/**
@@ -418,6 +419,7 @@ export default {
 
 			return this.$app.apiGet(route, query)
 				.then(data => {
+					console.log(data,'ressources',route,query)
 					this[refreshMethod](data);
 					return data;
 				})
@@ -524,6 +526,7 @@ export default {
 			}
 
             searchConsultation(this.searchOptions, this.$app).then(data => {
+				console.log(data, 'searchconsultation')
 				if(this.searchOptions.mode == 'collecte') {
 					if(mode == 'append') {
 						if(!data.length) {

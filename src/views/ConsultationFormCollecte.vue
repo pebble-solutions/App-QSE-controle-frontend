@@ -5,7 +5,7 @@
             size="lg"
             @modal-hide="routeToParent()"
             >
-            <ConsultationCollecteResume :collecte="collecte" :readonly="true" :route="nameRoute" ></ConsultationCollecteResume>
+            <ConsultationCollecteResume :collecte="collecte" :levelUser="login.type" :readonly="true" :route="nameRoute" ></ConsultationCollecteResume>
         </app-modal>
     </div>
 </template>
@@ -19,7 +19,7 @@ export default {
     components:{AppModal,ConsultationCollecteResume}, //
 
     computed:{
-        ...mapState(['collectes','collecte']),
+        ...mapState(['collectes','collecte', 'login']),
 
         nameRoute() {
             if(this.$route.name == 'consultationFormCollecte' ) {
