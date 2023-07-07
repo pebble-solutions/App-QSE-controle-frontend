@@ -38,7 +38,7 @@
         </div>
         <div class="row">
             <div class="col-9">
-                <div class="card my-2">
+                <div class="card my-2 overflow-auto">
                     <div class="card-body">
                         <h3 class="card-title fs-4">Agenda</h3>
                         <AgendaChart :jsonData="data"></AgendaChart>

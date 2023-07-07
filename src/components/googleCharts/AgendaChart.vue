@@ -1,72 +1,52 @@
 <template>
-    <div :id="chartElementId">
-        <GChart :type="type" :data="chartData" :options="options" :settings="settings" :chart-element="chartElementId" v-if="chartDataLoaded" />
-    </div>
+    <div id="agendaChart"></div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { GChart } from 'vue-google-charts';
+import { GoogleCharts } from 'google-charts';
 
 export default {
-    props: {
-        jsonData: {
-            type: Object,
-            required: true
-        }
-    },
-
-    components: { GChart },
-
     data() {
         return {
-            type: 'Calendar',
-            options: {
-            },
-            settings: {
-                packages: ['calendar', 'corechart'],
-            },
-            chartData: null,
+            chartData: [],
             chartDataLoaded: false,
-            chartElementId: "agendaChart"
         }
     },
-    mounted() {
-        this.fetchData(this.jsonData);
-    },
-    computed: {
-        ...mapState(['collectes'])
-    },
     methods: {
-        fetchData() {
-            /*const dateOccurrences = {};
-            for (const i in jsonData['data']) {
-                const date = jsonData['data'][i].date_done.split(' ')[0];
-                dateOccurrences[date] = dateOccurrences[date] ? dateOccurrences[date] + 1 : 1;
-            }
-
-            this.chartData = [
-                ['Date', 'Occurencies'],
-                ...Object.entries(dateOccurrences).map(([date, count]) => [new Date(date), count])
-            ];
-            this.chartDataLoaded = true;*/
-
+        async fetchData() {
+            let collection = this.$assets.getCollection('collectes');
+            await collection.load();
+            const data = collection.getCollection();
 
             const dateOccurrences = {};
-            for (const element of this.collectes) {
-                console.log(element);
-                if (element.done_done != null) {
-                    const date = element.done_done.split(' ')[0];
+            for (const element of data) {
+                if (element['date'] != null) {
+                    const date = element['date'].split(' ')[0];
                     dateOccurrences[date] = dateOccurrences[date] ? dateOccurrences[date] + 1 : 1;
                 }
             }
 
-            this.chartData = [
-                ['Date', 'Occurencies'],
-                ...Object.entries(dateOccurrences).map(([date, count]) => [new Date(date), count])
-            ];
+            this.chartData = [];
+            for (const key in dateOccurrences) {
+                let subArray = [new Date(key), dateOccurrences[key]];
+                this.chartData.push(subArray);
+            }
             this.chartDataLoaded = true;
+        },
+
+        drawChart() {
+            let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, true);
+            let chartWrap = document.getElementById('agendaChart');
+            let chart = new GoogleCharts.api.visualization.Calendar(chartWrap);
+            chart.draw(dataTable);
         }
+    },
+
+    async mounted() {
+        await this.fetchData();
+        GoogleCharts.load(this.drawChart, {
+            packages: ['calendar'],
+        });
     }
 }
 </script>

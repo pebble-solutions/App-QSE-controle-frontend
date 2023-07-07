@@ -25,7 +25,8 @@ export default createStore({
 		stat: null,
 		requeteStat: null,
 		veilleConfig: [],
-		personnels: []
+		personnels: [],
+		collectesCollection: []
 	},
 	getters: {
 		activeStructure(state) {
@@ -534,6 +535,14 @@ export default createStore({
 		 */
 		addCollectes(contexte, collectes) {
 			contexte.commit('collectes', {collectes, action:'add'})
+		},
+
+		updateCollectes(contexte, data) {
+			contexte.commit('collectes', {
+				action: 'update',
+				key: 'collectes',
+				data
+			})
 		},
 
 		/**
