@@ -16,15 +16,15 @@
     
                 <div class="col-spec d-flex justify-content-center ms-2">
                     {{ labelHabilitation(hab.nom) }}
-                    <i :class="personnel.kn ? '' : 'bi bi-exclamation-diamond text-warning'" placeholder="Aucun contrôle sur la période saisie"></i>
+                    <i :class="classKnManquant(personnel.id)" placeholder="Aucun contrôle sur la période saisie"></i>
                 </div>
     
                 <div class="progressbar" :style="{ left: (personnel.dentree.semaine - 1) * size + 140 + 'px', width: calculateWidth(personnel) + 'px' }" v-if="personnel.dentree">
                     <p>{{ contratLabel(personnel) }}</p>
                 </div>
     
-                <div v-for="kn in personnel.kn" :key="kn" class="btn" :class="[classSAMI(kn.note)]" :style="{ bottom: '18px', left: (kn.date * size + 75 - 40 * personnel.kn.findIndex(opkn => opkn === kn)) + 'px' }">
-                    {{ kn.note }}
+                <div v-for="kn in verifKns(personnel.id)" :key="kn" class="btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
+                    {{ kn.sami }}
                 </div>
             </div>
     
@@ -168,6 +168,17 @@ export default {
             return `left: ${left}px; width: ${width}px; height: ${height};`;
         },
 
+        /**
+         * Retourne le nom des classes bootstraps si l'operateur n'a pas de kn sur la periode selectionné
+         * 
+         * @param {number} id 
+         * 
+         * @returns {string}
+         */
+         classKnManquant(id) {
+            const result = this.kns.some(item => item.personnel_id__operateur === id);
+            return result ? '' : 'ms-2 bi bi-exclamation-diamond text-warning';
+        },
 
         /**
          * Retourne la valeur de la classe bootstrap en fonction de la valeur de ref du kn
@@ -186,6 +197,49 @@ export default {
             } if (ref == 'I') {
                 return "btn-danger"
             }
+        },
+
+        /**
+         * Retourne le nomb de pixel de decalage du kn en fonction de sa date
+         * 
+         * @param {object} kn 
+         * 
+         * @returns {string} 
+         */
+         leftkn(kn){
+            let knDate = new Date(kn.date)
+            return ((knDate.getWeek() * this.size) + 140) + "px"
+        },
+
+        /**
+         * Filtre la liste des kns avec l'id du personnel et renvoie le dernier kn effectué si plusieurs kn sont marqué la meme semaine  
+         * 
+         * @param {number} id 
+         * 
+         * @returns {array}
+         */
+        verifKns(id) {
+        let rendukn = this.kns.filter(item => item.personnel_id__operateur === id);
+
+            if (rendukn.length !== 0) {
+                let knlist = [rendukn[rendukn.length - 1]];
+                let kntest = rendukn[rendukn.length - 1];
+
+                for (let i = rendukn.length - 2; i >= 0; i--) {
+                let kn = rendukn[i];
+                let date = new Date(kn.date);
+                let datetest = new Date(kntest.date);
+
+                if (date.getWeek() !== datetest.getWeek()) {
+                    knlist.unshift(kn);
+                    kntest = kn;
+                }
+                }
+
+                rendukn = knlist;
+            }
+
+            return rendukn;
         },
 
         /**
