@@ -180,20 +180,10 @@ export default {
          * 
          * @returns {string}
          */
-        classKnManquant(id){
-            let result = this.kns.filter(item => item.personnel_id__operateur == id);
-            let labelClass = '';
-            if(result.length == 0){
-                labelClass = 'ms-2 bi bi-exclamation-diamond text-warning'
-            }
-            return labelClass
+        classKnManquant(id) {
+            const result = this.kns.some(item => item.personnel_id__operateur === id);
+            return result ? '' : 'ms-2 bi bi-exclamation-diamond text-warning';
         },
-
-        // OPTI TEST
-        // classKnManquant(id) {
-        //     const result = this.kns.some(item => item.personnel_id__operateur === id);
-        //     return result ? '' : 'ms-2 bi bi-exclamation-diamond text-warning';
-        // },
 
         /**
          * Retourne la valeur de la classe bootstrap en fonction de la valeur de ref du kn
