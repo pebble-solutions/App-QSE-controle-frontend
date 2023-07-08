@@ -223,29 +223,52 @@ export default {
          * 
          * @returns {array}
          */
-        verifKns(id){
-            let rendukn = this.kns.filter(item => item.personnel_id__operateur == id);
+        // verifKns(id){
+        //     let rendukn = this.kns.filter(item => item.personnel_id__operateur == id);
 
-            if(rendukn.length != 0){
-                let knlist = []
-                let kntest = rendukn[0]
-                for(let kn of rendukn){
-                    if(kn.id == rendukn[rendukn.length -1].id){
-                        knlist.push(kn)
-                    } else {
-                        let date = new Date(kn.date)
-                        let datetest = new Date(kntest.date)
-                        if(date.getWeek() == datetest.getWeek()){
-                            kntest = kn;
-                        } else {
-                            knlist.push(kntest)
-                        }
-                    }
-                }
-                rendukn = knlist
-            }
-            return rendukn
-        },
+        //     if(rendukn.length != 0){
+        //         let knlist = []
+        //         let kntest = rendukn[0]
+        //         for(let kn of rendukn){
+        //             if(kn.id == rendukn[rendukn.length -1].id){
+        //                 knlist.push(kn)
+        //             } else {
+        //                 let date = new Date(kn.date)
+        //                 let datetest = new Date(kntest.date)
+        //                 if(date.getWeek() == datetest.getWeek()){
+        //                     kntest = kn;
+        //                 } else {
+        //                     knlist.push(kntest)
+        //                 }
+        //             }
+        //         }
+        //         rendukn = knlist
+        //     }
+        //     return rendukn
+        // },
+        verifKns(id) {
+  let rendukn = this.kns.filter(item => item.personnel_id__operateur === id);
+
+  if (rendukn.length !== 0) {
+    let knlist = [rendukn[rendukn.length - 1]];
+    let kntest = rendukn[rendukn.length - 1];
+
+    for (let i = rendukn.length - 2; i >= 0; i--) {
+      let kn = rendukn[i];
+      let date = new Date(kn.date);
+      let datetest = new Date(kntest.date);
+
+      if (date.getWeek() !== datetest.getWeek()) {
+        knlist.unshift(kn);
+        kntest = kn;
+      }
+    }
+
+    rendukn = knlist;
+  }
+
+  return rendukn;
+},
 
         /**
          * Retourne la propriété style (left et width) en px calculée avec la durée du contrat du personnel
