@@ -1,5 +1,5 @@
 <template>
-    <form method="post" class="p-2 my-2" @submit.prevent="searchEcheancier()">
+    <form class="p-2 my-2" @submit.prevent="searchEcheancier()">
 
         <div class="mb-3">
             <h5>Période</h5>
@@ -46,8 +46,8 @@
         </div>
         
         <div class="text-center">
-            <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.stats">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.stats"></span>
+            <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.echeance">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.echeance"></span>
                 <i class="me-2 bi bi-calendar2-check" v-else></i>
                 Afficher
             </button>
@@ -73,7 +73,7 @@ export default {
                 environnement:'private'
             },
             pending: {
-                stats: false
+                echeance: false
             },
             allHabilitations: null,
             operateurs: [],
@@ -88,9 +88,9 @@ export default {
         ...mapActions(['setEcheance']),
 
         selectMe(){
-            console.log("/// Select me ///")
-            console.log(this.requete.habilitation[this.requete.habilitation.length])
-            console.log("/////////////////")
+            // console.log("/// Select me ///")
+            // console.log(this.requete.habilitation[this.requete.habilitation.length])
+            // console.log("/////////////////")
         },
 
         /**
@@ -159,7 +159,7 @@ export default {
         },
 
         /**
-         * Lance une requête au serveur pour récupérer les statistiques. Enregistre le résultat dans le store.
+         * Enregistre le résultat de la requete dans le store.
          */
         searchEcheancier() {
             let query = this.requete

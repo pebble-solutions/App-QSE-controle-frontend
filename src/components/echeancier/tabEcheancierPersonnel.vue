@@ -3,16 +3,16 @@
     <div class="tablo overflow-scroll">
         <!-- <div :style="{ border: 'solid grey 1px', height: '50px', position: 'relative', left: '85px', width: periode.length * 50 + 'px' }"></div> -->
 
-        <div :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * 50 + 85 + 'px' }">
+        <div :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * 50 + 140 + 'px' }">
             <div class="col-spec d-flex justify-content-center mt-2"><strong>Agents</strong></div>
         </div>
 
         <div v-for="personnel in operateurs" :key="personnel" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }">
-            <div v-for="kn in personnel.kn" :key="kn" class="habilit" :style="operateurHabilit(kn,personnel)" style="position: absolute;"></div>
+            <!-- <div v-for="kn in verifKns(personnel.id)" :key="kn" class="habilit" :style="operateurHabilit(kn,personnel)" style="position: absolute;"></div> -->
 
             <div class="col-spec d-flex justify-content-center">
                 {{ personnel.cache_nom }}
-                <i :class="personnel.kn ? '' : 'ms-2 bi bi-exclamation-diamond text-warning'" placeholder="Aucun contrôle sur la période saisie"></i>
+                <i :class="classKnManquant(personnel.id)" placeholder="Aucun contrôle sur la période saisie"></i>
             </div>
 
             <div v-for="contrat in contratUses.filter(e => e.structure__personnel_id == personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">
@@ -20,8 +20,8 @@
                 <p>{{ contratLabel(contrat) }}</p>
             </div>
 
-            <div v-for="kn in personnel.kn" :key="kn" class="btn" :class="[classSAMI(kn.note)]" :style="{ bottom: '18px', left: (kn.date * size + 40 - 40 * personnel.kn.findIndex(opkn => opkn === kn)) + 'px' }">
-                {{ kn.note }}
+            <div v-for="kn in verifKns(personnel.id)" :key="kn" class="btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
+                {{ kn.sami }}
             </div>
         </div>
 
@@ -36,25 +36,6 @@
         </div>
     </div>
 
-    <div class="card list-group">
-            <h5 class="card-title">Contrat</h5>
-            <div v-for="contrat in contrats" :key="contrat" class="m-2 list-group-item">
-                <div><strong>ID : </strong>{{ contrat.id }}</div>
-                <div><strong>OP : </strong>{{ contrat.structure__personnel_id }}</div>
-                <div v-for="op in operateurs" :key="op">
-                    <div v-if="op.id == contrat.structure__personnel_id">
-                        <div><strong>{{ op.cache_nom }}</strong></div>
-                    </div>
-                </div>
-                <div><strong>Date entree : </strong>{{ contrat.dentree }}</div>
-                <div><strong>Date sortie : </strong>{{ contrat.dsortie }}</div>
-
-                <div><strong>Duree indeterminée : </strong>{{ contrat.duree_indeterminee }}</div>
-
-
-            </div>
-
-        </div>
   </template>
   
 
@@ -162,35 +143,57 @@ export default {
         operateurHabilit(kn,op) {
             const height = "50px";
             let width;
-            let left = 85;
+            let left = 140;
             const periode = this.periode;
 
-            if (!op.kn) {
+            if (kn.personnel_id__operateur != op.id) {
                 // EN cas ou aucun kn n'a été effectué sur la période
                 width = periode.length * this.size;
             } else {
-                let knTrie = op.kn.sort((a, b) => a.date - b.date);
+                let knTrie = kn.sort((a, b) => a.date - b.date);
                 let numIdKn = knTrie.findIndex(opkn => opkn.id === kn.id);
+                let datekn = new Date(kn.date).getWeek();
 
-                if (kn.note === 'I') {
-                    width = kn.date * this.size;
+                if (kn.sami === 'I') {
+                    width = datekn * this.size;
                     if (knTrie[numIdKn-1]){
-                        width = ( kn.date - knTrie[numIdKn-1].date) * this.size;
+                        width = ( datekn - knTrie[numIdKn-1].date) * this.size;
                         left = left + (knTrie[numIdKn-1].date * this.size);
                     }
                 } else {
                     if (knTrie[numIdKn+1]){
-                        width = ((knTrie[numIdKn+1].date - kn.date) * this.size);
+                        width = ((knTrie[numIdKn+1].date - datekn) * this.size);
                     } else {
-                        width = ((periode.length + 1 - kn.date) * this.size);
+                        width = ((periode.length + 1 - datekn) * this.size);
                     }
-                    left = left + ((kn.date -1) * this.size );
+                    left = left + ((datekn -1) * this.size );
                 }
             }
 
             return `left: ${left}px; width: ${width}px; height: ${height};`;
         },
 
+        /**
+         * Retourne le nom des classes bootstraps si l'operateur n'a pas de kn sur la periode selectionné
+         * 
+         * @param {number} id 
+         * 
+         * @returns {string}
+         */
+        classKnManquant(id){
+            let result = this.kns.filter(item => item.personnel_id__operateur == id);
+            let labelClass = '';
+            if(result.length == 0){
+                labelClass = 'ms-2 bi bi-exclamation-diamond text-warning'
+            }
+            return labelClass
+        },
+
+        // OPTI TEST
+        // classKnManquant(id) {
+        //     const result = this.kns.some(item => item.personnel_id__operateur === id);
+        //     return result ? '' : 'ms-2 bi bi-exclamation-diamond text-warning';
+        // },
 
         /**
          * Retourne la valeur de la classe bootstrap en fonction de la valeur de ref du kn
@@ -211,54 +214,47 @@ export default {
             }
         },
 
-        getWeekContrat(){
-            for(let contrat of this.contrats){
-                let query;
-            
-                if ( !contrat.dsortie){
-                    query = {
-                        dd: contrat.dentree.slice(0,10),
-                        df: this.echeancier.df,
-                        pas: 1,
-                        pas_type: 'week',
-                        format: 'W o',
-                        retour_type: 'text'
-                    };
-                } else {
-                    query = {
-                        dd: contrat.dentree.slice(0,10),
-                        df: contrat.dsortie.slice(0,10),
-                        pas: 1,
-                        pas_type: 'week',
-                        format: 'W o',
-                        retour_type: 'text'
-                    };
-                }
+        /**
+         * Retourne le nomb de pixel de decalage du kn en fonction de sa date
+         * 
+         * @param {object} kn 
+         * 
+         * @returns {string} 
+         */
+        leftkn(kn){
+            let knDate = new Date(kn.date)
+            return ((knDate.getWeek() * this.size) + 140) + "px"
+        },
 
-                let periodeContrat = [];
-                this.$app.api.get('/v2/periode/DatePeriod', query)
-                .then(data => {
-                    for(let date of data){
-                        let week = {
-                            semaine : parseInt(date.slice(0,2)),
-                            annee: date.slice(3), 
+        /**
+         * Filtre la liste des kns avec l'id du personnel et renvoie le dernier kn effectué si plusieurs kn sont marqué la meme semaine  
+         * 
+         * @param {number} id 
+         * 
+         * @returns {array}
+         */
+        verifKns(id){
+            let rendukn = this.kns.filter(item => item.personnel_id__operateur == id);
+
+            if(rendukn.length != 0){
+                let knlist = []
+                let kntest = rendukn[0]
+                for(let kn of rendukn){
+                    if(kn.id == rendukn[rendukn.length -1].id){
+                        knlist.push(kn)
+                    } else {
+                        let date = new Date(kn.date)
+                        let datetest = new Date(kntest.date)
+                        if(date.getWeek() == datetest.getWeek()){
+                            kntest = kn;
+                        } else {
+                            knlist.push(kntest)
                         }
-
-                        periodeContrat.push(week)
                     }
-                })
-                .catch(this.$app.catchError);
-
-                let contratuse = {
-                    structure__personnel_id : contrat.structure__personnel_id,
-                    dentree : contrat.dentree,
-                    dsortie : contrat.dsortie,
-                    duree_indeterminee : contrat.duree_indeterminee,
-                    periode : periodeContrat
                 }
-
-                this.contratUses.push(contratuse)
+                rendukn = knlist
             }
+            return rendukn
         },
 
         /**
@@ -303,10 +299,6 @@ export default {
         },
 
     },
-
-    mounted(){
-        this.getWeekContrat();
-    }
 }
 
 </script>

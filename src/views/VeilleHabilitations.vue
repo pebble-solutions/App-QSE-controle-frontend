@@ -5,18 +5,23 @@
 
             <div  v-for="habilitation in filtredHabilitations()" :key="habilitation" class="my-3">
                 <tabEcheancierPersonnel
-                :operateurs = "filtredOp()"
-                :periode = "periode"
-                :habilitation = "habilitation"
-                :kns = "filtredKns('habilitation', habilitation.id)"
-                :contrats = "contrats"
+                    :operateurs = "filtredOp()"
+                    :periode = "periode"
+                    :habilitation = "habilitation"
+                    :kns = "filtredkns(habilitation.id, 'habilitation')"
+                    :contrats = "contrats"
                 />
 
             </div>
         </div>
 
         <div v-for="personnel in filtredOp()" :key="personnel" class="my-3" v-else>
-            <tabEcheancierHabilitation :personnel="personnel" :kns="filtredKns('operateur', personnel.id)" :periode="periode" :habilitations="filtredHabilitations()"/>
+            <tabEcheancierHabilitation 
+                :personnel="personnel" 
+                :kns = "filtredkns(personnel.id, 'personnel')" 
+                :periode="periode" 
+                :habilitations="filtredHabilitations()"
+            />
         </div>
     </div>
     <div class="container py-2" v-else>
@@ -40,22 +45,6 @@
                 </div>
             </div>
         </div> 
-
-        <div class="card list-group">
-            <div v-for="kn in kns" :key="kn" class="m-2 list-group-item">
-                <div><strong>ID : </strong>{{ kn.id }}</div>
-                <div><strong>OP : </strong>{{ kn.cible__structure__personnel_id }}</div>
-                <div v-for="op in allOp" :key="op">
-                    <div v-if="op.id == kn.cible__structure__personnel_id">
-                        <div><strong>{{ op.cache_nom }}</strong></div>
-                    </div>
-                </div>
-                <div v-if="kn.result_var"><strong>Resultat : </strong>{{ kn.result_var }}</div>
-                <div v-else class="text-warning"><strong>Aucun resultat</strong></div>
-                <div><strong>Date : </strong>{{ kn.date }}</div>
-
-            </div>
-        </div>
     </div>
 
 
@@ -86,6 +75,7 @@ export default {
             handler(newValue){
                 if(newValue.dd && newValue.df){
                     this.getPeriode()
+                    this.getKn()
                 }
             },
             deep:true,
@@ -120,18 +110,40 @@ export default {
         },
 
         getKn(){
-            this.$app.api.get('/v2/collecte')
+            if(this.echeancier){
+                let query = {
+                    type : "KN",
+                    dd_start : this.echeancier.dd,
+                    df_start : this.echeancier.df,
+                    personnel_id__operateur : this.echeancier.operateurs,
+                    habilitation_id : this.echeancier.habilitation
+                }
+
+                if (this.echeancier.habilitation.length == 0 || this.echeancier.habilitation[0] == ""){
+                    query.habilitation_id = 0;
+                } else {
+                    query.habilitation_id = this.echeancier.habilitation.toString()
+                }
+
+                if(this.echeancier.operateurs.length == 0 || this.echeancier.operateurs[0] == ""){
+                    query.personnel_id__operateur = 0;
+                } else {
+                    query.personnel_id__operateur = this.echeancier.operateurs.toString()
+                }
+
+                this.$app.api.get('/v2/collecte', query)
                 .then(data => {
                     this.kns = data;
                 })
                 .catch(this.$app.catchError);
+            }
         },
 
-        filtredKns(filter, id){
-            if (filter == 'habilitation'){
-                return this.kns.filter(e => e.habilitation_id == id)
-            } else if (filter == 'operateur'){
-                return this.kns.filter(e => e.cible__structure__personnel_id == id)
+        filtredkns(id, type){
+            if(type == 'habilitation'){
+                return this.kns.filter(item => item.habilitation_id == id)
+            } else if(type == 'personnel'){
+                return this.kns.filter(item => item.personnel_id__operateur == id)
             }
         },
 
@@ -195,7 +207,6 @@ export default {
     mounted(){
         this.getHabilitation();
         this.getAllOp(); 
-        this.getKn();
         this.getContrat();
     }
 }
