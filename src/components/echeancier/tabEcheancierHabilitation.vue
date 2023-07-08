@@ -12,7 +12,7 @@
             </div>
     
             <div v-for="hab in habilitations" :key="hab" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }">
-                <div v-for="kn in personnel.kn" :key="kn" class="habilit" :style="operateurHabilit(kn,personnel)" style="position: absolute;"></div>
+                <div v-for="kn in verifKns(hab.id)" :key="kn" class="habilit" :style="operateurHabilit(kn, hab.id)" style="position: absolute;"></div>
     
                 <div class="col-spec d-flex justify-content-center ms-2">
                     {{ labelHabilitation(hab.nom) }}
@@ -23,7 +23,7 @@
                     <p>{{ contratLabel(personnel) }}</p>
                 </div>
     
-                <div v-for="kn in verifKns(personnel.id)" :key="kn" class="btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
+                <div v-for="kn in verifKns(hab.id)" :key="kn" class="btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
                     {{ kn.sami }}
                 </div>
             </div>
@@ -129,39 +129,42 @@ export default {
             return (this.habilitations.length + 1) * 50
         },
 
-        /**
+         /**
          * Retourne les propriété de style dynamique par rapport aux périodes d'habilitation de l'opérateur
          * 
          * @param {Object} kn
          * 
          * @returns {string} style dynamique 
          */
-        operateurHabilit(kn,op) {
+         operateurHabilit(kn, id) {
             const height = "50px";
             let width;
             let left = 140;
             const periode = this.periode;
 
-            if (!op.kn) {
+            let temp_kns = this.verifKns(id);
+
+            if (kn.habilitation_id != id) {
                 // EN cas ou aucun kn n'a été effectué sur la période
                 width = periode.length * this.size;
             } else {
-                let knTrie = op.kn.sort((a, b) => a.date - b.date);
+                let knTrie = temp_kns.sort((a, b) => new Date(a.date).getWeek() - new Date(b.date).getWeek());
                 let numIdKn = knTrie.findIndex(opkn => opkn.id === kn.id);
+                let datekn = new Date(kn.date).getWeek();
 
-                if (kn.note === 'I') {
-                    width = kn.date * this.size;
+                if (kn.sami === 'I') {
+                    width = datekn * this.size;
                     if (knTrie[numIdKn-1]){
-                        width = ( kn.date - knTrie[numIdKn-1].date) * this.size;
-                        left = left + (knTrie[numIdKn-1].date * this.size);
+                        width = ( datekn - new Date(knTrie[numIdKn-1].date).getWeek()) * this.size;
+                        left = left + ((new Date(knTrie[numIdKn-1].date).getWeek() + 1) * this.size);
                     }
                 } else {
                     if (knTrie[numIdKn+1]){
-                        width = ((knTrie[numIdKn+1].date - kn.date) * this.size);
+                        width = ((new Date(knTrie[numIdKn+1].date).getWeek() - datekn) * this.size);
                     } else {
-                        width = ((periode.length + 1 - kn.date) * this.size);
+                        width = ((periode.length - datekn) * this.size);
                     }
-                    left = left + ((kn.date -1) * this.size );
+                    left = left + (datekn * this.size );
                 }
             }
 
@@ -219,7 +222,7 @@ export default {
          * @returns {array}
          */
         verifKns(id) {
-        let rendukn = this.kns.filter(item => item.personnel_id__operateur === id);
+        let rendukn = this.kns.filter(item => item.habilitation_id === id);
 
             if (rendukn.length !== 0) {
                 let knlist = [rendukn[rendukn.length - 1]];

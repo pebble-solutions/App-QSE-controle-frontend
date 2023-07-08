@@ -8,7 +8,7 @@
         </div>
 
         <div v-for="personnel in operateurs" :key="personnel" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }">
-            <!-- <div v-for="kn in verifKns(personnel.id)" :key="kn" class="habilit" :style="operateurHabilit(kn,personnel)" style="position: absolute;"></div> -->
+            <div v-for="kn in verifKns(personnel.id)" :key="kn" class="habilit" :style="operateurHabilit(kn,personnel)" style="position: absolute;"></div>
 
             <div class="col-spec d-flex justify-content-center">
                 {{ personnel.cache_nom }}
@@ -146,27 +146,29 @@ export default {
             let left = 140;
             const periode = this.periode;
 
+            let temp_kns = this.verifKns(op.id);
+
             if (kn.personnel_id__operateur != op.id) {
                 // EN cas ou aucun kn n'a été effectué sur la période
                 width = periode.length * this.size;
             } else {
-                let knTrie = kn.sort((a, b) => a.date - b.date);
+                let knTrie = temp_kns.sort((a, b) => new Date(a.date).getWeek() - new Date(b.date).getWeek());
                 let numIdKn = knTrie.findIndex(opkn => opkn.id === kn.id);
                 let datekn = new Date(kn.date).getWeek();
 
                 if (kn.sami === 'I') {
                     width = datekn * this.size;
                     if (knTrie[numIdKn-1]){
-                        width = ( datekn - knTrie[numIdKn-1].date) * this.size;
-                        left = left + (knTrie[numIdKn-1].date * this.size);
+                        width = ( datekn - new Date(knTrie[numIdKn-1].date).getWeek()) * this.size;
+                        left = left + ((new Date(knTrie[numIdKn-1].date).getWeek() + 1) * this.size);
                     }
                 } else {
                     if (knTrie[numIdKn+1]){
-                        width = ((knTrie[numIdKn+1].date - datekn) * this.size);
+                        width = ((new Date(knTrie[numIdKn+1].date).getWeek() - datekn) * this.size);
                     } else {
-                        width = ((periode.length + 1 - datekn) * this.size);
+                        width = ((periode.length - datekn) * this.size);
                     }
-                    left = left + ((datekn -1) * this.size );
+                    left = left + (datekn * this.size );
                 }
             }
 
