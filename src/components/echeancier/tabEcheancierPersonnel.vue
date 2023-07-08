@@ -15,8 +15,7 @@
                 <i :class="classKnManquant(personnel.id)" placeholder="Aucun contrôle sur la période saisie"></i>
             </div>
 
-            <div v-for="contrat in contratUses.filter(e => e.structure__personnel_id == personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">
-                {{ calculateWidth(contrat) }}    
+            <div v-for="contrat in filtredContrats(personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">    
                 <p>{{ contratLabel(contrat) }}</p>
             </div>
 
@@ -97,7 +96,6 @@ export default {
     data() {
 		return {
 			size : 50,
-            contratUses : []
 		}
 	},
 
@@ -249,6 +247,12 @@ export default {
             return rendukn;
         },
 
+        filtredContrats(id){
+            let contratsFiltre = this.contrats.filter(e => e.structure__personnel_id == id);
+
+            return contratsFiltre.filter(contrat => new Date(contrat.dentree).getWeek() < this.periode[this.periode.length-1].semaine)
+        },
+
         /**
          * Retourne la propriété style (left et width) en px calculée avec la durée du contrat du personnel
          * 
@@ -258,16 +262,19 @@ export default {
          */
          calculateWidth(contrat) {
             let width;
-
+            let periode = this.periode
             let left = 140;
 
-            left = (contrat.periode[0].semaine - 1) * this.size + left;
+            left = (new Date(contrat.dentree).getWeek() - 1) * this.size + left;
 
             if (contrat.dsortie) {
-                width = (contrat.periode[contrat.periode.length - 1].semaine - contrat.periode[0].semaine + 1 + ((contrat.periode[contrat.periode.length - 1].annee - contrat.periode[0].annee)*52)) * this.size;
+                if(new Date(contrat.dsortie).getWeek() > periode[periode.length-1].semaine){
+                    width =  (periode.length - new Date(contrat.dentree).getWeek() + 1) * this.size;
+                } else {
+                    width = (new Date(contrat.dsortie).getWeek() - new Date(contrat.dentree).getWeek() + 1 + ((new Date(contrat.dsortie).getFullYear() - new Date(contrat.dentree).getFullYear())*52)) * this.size;
+                }
             } else {
-                let periode = this.periode
-                width =  (periode.length - contrat.periode[0].semaine + 1) * this.size;
+                width =  (periode.length - new Date(contrat.dentree).getWeek() + 1) * this.size;
             }
 
 
