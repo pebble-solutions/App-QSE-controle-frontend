@@ -159,7 +159,7 @@ export default {
         },
 
         /**
-         * Enregistre le résultat de la requete dans le store.
+         * Enregistre le résultat de la recherche/ des filtres dans le store.
          */
         searchEcheancier() {
             let query = this.requete
@@ -174,7 +174,7 @@ export default {
         },
 
         /**
-         * Retourne les données des habilitations via un appel API
+         * Charge les données des habilitations via un appel API
          */
         getHabilitation(){
             this.$app.api.get('/v2/characteristic/')
@@ -185,7 +185,7 @@ export default {
         },
 
         /**
-         * Retourne les données des opérateurs via un appel API
+         * Charge les données des opérateurs via un appel API
          */
         getOp(){
             this.$app.api.get('/v2/personnel')

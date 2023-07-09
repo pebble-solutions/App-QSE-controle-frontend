@@ -247,6 +247,12 @@ export default {
             return rendukn;
         },
 
+        /**
+         * Retourne la liste filtrée des contrats par le l'id du personnel et la periode selectionnée
+         * @param {number} id
+         * 
+         * @returns {array} 
+         */
         filtredContrats(id){
             let contratsFiltre = this.contrats.filter(e => e.structure__personnel_id == id);
 

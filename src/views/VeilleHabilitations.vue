@@ -71,6 +71,11 @@ export default {
     components: {tabEcheancierPersonnel, tabEcheancierHabilitation},
 
     watch:{
+        /**
+         * Ecoute la varible echeancier dans le store 
+         * et fais les appels necessaire au methodes de recuperation de données 
+         * lors du changement de celle-ci
+         */
         echeancier:{
             handler(newValue){
                 if(newValue.dd && newValue.df){
@@ -101,6 +106,11 @@ export default {
                 .catch(this.$app.catchError);
         },
 
+        /**
+         * Retourne la liste des Hailitations filtrées avec la recherche 
+         * 
+         * @returns {array}
+         */
         filtredHabilitations(){
             if(this.echeancier.habilitation.length == 0 || (this.echeancier.habilitation.length == 1 && this.echeancier.habilitation.includes(''))){
                 return this.allHabilitations
@@ -109,6 +119,9 @@ export default {
             }
         },
 
+        /**
+         * Charge les données des kns via les diferents filtre de periodes, personnels et habilitations
+         */
         getKn(){
             if(this.echeancier){
                 let query = {
@@ -139,6 +152,14 @@ export default {
             }
         },
 
+        /**
+         * Retourne la liste des kns filtré par l'id d'un personnele ou d'une habilkitation
+         * 
+         * @param {number} id id pour le filtre
+         * @param {string} type decrit le type de tableau a afficher
+         * 
+         * @returns {array} tout les kns trié
+         */
         filtredkns(id, type){
             if(type == 'habilitation'){
                 return this.kns.filter(item => item.habilitation_id == id)
@@ -147,6 +168,9 @@ export default {
             }
         },
 
+        /**
+         * Charge tous les operateurs
+         */
         getAllOp(){
             this.$app.api.get('/v2/personnel')
                 .then(data => {
@@ -155,6 +179,11 @@ export default {
                 .catch(this.$app.catchError);
         },
 
+        /**
+         * Retourne la liste des opérateurs triés en fonction des filtre selectionnés
+         * 
+         * @returns {array}
+         */
         filtredOp(){
             if(this.echeancier.operateurs.length == 0 || (this.echeancier.operateurs.length == 1 && this.echeancier.operateurs.includes(''))){
                 return this.allOp
@@ -163,6 +192,9 @@ export default {
             }
         },
 
+        /**
+         * Charge les données relative a la période selectionné comme suit: [objet{semaine: number, annee: number}]
+         */
         getPeriode() {
             if(this.echeancier){
                 let query = {
@@ -181,7 +213,7 @@ export default {
                         for(let date of data){
                             let week = {
                                 semaine : date.slice(0,2),
-                                annee:date.slice(3), 
+                                annee: date.slice(3), 
                             }
                             this.periode.push(week)
                         }
@@ -190,6 +222,9 @@ export default {
             }
         },
 
+        /**
+         * Charges tout les contrats 
+         */
         getContrat(){
             this.$app.api.get('/v2/contrat/')
                 .then(data => {
