@@ -4,51 +4,67 @@
 			<template v-if="!stats">
 				<h1 class="fs-3 my-3 text-center">Tableau de bord</h1>
 
+				<div>{ "id": 801, "dc": "2023-03-30 11:34:03", "dm": "2023-03-30 12:11:56", "commentaire": "", "ordre": 0, "keygen": "m387d26fz8xc", "id_edi": null, "structure": 13, "sess_login_id": 599, "corbeille": "NON", "personne": 722, "matricule": "00520", "nss": "193122211324685", "mls__secteur": null, "mls__fonction": 515, "niveau_hierarchique": 3, "n_1": 790, "cache_nom": "BATHIANY Antoine", "dentree": "2022-01-01 00:00:00", "dsortie": null, "structure__personnel_contrat_id": 6248, "organigramme": null, "archived": null, "readOnly": false, "initials": "BAE" }</div>
 
+				<div v-for="col in collectes" :key="col.id">
+					<span>id {{ col.id }}</span><br>
+					<span>{{ col.result_var }}</span><br>
+					<span> Controleur : {{ col.enqueteur_nom }}</span><br>
+					<span> Operateur : {{ col.cible_nom }}</span><br>
+				
+				</div>
 
-
+				<div v-for="inf in listActifs" :key="inf.id">
+					<span>id {{ inf.id }}</span><br>
+					<span>structure__personnel_contrat_id : {{ inf.structure__personnel_contrat_id }}</span><br>
+					<span>matricule {{ inf.matricule }}</span><br>
+					<span>nss {{ inf.nss }}</span><br><br>
+				</div>
+				
 				<alert-message variant="warning" icon="bi-exclamation-circle me-2" v-if="stat">Aucun résultat pour cette
 					recherche.</alert-message>
-				<div class="card my-3">
-					<div class="card-body">
-						<div class="row align-items-center">
-							<div class="col display-6 fs-4 text-center">
-								Retrouvez ici tes les Controles KN à effectuer. Cliquez sur la map pour lancer l'itinéraire
-								!
+					<div class="card my-3">
+						<div class="card-body">
+							<div class="row align-items-center">
+								<div class="col display-6 fs-4 text-center">
+									Retrouvez ici tes les Controles KN à effectuer. Cliquez sur la map pour lancer l'itinéraire
+									!
+								</div>
 							</div>
 						</div>
 					</div>
+				</template>
+				<template v-else>
+					<div class="d-flex align-items-center my-3">
+						<div class="d-flex align-items-center">
+							<user-image :name="personnelNom" className="me-2" />
+							<h1 class="fs-3 m-0 me-3">{{ personnelNom }}</h1>
+						</div>
+						<div class="fw-light text-secondary text-end">du {{ changeFormatDateLit(requeteStat.dd) }} au
+							{{ changeFormatDateLit(requeteStat.df) }}</div>
+						</div>
+						<charts :stats="stats" v-if="stats" />
+					</template>
 				</div>
-			</template>
-			<template v-else>
-				<div class="d-flex align-items-center my-3">
-					<div class="d-flex align-items-center">
-						<user-image :name="personnelNom" className="me-2" />
-						<h1 class="fs-3 m-0 me-3">{{ personnelNom }}</h1>
-					</div>
-					<div class="fw-light text-secondary text-end">du {{ changeFormatDateLit(requeteStat.dd) }} au
-						{{ changeFormatDateLit(requeteStat.df) }}</div>
-				</div>
-				<charts :stats="stats" v-if="stats" />
-			</template>
-		</div>
-
-		<!-- bloc de controle par jour -->
-		<div class="container p-2">
-			<div class="card my-3" v-for="(date, index) in dates" :key="index">
-				<div class="card-body">
-					<div class="row align-items-center">
-						<div class="col-12">
-							<div class="fw-light text-secondary text-center mb-1 fw-bold">{{ date.dayName }} {{ date.date }}
+				
+				<!-- bloc de controle par jour -->
+				<div class="container p-2">
+					<div class="card my-3" v-for="(date, index) in dates" :key="index">
+						<div class="card-body">
+							<div class="row align-items-center">
+								<div class="col-12">
+									<div class="fw-light text-secondary text-center mb-1 fw-bold">{{ date.dayName }} {{ date.date }}
+									</div>
+								</div>
 							</div>
+							<CarteDeControle :collectes="'collectes'"></CarteDeControle>
 						</div>
 					</div>
-					<CarteDeControle></CarteDeControle>
 				</div>
+				listActifs: {{ listActifs }}
+				collectes : {{ collectes }}
+				<RouterView></RouterView>
 			</div>
-		</div>
-		<RouterView></RouterView>
-	</div>
 </template>
 
 <script>
@@ -65,6 +81,7 @@ export default {
 	data() {
 		return {
 			dates: [],
+			collectes: [],
 
 		};
 	},
@@ -96,6 +113,16 @@ export default {
 		changeFormatDateLit(el) {
 			return dateFormat(el);
 		},
+		loadCollectes() {
+			this.$app.apiGet('data/GET/collecte',{
+				environnement: 'private'
+			})
+				.then((data) => {
+					console.log(data,'toto');
+					this.collectes = data;
+				})
+		},
+
 	},
 	beforeUnmount() {
 		this.refreshStat(null);
@@ -127,6 +154,9 @@ export default {
 		AlertMessage,
 		UserImage,
 		CarteDeControle,
+	},
+	beforeMount() {
+		this.loadCollectes();
 	},
 };
 </script>

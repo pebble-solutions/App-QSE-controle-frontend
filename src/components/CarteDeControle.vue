@@ -1,17 +1,14 @@
 <template>
 	<div class="row bg-light rounded shadow p-2 m-2 mb-2">
 		<div class="fw-light text-secondary text-center mb-2 fw-bold">
-			KN annonceur - <span class="badge" :class="badgeClass">
-				<i class="bi bi-hourglass"></i>
-				{{ getDateDifference(dfCritique) }} j
-			</span>
+			KN annonceur - <SablierDeJours :date="dfCritique"></SablierDeJours>
 		</div>
 
 		<div class="col-12 col-lg-6 mb-3 mb-lg-0 d-flex flex-column justify-content-between">
 			<div class="row my-auto gx-lg-5 align-items-center">
 				<RouterLink to="agent" v-slot="{ navigate, href }" custom>
 					<a :href="href" @click="navigate" class="router-link text-decoration-none text-dark">
-						<MiniInfosAgent></MiniInfosAgent>
+						<MiniInfosAgent :idCible="id"></MiniInfosAgent>
 					</a>
 				</RouterLink>
 
@@ -30,9 +27,11 @@
 			<div v-if="chantier">
 				<CarteMapEtAdresse :chantier="chantier" />
 			</div>
+
 			<div v-else>
 				<CarteChoisirChantier />
 			</div>
+		
 		</div>
 
 		<div class="text-center mt-sm-2 d-lg-none p-0">
@@ -46,14 +45,15 @@ import SuiviHabilitation from '../components/SuiviHabilitation.vue';
 import MiniInfosAgent from '../components/MiniInfosAgent.vue';
 import CarteMapEtAdresse from '../components/CarteMapEtAdresse.vue';
 import CarteChoisirChantier from '../components/CarteChoisirChantier.vue';
+import SablierDeJours from '../components/SablierDeJours.vue';
+import { mapState } from 'vuex';
 
 export default {
 	data() {
 		return {
-			chantier: "Lorient", // Remplacez par votre propriété de chantier réel "lorient"
-			dfCritique: '2023-07-01',
-
-			// todo : donne à dfCritique la valeur la plus faible parmis : la difference entre dfveille et date du jour ou la diffrence entre df et la date du jour
+			chantier: "Lorient", // Remplacez par votre propriété de chantier réelle ou par NULL
+			dfCritique: '2023-07-01',   
+			id: '735',
 		};
 	},
 	components: {
@@ -61,35 +61,13 @@ export default {
 		MiniInfosAgent,
 		CarteMapEtAdresse,
 		CarteChoisirChantier,
+		SablierDeJours,
 	},
 	computed: {
-		badgeClass() {
-			const currentDate = new Date();
-			const dfDate = new Date(this.dfCritique);
 
-			if (dfDate > currentDate) {
-				return 'badge bg-success';
-			} else {
-				return 'badge bg-danger';
-			}
-		},
-	},
-	methods: {
-		getDateDifference(date) {
-			const currentDate = new Date();
-			const dfDate = new Date(date);
+		...mapState(['listActifs']),
 
-			const timeDifference = dfDate.getTime() - currentDate.getTime();
-			const dayDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
-
-			if (dayDifference > 0) {
-				return `-${dayDifference}`;
-			} else if (dayDifference < 0) {
-				return `+${Math.abs(dayDifference)}`;
-			} else {
-				return ``;
-			}
-		},
+		
 	},
 };
 </script>

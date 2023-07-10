@@ -5,7 +5,7 @@
 					<div class="row">
 						<div class="col-12 text-center mb-3">
 							<div class="row fw-bold">
-								<div class="col-12">RAV LORIENT</div>
+								<div class="col-12">RAV Lorient</div>
 								<div class="col-12">21.02.23 au 22.02.23</div>	
 							</div>
 						</div>
@@ -27,8 +27,13 @@
 </template>
 <script>
 import InteractiveMap from '../components/InteractiveMap.vue';
+import { mapState } from 'vuex';
 
 export default {
+    computed: {
+        ...mapState(['listActifs', 'collectes']),
+    },
+
 	components: {
 	InteractiveMap,
 	},

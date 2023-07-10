@@ -427,6 +427,7 @@ export default {
 
 			return this.$app.apiGet(route, query)
 				.then(data => {
+					console.log(data, "ressources");
 					this[refreshMethod](data);
 					return data;
 				})
