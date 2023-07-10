@@ -87,8 +87,8 @@
         <StatHabilitation :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
         </StatHabilitation>
         <StatProjet :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations"></StatProjet>
-        <StatControleur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
-        </StatControleur>
+        <!-- <StatControleur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
+        </StatControleur> -->
     </div>
 </template>
 
@@ -98,7 +98,7 @@ import GlobalPieChart from '../components/googleCharts/GlobalPieChart.vue'
 import StatOperateur from '../components/googleCharts/StatOperateur.vue'
 import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
-import StatControleur from '../components/googleCharts/StatControleur.vue'
+// import StatControleur from '../components/googleCharts/StatControleur.vue'
 
 export default {
     data() {
@@ -237,7 +237,7 @@ export default {
             totalHabilitations: 12
         }
     },
-    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur },
+    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet  }, //StatControleur
     methods: {
         computeTimeDiff() {
             const startDate = new Date(this.startDate);

@@ -134,7 +134,10 @@
 					Il n'y a pas de personnels concernés
 				</div>
 			</AppMenu>
-
+			<AppMenu v-else-if="listMode === 'statistiques'">
+				<!-- <form-stats /> -->
+				<formforstats></formforstats>
+			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
@@ -172,7 +175,7 @@ import CollecteItem from './components/CollecteItem.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
-
+import formforstats from './views/formforstats.vue'
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
@@ -435,20 +438,7 @@ export default {
 				.finally(() => this.pending[pending] = false)
 		},
 
-		/**<AppMenu v-else-if="listMode == 'operateur'">
-				<!-- <AppMenuItem href="/habilitation/Agent"> 
-					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
-				</AppMenuItem> -->
-					<template v-for="agent in listActifs" :key="agent.id" >
-						<AppMenuItem :href="'/operateur/'+agent.id">
-							{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
-						</AppMenuItem>
-					</template>
-					<div class="alert alert-info m-2" v-if="!listActifs?.length">
-						Il n'y a pas de personnels concernés
-					</div>
-		 * Charge le personnel actifs
-		 */
+		
 		loadAgent() {
 			this.pending.actifs = true;
 			this.$app.apiGet('structurePersonnel/GET/list', {
@@ -597,7 +587,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone }, //,  , SearchHab 
+	components: { formforstats, AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone }, //,  , SearchHab 
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
