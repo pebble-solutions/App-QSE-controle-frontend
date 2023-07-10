@@ -2,6 +2,8 @@
     <div class="container py-2 px-2">
         <spinner v-if="pending.collecte" />
         <template v-else>
+            <hab-monitor v-if="collecte.tli" :habId="collecte.tli"></hab-monitor>
+            {{ collecte.tli }}
             <consultation-collecte-resume :collecte="collecte" :levelUser="login.type" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             <router-view></router-view>
         </template>
@@ -14,9 +16,11 @@ import {mapState, mapActions} from 'vuex';
 
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import HabMonitor from '../components/collecte/HabMonitor.vue';
+
 
 export default {
-    components:{ConsultationCollecteResume, Spinner}, 
+    components:{ConsultationCollecteResume, Spinner, HabMonitor}, 
 
     data() {
         return {
@@ -27,7 +31,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['collectes', 'collecte', 'login' ]),
+        ...mapState(['collectes', 'collecte', 'login', 'collectesCollection']),
 
 
         /**
@@ -37,6 +41,7 @@ export default {
 
         filterCollecte() {
             let collecteid = this.collectes.filter((collecte)=> collecte.id == this.$route.params.idCollecte);
+            console.log(collecteid, 'computed')
             return collecteid;
         },
     },
@@ -59,6 +64,7 @@ export default {
             })
             .then((data) => {
                 this.setCollecte(data);
+                
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
     },
