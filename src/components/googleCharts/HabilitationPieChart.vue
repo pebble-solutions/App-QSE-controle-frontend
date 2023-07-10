@@ -1,15 +1,14 @@
 <template>
-    <div id="projectPieChart" :v-if="chartDataLoaded"></div>
+    <div id="knPieChart" :v-if="chartDataLoaded"></div>
 </template>
 
 <script>
 import { GoogleCharts } from 'google-charts'
 
 export default {
-
     data() {
         return {
-            chartData: [],
+            chartData: null,
             chartDataLoaded: false,
         }
     },
@@ -23,16 +22,16 @@ export default {
             this.chartData = [
                 ['Réponses', 'Nombre']
             ];
-            const ids = [1157, 1158];
+            const ids = [728, 137];
             let i = 1;
 
             ids.forEach(id => {
                 data.forEach(collecte => {
-                    if (collecte['projet_id'] == id) {
+                    if (collecte['habilitation_id'] == id) {
                         if (this.chartData[i]) {
                             this.chartData[i][1]++;
                         } else {
-                            this.chartData.push(["Projet " + id, 1]);
+                            this.chartData.push(["Habilitation " + id, 1]);
                         }
                     }
                 });
@@ -42,7 +41,7 @@ export default {
         },
         async drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
-            let chartWrap = await document.getElementById('projectPieChart');
+            let chartWrap = await document.getElementById('knPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
             chart.draw(dataTable);
         }
@@ -52,6 +51,7 @@ export default {
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         })
+
     },
 }
 </script>

@@ -348,7 +348,6 @@ export default {
 				apiRoute: 'v2/collecte/?done=OUI&type=KN'
 			});
 			this.$assets.addCollection('collectes', collecteCollection);
-			console.log(collecteCollection, this.$assets.getCollection('collectes'));
 		},
 
 		/**

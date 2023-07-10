@@ -1,5 +1,5 @@
 <template>
-    <div id="agendaChart"></div>
+    <div id="agendaChart" :v-if="chartDataLoaded"></div>
 </template>
 
 <script>
@@ -14,14 +14,15 @@ export default {
     },
     methods: {
         async fetchData() {
+            this.chartDataLoaded = false;
             let collection = this.$assets.getCollection('collectes');
             await collection.load();
             const data = collection.getCollection();
 
             const dateOccurrences = {};
             for (const element of data) {
-                if (element['date'] != null) {
-                    const date = element['date'].split(' ')[0];
+                if (element['date_done'] != null) {
+                    const date = element['date_done'].split(' ')[0];
                     dateOccurrences[date] = dateOccurrences[date] ? dateOccurrences[date] + 1 : 1;
                 }
             }
@@ -34,11 +35,13 @@ export default {
             this.chartDataLoaded = true;
         },
 
-        drawChart() {
+        async drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, true);
-            let chartWrap = document.getElementById('agendaChart');
+            let chartWrap = await document.getElementById('agendaChart');
             let chart = new GoogleCharts.api.visualization.Calendar(chartWrap);
             chart.draw(dataTable);
+            var cli = chart.getChartLayoutInterface();
+            this.$refs.card.style.height = cli.getBoundingBox('chartarea').height
         }
     },
 

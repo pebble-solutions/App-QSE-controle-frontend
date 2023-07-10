@@ -1,45 +1,70 @@
 <template>
-    <div>
-        <GChart :type="type" :data="chartData" :options="options" v-if="chartDataLoaded" />
-    </div>
+        <div id="controlerPieChart" :v-if="chartDataLoaded"></div>
 </template>
 
 <script>
-import { GChart } from 'vue-google-charts'
+import { GoogleCharts } from 'google-charts'
 
 export default {
-    props: {
-        jsonData: {
-            type: Object,
-            required: true
-        }
-    },
-
-    components: { GChart },
 
     data() {
         return {
-            type: "PieChart",
-            chartData: null,
+            chartData: [],
             chartDataLoaded: false,
-            options: {}
         }
-    },
-    mounted() {
-        this.fetchData(this.jsonData);
     },
     methods: {
-        fetchData(jsonData) {
-            console.log(jsonData);
+        async fetchData() {
+            this.chartDataLoaded = false;
+            let collection = this.$assets.getCollection('collectes');
+            await collection.load();
+            const data = collection.getCollection();
+
             this.chartData = [
-                ['Contrôleurs', 'Amount'],
-                ['Contrôleur 1', 33],
-                ['Contrôleur 2', 33],
-                ['Contrôleur 3', 33],
-                ['Contrôleur 4 ', 33],
+                ['Réponses', 'Nombre'],
+                ['S', 0],
+                ['A', 0],
+                ['M', 0],
+                ['I', 0],
             ];
+            const ids = [133];
+
+            ids.forEach(id => {
+                data.forEach(collecte => {
+                    if (collecte['personnel_id__controleur'] == id) {
+                        switch (collecte['sami']) {
+                            case 'S':
+                                this.chartData[1][1]++;
+                                break;
+                            case 'A':
+                                this.chartData[2][1]++;
+                                break;
+                            case 'M':
+                                this.chartData[3][1]++;
+                                break;
+                            case 'I':
+                                this.chartData[4][1]++;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            });
             this.chartDataLoaded = true;
+        },
+        async drawChart(){
+            let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
+            let chartWrap = await document.getElementById('controlerPieChart');
+            let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
+            chart.draw(dataTable);
         }
-    }
+    },
+    async mounted() {
+        await this.fetchData();
+        GoogleCharts.load(this.drawChart, {
+            packages: ['corechart'],
+        })
+    },
 }
 </script>

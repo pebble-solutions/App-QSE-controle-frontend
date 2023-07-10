@@ -23,7 +23,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Répartition des réponses</h3>
-                    <ProjectBarChart :jsonData="jsonData"></ProjectBarChart>
+                    <ProjectBarChart></ProjectBarChart>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Nombre de KN par projet</h3>
-                    <ProjectPieChart :jsonData="jsonData"></ProjectPieChart>
+                    <ProjectPieChart></ProjectPieChart>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <ProjectTable :jsonData="jsonData"></ProjectTable>
+                    <ProjectTable></ProjectTable>
                 </div>
             </div>
         </div>
@@ -66,10 +66,5 @@ export default {
         }
     },
     components: { ProjectBarChart, ProjectPieChart, ProjectTable},
-    data() {
-        return {
-            jsonData: { "test": "oui"  }
-        }
-    },
 }
 </script>

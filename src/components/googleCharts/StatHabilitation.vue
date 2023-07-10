@@ -23,7 +23,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Répartition de réponses par KN</h3>
-                    <KnBarChart :jsonData="jsonData"></KnBarChart>
+                    <HabilitationBarChart></HabilitationBarChart>
                 </div>
             </div>
         </div>
@@ -32,7 +32,8 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <KnPieChart :jsonData="jsonData"></KnPieChart>
+                    <h3 class="card-title fs-4">Répartition des types d'habilitations</h3>
+                    <HabilitationPieChart></HabilitationPieChart>
                 </div>
             </div>
         </div>
@@ -41,7 +42,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <KnTable :jsonData="jsonData"></KnTable>
+                    <HabilitationTable></HabilitationTable>
                 </div>
             </div>
         </div>
@@ -49,10 +50,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import KnBarChart from './KnBarChart.vue';
-import KnPieChart from './KnPieChart.vue';
-import KnTable from './KnTable.vue';
+import HabilitationBarChart from './HabilitationBarChart.vue';
+import HabilitationPieChart from './HabilitationPieChart.vue';
+import HabilitationTable from './HabilitationTable.vue';
 
 export default {
     props: {
@@ -65,14 +65,6 @@ export default {
             required: true
         }
     },
-    computed:{
-        ...mapState['collectes'],
-    },
-    components: { KnBarChart, KnPieChart, KnTable},
-    data() {
-        return {
-            jsonData: { "test": "oui"  }
-        }
-    },
+    components: { HabilitationBarChart, HabilitationPieChart, HabilitationTable},
 }
 </script>

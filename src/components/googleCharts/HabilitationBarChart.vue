@@ -1,5 +1,5 @@
 <template>
-    <div id="projectBarChart" :v-if="chartDataLoaded"></div>
+    <div id="knBarChart" :v-if="chartDataLoaded"></div>
 </template>
 
 <script>
@@ -19,40 +19,40 @@ export default {
             await collection.load();
             const data = collection.getCollection();
 
-            this.chartData = [['Projets', 'S', 'A', 'M', 'I']];
+            this.chartData = [['Habilitations', 'S', 'A', 'M', 'I']];
 
-            const ids = [1158];
+            const ids = [751];
             let i = 1;
             for (const id of ids) {
                 data.forEach(collecte => {
-                    if (collecte['projet_id'] == id) {
+                    if (collecte['habilitation_id'] == id) {
                         switch (collecte['sami']) {
                             case 'S':
                                 if (this.chartData[i]) {
                                     this.chartData[i][1]++;
                                 } else {
-                                    this.chartData.push(['Projet ' + id, 1, 0, 0, 0]);
+                                    this.chartData.push(['Habilitation ' + id, 1, 0, 0, 0]);
                                 }
                                 break;
                             case 'A':
                                 if (this.chartData[i]) {
                                     this.chartData[i][2]++;
                                 } else {
-                                    this.chartData.push(['Projet ' + id, 0, 1, 0, 0]);
+                                    this.chartData.push(['Habilitation ' + id, 0, 1, 0, 0]);
                                 }
                                 break;
                             case 'M':
                                 if (this.chartData[i]) {
                                     this.chartData[i][3]++;
                                 } else {
-                                    this.chartData.push(['Projet ' + id, 0, 0, 1, 0]);
+                                    this.chartData.push(['Habilitation ' + id, 0, 0, 1, 0]);
                                 }
                                 break;
                             case 'I':
                                 if (this.chartData[i]) {
                                     this.chartData[i][4]++;
                                 } else {
-                                    this.chartData.push(['Projet ' + id, 0, 0, 0, 1]);
+                                    this.chartData.push(['Habilitation ' + id, 0, 0, 0, 1]);
                                 }
                                 break;
                             default:
@@ -66,7 +66,7 @@ export default {
         },
         async drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
-            let chartWrap = await document.getElementById('projectBarChart');
+            let chartWrap = await document.getElementById('knBarChart');
             let chart = new GoogleCharts.api.visualization.BarChart(chartWrap);
             let options = {
                 isStacked: 'percent',

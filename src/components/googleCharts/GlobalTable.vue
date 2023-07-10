@@ -1,14 +1,23 @@
 <template>
-    <div id="globalPieChart" :v-if="chartDataLoaded"></div>
+    <table class="table" :v-if="chartDataLoaded">
+        <thead>
+            <tr>
+                <th v-for="(label, index) in chartData[0]" :key="index">{{ label }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(row, rowIndex) in chartData.slice(1)" :key="rowIndex">
+                <td v-for="(value, columnIndex) in row" :key="columnIndex">{{ value }}</td>
+            </tr>
+        </tbody>
+    </table>
 </template>
-
+    
 <script>
-import { GoogleCharts } from 'google-charts'
-
 export default {
     data() {
         return {
-            chartData: null,
+            chartData: [],
             chartDataLoaded: false,
         }
     },
@@ -16,47 +25,40 @@ export default {
         async fetchData() {
             this.chartDataLoaded = false;
             this.chartData = [
-                ['Réponses', 'Nombre'],
-                ['S', 0],
-                ['A', 0],
-                ['M', 0],
-                ['I', 0],
+                ['KN', 'S', 'A', 'M', 'I'],
+                [0, 0, 0, 0, 0]
             ];
+
             let collection = this.$assets.getCollection('collectes');
             await collection.load();
             const data = collection.getCollection();
+
             data.forEach(collecte => {
+                this.chartData[1][0]++;//incrémentation du champ KN
+
                 switch (collecte['sami']) {
                     case 'S':
                         this.chartData[1][1]++;
                         break;
                     case 'A':
-                        this.chartData[2][1]++;
+                        this.chartData[1][2]++;
                         break;
                     case 'M':
-                        this.chartData[3][1]++;
+                        this.chartData[1][3]++;
                         break;
                     case 'I':
-                        this.chartData[4][1]++;
+                        this.chartData[1][4]++;
                         break;
                     default:
                         break;
                 }
             });
             this.chartDataLoaded = true;
-        },
-        async drawChart(){
-            let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
-            let chartWrap = await document.getElementById('globalPieChart');
-            let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
-            chart.draw(dataTable);
         }
     },
-    async mounted() {
-        await this.fetchData();
-        GoogleCharts.load(this.drawChart, {
-            packages: ['corechart'],
-        })
+    mounted() {
+        this.fetchData();
     },
 }
 </script>
+    

@@ -32,15 +32,15 @@ export default {
       const data = collection.getCollection();
       let habilitationTypeHistory = [];
 
-      const ids = [437];
+      const ids = [137];
       let i = 1;
       ids.forEach(id => {
         data.forEach(collecte => {
-          if (id == collecte['personnel_id__operateur']) {
+          if (id == collecte['habilitation_id']) {
             if (this.chartData[i]) {
               this.chartData[i][1]++;//incrémentation du champ KN
-              if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
-                habilitationTypeHistory.push(collecte['habilitation_type_id']);
+              if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_id']) == -1) {
+                habilitationTypeHistory.push(collecte['habilitation_id']);
               }
               this.chartData[i][3]++;
               switch (collecte['sami']) {
@@ -60,7 +60,7 @@ export default {
                   break;
               }
             } else {
-              this.chartData.push(['Opérateur ' + id, 0, 0, 0, 0, 0, 0, 0]);
+              this.chartData.push(['Habilitation ' + id, 0, 0, 0, 0, 0, 0, 0]);
             }
           }
         });

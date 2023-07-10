@@ -38,10 +38,10 @@
         </div>
         <div class="row">
             <div class="col-9">
-                <div class="card my-2 overflow-auto">
+                <div class="card my-2 overflow-auto" ref="card">
                     <div class="card-body">
                         <h3 class="card-title fs-4">Agenda</h3>
-                        <AgendaChart :jsonData="data"></AgendaChart>
+                        <AgendaChart></AgendaChart>
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                 <div class="card my-2">
                     <div class="card-body">
                         <h3 class="card-title fs-4">Répartition des réponses</h3>
-                        <GlobalPieChart :jsonData="pieChartData"></GlobalPieChart>
+                        <GlobalPieChart></GlobalPieChart>
                     </div>
                 </div>
             </div>
@@ -58,26 +58,7 @@
             <div class="col-12">
                 <div class="card my-2">
                     <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>KN</th>
-                                    <th>S</th>
-                                    <th>A</th>
-                                    <th>M</th>
-                                    <th>I</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>79</td>
-                                    <td>33</td>
-                                    <td>12</td>
-                                    <td>10</td>
-                                    <td>8</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <GlobalTable></GlobalTable>
                     </div>
                 </div>
             </div>
@@ -99,126 +80,11 @@ import StatOperateur from '../components/googleCharts/StatOperateur.vue'
 import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
+import GlobalTable from '../components/googleCharts/GlobalTable.vue'
 
 export default {
     data() {
         return {
-            data: {
-                "status": "OK",
-                "datetime": "2023-06-15 16:02:36",
-                "data": [
-                    {
-                        "id": 852,
-                        "dc": "2023-03-10 15:55:36",
-                        "dm": "2023-03-10 16:30:00",
-                        "commentaire": "Premier essai du nouveau formulaire de veille système.",
-                        "ordre": 0,
-                        "keygen": "e44he8zey9rb",
-                        "id_edi": null,
-                        "structure": 3,
-                        "sess_login_id": 235,
-                        "corbeille": "NON",
-                        "information__groupe_id": 63,
-                        "tlc": null,
-                        "tli": null,
-                        "team_id": null,
-                        "grant_login": null,
-                        "grant_team": null,
-                        "grant_public": null,
-                        "date": "2022-12-10 00:00:00",
-                        "enqueteur__login_id": null,
-                        "enqueteur__structure__personnel_id": 508,
-                        "rapport": "Il est important de poursuivre la mise à jour du process logistique avec un inventaire complet du matériel par opérateur.\r\nNous nous sommes améliorés dans la traçabilité de nos données grâce à la création des tableaux de bords.",
-                        "document_id": null,
-                        "cible__login_id": null,
-                        "cible__structure__personnel_id": 0,
-                        "done": "OUI",
-                        "nb_question": 16,
-                        "nb_reponse": 16,
-                        "projet_id": null,
-                        "ticket_id": null,
-                        "result_integer": null,
-                        "result_float": null,
-                        "result_var": "A",
-                        "result_enum": null,
-                        "result_datetime": null,
-                        "result_text": null,
-                        "actions": "Créer un formulaire Pebble afin de réaliser un suivi plus approfondie des opérateurs sous tutorat.\r\n",
-                        "date_done": "2023-03-10 16:30:00",
-                        "previous_id": null,
-                        "following_id": null,
-                        "date_start": "2023-03-10 16:30:00",
-                        "unlocked": null,
-                        "projet_label": null,
-                        "enqueteur_nom": "COUFFIN Virginie",
-                        "cible_nom": null,
-                        "groupe_lock_timeout": null,
-                        "following_result": null,
-                        "previous_result": null,
-                        "formulaire": 63,
-                        "cible_login": null,
-                        "cible_personnel": 0,
-                        "enqueteur_login": null,
-                        "enqueteur_personnel": 508,
-                        "locked": true
-                    },
-                    {
-                        "id": 844,
-                        "dc": "2023-03-10 09:39:34",
-                        "dm": "2023-03-10 10:26:20",
-                        "commentaire": "Premier essai du nouveau formulaire de veille système.",
-                        "ordre": 0,
-                        "keygen": "wnz9kxkbgb4n",
-                        "id_edi": null,
-                        "structure": 3,
-                        "sess_login_id": 235,
-                        "corbeille": "NON",
-                        "information__groupe_id": 63,
-                        "tlc": null,
-                        "tli": null,
-                        "team_id": null,
-                        "grant_login": null,
-                        "grant_team": null,
-                        "grant_public": null,
-                        "date": "2022-12-10 00:00:00",
-                        "enqueteur__login_id": null,
-                        "enqueteur__structure__personnel_id": 508,
-                        "rapport": "Les questions JFC et suspension ne sont pas évaluées car actuellement en cours.\r\nNous devons nous améliorer sur le suivi du tutorat des opérateurs en doublons.",
-                        "document_id": null,
-                        "cible__login_id": null,
-                        "cible__structure__personnel_id": 0,
-                        "done": "OUI",
-                        "nb_question": 16,
-                        "nb_reponse": 16,
-                        "projet_id": null,
-                        "ticket_id": null,
-                        "result_integer": null,
-                        "result_float": null,
-                        "result_var": "A",
-                        "result_enum": null,
-                        "result_datetime": null,
-                        "result_text": null,
-                        "actions": "Créer un formulaire via Pebble de fin de tutorat pour avoir un retour du tuteur sur l'opérateur et évaluer l'efficacité de sa période de doublon.",
-                        "date_done": "2023-03-10 10:26:20",
-                        "previous_id": null,
-                        "following_id": null,
-                        "date_start": "2023-03-10 10:26:20",
-                        "unlocked": null,
-                        "projet_label": null,
-                        "enqueteur_nom": "COUFFIN Virginie",
-                        "cible_nom": null,
-                        "groupe_lock_timeout": null,
-                        "following_result": null,
-                        "previous_result": null,
-                        "formulaire": 63,
-                        "cible_login": null,
-                        "cible_personnel": 0,
-                        "enqueteur_login": null,
-                        "enqueteur_personnel": 508,
-                        "locked": true
-                    }
-                ]
-            },
             startDate: '',
             endDate: '',
             daysDiff: 0,
@@ -237,7 +103,7 @@ export default {
             totalHabilitations: 12
         }
     },
-    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur },
+    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable},
     methods: {
         computeTimeDiff() {
             const startDate = new Date(this.startDate);

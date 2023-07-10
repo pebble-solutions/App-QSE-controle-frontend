@@ -1,42 +1,84 @@
 <template>
-    <GChart :type="type" :data="chartData" :options="options" v-if="chartDataLoaded" />
+    <div id="operatorBarChart" :v-if="chartDataLoaded"></div>
 </template>
 
 <script>
-import { GChart } from 'vue-google-charts'
+import { GoogleCharts } from 'google-charts'
 
 export default {
-    props: {
-        jsonData: {
-            type: Object,
-            required: true
-        }
-    },
-
-    components: { GChart },
-
     data() {
         return {
-            type: "BarChart",
             chartData: null,
             chartDataLoaded: false,
-            options: {
-                isStacked: "percent",
-            },
         }
-    },
-    mounted() {
-        this.fetchData(this.jsonData);
     },
     methods: {
-        fetchData(jsonData) {
-            console.log(jsonData),
-                this.chartData = [
-                    ['Opérateurs', 'S', 'A', 'M', 'I'],
-                    ['Opérateur 1', 10, 3, 5, 2],
-                ];
+        async fetchData() {
+            this.chartDataLoaded = false;
+            let collection = this.$assets.getCollection('collectes');
+            await collection.load();
+            const data = collection.getCollection();
+
+            this.chartData = [];
+            this.chartData.push(['Opérateurs', 'S', 'A', 'M', 'I']);
+            const ids = [268, 133];
+            let i = 1;
+            for (const id of ids) {
+                data.forEach(collecte => {
+                    if (collecte['personnel_id__operateur'] == id) {
+                        switch (collecte['sami']) {
+                            case 'S':
+                                if (this.chartData[i]) {
+                                    this.chartData[i][1]++;
+                                } else {
+                                    this.chartData.push(['Opérateur ' + id, 0, 0, 0, 0]);
+                                }
+                                break;
+                            case 'A':
+                                if (this.chartData[i]) {
+                                    this.chartData[i][2]++;
+                                } else {
+                                    this.chartData.push(['Opérateur ' + id, 0, 0, 0, 0]);
+                                }
+                                break;
+                            case 'M':
+                                if (this.chartData[i]) {
+                                    this.chartData[i][3]++;
+                                } else {
+                                    this.chartData.push(['Opérateur ' + id, 0, 0, 0, 0]);
+                                }
+                                break;
+                            case 'I':
+                                if (this.chartData[i]) {
+                                    this.chartData[i][4]++;
+                                } else {
+                                    this.chartData.push(['Opérateur ' + id, 0, 0, 0, 0]);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+                i++;
+            }
             this.chartDataLoaded = true;
+        },
+        async drawChart() {
+            let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
+            let chartWrap = await document.getElementById('operatorBarChart');
+            let chart = new GoogleCharts.api.visualization.BarChart(chartWrap);
+            let options = {
+                isStacked: 'percent',
+            };
+            chart.draw(dataTable, options);
         }
-    }
+    },
+    async mounted() {
+        await this.fetchData();
+        GoogleCharts.load(this.drawChart, {
+            packages: ['corechart'],
+        });
+    },
 }
 </script>

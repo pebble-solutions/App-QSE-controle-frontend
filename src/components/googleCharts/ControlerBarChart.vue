@@ -1,66 +1,59 @@
 <template>
-    <GChart :type="type" :data="chartData" :options="options" v-if="chartDataLoaded" />
-    <div id="controlerBarChart"></div>
+    <div id="controlerBarChart" :v-if="chartDataLoaded"></div>
 </template>
 
 <script>
-import { GChart } from 'vue-google-charts'
 import { GoogleCharts } from 'google-charts'
 
 export default {
-    components: { GChart },
-
     data() {
         return {
-            type: "BarChart",
             chartData: [],
             chartDataLoaded: false,
-            options: {
-                isStacked: "percent",
-                height: 0,
-            },
-            pixelHeight: 75
         }
     },
     methods: {
         async fetchData() {
-            /*this.chartData = [
-                ['Contrôleurs', 'S', 'A', 'M', 'I'],
-                ['Contrôleur 1', 10, 3, 5, 2],
-                ['Contrôleur 2', 10, 3, 5, 2],
-            ];*/
-
+            this.chartDataLoaded = false;
             let collection = this.$assets.getCollection('collectes');
             await collection.load();
             const data = collection.getCollection();
 
-            this.chartData = [];
-            this.chartData.push(['Contrôleurs', 'S', 'A', 'M', 'I']);
-            const ids = [268];
+            this.chartData = [['Contrôleurs', 'S', 'A', 'M', 'I']];
+
+            const ids = [268, 133];
             let i = 1;
             for (const id of ids) {
-                data.array.forEach(collecte => {
+                data.forEach(collecte => {
                     if (collecte['personnel_id__controleur'] == id) {
                         switch (collecte['sami']) {
                             case 'S':
                                 if (this.chartData[i]) {
                                     this.chartData[i][1]++;
-                                } else { this.chatData[i] = ['Contrôleur ' + i, 0, 0, 0, 0] }
+                                } else {
+                                    this.chartData.push(['Contrôleur ' + id, 1, 0, 0, 0]);
+                                }
                                 break;
                             case 'A':
                                 if (this.chartData[i]) {
                                     this.chartData[i][2]++;
-                                } else { this.chatData[i] = ['Contrôleur ' + i, 0, 0, 0, 0] }
+                                } else {
+                                    this.chartData.push(['Contrôleur ' + id, 0, 1, 0, 0]);
+                                }
                                 break;
                             case 'M':
                                 if (this.chartData[i]) {
                                     this.chartData[i][3]++;
-                                } else { this.chatData[i] = ['Contrôleur ' + i, 0, 0, 0, 0] }
+                                } else {
+                                    this.chartData.push(['Contrôleur ' + id, 0, 0, 1, 0]);
+                                }
                                 break;
                             case 'I':
                                 if (this.chartData[i]) {
                                     this.chartData[i][4]++;
-                                } else { this.chatData[i] = ['Contrôleur ' + i, 0, 0, 0, 0] }
+                                } else {
+                                    this.chartData.push(['Contrôleur ' + id, 0, 0, 0, 1]);
+                                }
                                 break;
                             default:
                                 break;
@@ -69,9 +62,16 @@ export default {
                 });
                 i++;
             }
-
-            this.options.height = (this.chartData.length - 1) * this.pixelHeight;
             this.chartDataLoaded = true;
+        },
+        async drawChart() {
+            let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
+            let chartWrap = await document.getElementById('controlerBarChart');
+            let chart = new GoogleCharts.api.visualization.BarChart(chartWrap);
+            let options = {
+                isStacked: 'percent',
+            };
+            chart.draw(dataTable, options);
         }
     },
     async mounted() {

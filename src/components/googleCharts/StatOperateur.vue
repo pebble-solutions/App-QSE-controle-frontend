@@ -23,7 +23,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Répartition des réponses</h3>
-                    <OperatorBarChart :jsonData="jsonData"></OperatorBarChart>
+                    <OperatorBarChart></OperatorBarChart>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Nombre de KN par opérateur</h3>
-                    <OperatorPieChart :jsonData="jsonData"></OperatorPieChart>
+                    <OperatorPieChart></OperatorPieChart>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <OperatorTable :jsonData="jsonData"></OperatorTable>
+                    <OperatorTable></OperatorTable>
                 </div>
             </div>
         </div>
@@ -66,10 +66,5 @@ export default {
         }
     },
     components: { OperatorBarChart, OperatorPieChart, OperatorTable},
-    data() {
-        return {
-            jsonData: { "test": "oui"  }
-        }
-    },
 }
 </script>

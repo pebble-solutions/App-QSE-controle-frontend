@@ -23,7 +23,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Répartition des réponses</h3>
-                    <ControlerBarChart :jsonData="jsonData"></ControlerBarChart>
+                    <ControlerBarChart></ControlerBarChart>
                 </div>
             </div>
         </div>
@@ -32,8 +32,8 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <h3 class="card-title fs-4">Nombre de KN par projet</h3>
-                    <ControlerPieChart :jsonData="jsonData"></ControlerPieChart>
+                    <h3 class="card-title fs-4">Nombre de KN par contrôleur</h3>
+                    <ControlerPieChart></ControlerPieChart>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <ControlerTable :jsonData="jsonData"></ControlerTable>
+                    <ControlerTable></ControlerTable>
                 </div>
             </div>
         </div>
@@ -66,10 +66,5 @@ export default {
         }
     },
     components: { ControlerBarChart, ControlerPieChart, ControlerTable},
-    data() {
-        return {
-            jsonData: { "test": "oui"  }
-        }
-    },
 }
 </script>
