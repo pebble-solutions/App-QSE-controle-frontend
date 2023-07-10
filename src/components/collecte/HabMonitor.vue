@@ -1,41 +1,36 @@
 <template>
-    <div class="list-group">
-        <h3>
-            <span class="fw-lighter" >#{{habId}}</span>
-            hab ........
-            
-        </h3>
-        <div class="row">
-            <div class="col">
-                <div class="card mb-2">
-                    <!-- échéance habilitation: {{formatDayDate(hab.df)  }}
-                        <progress-bar :dd=hab.dd :df=hab.df></progress-bar> -->
-                    </div>
-                    
-                </div>
-                <div class="col">
-                <div class="card d-flex justify-content-start mb-2" v-for=" control in listControlDone" :key="control.id">
-                        <span class="badge text-bg-success me-1">{{ control.result_var }}</span>
-                </div>
-                
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card" v-for="hab in habilitationPerso" :key="hab.id">
+                habilitation #{{ hab.id }} 
+                <ProgressBar :dd="hab.dd" :df="hab.df"></ProgressBar>
             </div>
-            <div class="col">
-                <div class="card mb-2">
-                    <!-- échéance controle:  {{formatDayDate(control.delay)  }}
-                    <progress-bar :dd="control.date_last" :df="control.delay"></progress-bar> -->
-                </div>
-                
-            </div>
-            
+
         </div>
+        <div class="col-md-8">
+            controles
+            <div class="d-flex justify-content-start align-items-center">
+                
+                <div class="d-flex justify-content-start me-2" v-for=" control in listControlDone" :key="control.id">
+                    <span class="me-1">#{{ control.id }} : </span>
+                    <span   class="badge" :class="classNameFromSAMI(control.result_var)"> {{control.result_var}}</span>
+                </div>
+    
+            </div>
+
+       </div>
     </div>
+    
+            
 </template>
 <script>
 // import ProgressBar from '../ProgressBar.vue';
 import { dateFormat } from '../../js/collecte';
+import ProgressBar from '../ProgressBar.vue';
+import { classNameFromSAMI } from '../../js/collecte';
 
 export default {
-    // components: { ProgressBar },
+    components: { ProgressBar },
 
     props: {
         habId: Number,
@@ -47,21 +42,13 @@ export default {
                 control: false
             },
             listControlDone: [],
+            habilitationPerso:{},
         }
     },
 
     methods: {
 
-        // /**
-        //  * Retourne une classe CSS par rapport à une réponse S A M I
-        //  * 
-        //  * @param {string} reponse S A M I
-        //  * 
-        //  * @return {string}
-        //  */
-		// classNameFromSAMI(reponse) {
-        //     return classNameFromSAMI(reponse);
-        // },
+       
 
         /**
          * Envoie une requête pour charger la liste des collectes 
@@ -79,6 +66,23 @@ export default {
             })
             .catch(this.$app.catchError).finally(() => this.pending.control= false);
         },
+
+         /**
+         * Envoie une requête pour charger l'habilitation
+         * en fonction de l'id fourni
+         * @param {Number} id du 
+         */
+         loadHabilitation(id) {
+            this.pending.control=true;
+            this.$app.apiGet('v2/controle/habilitation', {
+                id : id,
+                
+            })
+            .then((data) => {
+                this.habilitationPerso = data;
+            })
+            .catch(this.$app.catchError).finally(() => this.pending.control= false);
+        },
          /**
 		 * Modifie le format de la date entrée en paramètre et la retourne 
 		 * sous le format 01 févr. 2021
@@ -88,15 +92,29 @@ export default {
 		changeFormatDateLit(el) {
 			return dateFormat(el);
 		},
+
+         /**
+         * Retourne une classe CSS par rapport à une réponse S A M I
+         * 
+         * @param {string} reponse S A M I
+         * 
+         * @return {string}
+         */
+		classNameFromSAMI(reponse) {
+            return classNameFromSAMI(reponse);
+        },
+
+       
     },
 
     
 
     mounted () {
         /**
-         * charge la liste des collectes
+         * charge la liste des controls
          */
         this.loadCollecte(this.habId);
+        this.loadHabilitation(this.habId)
     }
 
 }

@@ -3,7 +3,6 @@
         <spinner v-if="pending.collecte" />
         <template v-else>
             <hab-monitor v-if="collecte.tli" :habId="collecte.tli"></hab-monitor>
-            {{ collecte.tli }}
             <consultation-collecte-resume :collecte="collecte" :levelUser="login.type" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             <router-view></router-view>
         </template>
@@ -31,7 +30,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['collectes', 'collecte', 'login', 'collectesCollection']),
+        ...mapState(['collectes', 'collecte', 'login', 'collectesCollection', 'veilleConfig']),
 
 
         /**
