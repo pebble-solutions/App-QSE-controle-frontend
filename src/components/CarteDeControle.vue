@@ -2,6 +2,7 @@
 	<div class="row bg-light rounded shadow p-2 m-2 mb-2">
 		<div class="fw-light text-secondary text-center mb-2 fw-bold">
 			KN annonceur - <SablierDeJours :date="dfCritique"></SablierDeJours>
+			<CheckKn2Kn :id="testId"></CheckKn2Kn>
 		</div>
 
 		<div class="col-12 col-lg-6 mb-3 mb-lg-0 d-flex flex-column justify-content-between">
@@ -46,6 +47,7 @@ import MiniInfosAgent from '../components/MiniInfosAgent.vue';
 import CarteMapEtAdresse from '../components/CarteMapEtAdresse.vue';
 import CarteChoisirChantier from '../components/CarteChoisirChantier.vue';
 import SablierDeJours from '../components/SablierDeJours.vue';
+import CheckKn2Kn from '../components/CheckKn2Kn.vue';
 import { mapState } from 'vuex';
 
 export default {
@@ -54,6 +56,7 @@ export default {
 			chantier: "Lorient", // Remplacez par votre propriété de chantier réelle ou par NULL
 			dfCritique: '2023-07-01',   
 			id: '735',
+			testId: null,
 		};
 	},
 	components: {
@@ -62,6 +65,7 @@ export default {
 		CarteMapEtAdresse,
 		CarteChoisirChantier,
 		SablierDeJours,
+		CheckKn2Kn,
 	},
 	computed: {
 

@@ -2,7 +2,7 @@
     <!-- Ce span affiche une badge. La classe de la badge est déterminée par le computed 'badgeClass'.
          Le contenu de la badge est le nombre de jours de différence entre la date actuelle et 'dfCritique'. 
         
-        !!! Il attends une date au format '2023-07-31' -->
+        !!! Il attends une date au format '2023-07-' -->
 
 
     <span class="badge" :class="badgeClass">

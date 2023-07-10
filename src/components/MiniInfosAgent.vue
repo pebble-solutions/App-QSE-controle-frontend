@@ -46,10 +46,6 @@
         return item ? item.matricule : '';
       },
 
-      loadNumTel(id) {
-        this.$app.apiGet('api/structurePersonnel/GET/{idCible}')
-         
-		},
 
       
     },
