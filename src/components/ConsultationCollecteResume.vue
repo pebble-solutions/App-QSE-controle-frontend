@@ -1,16 +1,12 @@
 <template>
+   
+
     <div v-if="collecte">
         <div class="card my-2">
             <div class="card-header" v-if="timeline">
                 <Timeline :collecte="collecte" :route="route" />
             </div>
             <div class="card-body">
-                <alert-message
-                    icon="bi-info-square-fill" 
-                    className="mb-3" 
-                    v-if="collecte.following_id">
-                    Un contrôle de veille est programmé
-                </alert-message>
                 <div class="row">
                     <div class="mb-2 col">
                         <div class="d-flex align-items-center">
@@ -21,9 +17,9 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="mb-2 col border-start border-dark">
-
+                        
                         <div class="d-flex align-items-center">
                             <user-image :name="controleur" />
                             <div class="w-100 ps-2">
@@ -33,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="my-2">
                     <strong>Projet :</strong>
                     <span class="fw-lighter ms-1">
@@ -52,7 +48,7 @@
                     <div v-else>
                         <strong class="d-block">Pas d'éléments de contexte</strong>
                     </div>
-    
+                    
                     <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
                         <strong class="d-block">Commentaire final :</strong>
                         <div class="ms-2 fw-lighter">
@@ -62,7 +58,7 @@
                     <div v-else>
                         <strong class="d-block">Aucun commentaire final</strong>
                     </div>
-    
+                    
                     <div class="my-2" v-if="collecte.actions != 'null' && collecte.actions">
                         <strong class="d-block">Actions correctives proposées :</strong>
                         <div class="ms-2 fw-lighter">
@@ -72,17 +68,48 @@
                     <div v-else>
                         <strong class="d-block">Aucune action corrective proposée</strong>
                     </div>
+                    <alert-message
+                        icon="bi-info-square-fill" 
+                        className="mt-3" 
+                        v-if="collecte.following_id">
+                        Bouclage #{{ collecte.following_id }}
+                    </alert-message>
                 </template>
             </div>
-            <div class="card-footer" v-if="collecte.locked">
-                <button class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)" :disabled="pending.pdf">
-                    Exporter
-                </button>
+            <div v-if="readonly" class="card-footer ">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <template v-if=" levelUser >= 5">
+                                <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-4">
+                                    <i class="bi bi-lock-fill" v-if="locked"></i>
+                                </button>
+                                <button class="btn btn-sm btn-warning me-4" v-else><i class="bi bi-unlock-fill"></i></button>
+                        </template>
+                        <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()" v-if="collecte.notes.length >= 1">
+                            Historique
+                            <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
+                        </button>
+                    </div>
+                    <div>
+                        <button v-if="locked & !collecte.unlocked" class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
+                            Exporter
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <div v-if="readNotes" class="list-group col-12 col-md-6 mt-2">
+                    <div class ="list-group-item" v-for="note in collecte.notes" :key="note.id">
+                        <div class="d-flex flex-column">
+                            <span>{{changeFormatDateLit(note.date)}}</span>
+                            <span>{{note.titre }}</span>
+                            <span>{{note.note}}</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
             </div>
         </div>
-       
-        
- 
         <div v-if="collecte.documents.length && (isReadable)" class="card my-3">
             <div class="card-body">
                 <h5 class="mb-3"><i class="bi bi-cloud-check me-1"></i> Fichiers joints</h5>
@@ -168,14 +195,17 @@ import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
 import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
+import { mapActions } from 'vuex';
 
 export default {
 
     data() {
         return {
+            readNotes : false,
             pending: {
                 pdf: false
-            }
+            },
+            locked: true
         }
     },
     props: {
@@ -185,6 +215,7 @@ export default {
             type: Boolean,
             default: true
         },
+        levelUser: Number,
         
         
         route: {
@@ -252,6 +283,42 @@ export default {
     },
 
     methods: {
+
+        ...mapActions(['refreshCollecte']),
+
+        /**
+         * change la valeur de readNotes permettant la visualisation ou non des notes
+         */
+        displayNotes(){
+            this.readNotes =!this.readNotes
+
+        },
+
+        /**
+         * envoie une requete API pour dévérouiller la collecte
+         * 
+         * @param {id}  id de la collecte à déverouiller
+         */
+
+         unlock(id){
+            this.pending.unlock = true
+            let comment = prompt ('indiquer le motif de dévérouillage de la collecte #'+id);
+            if (comment){
+                this.$app.apiPost('v2/collecte/'+id+'/unlock', {
+                    comment
+                })
+                .then((data) =>{
+                    this.refreshCollecte(data);
+                    
+                    this.locked = false
+                })
+                .catch(this.$app.catchError).finally(() => this.pending.unlock = false);
+            }
+            else {
+                alert("Commentaire obligatoire ! La collecte n'est pas déverrouillé")
+            }
+        },
+
 
         /**
 		 * Modifie le format de la date entrée en paramètre et la retourne 

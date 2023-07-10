@@ -5,6 +5,7 @@
             size="lg"
             @modal-hide="routeToParent()"
             >
+            
             <ConsultationCollecteResume :collecte="collecte" :readonly="true" :route="nameRoute" ></ConsultationCollecteResume>
         </app-modal>
     </div>
@@ -38,7 +39,7 @@ export default {
 
     
     methods: {
-        ...mapActions(["setCollecte", "resetResponses"]),
+        ...mapActions(["setCollecte", "resetResponses", "login"]),
 
 
         /**

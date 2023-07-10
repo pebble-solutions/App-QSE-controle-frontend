@@ -250,6 +250,7 @@ export default {
 				dd: null,
 				df: null,
 				mode: 'collecte',
+				locked: true,
 				start: 0,
 				limit: 50,
 			},
@@ -339,7 +340,7 @@ export default {
 		 * @return {Promise<object>}
 		 */
 		loadCollectes() {
-			return this.loadRessources('collecte', { enqueteur_login: 'self', done: 'NON' });
+			return this.loadRessources('collecte', { enqueteur_login: 'self', locked: 0 });
 		},
 
 		/**
@@ -438,7 +439,9 @@ export default {
 				.finally(() => this.pending[pending] = false)
 		},
 
-		
+		/**
+		 * Charge le personnel actifs
+		 */
 		loadAgent() {
 			this.pending.actifs = true;
 			this.$app.apiGet('structurePersonnel/GET/list', {
