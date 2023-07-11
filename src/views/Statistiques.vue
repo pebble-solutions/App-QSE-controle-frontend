@@ -41,7 +41,9 @@
                 <div class="card my-2 overflow-auto">
                     <div class="card-body">
                         <h3 class="card-title fs-4">Agenda</h3>
-                        <AgendaChart></AgendaChart>
+                        <template v-if="!pending.collectes">
+                            <AgendaChart></AgendaChart>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -49,7 +51,9 @@
                 <div class="card my-2">
                     <div class="card-body">
                         <h3 class="card-title fs-4">Répartition des réponses</h3>
-                        <GlobalPieChart></GlobalPieChart>
+                        <template v-if="!pending.collectes">
+                            <GlobalPieChart></GlobalPieChart>
+                        </template>
                     </div>
                 </div>
             </div>

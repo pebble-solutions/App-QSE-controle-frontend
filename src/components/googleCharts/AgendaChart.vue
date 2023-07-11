@@ -31,13 +31,12 @@ export default {
                 let subArray = [new Date(key), dateOccurrences[key]];
                 this.chartData.push(subArray);
             }
-            console.log(this.chartData, "toto");
             this.chartDataLoaded = true;
         },
 
-        async drawChart() {
+        drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, true);
-            let chartWrap = await document.getElementById('agendaChart');
+            let chartWrap = document.getElementById('agendaChart');
             let chart = new GoogleCharts.api.visualization.Calendar(chartWrap);
             chart.draw(dataTable);
         }
