@@ -90,6 +90,7 @@ import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
+import { mapState } from 'vuex'
 
 export default {
     data() {
@@ -116,6 +117,17 @@ export default {
         }
     },
     components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable },
+    computed : {
+        ...mapState (['collectesCollection', 'personnels']),
+
+        returnName(id) {
+            let personnel = this.personnels.find(e => e.id == id);
+            if(personnel){
+                return personnel.cache_nom
+            }
+            return 'non trouvé'
+        }
+    },
     methods: {
         computeTimeDiff() {
             const startDate = new Date(this.startDate);
