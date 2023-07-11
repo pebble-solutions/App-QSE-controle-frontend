@@ -38,7 +38,7 @@
         </div>
         <div class="row">
             <div class="col-9">
-                <div class="card my-2 overflow-auto" ref="card">
+                <div class="card my-2 overflow-auto">
                     <div class="card-body">
                         <h3 class="card-title fs-4">Agenda</h3>
                         <AgendaChart></AgendaChart>
@@ -63,13 +63,18 @@
                 </div>
             </div>
         </div>
-        <StatOperateur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
-        </StatOperateur>
-        <StatHabilitation :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
-        </StatHabilitation>
-        <StatProjet :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations"></StatProjet>
-        <StatControleur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
-        </StatControleur>
+        <template v-if="!pending.collectes">
+            <StatOperateur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
+            </StatOperateur>
+            <StatHabilitation :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
+            </StatHabilitation>
+            <StatProjet :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations"></StatProjet>
+            <StatControleur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
+            </StatControleur>
+        </template>
+        <div v-else>
+            Chargement en cours
+        </div>
     </div>
 </template>
 
@@ -100,10 +105,13 @@ export default {
                 "I": 8
             },
             currentHabilitations: 3,
-            totalHabilitations: 12
+            totalHabilitations: 12,
+            pending: {
+                collectes: true,
+            },
         }
     },
-    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable},
+    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable },
     methods: {
         computeTimeDiff() {
             const startDate = new Date(this.startDate);
@@ -158,6 +166,12 @@ export default {
         monthsDiff() {
             this.updateEndDateFromMonths();
         }
+    },
+    async mounted() {
+        let collection = this.$assets.getCollection('collectes');
+        this.pending.collectes = true;
+        await collection.load();
+        this.pending.collectes = false;
     }
 }
 </script>

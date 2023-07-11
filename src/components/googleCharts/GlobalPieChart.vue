@@ -23,7 +23,6 @@ export default {
                 ['I', 0],
             ];
             let collection = this.$assets.getCollection('collectes');
-            await collection.load();
             const data = collection.getCollection();
             data.forEach(collecte => {
                 switch (collecte['sami']) {

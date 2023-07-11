@@ -345,7 +345,11 @@ export default {
 		loadCollectesCollection() {
 			let collecteCollection = new AssetsCollection(this, {
 				assetName: 'collectesCollection',
-				apiRoute: 'v2/collecte/?done=OUI&type=KN'
+				apiRoute: 'v2/collecte/',
+				requestPayload: {
+					done: "OUI",
+					type: "KN"
+				}
 			});
 			this.$assets.addCollection('collectes', collecteCollection);
 		},

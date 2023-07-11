@@ -16,7 +16,6 @@ export default {
         async fetchData() {
             this.chartDataLoaded = false;
             let collection = this.$assets.getCollection('collectes');
-            await collection.load();
             const data = collection.getCollection();
 
             this.chartData = [];

@@ -28,7 +28,6 @@ export default {
         ['', 'KN', 'Habilitation', 'Total habilitations', 'S', 'A', 'M', 'I'],
       ];
       let collection = this.$assets.getCollection('collectes');
-      await collection.load();
       const data = collection.getCollection();
       let habilitationTypeHistory = [];
 
