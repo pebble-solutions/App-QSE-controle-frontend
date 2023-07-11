@@ -1,5 +1,5 @@
 <template>
-        <div id="controlerPieChart" :v-if="chartDataLoaded"></div>
+    <div id="controlerPieChart" :v-if="chartDataLoaded"></div>
 </template>
 
 <script>
@@ -20,39 +20,26 @@ export default {
             const data = collection.getCollection();
 
             this.chartData = [
-                ['Réponses', 'Nombre'],
-                ['S', 0],
-                ['A', 0],
-                ['M', 0],
-                ['I', 0],
+                ['Réponses', 'Nombre']
             ];
-            const ids = [133];
+            const ids = [268];
+            let i = 1;
 
             ids.forEach(id => {
                 data.forEach(collecte => {
                     if (collecte['personnel_id__controleur'] == id) {
-                        switch (collecte['sami']) {
-                            case 'S':
-                                this.chartData[1][1]++;
-                                break;
-                            case 'A':
-                                this.chartData[2][1]++;
-                                break;
-                            case 'M':
-                                this.chartData[3][1]++;
-                                break;
-                            case 'I':
-                                this.chartData[4][1]++;
-                                break;
-                            default:
-                                break;
+                        if (this.chartData[i]) {
+                            this.chartData[i][1]++;
+                        } else {
+                            this.chartData.push(["Contrôleur " + id, 1]);
                         }
                     }
                 });
+                i++;
             });
             this.chartDataLoaded = true;
         },
-        async drawChart(){
+        async drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
             let chartWrap = await document.getElementById('controlerPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);

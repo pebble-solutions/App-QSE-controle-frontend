@@ -48,7 +48,10 @@ export default {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
             let chartWrap = await document.getElementById('globalPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
-            chart.draw(dataTable);
+            let options = {
+                colors: ['#198754', '#0074D9', '#FFC107', '#DC3545'],
+            };
+            chart.draw(dataTable, options);
         }
     },
     async mounted() {
