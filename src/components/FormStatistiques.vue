@@ -38,16 +38,17 @@
                 <option v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
             </select>
         </div>
-
         
-        <!-- <div class="mb-3">
-            <label for="operateur" class="form-label"><h5>Projets</h5></label>
+        <div class="mb-3">
+            <label for="controleur" class="form-label"><h5>Contrôleur</h5></label>
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
-            <select class="form-select" id="projet" name="projet" v-model="requete.projets" multiple size="8">
+            <select class="form-select" id="enqueteur_personnel" name="controleur" v-model="requete.controleurs" multiple size="8">
                 <option value="" selected>Tous</option>
-                <option v-for="(projet) in this.projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+                <option v-for="(agent) in restrictSearch(controleurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
-        </div> -->
+        </div>
+        
+       
         
     
         <!-- <div class="mb-3">
