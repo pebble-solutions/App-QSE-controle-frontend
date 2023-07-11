@@ -134,6 +134,9 @@
 					Il n'y a pas de personnels concernés
 				</div>
 			</AppMenu>
+			<AppMenu v-else-if="listMode === 'statistiques'">
+				<FormStatistiques></FormStatistiques>
+			</AppMenu>
 
 
 			<AppMenu v-else-if="listMode === 'home'">
@@ -172,6 +175,7 @@ import CollecteItem from './components/CollecteItem.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
+import FormStatistiques from './components/FormStatistiques.vue'
 
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
@@ -600,7 +604,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone }, //,  , SearchHab 
+	components: {  FormStatistiques, AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone }, //,  , SearchHab 
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

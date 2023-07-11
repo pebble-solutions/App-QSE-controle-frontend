@@ -21,5 +21,6 @@ export const ROUTES_NAMES = {
 				'HabilitationAgent',
 				'ControlHistory',
 				'ControlView'],
+	statistiques: ['Statistiques'],
 	home: ['Home'],
 };
