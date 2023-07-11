@@ -20,7 +20,7 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <ProgressBar class="flex-grow-1 me-2" :dd="ddveille" :df="dfveille" />
-                        <SablierDeJours :date="date"/>
+                        <SablierDeJours :date="dfveille"/>
                     </div>
                 </div>
             </div>
@@ -37,6 +37,10 @@ export default {
     data() {
         return {
             date: '2021-05-09',
+            dd: '2022-05-09',
+            df: '2025-05-09',
+            ddveille: '2023-01-14',
+            dfveille: '2023-07-14',
         };
     },
     components: {
@@ -45,22 +49,7 @@ export default {
         SablierDeJours,
     },
     props: {
-        dd: {
-            type: String,
-            default: null,
-        },
-        df: {
-            type: String,
-            default: null,
-        },
-        ddveille: {
-            type: String,
-            default: null,
-        },
-        dfveille: {
-            type: String,
-            default: null,
-        },
+       
     },
     methods: {
         formatDate(dateString) {

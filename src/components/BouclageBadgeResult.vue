@@ -1,6 +1,6 @@
 <template>
         <span :class="['badge', getBadgeClass(resultat)]">
-            <i class="bi bi-arrow-repeat"></i> {{ resultat || '?' }}
+            <i class="bi bi-arrow-repeat"></i> !
         </span>
 </template>
 
