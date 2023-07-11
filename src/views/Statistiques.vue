@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <div class="row">
-            <h1>Statistiques générales</h1>
+        <h1>Statistiques générales</h1>
+        <!-- <div class="row">
             <div class="col-3">
                 <div class="card my-2">
                     <div class="card-body">
@@ -35,38 +35,38 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="row">
-            <div class="col-9">
-                <div class="card my-2 overflow-auto">
-                    <div class="card-body">
-                        <h3 class="card-title fs-4">Agenda</h3>
-                        <template v-if="!pending.collectes">
-                            <AgendaChart></AgendaChart>
-                        </template>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="card my-2">
-                    <div class="card-body">
-                        <h3 class="card-title fs-4">Répartition des réponses</h3>
-                        <template v-if="!pending.collectes">
-                            <GlobalPieChart></GlobalPieChart>
-                        </template>
-                    </div>
+            <div class="card my-2 overflow-auto">
+                <div class="card-body">
+                    <h3 class="card-title fs-4">Agenda</h3>
+                    <template v-if="!pending.collectes">
+                        <AgendaChart></AgendaChart>
+                    </template>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
-                <div class="card my-2">
-                    <div class="card-body">
-                        <GlobalTable></GlobalTable>
-                    </div>
+            <div class="card my-2">
+                <div class="card-body">
+                    <h3 class="card-title fs-4">Répartition des réponses</h3>
+                    <template v-if="!pending.collectes">
+                        <GlobalPieChart></GlobalPieChart>
+                    </template>
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="card my-2">
+                <div class="card-body">
+                    <GlobalTable></GlobalTable>
+                </div>
+            </div>
+        </div>
+
+        
+       
         <template v-if="!pending.collectes">
             <StatOperateur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
             </StatOperateur>

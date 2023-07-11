@@ -32,38 +32,24 @@
         
         <div class="mb-3">
             <label for="projet" class="form-label"><h5>Projet</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
+            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchProjets">
             <select class="form-select" id="projet" name="projet" v-model="requete.projets" multiple size="8">
                 <option value="" selected>Tous</option>
-                <option v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+
+                <option v-for="(projet) in restrictSearchProjets(projets)" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
             </select>
         </div>
         
         <div class="mb-3">
             <label for="controleur" class="form-label"><h5>Contrôleur</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
+            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchControleurs">
             <select class="form-select" id="enqueteur_personnel" name="controleur" v-model="requete.controleurs" multiple size="8">
                 <option value="" selected>Tous</option>
-                <option v-for="(agent) in restrictSearch(controleurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
+                <option v-for="(agent) in restrictSearchControleurs(controleurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
         </div>
         
-       
-        
-    
-        <!-- <div class="mb-3">
-            <label for="kn" class="form-label"><h5>Regrouper</h5></label>
-            <div class="container">
-                <div class="row">
-                    <label class="form-check-label col-4" for="flexSwitchCheckDefault">Opérateurs</label>
-                    <div class="col-1"></div>
-                    <div class="form-check form-switch col-2">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" v-model="requete.priorite" checked>
-                    </div>
-                    <label class="form-check-label col-4" for="flexSwitchCheckChecked">Habilitations</label>
-                </div>
-            </div>
-        </div> -->
+
         
         <div class="text-center">
             <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.echeance">
@@ -103,7 +89,9 @@ export default {
             // projets: [this.projets],
 
             displaySearch : '',
-            displaySearchHab : ''
+            displaySearchHab : '',
+            displaySearchControleurs : '',
+            displaySearchProjets : '',
         }
     },
     computed: {
@@ -135,6 +123,64 @@ export default {
             filteredList.sort((a, b) => {
                 const nameA = a.cache_nom.toUpperCase();
                 const nameB = b.cache_nom.toUpperCase();
+
+                if (nameA < nameB) {
+                    return -1;
+                }
+
+                if (nameA > nameB) {
+                    return 1;
+                }
+
+                return 0;
+            });
+
+            return filteredList;
+        },
+         /**
+         * Retourne la list trié en fonction de la recherche des controleurs et tri alphabetiquement le resultat
+         * 
+         * @param {Array} list
+         * 
+         * @returns {Array} 
+         */
+         restrictSearchControleurs(list){
+            let filteredList = list.filter((item) => {
+                return item.cache_nom.match(this.displaySearchControleurs);
+            });
+
+            filteredList.sort((a, b) => {
+                const nameA = a.cache_nom.toUpperCase();
+                const nameB = b.cache_nom.toUpperCase();
+
+                if (nameA < nameB) {
+                    return -1;
+                }
+
+                if (nameA > nameB) {
+                    return 1;
+                }
+
+                return 0;
+            });
+
+            return filteredList;
+        },
+         /**
+         * Retourne la liste triée en fonction de la recherche des projets et tri alphabetiquement le resultat
+         * 
+         * @param {Array} list
+         * 
+         * @returns {Array} 
+         */
+         restrictSearchProjets(list){
+            let filteredList = list.filter((item) => {
+                return item.intitule.match(this.displaySearchProjets);
+            });
+
+            filteredList.sort((a, b) => {
+                const nameA = a.intitule.toUpperCase();
+                const nameB = b.intitule.toUpperCase();
 
                 if (nameA < nameB) {
                     return -1;

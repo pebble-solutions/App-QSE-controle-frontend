@@ -20,7 +20,7 @@ export default {
 
             this.chartData = [['Habilitations', 'S', 'A', 'M', 'I']];
 
-            const ids = [751];
+            const ids = [751, 812,234];
             let i = 1;
             for (const id of ids) {
                 data.forEach(collecte => {
