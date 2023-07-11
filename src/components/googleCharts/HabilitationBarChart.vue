@@ -69,6 +69,7 @@ export default {
             let chart = new GoogleCharts.api.visualization.BarChart(chartWrap);
             let options = {
                 isStacked: 'percent',
+                colors: ['#198754', '#0074D9', '#FFC107', '#DC3545'],
             };
             chart.draw(dataTable, options);
         }

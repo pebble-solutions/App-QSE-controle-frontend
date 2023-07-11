@@ -25,11 +25,12 @@ export default {
     async fetchData() {
       this.chartDataLoaded = false;
       this.chartData = [
-        ['', 'KN', 'Habilitation', 'Total habilitations', 'S', 'A', 'M', 'I'],
+        ['', 'KN', 'Type habilitation', 'Total habilitations', 'S', 'A', 'M', 'I'],
       ];
       let collection = this.$assets.getCollection('collectes');
       const data = collection.getCollection();
       let habilitationTypeHistory = [];
+      let totalHabilitationsHIstory = [];
 
       const ids = [1157];
       let i = 1;
@@ -38,8 +39,11 @@ export default {
           if (id == collecte['projet_id']) {
             if (this.chartData[i]) {
               this.chartData[i][1]++;//incrémentation du champ KN
-              if (habilitationTypeHistory.findIndex(id => id == collecte['projet_id']) == -1) {
-                habilitationTypeHistory.push(collecte['projet_id']);
+              if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
+                habilitationTypeHistory.push(collecte['habilitation_type_id']);
+              }
+              if (totalHabilitationsHIstory.findIndex(id => id == collecte['habilitation_id']) == -1) {
+                totalHabilitationsHIstory.push(collecte['habilitation_id']);
               }
               this.chartData[i][3]++;
               switch (collecte['sami']) {
@@ -64,7 +68,9 @@ export default {
           }
         });
         this.chartData[i][2] = habilitationTypeHistory.length;
+        this.chartData[i][3] = totalHabilitationsHIstory.length;
         habilitationTypeHistory = [];
+        totalHabilitationsHIstory = [];
         i++;
       });
     }
