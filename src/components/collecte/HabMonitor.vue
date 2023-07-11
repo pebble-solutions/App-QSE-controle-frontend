@@ -9,10 +9,10 @@
         </div>
         <div class="col-md-8">
             controles
-            <div class="d-flex justify-content-start align-items-center">
+            <div class="d-flex flex-row-reverse justify-content-end align-items-center">
                 
                 <div class="d-flex justify-content-start me-2" v-for=" control in listControlDone" :key="control.id">
-                    <span class="me-1">#{{ control.id }} : </span>
+                    <!-- <span class="me-1">#{{ control.id }} : </span>  -->
                     <span   class="badge" :class="classNameFromSAMI(control.result_var)"> {{control.result_var}}</span>
                 </div>
     
