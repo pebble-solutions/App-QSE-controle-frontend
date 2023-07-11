@@ -4,8 +4,8 @@
 			<template v-if="!stats">
 				<h1 class="fs-3 my-3 text-center">Tableau de bord</h1>
 
-				<div>{ "id": 801, "dc": "2023-03-30 11:34:03", "dm": "2023-03-30 12:11:56", "commentaire": "", "ordre": 0, "keygen": "m387d26fz8xc", "id_edi": null, "structure": 13, "sess_login_id": 599, "corbeille": "NON", "personne": 722, "matricule": "00520", "nss": "193122211324685", "mls__secteur": null, "mls__fonction": 515, "niveau_hierarchique": 3, "n_1": 790, "cache_nom": "BATHIANY Antoine", "dentree": "2022-01-01 00:00:00", "dsortie": null, "structure__personnel_contrat_id": 6248, "organigramme": null, "archived": null, "readOnly": false, "initials": "BAE" }</div>
-
+			
+<!-- 
 				<div v-for="col in collectes" :key="col.id">
 					<span>id {{ col.id }}</span><br>
 					<span>{{ col.result_var }}</span><br>
@@ -19,7 +19,7 @@
 					<span>structure__personnel_contrat_id : {{ inf.structure__personnel_contrat_id }}</span><br>
 					<span>matricule {{ inf.matricule }}</span><br>
 					<span>nss {{ inf.nss }}</span><br><br>
-				</div>
+				</div> -->
 				
 				<alert-message variant="warning" icon="bi-exclamation-circle me-2" v-if="stat">Aucun résultat pour cette
 					recherche.</alert-message>
@@ -33,7 +33,11 @@
 							</div>
 						</div>
 					</div>
+
+					<HabMoniteur></HabMoniteur>
 				</template>
+
+
 				<template v-else>
 					<div class="d-flex align-items-center my-3">
 						<div class="d-flex align-items-center">
@@ -74,6 +78,7 @@ import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import UserImage from '../components/pebble-ui/UserImage.vue';
 import { dateFormat } from '../js/collecte';
 import CarteDeControle from '../components/CarteDeControle.vue';
+import HabMoniteur from '../components/HabMoniteur.vue';
 
 
 
@@ -154,6 +159,7 @@ export default {
 		AlertMessage,
 		UserImage,
 		CarteDeControle,
+		HabMoniteur
 	},
 	beforeMount() {
 		this.loadCollectes();

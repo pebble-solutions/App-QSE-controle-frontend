@@ -3,6 +3,8 @@
 		<div class="fw-light text-secondary text-center mb-2 fw-bold">
 			KN annonceur - <SablierDeJours :date="dfCritique"></SablierDeJours>
 			<CheckKn2Kn :id="testId"></CheckKn2Kn>
+			<BouclageBadge></BouclageBadge>
+			<BouclageBadgeResult :resultat="resultat" ></BouclageBadgeResult>
 		</div>
 
 		<div class="col-12 col-lg-6 mb-3 mb-lg-0 d-flex flex-column justify-content-between">
@@ -48,6 +50,8 @@ import CarteMapEtAdresse from '../components/CarteMapEtAdresse.vue';
 import CarteChoisirChantier from '../components/CarteChoisirChantier.vue';
 import SablierDeJours from '../components/SablierDeJours.vue';
 import CheckKn2Kn from '../components/CheckKn2Kn.vue';
+import BouclageBadge from '../components/BouclageBadge.vue';
+import BouclageBadgeResult from '../components/BouclageBadgeResult.vue';
 import { mapState } from 'vuex';
 
 export default {
@@ -57,16 +61,19 @@ export default {
 			dfCritique: '2023-07-01',   
 			id: '735',
 			testId: '735',
+			resultat: 'I',
 		};
 	},
 	components: {
-		SuiviHabilitation,
-		MiniInfosAgent,
-		CarteMapEtAdresse,
-		CarteChoisirChantier,
-		SablierDeJours,
-		CheckKn2Kn,
-	},
+    SuiviHabilitation,
+    MiniInfosAgent,
+    CarteMapEtAdresse,
+    CarteChoisirChantier,
+    SablierDeJours,
+    CheckKn2Kn,
+    BouclageBadge,
+	BouclageBadgeResult,
+},
 	computed: {
 
 		...mapState(['listActifs']),

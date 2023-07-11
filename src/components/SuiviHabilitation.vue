@@ -1,19 +1,17 @@
 <template>
     <div>
         <div>
-            <div class="d-flex justify-content-between align-content-center my-1">
-                <div class="fw-bold">Habilitation ASP (3 ans)</div>
-                <div>{{ formatDate(dd) }} au {{ formatDate(df) }}</div>
-
-            </div>
+            <div class="d-flex flex-column-reverse flex-lg-row justify-content-between align-content-center my-1">
+        <div class="fw-bold order-2 order-lg-1">Habilitation ASP (3 ans)</div>
+        <div class="order-1 order-lg-2">{{ formatDate(dd) }} au {{ formatDate(df) }}</div>
+    </div>
             <ProgressBar :dd="dd" :df="df" />
-
-            <GroupResult></GroupResult>
-            <div class="d-flex justify-content-between align-content-center my-1">
-                <div class="fw-bold">Habilitation VEILLE (180 jours)</div>
-                <div class="">{{ formatDate(ddveille) }} au <span style="color: red;">{{ formatDate(dfveille) }}</span></div>
-
-            </div>
+            <div class="div mt-2">
+            <GroupResult></GroupResult></div>
+            <div class="d-flex flex-column-reverse flex-lg-row justify-content-between align-content-center my-1">
+        <div class="fw-bold order-2 order-lg-1">Hab. VEILLE (180 jours)</div>
+        <div class="order-1 order-lg-2">{{ formatDate(ddveille) }} au {{ formatDate(dfveille) }}</div>
+    </div>
             <ProgressBar :dd="ddveille" :df="dfveille" />
 
 

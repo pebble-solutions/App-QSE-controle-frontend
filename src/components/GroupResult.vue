@@ -1,58 +1,82 @@
 <template>
+    <DernierControleBadge :resultat="resultat" :lastControlDate="lastControlDate"></DernierControleBadge>
     <div class="d-flex align-items-center justify-content-start my-2">
-        <span v-for="(value, key) in results" :key="key" 
-              :class="['badge', getBadgeClass(value.result), 'me-2', 'fs-6', 'px-2', 'py-1', 'text-nowrap']">{{ value.result }}</span>
-        <DernierControleBadge :resultat="resultat" :lastControlDate="lastControlDate"></DernierControleBadge>
+        <button v-for="(value, key) in results" :key="key"
+                :class="['btn', 'btn-sm', getButtonClass(value.result), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']" 
+                :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="value.tooltipContent">
+            {{ value.result }}
+        </button>
     </div>
 </template>
 
 <script>
 import DernierControleBadge from './DernierControleBadge.vue';
+import { Tooltip } from 'bootstrap';
+
 export default {
     data() {
         return {
             results: {
                 1: {
                     result: "S",
-                    label: "Satisfaisant",
+                    tooltipContent: "#1234#",
                     color: "success",
                 },
                 2: {
                     result: "A",
-                    label: "Satisfaisant",
+                    tooltipContent: "#2345#",
                     color: "primary",
                 },
                 3: {
                     result: "M",
-                    label: "Moyen",
+                    tooltipContent: "#3456#",
                     color: "warning",
                 },
                 4: {
                     result: "I",
-                    label: "Insuffisant",
+                    tooltipContent: "#4567#",
                     color: "danger",
                 },
             },
-            resultat: 'I', // la valeur de `result` qui est passée au composant enfant.
-            lastControlDate: '2023-02-01', // la valeur de `lastControlDate` qui est passée au composant enfant.
+            resultat: 'I',
+            lastControlDate: '2023-02-01',
         };
     },
     methods: {
-        getBadgeClass(result) {
+        getButtonClass(result) {
             switch (result) {
                 case "S":
-                    return "bg-success text-light";
+                    return "btn-success";
                 case "A":
-                    return "bg-primary text-light";
+                    return "btn-primary";
                 case "M":
-                    return "bg-warning text-dark";
+                    return "btn-warning text-dark";
                 case "I":
-                    return "bg-danger text-light";
+                    return "btn-danger";
                 default:
-                    return "bg-secondary text-light";
+                    return "btn-secondary";
             }
         },
+    },
+    mounted() {
+        this.$nextTick(function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                return new Tooltip(tooltipTriggerEl)
+            })
+        })
     },
     components: { DernierControleBadge }
 };
 </script>
+
+<style scoped>
+.btn-square {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
