@@ -15,23 +15,43 @@
         <div class="mb-3">
             <label for="habilitation" class="form-label"><h5>Habilitation</h5></label>
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchHab">
-            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="5" :onclick='selectMe()'>
+            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="8" :onclick='selectMe()'>
                 <option value="" selected>Toutes</option>
                 <option v-for="(hab) in restrictSearchHab(allHabilitations)" :value="hab.id" :key="hab.id">{{hab.label}}</option>
             </select>
         </div>
 
-
         <div class="mb-3">
             <label for="operateur" class="form-label"><h5>Opérateur</h5></label>
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
-            <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="5">
+            <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="8">
                 <option value="" selected>Tous</option>
                 <option v-for="(agent) in restrictSearch(operateurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
         </div>
-
+        
         <div class="mb-3">
+            <label for="projet" class="form-label"><h5>Projet</h5></label>
+            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
+            <select class="form-select" id="projet" name="projet" v-model="requete.projets" multiple size="8">
+                <option value="" selected>Tous</option>
+                <option v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="controleur" class="form-label"><h5>Contrôleur</h5></label>
+            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
+            <select class="form-select" id="enqueteur_personnel" name="controleur" v-model="requete.controleurs" multiple size="8">
+                <option value="" selected>Tous</option>
+                <option v-for="(agent) in restrictSearch(controleurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
+            </select>
+        </div>
+        
+       
+        
+    
+        <!-- <div class="mb-3">
             <label for="kn" class="form-label"><h5>Regrouper</h5></label>
             <div class="container">
                 <div class="row">
@@ -43,7 +63,7 @@
                     <label class="form-check-label col-4" for="flexSwitchCheckChecked">Habilitations</label>
                 </div>
             </div>
-        </div>
+        </div> -->
         
         <div class="text-center">
             <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.echeance">
@@ -57,7 +77,7 @@
 
 <script>
 
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
 
@@ -66,6 +86,8 @@ export default {
 
             requete: {
                 operateurs: [''],
+                // projets: [''],
+                controleurs: [''],
                 dd: null,
                 df: null,
                 habilitation: [''],
@@ -77,10 +99,15 @@ export default {
             },
             allHabilitations: null,
             operateurs: [],
+            controleurs:[],
+            // projets: [this.projets],
 
             displaySearch : '',
             displaySearchHab : ''
         }
+    },
+    computed: {
+        ...mapState(['projets'])
     },
     
     methods: {
@@ -166,6 +193,9 @@ export default {
             if(query.operateurs == ""){
                 query.operateurs = []
             }
+            if(query.controleurs == ""){
+                query.controleurs = []
+            }
 
             if(query.habilitation == ""){
                 query.habilitation = []
@@ -176,7 +206,7 @@ export default {
         /**
          * Charge les données des habilitations via un appel API
          */
-        getHabilitation(){
+        getHabilitations(){
             this.$app.api.get('/v2/characteristic/')
                 .then(data => {
                     this.allHabilitations = data;
@@ -188,16 +218,30 @@ export default {
          * Charge les données des opérateurs via un appel API
          */
         getOp(){
-            this.$app.api.get('/v2/personnel')
+            this.$app.api.get('/v2/personnel', {
+                limit: 999,
+                
+            })
                 .then(data => {
+                    this.controleurs = data;
                     this.operateurs = data;
                 })
                 .catch(this.$app.catchError);
-        }
+        },
+        /**
+         * Charge les données des projets via un appel API
+         */
+        //  getProjets(){
+        //     this.$app.api.get('/v2/')
+        //         .then(data => {
+        //             this.projets = data;
+        //         })
+        //         .catch(this.$app.catchError);
+        // }
     },
 
     mounted(){
-        this.getHabilitation();
+        this.getHabilitations();
         this.getOp();
     }
 }
