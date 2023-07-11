@@ -23,7 +23,7 @@
         "header": true,
         "options": {
             "core": {
-                "className": ""
+                "className": "overflow-auto"
             }
         }
     },
