@@ -99,22 +99,15 @@ export default {
             endDate: '',
             daysDiff: 0,
             monthsDiff: 0,
-            pieChartData: {
-                "labels": {
-                    1: "Answer",
-                    2: "Amount"
-                },
-                "S": 33,
-                "A": 12,
-                "M": 10,
-                "I": 8
-            },
             currentHabilitations: 3,
             totalHabilitations: 12,
             pending: {
                 collectes: true,
             },
         }
+    },
+    computed: {
+        ...mapState(['requeteStat']),
     },
     components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable },
     computed : {
@@ -130,6 +123,9 @@ export default {
     },
     methods: {
         computeTimeDiff() {
+            console.log(this.requeteStat, "aaaaaaaaaaaaaaaaaH");
+
+
             const startDate = new Date(this.startDate);
             const endDate = new Date(this.endDate);
 
@@ -181,7 +177,7 @@ export default {
         },
         monthsDiff() {
             this.updateEndDateFromMonths();
-        }
+        },
     },
     async mounted() {
         let collection = this.$assets.getCollection('collectes');

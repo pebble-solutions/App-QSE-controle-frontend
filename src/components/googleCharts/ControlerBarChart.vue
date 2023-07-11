@@ -12,6 +12,7 @@ export default {
             chartDataLoaded: false,
         }
     },
+
     methods: {
         async fetchData() {
             this.chartDataLoaded = false;
