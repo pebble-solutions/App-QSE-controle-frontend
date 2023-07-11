@@ -1,7 +1,8 @@
 <template>
     <div class="container">
-    
-        <h1>Statistiques générales</h1>
+        {{ requeteStat }}
+        nouvelle vue 
+        <h1>Statistiques requetes</h1>
         <!-- <div class="row">
             <div class="col-3">
                 <div class="card my-2">
@@ -81,7 +82,6 @@
             Chargement en cours
         </div>
     </div>
-    <RouterView></RouterView>
 </template>
 
 <script>

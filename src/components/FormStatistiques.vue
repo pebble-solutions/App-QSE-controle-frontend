@@ -248,6 +248,9 @@ export default {
                 query.projets = []
             }
             this.requeteStat(query)
+            console.log(this.requeteStat,'requete')
+            this.$router.push({name: 'NewRequest'});
+
         },
 
         /**

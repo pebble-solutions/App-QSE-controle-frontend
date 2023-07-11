@@ -10,7 +10,12 @@ const routes = [
   {
     path: '/statistiques',
     name: 'Statistiques',
-    component: () => import('../views/Statistiques.vue')
+    component: () => import('../views/Statistiques.vue'),
+  },
+  {
+    path: '/statistiques/requete',
+    name: 'NewRequest',
+    component: () => import(/* webpackChunkName: "about" */ '../views/RequestNew.vue')
   },
   {
     path: '/programmation',
