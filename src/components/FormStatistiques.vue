@@ -1,5 +1,5 @@
 <template>
-    <form class="p-2 my-2" @submit.prevent="searchEcheancier()">
+    <form class="p-2 my-2" @submit.prevent="searchStat()">
 
         <div class="mb-3">
             <h5>Période</h5>
@@ -35,7 +35,6 @@
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchProjets">
             <select class="form-select" id="projet" name="projet" v-model="requete.projets" multiple size="8">
                 <option value="" selected>Tous</option>
-
                 <option v-for="(projet) in restrictSearchProjets(projets)" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
             </select>
         </div>
@@ -72,7 +71,7 @@ export default {
 
             requete: {
                 operateurs: [''],
-                // projets: [''],
+                projets: [''],
                 controleurs: [''],
                 dd: null,
                 df: null,
@@ -100,7 +99,7 @@ export default {
     
     methods: {
 
-        ...mapActions(['setEcheance']),
+        ...mapActions(['requeteStat']),
 
         selectMe(){
             // console.log("/// Select me ///")
@@ -234,7 +233,7 @@ export default {
         /**
          * Enregistre le résultat de la recherche/ des filtres dans le store.
          */
-        searchEcheancier() {
+        searchStat() {
             let query = this.requete
             if(query.operateurs == ""){
                 query.operateurs = []
@@ -242,11 +241,13 @@ export default {
             if(query.controleurs == ""){
                 query.controleurs = []
             }
-
             if(query.habilitation == ""){
                 query.habilitation = []
             }
-            this.setEcheance(query)
+            if(query.projets == ""){
+                query.projets = []
+            }
+            this.requeteStat(query)
         },
 
         /**

@@ -90,6 +90,7 @@ import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
+import { mapState } from 'vuex'
 
 export default {
     data() {
@@ -98,16 +99,6 @@ export default {
             endDate: '',
             daysDiff: 0,
             monthsDiff: 0,
-            pieChartData: {
-                "labels": {
-                    1: "Answer",
-                    2: "Amount"
-                },
-                "S": 33,
-                "A": 12,
-                "M": 10,
-                "I": 8
-            },
             currentHabilitations: 3,
             totalHabilitations: 12,
             pending: {
@@ -115,9 +106,15 @@ export default {
             },
         }
     },
+    computed: {
+        ...mapState(['requeteStat']),
+    },
     components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable },
     methods: {
         computeTimeDiff() {
+            console.log(this.requeteStat, "aaaaaaaaaaaaaaaaaH");
+
+
             const startDate = new Date(this.startDate);
             const endDate = new Date(this.endDate);
 
@@ -169,7 +166,7 @@ export default {
         },
         monthsDiff() {
             this.updateEndDateFromMonths();
-        }
+        },
     },
     async mounted() {
         let collection = this.$assets.getCollection('collectes');
