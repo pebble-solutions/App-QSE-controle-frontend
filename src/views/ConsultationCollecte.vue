@@ -2,6 +2,7 @@
     <div class="container py-2 px-2">
         <spinner v-if="pending.collecte" />
         <template v-else>
+            <HabMonitor></HabMonitor>
             <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             <router-view></router-view>
         </template>
@@ -11,12 +12,13 @@
 <script>
 
 import {mapState, mapActions} from 'vuex'; 
+import HabMonitor from '../components/collecte/HabMonitor.vue';
 
 import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
-    components:{ConsultationCollecteResume, Spinner}, 
+    components:{ConsultationCollecteResume, Spinner, HabMonitor}, 
 
     data() {
         return {

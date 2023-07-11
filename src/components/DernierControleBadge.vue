@@ -6,7 +6,7 @@
             <span v-else>Pas encore contrôlé</span>
         </p>
     </div>
-</template>
+</template>=
 
 <script>
 export default {
