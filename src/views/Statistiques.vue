@@ -92,7 +92,6 @@ import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
-import { mapState } from 'vuex'
 
 export default {
     data() {
@@ -108,16 +107,10 @@ export default {
             },
         }
     },
-    computed: {
-        ...mapState(['requeteStat']),
-    },
     components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable },
     
     methods: {
         computeTimeDiff() {
-            console.log(this.requeteStat, "aaaaaaaaaaaaaaaaaH");
-
-
             const startDate = new Date(this.startDate);
             const endDate = new Date(this.endDate);
 
@@ -177,7 +170,6 @@ export default {
         this.pending.collectes = true;
         await collection.load();
         this.pending.collectes = false;
-        
     }
 }
 </script>

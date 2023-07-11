@@ -579,10 +579,11 @@ export default createStore({
 		 * Enregistre la requete de statistique  dans le store
 		 * @param {Object} state State de Vuex
 		 * @param {Object} data List des éléménts de la requete
-		 */
+		 
 		requeteStat(state, data) {
 			state.requeteStat = data;
-		},
+			console.log(this.state.requeteStat, "oui");
+		},*/
 
 		/**
 		 * Charge un formulaire sur openedElement
@@ -619,8 +620,6 @@ export default createStore({
 		setCollecte(contexte, collecte) {
 			contexte.commit('collecte', { collecte, mode: 'set' })
 		},
-
-
 
 		/**
 		 * Met à jour les informations de la collecte chargée dans le store

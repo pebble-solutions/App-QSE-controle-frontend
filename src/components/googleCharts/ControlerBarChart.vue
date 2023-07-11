@@ -4,6 +4,7 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
+import { mapState } from 'vuex';
 
 export default {
     data() {
@@ -12,7 +13,9 @@ export default {
             chartDataLoaded: false,
         }
     },
-
+    computed: {
+        ...mapState(['requeteStat'])
+    },
     methods: {
         async fetchData() {
             this.chartDataLoaded = false;
