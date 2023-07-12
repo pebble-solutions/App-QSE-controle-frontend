@@ -1,5 +1,7 @@
 <template>
-    <form class="p-2 my-2" @submit.prevent="searchEcheancier()">
+    <Spiner v-if="!pending.habilitations && !pending.operateurs"></Spiner>
+
+    <form v-else class="p-2 my-2" @submit.prevent="searchEcheancier()">
 
         <div class="mb-3">
             <h5>Période</h5>
@@ -15,19 +17,19 @@
         <div class="mb-3">
             <label for="habilitation" class="form-label"><h5>Habilitation</h5></label>
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchHab">
-            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="5" :onclick='selectMe()'>
+            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="5">
                 <option value="" selected>Toutes</option>
-                <option v-for="(hab) in restrictSearchHab(allHabilitations)" :value="hab.id" :key="hab.id">{{hab.label}}</option>
+                <option v-for="(hab) in restrictSearchHabilitations(allHabilitations)" :value="hab.id" :key="hab.id">{{hab.label}}</option>
             </select>
         </div>
 
 
         <div class="mb-3">
             <label for="operateur" class="form-label"><h5>Opérateur</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
+            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchOperateur">
             <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="5">
                 <option value="" selected>Tous</option>
-                <option v-for="(agent) in restrictSearch(operateurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
+                <option v-for="(agent) in restrictSearchOperateurs(operateurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
         </div>
 
@@ -73,12 +75,14 @@ export default {
                 environnement:'private'
             },
             pending: {
-                echeance: false
+                echeance: false,
+                habilitations: true,
+                operateurs:true
             },
             allHabilitations: null,
             operateurs: [],
 
-            displaySearch : '',
+            displaySearchOperateur : '',
             displaySearchHab : ''
         }
     },
@@ -87,11 +91,6 @@ export default {
 
         ...mapActions(['setEcheance']),
 
-        selectMe(){
-            // console.log("/// Select me ///")
-            // console.log(this.requete.habilitation[this.requete.habilitation.length])
-            // console.log("/////////////////")
-        },
 
         /**
          * Retourne la list trié en fonction de la recherche des opérateurs et tri alphabetiquement le resultat
@@ -100,10 +99,12 @@ export default {
          * 
          * @returns {Array} 
          */
-        restrictSearch(list){
+        restrictSearchOperateurs(list) {
             let filteredList = list.filter((item) => {
-                return item.cache_nom.match(this.displaySearch);
+                return item.cache_nom.match(this.displaySearchOperateur);
             });
+
+            if (!filteredList) return [];
 
             filteredList.sort((a, b) => {
                 const nameA = a.cache_nom.toUpperCase();
@@ -130,8 +131,8 @@ export default {
          * 
          * @returns {Array} 
          */
-        restrictSearchHab(list){
-            if(list){
+        restrictSearchHabilitations(list) {
+            if(list) {
                 let filteredList = list.filter((item) => {
                     return item.label.match(this.displaySearchHab);
                 });
@@ -163,42 +164,44 @@ export default {
          */
         searchEcheancier() {
             let query = this.requete
-            if(query.operateurs == ""){
-                query.operateurs = []
+            if (query.operateurs == "") {
+                query.operateurs = [];
             }
 
-            if(query.habilitation == ""){
-                query.habilitation = []
+            if (query.habilitation == "") {
+                query.habilitation = [];
             }
-            this.setEcheance(query)
+            this.setEcheance(query);
         },
 
         /**
          * Charge les données des habilitations via un appel API
          */
-        getHabilitation(){
+        getHabilitations() {
             this.$app.api.get('/v2/characteristic/')
                 .then(data => {
                     this.allHabilitations = data;
                 })
-                .catch(this.$app.catchError);
+                .catch(this.$app.catchError)
+                .finally(() => this.pending.habilitations = false);
         },
 
         /**
          * Charge les données des opérateurs via un appel API
          */
-        getOp(){
+        getOperateurs() {
             this.$app.api.get('/v2/personnel')
                 .then(data => {
                     this.operateurs = data;
                 })
-                .catch(this.$app.catchError);
+                .catch(this.$app.catchError)
+                .finally(() => this.pending.operateurs = false);
         }
     },
 
-    mounted(){
-        this.getHabilitation();
-        this.getOp();
+    mounted() {
+        this.getHabilitations();
+        this.getOperateurs();
     }
 }
 

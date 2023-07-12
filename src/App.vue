@@ -282,9 +282,9 @@ export default {
 			else if (['Habilitation', 'HabilitationAgent', 'HabilitationHabilitation','habilitationByHab','habilitationByAgent','NewCollecteVeille'].includes(this.$route.name)) {
 				return 'habilitation'
 			}
-			else if(['Echeancier'].includes(this.$route.name)){
+			else if (['Echeancier'].includes(this.$route.name)) {
 				return 'echeancier';
-			}else if (['Home'].includes(this.$route.name)) {
+			} else if (['Home'].includes(this.$route.name)) {
 				return 'home';
 			}
 			return null;
@@ -386,17 +386,16 @@ export default {
 			})
 			.catch(this.$app.catchError)
 			.finally(() => {this.pending.projets = false});
-
 		},
 
 		/**
 		 * charge la liste des habilitations depuis le serveur et les charge dans le store
 		 */
-		loadHabilitationType(){
+		loadHabilitationType() {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/controle/habilitation/type')
 			.then ((data)=> {
-				this.refreshHabilitationType(data)
+				this.refreshHabilitationType(data);
 			})
 			.catch(this.$app.catchError)
 			.finally(() => {this.pending.habilitations = false});
@@ -409,7 +408,7 @@ export default {
 
             this.$app.apiGet('v2/controle/veille')
             .then((data) =>{
-				this.refreshVeilleConfig(data)
+				this.refreshVeilleConfig(data);
             })
             .catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 
@@ -439,10 +438,9 @@ export default {
 				.then(data => {
 					this[refreshMethod](data);
 					return data;
-				})
-                           
+				})        
 				.catch(this.$app.catchError)
-				.finally(() => this.pending[pending] = false)
+				.finally(() => this.pending[pending] = false);
 		},
 
 		/**
@@ -501,18 +499,19 @@ export default {
 			
 			for (let form of liste) {
 				let result= form.nb_todo;
-				if (result === 0){
+				if (result === 0) {
 					compteur += 0
 				}
 				else compteur += 1;
 			}
-			if (compteur > 0){
-				return true
+			if (compteur > 0) {
+				return true;
 			} else {
-				return false
+				return false;
 			}
 		
 		},
+
 		/**
          * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
 		 * 
@@ -533,9 +532,9 @@ export default {
 				if(this.searchOptions.mode == 'collecte') {
 					if(mode == 'append') {
 						if(!data.length) {
-							this.noMoreAvailable = true
+							this.noMoreAvailable = true;
 						} else {
-							this.addSearchResults(data)
+							this.addSearchResults(data);
 						}
 					} 
 					else {
@@ -576,7 +575,7 @@ export default {
         },
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, //,  , SearchHab 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
