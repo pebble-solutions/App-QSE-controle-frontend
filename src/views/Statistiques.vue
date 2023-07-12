@@ -1,7 +1,8 @@
 <template>
     <div class="container">
-        {{ this.requeteStat  }}
+        REQUETE STATS{{ this.requeteStat  }}
         <h1>Statistiques générales</h1>
+        STATS{{ stats }}
         <div class="row">
             <div class="col-3">
                 <div class="card my-2">
@@ -69,7 +70,7 @@
         
        
         <template v-if="!pending.collectes">
-            <StatOperateur :requeteStat="stats" v-if="requeteStat != null">
+            <StatOperateur :requeteStat="requeteStat" v-if="requeteStat">
             </StatOperateur>
             <StatHabilitation :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
             </StatHabilitation>
