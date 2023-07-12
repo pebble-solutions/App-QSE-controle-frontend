@@ -250,7 +250,7 @@ export default {
             console.log("Query :", query);
             this.setRequete(query);
             console.log(this.requeteStat,'requete');
-            this.$router.push({name: 'NewRequest'});
+            // this.$router.push({name: 'NewRequest'});
 
         },
 

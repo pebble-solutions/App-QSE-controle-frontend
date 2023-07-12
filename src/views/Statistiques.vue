@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        {{ this.requeteStat  }}
         <h1>Statistiques générales</h1>
         <div class="row">
             <div class="col-3">
@@ -79,6 +80,7 @@
         <div v-else>
             Chargement en cours
         </div>
+        
     </div>
     <RouterView></RouterView>
 </template>
@@ -109,7 +111,11 @@ export default {
     },
     components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable },
     computed: {
-        ...mapState(['requeteStat'])
+        ...mapState(['requeteStat']),
+
+        stats() {
+            return this.requeteStat;
+        }
     },
     methods: {
         computeTimeDiff() {
@@ -172,6 +178,7 @@ export default {
         this.pending.collectes = true;
         await collection.load();
         this.pending.collectes = false;
+        console.log(this.requeteStat,'requete')
     }
 }
 </script>
