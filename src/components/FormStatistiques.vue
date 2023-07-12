@@ -247,11 +247,7 @@ export default {
             if(query.projets == ""){
                 query.projets = []
             }
-            console.log("Query :", query);
             this.setRequete(query);
-            console.log(this.requeteStat,'requete');
-            // this.$router.push({name: 'NewRequest'});
-
         },
 
         /**

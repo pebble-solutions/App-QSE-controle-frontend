@@ -69,7 +69,7 @@
         
        
         <template v-if="!pending.collectes">
-            <StatOperateur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
+            <StatOperateur :requeteStat="stats" v-if="requeteStat != null">
             </StatOperateur>
             <StatHabilitation :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
             </StatHabilitation>
@@ -174,11 +174,9 @@ export default {
     },
     async mounted() {
         let collection = this.$assets.getCollection('collectes');
-        console.log(collection,'mounted')
         this.pending.collectes = true;
         await collection.load();
         this.pending.collectes = false;
-        console.log(this.requeteStat,'requete')
     }
 }
 </script>
