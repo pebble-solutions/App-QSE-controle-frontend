@@ -2,7 +2,7 @@
     <div class="container">
     
         <h1>Statistiques générales</h1>
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-3">
                 <div class="card my-2">
                     <div class="card-body">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
         <div class="row">
             <div class="card my-2 overflow-auto">
                 <div class="card-body">
