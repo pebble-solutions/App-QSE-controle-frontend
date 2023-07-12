@@ -1,5 +1,5 @@
 <template>
-    <div id="operatorBarChart" :v-if="chartDataLoaded"></div>XXX {{ chartData }}
+    <div id="operatorBarChart" :v-if="chartDataLoaded"></div>XXX {{ chartData }} {{ requeteStat }}
 </template>
 
 <script>
@@ -28,6 +28,7 @@ export default {
             console.log("between : ", this.chartData);
             this.chartData.push(['Opérateurs', 'S', 'A', 'M', 'I']);
             console.log("after : ",this.chartData);
+            console.log(this.requeteStat,'requeteStat')
             let i = 1;
             for (const id of this.requeteStat.operateurs) {
                 data.forEach(collecte => {
