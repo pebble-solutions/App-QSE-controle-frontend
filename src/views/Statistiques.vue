@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-    
         <h1>Statistiques générales</h1>
         <!-- <div class="row">
             <div class="col-3">
@@ -92,6 +91,7 @@ import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
+import { mapState } from 'vuex'
 
 export default {
     data() {
@@ -108,7 +108,9 @@ export default {
         }
     },
     components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable },
-    
+    computed: {
+        ...mapState(['requeteStat'])
+    },
     methods: {
         computeTimeDiff() {
             const startDate = new Date(this.startDate);

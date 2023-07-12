@@ -99,7 +99,7 @@ export default {
     
     methods: {
 
-        ...mapActions(['requeteStat']),
+        ...mapActions(['setRequete']),
 
         selectMe(){
             // console.log("/// Select me ///")
@@ -247,8 +247,9 @@ export default {
             if(query.projets == ""){
                 query.projets = []
             }
-            this.requeteStat(query)
-            console.log(this.requeteStat,'requete')
+            console.log("Query :", query);
+            this.setRequete(query);
+            console.log(this.requeteStat,'requete');
             this.$router.push({name: 'NewRequest'});
 
         },
