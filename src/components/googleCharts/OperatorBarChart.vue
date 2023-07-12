@@ -1,5 +1,5 @@
 <template>
-    <div id="operatorBarChart" :v-if="chartDataLoaded"></div>XXX {{ chartData }} {{ requeteStat }}
+    <div id="operatorBarChart" :v-if="chartDataLoaded"></div> {{ requeteStat }}
 </template>
 
 <script>

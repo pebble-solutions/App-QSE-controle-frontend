@@ -27,7 +27,7 @@
             <input type="text" class="form-control px-2" placeholder="Rechercher opérateur..." v-model="displaySearch">
             <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="7">
                 <option value="" selected>Tous</option>
-                <option v-for="(agent) in restrictSearch(operateurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
+                <option v-for="(agent) in restrictSearch(operateurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}} {{ agent.id }}</option>
             </select>
         </div>
         
@@ -249,7 +249,20 @@ export default {
             if(query.projets == ""){
                 query.projets = []
             }
+            console.log(query,'queru')
+            console.log(this.requete, 'avant init')
             this.setRequete(query);
+            this.requete =  {
+                operateurs: [''],
+                projets: [''],
+                controleurs: [''],
+                dd: null,
+                df: null,
+                habilitation: [''],
+                priorite: true,
+                environnement:'private'
+            },
+            console.log(this.requete, 'apres')
             this.pending.requete = false;
             // this.$router.push({name: 'NewRequest'});
 
@@ -297,6 +310,7 @@ export default {
     mounted(){
         this.getHabilitations();
         this.getOp();
+        
     }
 }
 
