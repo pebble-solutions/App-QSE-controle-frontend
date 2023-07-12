@@ -24,11 +24,10 @@ export default {
             let collection = this.$assets.getCollection('collectes');
             const data = collection.getCollection();
 
-            console.log("before : ", this.chartData);
-            console.log("between : ", this.chartData);
+            this.chartData = [];
             this.chartData.push(['Opérateurs', 'S', 'A', 'M', 'I']);
-            console.log("after : ",this.chartData);
-            console.log(this.requeteStat,'requeteStat')
+            console.log("initial : ", this.chartData);
+            
             let i = 1;
             for (const id of this.requeteStat.operateurs) {
                 data.forEach(collecte => {
