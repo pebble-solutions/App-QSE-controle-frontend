@@ -178,7 +178,6 @@ export default {
         this.pending.collectes = true;
         await collection.load();
         this.pending.collectes = false;
-        console.log(this.requeteStat,'requete')
     }
 }
 </script>

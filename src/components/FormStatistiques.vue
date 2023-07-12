@@ -1,58 +1,60 @@
 <template>
-    <form class="p-2 my-2" @submit.prevent="searchStat()">
+    <form class="p-2 my-1" @submit.prevent="searchStat()">
+        <div class="row">
 
-        <div class="mb-3">
-            <h5>Période</h5>
-            <label class="form-label" for="DateDebut">Date de début</label>
-            <input type="date" class="form-control" id="dd" name="date" v-model="requete.dd" required>
+            <div class=" col-6 mb-3">
+                <label class="form-label" for="DateDebut">Date de début</label>
+                <input type="date" class="form-control" id="dd" name="date" v-model="requete.dd" required>
+            </div>
+    
+            <div class="col-6 mb-3">
+                <label class="form-label" for="DateFin">Date de fin</label>
+                <input type="date" class="form-control" id="df" name="date" v-model="requete.df" required>
+            </div>
         </div>
 
         <div class="mb-3">
-            <label class="form-label" for="DateFin">Date de fin</label>
-            <input type="date" class="form-control" id="df" name="date" v-model="requete.df" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="habilitation" class="form-label"><h5>Habilitation</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchHab">
-            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="8" :onclick='selectMe()'>
+            <label for="habilitation" class="form-label">Habilitation :</label>
+            <input type="text" class="form-control px-2" placeholder="Rechercher habilitation..." v-model="displaySearchHab">
+            <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="7">
                 <option value="" selected>Toutes</option>
                 <option v-for="(hab) in restrictSearchHab(allHabilitations)" :value="hab.id" :key="hab.id">{{hab.label}}</option>
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="operateur" class="form-label"><h5>Opérateur</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
-            <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="8">
+        <div v-if="!pending.agents" class="mb-3">
+            <label for="operateur" class="form-label">Opérateur:</label>
+            <input type="text" class="form-control px-2" placeholder="Rechercher opérateur..." v-model="displaySearch">
+            <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="7">
                 <option value="" selected>Tous</option>
                 <option v-for="(agent) in restrictSearch(operateurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
         </div>
         
         <div class="mb-3">
-            <label for="projet" class="form-label"><h5>Projet</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchProjets">
-            <select class="form-select" id="projet" name="projet" v-model="requete.projets" multiple size="8">
-                <option value="" selected>Tous</option>
+            <label for="projet" class="form-label">Projet</label>
+            <input type="text" class="form-control px-2" placeholder="Rechercher projet..." v-model="displaySearchProjets">
+            <select class="form-select" id="projet" name="projet" v-model="requete.projets" multiple size="6">
+                <option :value="projets" selected>Tous</option>
                 <option v-for="(projet) in restrictSearchProjets(projets)" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
             </select>
         </div>
         
-        <div class="mb-3">
-            <label for="controleur" class="form-label"><h5>Contrôleur</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchControleurs">
-            <select class="form-select" id="enqueteur_personnel" name="controleur" v-model="requete.controleurs" multiple size="8">
+        <div v-if="!pending.agents" class="mb-3">
+            <label for="controleur" class="form-label">Contrôleur</label>
+            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher contrôleur..." v-model="displaySearchControleurs">
+            <select class="form-select" id="enqueteur_personnel" name="controleur" v-model="requete.controleurs" multiple size="7">
                 <option value="" selected>Tous</option>
                 <option v-for="(agent) in restrictSearchControleurs(controleurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
         </div>
+        <spinner v-else></spinner>
         
 
         
         <div class="text-center">
-            <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.echeance">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.echeance"></span>
+            <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.requete">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.requete"></span>
                 <i class="me-2 bi bi-calendar2-check" v-else></i>
                 Afficher
             </button>
@@ -63,8 +65,10 @@
 <script>
 
 import { mapActions, mapState } from 'vuex';
+import Spinner from './pebble-ui/Spinner.vue';
 
 export default {
+    components: {Spinner},
 
     data() {
         return {
@@ -80,7 +84,9 @@ export default {
                 environnement:'private'
             },
             pending: {
-                echeance: false
+                habilitations: false,
+                agents: false,
+                requete: false,
             },
             allHabilitations: null,
             operateurs: [],
@@ -101,11 +107,7 @@ export default {
 
         ...mapActions(['setRequete']),
 
-        selectMe(){
-            // console.log("/// Select me ///")
-            // console.log(this.requete.habilitation[this.requete.habilitation.length])
-            // console.log("/////////////////")
-        },
+       
 
         /**
          * Retourne la list trié en fonction de la recherche des opérateurs et tri alphabetiquement le resultat
@@ -133,7 +135,6 @@ export default {
 
                 return 0;
             });
-
             return filteredList;
         },
          /**
@@ -234,6 +235,7 @@ export default {
          * Enregistre le résultat de la recherche/ des filtres dans le store.
          */
         searchStat() {
+            this.pending.requete = true;
             let query = this.requete
             if(query.operateurs == ""){
                 query.operateurs = []
@@ -249,7 +251,7 @@ export default {
             }
             console.log("Query :", query);
             this.setRequete(query);
-            console.log(this.requeteStat,'requete');
+            this.pending.requete = false;
             // this.$router.push({name: 'NewRequest'});
 
         },
@@ -258,17 +260,19 @@ export default {
          * Charge les données des habilitations via un appel API
          */
         getHabilitations(){
+            this.pending.habilitations = true
             this.$app.api.get('/v2/characteristic/')
                 .then(data => {
                     this.allHabilitations = data;
                 })
-                .catch(this.$app.catchError);
+                .catch(this.$app.catchError).finally(this.pending.habilitations = false);
         },
 
         /**
          * Charge les données des opérateurs via un appel API
          */
         getOp(){
+            this.pending.agents = true
             this.$app.api.get('/v2/personnel', {
                 limit: 999,
                 
@@ -277,7 +281,7 @@ export default {
                     this.controleurs = data;
                     this.operateurs = data;
                 })
-                .catch(this.$app.catchError);
+                .catch(this.$app.catchError).finally(this.pending.agents = false);
         },
         /**
          * Charge les données des projets via un appel API
