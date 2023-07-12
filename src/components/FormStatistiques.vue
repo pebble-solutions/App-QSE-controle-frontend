@@ -91,6 +91,7 @@ export default {
             allHabilitations: null,
             operateurs: [],
             controleurs:[],
+            collecte: '',
             // projets: [this.projets],
 
             displaySearch : '',
@@ -287,7 +288,6 @@ export default {
             this.pending.agents = true
             this.$app.api.get('/v2/personnel', {
                 limit: 999,
-                
             })
                 .then(data => {
                     this.controleurs = data;
@@ -295,21 +295,24 @@ export default {
                 })
                 .catch(this.$app.catchError).finally(this.pending.agents = false);
         },
-        /**
-         * Charge les données des projets via un appel API
-         */
-        //  getProjets(){
-        //     this.$app.api.get('/v2/')
-        //         .then(data => {
-        //             this.projets = data;
-        //         })
-        //         .catch(this.$app.catchError);
-        // }
+        loadCollecte(){
+            this.pending.agents= true
+            
+            this.$app.api.get('/v2/collecte')
+               
+                
+                .then(data => {
+                    this.collecte = data;
+                })
+                .catch(this.$app.catchError).finally(this.pending.agents = false);
+        },
+        
     },
 
     mounted(){
         this.getHabilitations();
         this.getOp();
+        this.loadCollecte();
         
     }
 }

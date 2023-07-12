@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-if="requeteStat">
         REQUETE STATS{{ this.requeteStat  }}
         <h1>Statistiques générales</h1>
         STATS{{ stats }}
@@ -177,6 +177,7 @@ export default {
         let collection = this.$assets.getCollection('collectes');
         this.pending.collectes = true;
         await collection.load();
+        console.log(collection)
         this.pending.collectes = false;
     }
 }
