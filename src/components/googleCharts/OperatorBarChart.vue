@@ -1,5 +1,5 @@
 <template>
-    <div id="operatorBarChart" :v-if="chartDataLoaded"></div>
+    <div id="operatorBarChart" :v-if="chartDataLoaded"></div>XXX {{ chartData }}
 </template>
 
 <script>
@@ -68,6 +68,7 @@ export default {
                 });
                 i++;
             }
+            console.log(this.chartData,'endfetch')
             this.chartDataLoaded = true;
         },
         async drawChart() {
@@ -83,6 +84,7 @@ export default {
     },
     async mounted() {
         await this.fetchData();
+        console.log(this.chartData, 'mounted')
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         });
