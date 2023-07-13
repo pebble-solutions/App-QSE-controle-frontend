@@ -21,6 +21,12 @@ export default {
       chartDataLoaded: false,
     }
   },
+  props: {
+    requeteStat: {
+      type: Object,
+      required: true
+    }
+  },
   methods: {
     async fetchData() {
       this.chartDataLoaded = false;
@@ -32,46 +38,46 @@ export default {
       let habilitationTypeHistory = [];
       let totalHabilitationsHIstory = [];
 
-      const ids = [437];
-      let i = 1;
+      const ids = this.requeteStat.operateurs;
+      let index = -2;
       ids.forEach(id => {
         data.forEach(collecte => {
           if (id == collecte['personnel_id__operateur']) {
-            if (this.chartData[i]) {
-              this.chartData[i][1]++;//incrémentation du champ KN
+            index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
+            if (index >= 0) {
+              this.chartData[index][1]++;//incrémentation du champ KN
               if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
                 habilitationTypeHistory.push(collecte['habilitation_type_id']);
               }
               if (totalHabilitationsHIstory.findIndex(id => id == collecte['habilitation_id']) == -1) {
                 totalHabilitationsHIstory.push(collecte['habilitation_id']);
               }
-              this.chartData[i][3]++;
+              this.chartData[index][3]++;
               switch (collecte['sami']) {
                 case 'S':
-                  this.chartData[i][4]++;
+                  this.chartData[index][4]++;
                   break;
                 case 'A':
-                  this.chartData[i][5]++;
+                  this.chartData[index][5]++;
                   break;
                 case 'M':
-                  this.chartData[i][6]++;
+                  this.chartData[index][6]++;
                   break;
                 case 'I':
-                  this.chartData[i][7]++;
+                  this.chartData[index][7]++;
                   break;
                 default:
                   break;
               }
+              this.chartData[index][2] = habilitationTypeHistory.length;
+              this.chartData[index][3] = totalHabilitationsHIstory.length;
             } else {
               this.chartData.push(['Opérateur ' + id, 0, 0, 0, 0, 0, 0, 0]);
             }
           }
         });
-        this.chartData[i][2] = habilitationTypeHistory.length;
-        this.chartData[i][3] = totalHabilitationsHIstory.length;
         habilitationTypeHistory = [];
         totalHabilitationsHIstory = [];
-        i++;
       });
     }
   },

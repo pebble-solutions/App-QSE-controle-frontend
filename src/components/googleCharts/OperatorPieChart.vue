@@ -12,6 +12,17 @@ export default {
             chartDataLoaded: false,
         }
     },
+    props: {
+        requeteStat: {
+            type: Object,
+            required: true
+        }
+    },
+    watch: {
+        requeteStat() {
+            this.fetchData();
+        }
+    },
     methods: {
         async fetchData() {
             this.chartDataLoaded = false;
@@ -21,26 +32,25 @@ export default {
             this.chartData = [
                 ['Réponses', 'Nombre']
             ];
-            const ids = [143, 48];
-            let i = 1;
+            const ids = this.requeteStat.operateurs;
 
             ids.forEach(id => {
                 data.forEach(collecte => {
                     if (collecte['personnel_id__operateur'] == id) {
-                        if (this.chartData[i]){
-                            this.chartData[i][1]++;
-                        }else {
-                            this.chartData.push(["Opérateur "+ id, 1]);
+                        const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
+                        if (index >= 0) {
+                            this.chartData[index][1]++;
+                        } else {
+                            this.chartData.push(["Opérateur " + id, 1]);
                         }
                     }
                 });
-                i++;
             });
             this.chartDataLoaded = true;
         },
-        async drawChart() {
+        drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
-            let chartWrap = await document.getElementById('operatorPieChart');
+            let chartWrap = document.getElementById('operatorPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
             chart.draw(dataTable);
         }

@@ -65,7 +65,7 @@ export default {
         requeteStat: {
             type: Object,
             required: true
-        }
+        },
     },
     methods: {
         computeHabilitations() {

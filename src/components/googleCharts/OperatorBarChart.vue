@@ -1,5 +1,5 @@
-<template>
-    <div id="operatorBarChart" :v-if="chartDataLoaded"></div> {{ requeteStat }}
+<template v-if="!pending.fetchData">
+    <div id="operatorBarChart"></div> {{ requeteStat }}
 </template>
 
 <script>
@@ -9,54 +9,54 @@ export default {
     data() {
         return {
             chartData: [],
-            chartDataLoaded: false,
+            pending: {
+                fetchData: true,
+            },
         }
     },
     props: {
         requeteStat: {
             type: Object,
             required: true
-        }
+        },
     },
     methods: {
-        async fetchData() {
-            this.chartDataLoaded = false;
+        fetchData() {
             let collection = this.$assets.getCollection('collectes');
             const data = collection.getCollection();
 
-            this.chartData = [];
-            this.chartData.push(['Opérateurs', 'S', 'A', 'M', 'I']);
-            console.log("initial : ", this.chartData);
-            
-            let i = 1;
-            for (const id of this.requeteStat.operateurs) {
+            this.chartData = [['Opérateurs', 'S', 'A', 'M', 'I']];
+            const ids = this.requeteStat.operateurs;
+
+            for (const id of ids) {
                 data.forEach(collecte => {
                     if (collecte['personnel_id__operateur'] == id) {
+                        const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
                         switch (collecte['sami']) {
                             case 'S':
-                                if (this.chartData[i]) {
-                                    this.chartData[i][1]++;
+                                if (index >= 0) {
+                                    this.chartData[index][1]++;
                                 } else {
                                     this.chartData.push(['Opérateur ' + id, 1, 0, 0, 0]);
                                 }
                                 break;
                             case 'A':
-                                if (this.chartData[i]) {
-                                    this.chartData[i][2]++;
+                                if (index >= 0) {
+                                    this.chartData[index][2]++;
                                 } else {
                                     this.chartData.push(['Opérateur ' + id, 0, 1, 0, 0]);
                                 }
                                 break;
                             case 'M':
-                                if (this.chartData[i]) {
-                                    this.chartData[i][3]++;
+                                if (index >= 0) {
+                                    this.chartData[index][3]++;
                                 } else {
                                     this.chartData.push(['Opérateur ' + id, 0, 0, 1, 0]);
                                 }
                                 break;
                             case 'I':
-                                if (this.chartData[i]) {
-                                    this.chartData[i][4]++;
+                                if (index >= 0) {
+                                    this.chartData[index][4]++;
                                 } else {
                                     this.chartData.push(['Opérateur ' + id, 0, 0, 0, 1]);
                                 }
@@ -66,14 +66,11 @@ export default {
                         }
                     }
                 });
-                i++;
             }
-            console.log(this.chartData,'endfetch')
-            this.chartDataLoaded = true;
         },
-        async drawChart() {
+        drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
-            let chartWrap = await document.getElementById('operatorBarChart');
+            let chartWrap = document.getElementById('operatorBarChart');
             let chart = new GoogleCharts.api.visualization.BarChart(chartWrap);
             let options = {
                 isStacked: 'percent',
@@ -82,9 +79,10 @@ export default {
             chart.draw(dataTable, options);
         }
     },
-    async mounted() {
-        await this.fetchData();
-        console.log(this.chartData, 'mounted')
+    mounted() {
+        this.pending.fetchData = true;
+        this.fetchData();
+        this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         });

@@ -12,6 +12,12 @@ export default {
             chartDataLoaded: false,
         }
     },
+    props: {
+        requeteStat: {
+            type: Object,
+            required: true
+        }
+    },
     methods: {
         async fetchData() {
             this.chartDataLoaded = false;
@@ -20,7 +26,8 @@ export default {
 
             this.chartData = [['Habilitations', 'S', 'A', 'M', 'I']];
 
-            const ids = [751, 812,234];
+            const ids = [751, 812, 234];
+
             let i = 1;
             for (const id of ids) {
                 data.forEach(collecte => {

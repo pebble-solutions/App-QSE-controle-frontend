@@ -66,11 +66,9 @@
                 </div>
             </div>
         </div>
-
-        
        
         <template v-if="!pending.collectes">
-            <StatOperateur :requeteStat="requeteStat" v-if="requeteStat">
+            <StatOperateur :ids="requeteStat.operateurs" :requeteStat="requeteStat" v-if="requeteStat">
             </StatOperateur>
             <StatHabilitation :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
             </StatHabilitation>
@@ -118,6 +116,8 @@ export default {
    
     methods: {
         computeTimeDiff() {
+            console.log("type : ",typeof(this.requeteStat.operateurs));
+
             const startDate = new Date(this.startDate);
             const endDate = new Date(this.endDate);
             
