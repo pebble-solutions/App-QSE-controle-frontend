@@ -346,7 +346,7 @@ export default {
 		/**
 		 * Charge l'ensemble des collectes terminées
 		 */
-		loadCollectesCollection() {
+		loadCollectesCollection() {/*
 			let collecteCollection = new AssetsCollection(this, {
 				assetName: 'collectesCollection',
 				apiRoute: 'v2/collecte/',
@@ -358,7 +358,7 @@ export default {
 
 				}
 			});
-			this.$assets.addCollection('collectes', collecteCollection);
+			this.$assets.addCollection('collectes', collecteCollection);*/
 		},
 
 		/**
@@ -618,7 +618,7 @@ export default {
 				this.loadProjets();
 				this.loadHabilitationType();
 				this.loadVeille();
-				this.loadCollectesCollection();
+				//this.loadCollectesCollection();
 			}
 		});
 	}

@@ -1,20 +1,25 @@
-<template>
-    <div id="globalPieChart" :v-if="chartDataLoaded"></div>
+<template v-if="!pending.fetchData">
+    <div id="globalPieChart"></div>
 </template>
 
 <script>
 import { GoogleCharts } from 'google-charts'
+import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
             chartData: null,
-            chartDataLoaded: false,
+            pending: {
+                fetchData: true,
+            },
         }
+    },
+    computed: {
+        ...mapState(['statResult'])
     },
     methods: {
         async fetchData() {
-            this.chartDataLoaded = false;
             this.chartData = [
                 ['Réponses', 'Nombre'],
                 ['S', 0],
@@ -22,8 +27,7 @@ export default {
                 ['M', 0],
                 ['I', 0],
             ];
-            let collection = this.$assets.getCollection('collectes');
-            const data = collection.getCollection();
+            const data = this.statResult;
             data.forEach(collecte => {
                 switch (collecte['sami']) {
                     case 'S':
@@ -42,11 +46,10 @@ export default {
                         break;
                 }
             });
-            this.chartDataLoaded = true;
         },
-        async drawChart(){
+        drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
-            let chartWrap = await document.getElementById('globalPieChart');
+            let chartWrap = document.getElementById('globalPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
             let options = {
                 colors: ['#198754', '#0074D9', '#FFC107', '#DC3545'],
@@ -55,7 +58,9 @@ export default {
         }
     },
     async mounted() {
+        this.pending.fetchData = true;
         await this.fetchData();
+        this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         })

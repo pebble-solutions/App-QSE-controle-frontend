@@ -14,12 +14,16 @@
 </template>
     
 <script>
+import { mapState } from 'vuex';
 export default {
     data() {
         return {
             chartData: [],
             chartDataLoaded: false,
         }
+    },
+    computed: {
+        ...mapState(['statResult'])
     },
     methods: {
         async fetchData() {
@@ -29,8 +33,7 @@ export default {
                 [0, 0, 0, 0, 0]
             ];
 
-            let collection = this.$assets.getCollection('collectes');
-            const data = collection.getCollection();
+            const data = this.statResult;
 
             data.forEach(collecte => {
                 this.chartData[1][0]++;//incrémentation du champ KN

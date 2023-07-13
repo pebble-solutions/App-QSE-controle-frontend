@@ -4,6 +4,7 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
+import { mapState } from 'vuex';
 
 export default {
     data() {
@@ -20,11 +21,13 @@ export default {
             required: true
         }
     },
+    computed: {
+        ...mapState(['statResult'])
+    },
     methods: {
         async fetchData() {
 
-            let collection = this.$assets.getCollection('collectes');
-            const data = collection.getCollection();
+            const data = this.statResult;
 
             this.chartData = [['Habilitations', 'S', 'A', 'M', 'I']];
 
@@ -36,7 +39,7 @@ export default {
                         const index = this.chartData.findIndex(habilitation => (habilitation[0] == 'Habilitation ' + id));
                         switch (collecte['sami']) {
                             case 'S':
-                                if (index >=0) {
+                                if (index >= 0) {
                                     this.chartData[index][1]++;
                                 } else {
                                     this.chartData.push(['Habilitation ' + id, 1, 0, 0, 0]);

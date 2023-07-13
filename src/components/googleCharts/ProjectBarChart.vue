@@ -4,6 +4,7 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
+import { mapState } from 'vuex';
 
 export default {
     data() {
@@ -20,14 +21,15 @@ export default {
             required: true,
         }
     },
+    computed: {
+        ...mapState(['statResult'])
+    },
     methods: {
         fetchData() {
-            let collection = this.$assets.getCollection('collectes');
-            const data = collection.getCollection();
+            const data = this.statResult;
 
             this.chartData = [['Projets', 'S', 'A', 'M', 'I']];
 
-            console.log("toto", this.requeteStat.projets);
             const ids = this.requeteStat.projets;
             for (const id of ids) {
                 data.forEach(collecte => {

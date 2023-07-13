@@ -53,6 +53,7 @@
 import OperatorBarChart from './OperatorBarChart.vue';
 import OperatorPieChart from './OperatorPieChart.vue';
 import OperatorTable from './OperatorTable.vue';
+import { mapState } from 'vuex';
 
 export default {
     data() {
@@ -67,10 +68,12 @@ export default {
             required: true
         },
     },
+    computed: {
+        ...mapState(['statResult'])
+    },
     methods: {
         computeHabilitations() {
-            let collection = this.$assets.getCollection('collectes');
-            const data = collection.getCollection();
+            const data = this.statResult;
             let periodHabilitationsHistory = [];
             let totalHabilitationsHistory = [];
             data.forEach(collecte => {

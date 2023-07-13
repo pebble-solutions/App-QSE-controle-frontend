@@ -1,9 +1,10 @@
 <template v-if="!pending.fetchData">
-    <div id="operatorBarChart"></div> {{ requeteStat }}
+    <div id="operatorBarChart"></div>
 </template>
 
 <script>
 import { GoogleCharts } from 'google-charts'
+import { mapState } from 'vuex';
 
 export default {
     data() {
@@ -20,10 +21,12 @@ export default {
             required: true
         },
     },
+    computed: {
+        ...mapState(['statResult'])
+    },
     methods: {
         fetchData() {
-            let collection = this.$assets.getCollection('collectes');
-            const data = collection.getCollection();
+            const data = this.statResult;
 
             this.chartData = [['Opérateurs', 'S', 'A', 'M', 'I']];
             const ids = this.requeteStat.operateurs;
@@ -83,7 +86,6 @@ export default {
         this.pending.fetchData = true;
         await this.fetchData();
         this.pending.fetchData = false;
-        console.log("toto", this.chartData);
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         });

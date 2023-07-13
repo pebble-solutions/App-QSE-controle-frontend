@@ -26,7 +26,8 @@ export default createStore({
 		requeteStat: null,
 		veilleConfig: [],
 		personnels: [],
-		collectesCollection: []
+		collectesCollection: [],
+		statResult: []
 	},
 	getters: {
 		activeStructure(state) {
@@ -170,6 +171,11 @@ export default createStore({
 		requeteStat(state, data) {
 			state.requeteStat = data;
 		},
+
+		statResult(state, data) {
+			state.statResult = data;
+		},
+
 		/**
 		 * Met à jour la collection des collectes
 		 * 
@@ -573,6 +579,13 @@ export default createStore({
 		 */
 		setRequete(context, data) {
 			context.commit('requeteStat', data);
+		},
+
+		/**
+		 * charge dans le store les données retournées par l'api stat
+		 */
+		loadStatResult(context, data) {
+			context.commit('statResult',data);
 		},
 
 		/**

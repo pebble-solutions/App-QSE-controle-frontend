@@ -1,22 +1,26 @@
-<template>
-    <div id="agendaChart" v-if="chartDataLoaded"></div>
+<template v-if="!pending.fetchData">
+    <div id="agendaChart"></div>
 </template>
 
 <script>
 import { GoogleCharts } from 'google-charts';
+import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
             chartData: [],
-            chartDataLoaded: false,
+            pending: {
+                fetchData: true,
+            },
         }
     },
+    computed: {
+        ...mapState(['statResult'])
+    },
     methods: {
-        async fetchData() {
-            this.chartDataLoaded = false;
-            let collection = this.$assets.getCollection('collectes');
-            const data = collection.getCollection();
+        fetchData() {
+            const data = this.statResult;
 
             const dateOccurrences = {};
             for (const element of data) {
@@ -31,7 +35,6 @@ export default {
                 let subArray = [new Date(key), dateOccurrences[key]];
                 this.chartData.push(subArray);
             }
-            this.chartDataLoaded = true;
         },
 
         drawChart() {
@@ -43,7 +46,9 @@ export default {
     },
 
     async mounted() {
+        this.pending.fetchData = true;
         await this.fetchData();
+        this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['calendar'],
         });

@@ -4,9 +4,9 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
+import { mapState } from 'vuex';
 
 export default {
-
     data() {
         return {
             chartData: [],
@@ -21,10 +21,12 @@ export default {
             required: true,
         }
     },
+    computed: {
+        ...mapState(['statResult'])
+    },
     methods: {
         fetchData() {
-            let collection = this.$assets.getCollection('collectes');
-            const data = collection.getCollection();
+            const data = this.statResult;
 
             this.chartData = [
                 ['Réponses', 'Nombre']
