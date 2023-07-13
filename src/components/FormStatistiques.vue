@@ -18,7 +18,7 @@
             <input type="text" class="form-control px-2" placeholder="Rechercher habilitation..." v-model="displaySearchHab">
             <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="7">
                 <option value="" selected>Toutes</option>
-                <option v-for="(hab) in restrictSearchHab(allHabilitations)" :value="hab.id" :key="hab.id">{{hab.label}}</option>
+                <option v-for="(hab) in restrictSearchHab(allHabilitations)" :value="hab.id" :key="hab.id"> {{hab.id}} {{hab.label}}</option>
             </select>
         </div>
 
@@ -36,7 +36,7 @@
             <input type="text" class="form-control px-2" placeholder="Rechercher projet..." v-model="displaySearchProjets">
             <select class="form-select" id="projet" name="projet" v-model="requete.projets" multiple size="6">
                 <option :value="projets" selected>Tous</option>
-                <option v-for="(projet) in restrictSearchProjets(projets)" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+                <option v-for="(projet) in restrictSearchProjets(projets)" :value="projet.id" :key="projet.id"> {{ projet.id }} -{{projet.intitule}} </option>
             </select>
         </div>
         
@@ -45,7 +45,7 @@
             <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher contrôleur..." v-model="displaySearchControleurs">
             <select class="form-select" id="enqueteur_personnel" name="controleur" v-model="requete.controleurs" multiple size="7">
                 <option value="" selected>Tous</option>
-                <option v-for="(agent) in restrictSearchControleurs(controleurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
+                <option v-for="(agent) in restrictSearchControleurs(controleurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}} {{ agent.id }}</option>
             </select>
         </div>
         <spinner v-else></spinner>
@@ -91,6 +91,7 @@ export default {
             allHabilitations: null,
             operateurs: [],
             controleurs:[],
+            collecte: '',
             // projets: [this.projets],
 
             displaySearch : '',
@@ -287,7 +288,6 @@ export default {
             this.pending.agents = true
             this.$app.api.get('/v2/personnel', {
                 limit: 999,
-                
             })
                 .then(data => {
                     this.controleurs = data;
@@ -295,21 +295,24 @@ export default {
                 })
                 .catch(this.$app.catchError).finally(this.pending.agents = false);
         },
-        /**
-         * Charge les données des projets via un appel API
-         */
-        //  getProjets(){
-        //     this.$app.api.get('/v2/')
-        //         .then(data => {
-        //             this.projets = data;
-        //         })
-        //         .catch(this.$app.catchError);
-        // }
+        loadCollecte(){
+            this.pending.agents= true
+            
+            this.$app.api.get('/v2/collecte')
+               
+                
+                .then(data => {
+                    this.collecte = data;
+                })
+                .catch(this.$app.catchError).finally(this.pending.agents = false);
+        },
+        
     },
 
     mounted(){
         this.getHabilitations();
         this.getOp();
+        this.loadCollecte();
         
     }
 }

@@ -352,7 +352,10 @@ export default {
 				apiRoute: 'v2/collecte/',
 				requestPayload: {
 					done: "OUI",
-					type: "KN"
+					type: "KN",
+					// dd_start: '2023-04-05',
+					// df_start: '2023-04-05',
+
 				}
 			});
 			this.$assets.addCollection('collectes', collecteCollection);
