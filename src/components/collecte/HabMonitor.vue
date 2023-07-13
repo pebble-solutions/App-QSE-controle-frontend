@@ -145,7 +145,6 @@ export default {
       this.pending.control = true;
       this.$app.apiGet('v2/controle/habilitation', {
         id: id,
-        id: id,
       })
         .then((data) => {
           this.habilitationPerso = data;
