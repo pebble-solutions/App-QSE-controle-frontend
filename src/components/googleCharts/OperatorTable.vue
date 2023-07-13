@@ -1,5 +1,5 @@
-<template>
-  <table class="table" :v-if="chartDataLoaded">
+<template v-if="!pending.fetchData">
+  <table class="table">
     <thead>
       <tr>
         <th v-for="(label, index) in chartData[0]" :key="index">{{ label }}</th>
@@ -18,7 +18,9 @@ export default {
   data() {
     return {
       chartData: [],
-      chartDataLoaded: false,
+      pending: {
+        fetchData: true,
+      },
     }
   },
   props: {
@@ -28,8 +30,7 @@ export default {
     }
   },
   methods: {
-    async fetchData() {
-      this.chartDataLoaded = false;
+     fetchData() {
       this.chartData = [
         ['', 'KN', 'Type habilitation', 'Total habilitations', 'S', 'A', 'M', 'I'],
       ];
@@ -39,11 +40,10 @@ export default {
       let totalHabilitationsHIstory = [];
 
       const ids = this.requeteStat.operateurs;
-      let index = -2;
       ids.forEach(id => {
         data.forEach(collecte => {
           if (id == collecte['personnel_id__operateur']) {
-            index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
+            const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
             if (index >= 0) {
               this.chartData[index][1]++;//incrémentation du champ KN
               if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
@@ -82,7 +82,9 @@ export default {
     }
   },
   mounted() {
+    this.pending.fetchData = true;
     this.fetchData();
+    this.pending.fetchData = false;
   },
 }
 </script>

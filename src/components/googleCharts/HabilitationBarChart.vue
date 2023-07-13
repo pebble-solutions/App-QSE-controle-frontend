@@ -1,5 +1,5 @@
-<template>
-    <div id="knBarChart" :v-if="chartDataLoaded"></div>
+<template :v-if="!pending.fetchData">
+    <div id="knBarChart"></div>
 </template>
 
 <script>
@@ -9,7 +9,9 @@ export default {
     data() {
         return {
             chartData: [],
-            chartDataLoaded: false,
+            pending: {
+                fetchData: true,
+            },
         }
     },
     props: {
@@ -20,43 +22,43 @@ export default {
     },
     methods: {
         async fetchData() {
-            this.chartDataLoaded = false;
+
             let collection = this.$assets.getCollection('collectes');
             const data = collection.getCollection();
 
             this.chartData = [['Habilitations', 'S', 'A', 'M', 'I']];
 
-            const ids = [751, 812, 234];
+            const ids = this.requeteStat.habilitation;
 
-            let i = 1;
             for (const id of ids) {
                 data.forEach(collecte => {
                     if (collecte['habilitation_id'] == id) {
+                        const index = this.chartData.findIndex(habilitation => (habilitation[0] == 'Habilitation ' + id));
                         switch (collecte['sami']) {
                             case 'S':
-                                if (this.chartData[i]) {
-                                    this.chartData[i][1]++;
+                                if (index >=0) {
+                                    this.chartData[index][1]++;
                                 } else {
                                     this.chartData.push(['Habilitation ' + id, 1, 0, 0, 0]);
                                 }
                                 break;
                             case 'A':
-                                if (this.chartData[i]) {
-                                    this.chartData[i][2]++;
+                                if (index >= 0) {
+                                    this.chartData[index][2]++;
                                 } else {
                                     this.chartData.push(['Habilitation ' + id, 0, 1, 0, 0]);
                                 }
                                 break;
                             case 'M':
-                                if (this.chartData[i]) {
-                                    this.chartData[i][3]++;
+                                if (index >= 0) {
+                                    this.chartData[index][3]++;
                                 } else {
                                     this.chartData.push(['Habilitation ' + id, 0, 0, 1, 0]);
                                 }
                                 break;
                             case 'I':
-                                if (this.chartData[i]) {
-                                    this.chartData[i][4]++;
+                                if (index >= 0) {
+                                    this.chartData[index][4]++;
                                 } else {
                                     this.chartData.push(['Habilitation ' + id, 0, 0, 0, 1]);
                                 }
@@ -66,13 +68,12 @@ export default {
                         }
                     }
                 });
-                i++;
             }
             this.chartDataLoaded = true;
         },
-        async drawChart() {
+        drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
-            let chartWrap = await document.getElementById('knBarChart');
+            let chartWrap = document.getElementById('knBarChart');
             let chart = new GoogleCharts.api.visualization.BarChart(chartWrap);
             let options = {
                 isStacked: 'percent',
@@ -82,7 +83,9 @@ export default {
         }
     },
     async mounted() {
-        await this.fetchData();
+        this.pending.fetchData = true;
+        this.fetchData();
+        this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         });

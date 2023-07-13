@@ -1,5 +1,5 @@
-<template>
-    <div id="knPieChart" :v-if="chartDataLoaded"></div>
+<template v-if="!pending.fetchData">
+    <div id="knPieChart"></div>
 </template>
 
 <script>
@@ -9,44 +9,51 @@ export default {
     data() {
         return {
             chartData: null,
-            chartDataLoaded: false,
+            pending: {
+                fetchData: true,
+            }
+        }
+    },
+    props: {
+        requeteStat: {
+            type: Object,
+            required: true,
         }
     },
     methods: {
-        async fetchData() {
-            this.chartDataLoaded = false;
+        fetchData() {
             let collection = this.$assets.getCollection('collectes');
             const data = collection.getCollection();
 
             this.chartData = [
                 ['Réponses', 'Nombre']
             ];
-            const ids = [728, 137];
-            let i = 1;
+            const ids = this.requeteStat.habilitation;
 
             ids.forEach(id => {
                 data.forEach(collecte => {
                     if (collecte['habilitation_id'] == id) {
-                        if (this.chartData[i]) {
-                            this.chartData[i][1]++;
+                        const index = this.chartData.findIndex(habilitation => { habilitation[0] == 'Habilitation ' + id });
+                        if (index >= 0) {
+                            this.chartData[index][1]++;
                         } else {
                             this.chartData.push(["Habilitation " + id, 1]);
                         }
                     }
                 });
-                i++;
             });
-            this.chartDataLoaded = true;
         },
-        async drawChart() {
+        drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
-            let chartWrap = await document.getElementById('knPieChart');
+            let chartWrap = document.getElementById('knPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
             chart.draw(dataTable);
         }
     },
-    async mounted() {
-        await this.fetchData();
+    mounted() {
+        this.pending.fetchData = true;
+        this.fetchData();
+        this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         })

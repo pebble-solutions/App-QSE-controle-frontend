@@ -1,5 +1,5 @@
-<template>
-    <div id="operatorPieChart" :v-if="chartDataLoaded"></div>
+<template v-if="!pending.fetchData">
+    <div id="operatorPieChart"></div>
 </template>
 
 <script>
@@ -9,7 +9,9 @@ export default {
     data() {
         return {
             chartData: null,
-            chartDataLoaded: false,
+            pending: {
+                fetchData: true,
+            }
         }
     },
     props: {
@@ -24,8 +26,7 @@ export default {
         }
     },
     methods: {
-        async fetchData() {
-            this.chartDataLoaded = false;
+        fetchData() {
             let collection = this.$assets.getCollection('collectes');
             const data = collection.getCollection();
 
@@ -46,7 +47,6 @@ export default {
                     }
                 });
             });
-            this.chartDataLoaded = true;
         },
         drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
@@ -55,8 +55,10 @@ export default {
             chart.draw(dataTable);
         }
     },
-    async mounted() {
-        await this.fetchData();
+    mounted() {
+        this.pending.fetchData = true;
+        this.fetchData();
+        this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         })

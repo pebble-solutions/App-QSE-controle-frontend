@@ -1,3 +1,4 @@
+
 <template>
     <div class="container" v-if="!pending.stat">
         REQUETE STATS{{ this.requeteStat  }}
@@ -68,9 +69,9 @@
         </div>
        
         <template v-if="!pending.collectes">
-            <StatOperateur :ids="requeteStat.operateurs" :requeteStat="requeteStat" v-if="requeteStat">
+            <StatOperateur :requeteStat="requeteStat" v-if="requeteStat">
             </StatOperateur>
-            <StatHabilitation :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
+            <StatHabilitation :requete-stat="requeteStat" v-if="requeteStat">
             </StatHabilitation>
             <StatProjet :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations"></StatProjet>
             <StatControleur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
