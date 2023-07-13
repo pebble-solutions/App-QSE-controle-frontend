@@ -43,7 +43,7 @@ export default {
       ids.forEach(id => {
         data.forEach(collecte => {
           if (id == collecte['habilitation_id']) {
-            const index = this.chartData.findIndex(habilitation => { habilitation[0] == ('Habilitation ' + id) });
+            const index = this.chartData.findIndex(habilitation => ( habilitation[0] == 'Habilitation ' + id));
             if (index >= 0) {
               this.chartData[index][1]++;//incrémentation du champ KN
               if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {

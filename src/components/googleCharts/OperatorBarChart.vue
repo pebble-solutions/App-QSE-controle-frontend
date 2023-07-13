@@ -79,10 +79,11 @@ export default {
             chart.draw(dataTable, options);
         }
     },
-    mounted() {
+    async mounted() {
         this.pending.fetchData = true;
-        this.fetchData();
+        await this.fetchData();
         this.pending.fetchData = false;
+        console.log("toto", this.chartData);
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         });

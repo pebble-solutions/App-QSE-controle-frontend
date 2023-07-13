@@ -1,7 +1,7 @@
 
 <template>
     <div class="container" v-if="!pending.stat">
-        REQUETE STATS{{ this.requeteStat  }}
+        REQUETE STATS{{ this.requeteStat }}
         <h1>Statistiques générales</h1>
         STATS{{ stats() }}
         <div class="row">
@@ -67,20 +67,17 @@
                 </div>
             </div>
         </div>
-       
+
         <template v-if="!pending.collectes">
-            <StatOperateur :requeteStat="requeteStat" v-if="requeteStat">
-            </StatOperateur>
-            <StatHabilitation :requete-stat="requeteStat" v-if="requeteStat">
-            </StatHabilitation>
-            <StatProjet :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations"></StatProjet>
-            <StatControleur :currentHabilitations="currentHabilitations" :totalHabilitations="totalHabilitations">
-            </StatControleur>
+            <StatOperateur :requeteStat="requeteStat" v-if="requeteStat"></StatOperateur>
+            <StatHabilitation :requeteStat="requeteStat" v-if="requeteStat"></StatHabilitation>
+            <StatProjet :requeteStat="requeteStat" v-if="requeteStat"></StatProjet>
+            <StatControleur :requeteStat="requeteStat" v-if="requeteStat"></StatControleur>
         </template>
         <div v-else>
             Chargement en cours
         </div>
-        
+
     </div>
     <RouterView></RouterView>
 </template>
@@ -114,14 +111,14 @@ export default {
     computed: {
         ...mapState(['requeteStat']),
     },
-   
+
     methods: {
         computeTimeDiff() {
-            console.log("type : ",typeof(this.requeteStat.operateurs));
+            console.log("type : ", typeof (this.requeteStat.operateurs));
 
             const startDate = new Date(this.startDate);
             const endDate = new Date(this.endDate);
-            
+
             if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
                 const timeDiff = endDate.getTime() - startDate.getTime();
                 this.daysDiff = timeDiff / (1000 * 3600 * 24);
@@ -131,12 +128,12 @@ export default {
                 return false;
             }
         },
-        
+
         stats() {
             return this.requeteStat;
         },
-        
-        
+
+
         updateEndDateFromDays() {
             const startDate = new Date(this.startDate);
             const endDate = new Date(startDate.getTime() + this.daysDiff * 24 * 60 * 60 * 1000);
@@ -148,10 +145,10 @@ export default {
         updateEndDateFromMonths() {
             const startDate = new Date(this.startDate);
             const newEndDate = new Date(startDate.getTime());
-            
+
             // On ajoute le nombre de mois sélectionné à la date de début
             newEndDate.setMonth(startDate.getMonth() + parseInt(this.monthsDiff));
-            
+
             // Si la nouvelle date de fin se trouve être après la date de début, on la met à jour
             if (!isNaN(newEndDate.getTime()) && newEndDate > startDate) {
                 const year = newEndDate.getFullYear();
@@ -182,13 +179,13 @@ export default {
          * et fais les appels necessaire au methodes de recuperation de données 
          * lors du changement de celle-ci
          */
-        requeteStat:{
-            handler(newValue){
-                this.pending.stat=true
-                if(newValue.dd && newValue.df){
-                   console.log(newValue, 'watch');
-                   this.pending.stat = false
-                   
+        requeteStat: {
+            handler(newValue) {
+                this.pending.stat = true
+                if (newValue.dd && newValue.df) {
+                    console.log(newValue, 'watch');
+                    this.pending.stat = false
+
                 }
             },
         }
@@ -200,9 +197,8 @@ export default {
         let collection = this.$assets.getCollection('collectes');
         this.pending.collectes = true;
         collection.load();
-        console.log(collection)
         this.pending.collectes = false;
-        
+
     }
 }
 </script>

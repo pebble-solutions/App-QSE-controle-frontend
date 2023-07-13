@@ -23,7 +23,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Répartition des réponses</h3>
-                    <ControlerBarChart></ControlerBarChart>
+                    <ControlerBarChart :requeteStat="requeteStat"></ControlerBarChart>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Nombre de KN par contrôleur</h3>
-                    <ControlerPieChart></ControlerPieChart>
+                    <ControlerPieChart :requeteStat="requeteStat"></ControlerPieChart>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <ControlerTable></ControlerTable>
+                    <ControlerTable :requeteStat="requeteStat"></ControlerTable>
                 </div>
             </div>
         </div>
@@ -55,16 +55,41 @@ import ControlerPieChart from './ControlerPieChart.vue';
 import ControlerTable from './ControlerTable.vue';
 
 export default {
+    data() {
+        return {
+            currentHabilitations: 0,
+            totalHabilitations: 0,
+        }
+    },
     props: {
-        currentHabilitations: {
-            type: Number,
-            required: true
-        },
-        totalHabilitations: {
-            type: Number,
+        requeteStat: {
+            type: Object,
             required: true
         }
     },
+    methods: {
+        computeHabilitations() {
+            let collection = this.$assets.getCollection('collectes');
+            const data = collection.getCollection();
+            let periodHabilitationsHistory = [];
+            let totalHabilitationsHistory = [];
+            data.forEach(collecte => {
+                if (totalHabilitationsHistory.findIndex(id => id == collecte['habilitation_id']) == -1) {
+                    totalHabilitationsHistory.push(collecte['habilitation_id']);
+                    if (collecte['date_done'] >= this.requeteStat.dd && collecte['date_done'] <= this.requeteStat.df) {
+                        periodHabilitationsHistory.push(collecte['habilitation_id']);
+                    }
+                }
+            });
+            this.currentHabilitations = periodHabilitationsHistory.length;
+            this.totalHabilitations = totalHabilitationsHistory.length;
+            periodHabilitationsHistory = [];
+            totalHabilitationsHistory = [];
+        },
+    },
     components: { ControlerBarChart, ControlerPieChart, ControlerTable},
+    mounted(){
+        this.computeHabilitations();
+    }
 }
 </script>

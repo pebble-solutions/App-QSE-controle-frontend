@@ -84,7 +84,7 @@ export default {
     },
     async mounted() {
         this.pending.fetchData = true;
-        this.fetchData();
+        await this.fetchData();
         this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],

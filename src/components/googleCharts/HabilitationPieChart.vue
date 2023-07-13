@@ -33,7 +33,7 @@ export default {
             ids.forEach(id => {
                 data.forEach(collecte => {
                     if (collecte['habilitation_id'] == id) {
-                        const index = this.chartData.findIndex(habilitation => { habilitation[0] == 'Habilitation ' + id });
+                        const index = this.chartData.findIndex(habilitation => ( habilitation[0] == 'Habilitation ' + id ));
                         if (index >= 0) {
                             this.chartData[index][1]++;
                         } else {
@@ -50,9 +50,9 @@ export default {
             chart.draw(dataTable);
         }
     },
-    mounted() {
+    async mounted() {
         this.pending.fetchData = true;
-        this.fetchData();
+        await this.fetchData();
         this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],

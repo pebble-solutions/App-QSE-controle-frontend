@@ -23,7 +23,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Répartition des réponses</h3>
-                    <ProjectBarChart></ProjectBarChart>
+                    <ProjectBarChart :requeteStat="requeteStat"></ProjectBarChart>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Nombre de KN par projet</h3>
-                    <ProjectPieChart></ProjectPieChart>
+                    <ProjectPieChart :requeteStat="requeteStat"></ProjectPieChart>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <ProjectTable></ProjectTable>
+                    <ProjectTable :requeteStat="requeteStat"></ProjectTable>
                 </div>
             </div>
         </div>
@@ -55,16 +55,41 @@ import ProjectPieChart from './ProjectPieChart.vue';
 import ProjectTable from './ProjectTable.vue';
 
 export default {
-    props: {
-        currentHabilitations: {
-            type: Number,
-            required: true
-        },
-        totalHabilitations: {
-            type: Number,
-            required: true
+    data() {
+        return {
+            currentHabilitations: 0,
+            totalHabilitations: 0,
         }
     },
-    components: { ProjectBarChart, ProjectPieChart, ProjectTable},
+    props: {
+        requeteStat: {
+            type: Object,
+            required: true,
+        },
+    },
+    methods: {
+        computeHabilitations() {
+            let collection = this.$assets.getCollection('collectes');
+            const data = collection.getCollection();
+            let periodHabilitationsHistory = [];
+            let totalHabilitationsHistory = [];
+            data.forEach(collecte => {
+                if (totalHabilitationsHistory.findIndex(id => id == collecte['habilitation_id']) == -1) {
+                    totalHabilitationsHistory.push(collecte['habilitation_id']);
+                    if (collecte['date_done'] >= this.requeteStat.dd && collecte['date_done'] <= this.requeteStat.df) {
+                        periodHabilitationsHistory.push(collecte['habilitation_id']);
+                    }
+                }
+            });
+            this.currentHabilitations = periodHabilitationsHistory.length;
+            this.totalHabilitations = totalHabilitationsHistory.length;
+            periodHabilitationsHistory = [];
+            totalHabilitationsHistory = [];
+        },
+    },
+    components: { ProjectBarChart, ProjectPieChart, ProjectTable },
+    mounted() {
+        this.computeHabilitations();
+    }
 }
 </script>
