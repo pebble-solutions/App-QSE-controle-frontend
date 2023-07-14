@@ -41,7 +41,7 @@ export default {
 
         filterCollecte() {
             let collecteid = this.collectes.filter((collecte)=> collecte.id == this.$route.params.idCollecte);
-            console.log(collecteid, 'computed')
+            // console.log(collecteid, 'computed')
             return collecteid;
         },
     },

@@ -36,7 +36,7 @@
         <div class="col-lg-3 col-12">
           <div class="my-1">
             <div>Dernier contrôle : {{ changeFormatDateLit(lastControl) }}</div>
-            <div>{{ lastControl }} {{ noLastControl }}</div>
+            <!-- <div>{{ lastControl }} {{ noLastControl }}</div> -->
             <div class="fw-bold col-12">Veille : 180 jours</div>
            
           </div>
@@ -127,7 +127,6 @@ export default {
       })
         .then((data) => {
           this.listControlDone = data;
-          console.log(this.listControlDone, 'control')
         })
         .catch(this.$app.catchError).finally(() => this.pending.control = false);
     },
