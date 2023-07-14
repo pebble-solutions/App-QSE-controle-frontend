@@ -1,75 +1,64 @@
 <template>
-  <div class="card">
+  <div class="card" v-if="!pending.control">
     <div class="card-body">
       <!-- Titre -->
       <div class="fw-light text-secondary text-center mb-1 fw-bold">
-        {{ collecte.id }} 
-      
-        filterhabilitationtype de hab.habilitation.type.id{{ filterhabilitationType(hab.habilitation_type_id) }}
+        {{ collecte.id }}
+
+        {{ filterhabilitationType(hab.habilitation_type_id) }}
       </div>
       <div class="row">
         <!-- Colonne 1 : Validité -->
-      <div class="col-lg-4 col-12">
-        <div class="my-1">
-          <div class="fw-bold col-12">Validité : 3 ans</div>
-          <div class="col-12" v-for="hab in habilitationPerso" :key="hab.id">{{ changeFormatDateLit(hab.dd) }}
-            au {{ changeFormatDateLit(hab.df) }}
-            <div>
-              
+        <div class="col-lg-3 col-12">
+          <div class="my-1">
+            <div class="fw-bold col-12">Validité : 3 ans</div>
+            <div class="col-12" v-for="hab in habilitationPerso" :key="hab.id">{{ changeFormatDateLit(hab.dd) }}
+              au {{ changeFormatDateLit(hab.df) }}
             </div>
-            <div>
-              
-            </div>
-          </div>
-          
-        </div>
-        <!-- Composant ProgressBar -->
-        <ProgressBar v-for="hab in habilitationPerso" :key="hab.id" :dd="hab.dd" :df="hab.df"></ProgressBar>
-      </div>
-      <!-- Colonne 2 : Résultat de groupe -->
-      <div class="col-lg-4 col-12 mt-2">
-        <div v-for="kn in infosHab" :key="kn.id">
-          {{ kn.id}} {{ kn.sami }}
-          
-        </div>
-        <div class="d-flex align-items-center justify-content-between">
-          
-          <div>Dernier contrôle : {{ changeFormatDateLit(lastControlDate) }}</div>
-          </div>
-          <div class="d-flex flex-row-reverse align-items-center justify-content-end my-2">
-            
-            <button v-for="control in listControlDone" :key="control.id"
-            :class="['btn', 'btn-sm', classNameFromSAMI(control.result_var), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
-            :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + control.id">
-            {{ control.result_var }}
-          </button>
-        </div>
-      </div>
-      <!-- Colonne 3 : Veille -->
-      <div class="col-lg-4 col-12">
-        <div class="my-1">
-          
-          <div class="fw-bold col-12">Veille : 180 jours</div>
-          <div class="col-12" v-for="hab in habilitationPerso" :key="hab.id">{{ changeFormatDateLit(hab.dd) }}
-            au {{ changeFormatDateLit(hab.df) }}</div>
-            listcontrolTodo:{{ listControlToDo }}
+
           </div>
           <!-- Composant ProgressBar -->
-          <!-- <ProgressBar></ProgressBar> -->
+          <!-- {{ habilitationPerso }} -->
+          <ProgressBar v-for="hab in habilitationPerso" :key="hab.id" :dd="hab.dd" :df="hab.df"></ProgressBar>
         </div>
+        <!-- Colonne 2 : Résultat de groupe -->
+        <div class="col">
+          <div class="d-flex align-items-center justify-content-start my-2">
+            <button v-for="kn in infosHab" :key="kn.id"
+              :class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
+              :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
+              {{ kn.sami }}
+            </button>
+          </div>
+          
+        </div>
+        
+        <div class="col-lg-3 col-12">
+          <div class="my-1">
+            <div>Dernier contrôle : {{ changeFormatDateLit(lastControl) }}</div>
+            <div>{{ lastControl }} {{ noLastControl }}</div>
+            <div class="fw-bold col-12">Veille : 180 jours</div>
+           
+          </div>
+          <!-- Composant ProgressBar -->
+          <ProgressBar v-if="lastControl" :dd="new Date(lastControl)" :df="delay(lastControl)"></ProgressBar>
+          <AlertMessage v-else> {{ noLastControl }}</AlertMessage>
+        </div>
+        
+        <!-- Colonne 3 : Veille -->
       </div>
     </div>
-    info KN{{ info }}
+    <!-- info KN{{ info }} -->
   </div>
-
 </template>
 <script>
 import { Tooltip } from 'bootstrap';
 import ProgressBar from '../ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../../js/collecte';
 import { mapState } from 'vuex';
+import AlertMessage from '../pebble-ui/AlertMessage.vue';
 export default {
-  components: { ProgressBar },
+  components: { ProgressBar , AlertMessage},
   props: {
     habId: Number,
     collecte: Object,
@@ -79,7 +68,7 @@ export default {
     ...mapState(['habilitationType', 'listActifs', 'veilleConfig']),
 
 
-   
+
     returnFormulaireId() {
       let formulaire = this.veilleConfig.find((f) => f.objet_id == this.$route.params.id);
       return formulaire.formulaire_id
@@ -95,11 +84,13 @@ export default {
       },
       listControlDone: [],
       habilitationPerso: [],
-      hab:'',
+      hab: '',
       resultat: 'I',
-      lastControlDate: '2023-02-01',
+      lastControlDate: 'XX',
       listControlToDo: [],
       infosHab: '',
+      lastControl:'',
+      noLastControl: '',
     };
   },
   methods: {
@@ -112,9 +103,22 @@ export default {
     },
     findVeilleConfig(id) {
       let veilleConfig = this.veilleConfig.find((v) => v.objet_id == id);
-      this.veille =  veilleConfig
+      this.veille = veilleConfig
     },
 
+    /**
+     * return la date de l'expiration du délai de veille (+180j) à partir de la date du dernier contrôle
+     * @param {date} date la date du dernier contôle réalise
+     */
+    delay(date){
+      let dd = new Date(date);
+
+      dd.setDate(dd.getDate()+180);
+      
+      return dd
+      
+
+    },
     loadCollecte(id) {
       this.pending.control = true;
       this.$app.apiGet('data/GET/collecte', {
@@ -129,35 +133,42 @@ export default {
     },
 
     loadinfosHabMonitor(id) {
-        this.$app.apiGet('v2/collecte', {
-          habilitation_id: id,
-          kn2kn_info: 'OUI',
-          retard_info: 'OUI',
-          type: 'KN'
-        })
+      this.pending.control = true
+      this.$app.apiGet('v2/collecte', {
+        habilitation_id: id,
+        kn2kn_info: 'OUI',
+        retard_info: 'OUI',
+        type: 'KN'
+      })
         .then((data) => {
           this.infosHab = data
         })
         .catch(this.$app.catchError).finally(() => this.pending.control = false);
     },
-    
+
     loadHabilitation(id) {
       this.pending.control = true;
       this.$app.apiGet('v2/controle/habilitation', {
-        id: id,
         id: id,
       })
         .then((data) => {
           this.habilitationPerso = data;
           this.hab = data[0]
-          let habId = this.hab.id
+          // let habId = this.hab.id
           let veilleId = this.hab.habilitation_type_id
           this.filter
-          
-          console.log(habId, veilleId ,'toto');
-          this.$app.apiGet('v2/controle/veille/'+veilleId+'/todo', {CSP_min: 0, CSP_max: 600})
-            .then((data) =>{
-                this.listControlToDo = data;
+
+          this.$app.apiGet('v2/controle/veille/' + veilleId + '/todo', { CSP_min: 0, CSP_max: 600 })
+            .then((data) => {
+              this.listControlToDo = data;
+              if(this.listControlToDo){
+                let veille = this.listControlToDo.find((e) => e.personnel_id == this.hab.personnel_id)
+                console.log(veille , 'veille')
+                if (veille) {
+                  this.lastControl = veille.date_last
+                }
+                else this.noLastControl = 'La veille est à jour'
+              }
             })
             .catch(this.$app.catchError).finally(() => this.pending.control = false);
         })
@@ -224,4 +235,5 @@ export default {
 .btn:hover .tooltip {
   opacity: 1;
   visibility: visible;
-}</style>
+}
+</style>
