@@ -16,9 +16,9 @@
             <div v-for="hab in habilitations" :key="hab" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }">
                 <div v-for="kn in verifKns(hab.id)" :key="kn" class="habilit" :style="operateurHabilit(kn, hab.id)" style="position: absolute;"></div>
     
-                <div class="col-spec d-flex justify-content-center ms-2">
-                    {{ labelHabilitation(hab.nom) }}
-                    <i :class="classKnManquant(personnel.id)" placeholder="Aucun contrôle sur la période saisie"></i>
+                <div class="col-spec d-flex justify-content-between ms-2">
+                    <span>{{ labelHabilitation(hab.nom) }}</span>
+                    <i :class="classKnManquant(personnel.id)" title="Aucun contrôle sur la période saisie"></i>
                 </div>
     
                 <div class="progressbar" :style="{ left: (personnel.dentree.semaine - 1) * size + 140 + 'px', width: calculateWidth(personnel) + 'px' }" v-if="personnel.dentree">
@@ -56,6 +56,7 @@
     max-width:  85px;
     min-width: 85px;        
     width: 85px;
+    overflow: hidden;
 }
 
 .habilit {
@@ -250,7 +251,7 @@ export default {
          */
         labelHabilitation(label){
             if (label.includes('Habilitation')){
-                return label.slice(13)
+                return label.replace(/^Habilitation\s?:?\s?/, "");
             } else {
                 return label
             }
