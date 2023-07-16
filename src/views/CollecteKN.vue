@@ -1,5 +1,4 @@
 <template>
-
     <HeaderToolbar v-if="collecte">
         <div class="d-flex justify-content-between align-items-center">
             <CollecteHeaderToolbar :collecte="collecte" :projet-toggler="projetToggler" @projet-change="projetChange($event)" />
@@ -16,28 +15,23 @@
     </HeaderToolbar>
     
     <div class="container py-3">
-        <template v-if="!pending.collecte">
+        <template v-if="!pending.collecte && !pending.recordCollecte">
             <template v-if="collecte">
-
+                <!-- <div v-if="collecte.tli">
+                    {{ collecte.tli }}
+                </div> -->
                 <Timeline :collecte="collecte" route="collecte" />
-
                 <template v-if="collecte.done == 'OUI'">
-                    
                     <consultation-collecte-resume :collecte="collecte" :readonly="true" :timeline="false" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd' && $route.name !='CollecteVerif' && $route.name !='CollecteNext')"/>
-
                 </template>
-        
                 <template v-else>
                     <div class="card mt-3" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd' && !$route.params.bloc && $route.name !='CollecteVerif')">
                         <intro></intro>
                     </div>
                 </template>
-                
-
             </template>
             <alert-message v-else icon="bi-exclamation-triangle-fill" variant="warning">La collecte n'a pas été trouvée.</alert-message>
         </template>
-                
         <div v-else>
             <spinner />
         </div>
@@ -87,7 +81,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["setCollecte", "resetResponses", "refreshCollecte"]),
+        ...mapActions(["setCollecte", "resetResponses", "refreshCollecte", 'refreshCollectes', 'refreshResponse']),
 
         navigate() {
             this.$router.push({name: 'CollectKnEnd', params:{id: this.collecte.id}})
@@ -129,9 +123,41 @@ export default {
                 reponses: JSON.stringify(this.responses),
                 environnement:'private',
             })
+            .then((data) => {
+                return this.refreshCollectes([data]);
+            })
+            .then(() => {
+                return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                    environnement: 'private'
+                });
+            })
+            .then((collecte) => {
+                this.refreshCollecte(collecte);
+                this.getReponses(collecte);
+            })
             .catch(this.$app.catchError).finally(() => this.pending.recordCollecte = false);
 
         },
+
+        /**
+         * Récupère les réponses stockées dans la collecte pour les déplacer dans un élément tampon
+         * du store.
+         */
+         getReponses() {
+            this.collecte.reponses.forEach((resp) => {
+                let itemReponse = {};
+
+                itemReponse.question = resp.ligne;
+                itemReponse.reponse = resp.data;
+                itemReponse.commentaire = resp.commentaire;
+                itemReponse.documents = resp.documents;
+
+                let findBloc = this.collecte.formulaire.questions.find((question) => question.id == resp.ligne);
+                itemReponse.bloc = findBloc.information__bloc_id;
+
+                this.refreshResponse(itemReponse);
+            })
+        }
     },
 
     /**
