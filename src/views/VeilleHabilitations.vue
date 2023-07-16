@@ -161,13 +161,13 @@ export default {
                     dd_start : this.echeancier.dd,
                     df_start : this.echeancier.df,
                     personnel_id__operateur : this.echeancier.operateurs,
-                    habilitation_id : this.echeancier.habilitation
+                    habilitation_type_id : this.echeancier.habilitation
                 }
 
                 if (this.echeancier.habilitation.length == 0 || this.echeancier.habilitation[0] == "") {
-                    query.habilitation_id = 0;
+                    query.habilitation_type_id = 0;
                 } else {
-                    query.habilitation_id = this.echeancier.habilitation.toString()
+                    query.habilitation_type_id = this.echeancier.habilitation.toString()
                 }
 
                 if (this.echeancier.operateurs.length == 0 || this.echeancier.operateurs[0] == "") {
