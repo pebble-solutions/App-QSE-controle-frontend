@@ -6,7 +6,51 @@
         "moduleLabel": "Contrôle",
         "aside": true,
         "app_mode": "default",
-        "ppp": "private"
+        "ppp": "private",
+        "appMenu": [
+            {
+                "label": "Programmation",
+                "icon": "bi bi-calendar-event-fill",
+                "key": "programmation",
+                "href": "/programmation"
+            },
+            {
+                "label": "Statistiques",
+                "icon": "bi bi-bar-chart-line-fill",
+                "key": "stats",
+                "href": "/"
+            },
+            {
+                "label": "Contrôle",
+                "icon": "bi bi-pen-fill",
+                "key": "collecte",
+                "href": "/collecte"
+            },
+            {
+                "label": "Consultation",
+                "icon": "bi bi-eye-fill",
+                "key": "consultation",
+                "href": "/consultation"
+            },
+            {
+                "label": "Echéancier",
+                "icon": "bi bi-calendar2-check-fill",
+                "key": "echeancier",
+                "href": "/echeancier"
+            },
+            {
+                "label": "Veille Habilitations",
+                "icon": "bi bi-hourglass-split",
+                "key": "habilitation",
+                "href": "/habilitation"
+            },
+            {
+                "label": "Veille operateurs",
+                "icon": "bi bi-person-check-fill",
+                "key": "habilitation",
+                "href": "/operateur"
+            }
+        ]
     },
     "domains": {
         "prod": "pebble.solutions",
@@ -17,13 +61,13 @@
         "href": null
     },
     "cfgSlots": {
-        "menu": true,
+        "menu": false,
         "list": true,
         "core": true,
         "header": true,
         "options": {
             "core": {
-                "className": ""
+                "className": "overflow-auto"
             }
         }
     },

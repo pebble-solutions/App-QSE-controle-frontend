@@ -5,12 +5,6 @@
                 <Timeline :collecte="collecte" :route="route" />
             </div>
             <div class="card-body">
-                <alert-message
-                    icon="bi-info-square-fill" 
-                    className="mb-3" 
-                    v-if="collecte.following_id">
-                    Un contrôle de veille est programmé
-                </alert-message>
                 <div class="row">
                     <div class="mb-2 col">
                         <div class="d-flex align-items-center">
@@ -21,9 +15,9 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="mb-2 col border-start border-dark">
-
+                        
                         <div class="d-flex align-items-center">
                             <user-image :name="controleur" />
                             <div class="w-100 ps-2">
@@ -33,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="my-2">
                     <strong>Projet :</strong>
                     <span class="fw-lighter ms-1">
@@ -52,7 +46,7 @@
                     <div v-else>
                         <strong class="d-block">Pas d'éléments de contexte</strong>
                     </div>
-    
+                    
                     <div class="my-2" v-if="collecte.rapport != 'null' && collecte.rapport">
                         <strong class="d-block">Commentaire final :</strong>
                         <div class="ms-2 fw-lighter">
@@ -62,7 +56,7 @@
                     <div v-else>
                         <strong class="d-block">Aucun commentaire final</strong>
                     </div>
-    
+                    
                     <div class="my-2" v-if="collecte.actions != 'null' && collecte.actions">
                         <strong class="d-block">Actions correctives proposées :</strong>
                         <div class="ms-2 fw-lighter">
@@ -72,6 +66,12 @@
                     <div v-else>
                         <strong class="d-block">Aucune action corrective proposée</strong>
                     </div>
+                    <alert-message
+                        icon="bi-info-square-fill" 
+                        className="mt-3" 
+                        v-if="collecte.following_id">
+                        Bouclage #{{ collecte.following_id }}
+                    </alert-message>
                 </template>
             </div>
             <div class="card-footer" v-if="collecte.locked">
