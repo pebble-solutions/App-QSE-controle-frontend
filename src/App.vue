@@ -4,7 +4,6 @@
 		:cfg="cfg"
 		:cfg-menu="cfgMenu"
 		:cfg-slots="cfgSlots"
-		:sidebar-menu="appMenu"
 		
 		@auth-change="setLocal_user">
 
@@ -14,20 +13,6 @@
 				<programmation-header v-else-if="listMode === 'programmation'" />
 				<ControleHeader v-else-if="listMode === 'collecte'"></ControleHeader>
 			</div>
-		</template>
-
-
-		<template v-slot:menu>
-			<AppMenu>
-				<AppMenuItem href="/programmation" look="dark" icon="bi bi-calendar-event-fill">Programmation</AppMenuItem>
-				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
-				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
-				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille par habilitations</AppMenuItem>
-				<AppMenuItem href="/operateur" look="dark" icon="bi bi-person-check-fill">Veille par opérateurs</AppMenuItem>
-
-
-			</AppMenu>
 		</template>
 
 		<template v-slot:list>
@@ -207,45 +192,6 @@ export default {
 				habilitations :true,
 			},
 			isConnectedUser: false,
-			appMenu: [
-				{
-					label: 'Programmation',
-					icon: 'bi bi-calendar-event-fill',
-					key: 'programmation',
-					href: '/programmation'
-				},
-				{
-					label: 'Statistiques',
-					icon: 'bi bi-bar-chart-line-fill',
-					key: 'stats',
-					href: '/'
-				},
-				{
-					label: 'Contrôle',
-					icon: 'bi bi-pen-fill',
-					key: 'collecte',
-					href: '/collecte'
-				},
-				{
-					label: 'Consultation',
-					icon: 'bi bi-eye-fill',
-					key: 'consultation',
-					href: '/consultation'
-				},
-				{
-					label: 'Veille Habilitations',
-					icon: 'bi bi-hourglass-split',
-					key: 'habilitation',
-					href: '/habilitation'
-				},
-				{
-					label: 'Veille operateurs',
-					icon: 'bi bi-person-check-fill',
-					key: 'habilitation',
-					href: '/operateur'
-				},
-
-			],
 			searchOptions: {
 				dd: null,
 				df: null,
