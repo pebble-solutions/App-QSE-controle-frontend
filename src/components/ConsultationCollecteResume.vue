@@ -73,7 +73,11 @@
                         <strong class="d-block">Aucune action corrective proposée</strong>
                     </div>
                 </template>
-                
+            </div>
+            <div class="card-footer" v-if="collecte.locked">
+                <button class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)" :disabled="pending.pdf">
+                    Exporter
+                </button>
             </div>
         </div>
        
@@ -150,7 +154,6 @@
                 Ce contrôle n'est pas consultable car il n'est pas clôturé.
         </alert-message>
         
-
         <!-- <div class="text-center my-3" v-if="!readonly">
             <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">
                 Modifier les informations
@@ -167,6 +170,14 @@ import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 
 export default {
+
+    data() {
+        return {
+            pending: {
+                pdf: false
+            }
+        }
+    },
     props: {
         collecte: Object,
         readonly: Boolean,
@@ -336,8 +347,21 @@ export default {
             let reponse = this.reponses.find(e => e.question == question.id);
             return reponse?.documents?.length ? reponse.documents : null;
         },
+
+        /**
+         * envoie une requete au serveur pour créer un pdf et obtenir l'url
+         * 
+         * @param   {number}    id id de la collecte à exporter
+         */
+
+         exportToPdf(id) {
+                this.pending.pdf = true
+                this.$app.apiGet('v2/controle/enquete/'+id+'/pdf')
+                .then((data) => {window.open(data.url, "_blank")})
+                .catch(this.$app.catchError).finally(() => this.pending.pdf = false);
+         }
     },
 
     components: { UserImage, FileItem, Timeline, AlertMessage }
 }
-</script>
+</script> 

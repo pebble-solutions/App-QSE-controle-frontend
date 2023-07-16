@@ -4,12 +4,12 @@
         :collecte="collecte"
         :formulaires="formulaires"
         :personnels="mergedPersonnels"
-        :readonly="['cible_personnel']"
-
-        :veille= true
+        :readonly="['cible_personnel','formulaire']"
+        
         v-if="inited"
         @updated="routeToParent"/>
-</template>
+    </template>
+    <!-- :veille= true -->
 
 <script>
 
