@@ -7,13 +7,13 @@
             <h3 class="my-0 fs-5">{{ personnel.cache_nom }}</h3>
         </div>
 
-        <div class="position-relative overflow-scroll">
+        <div class="position-relative overflow-auto">
 
             <div :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * 50 + 140 + 'px' }">
                 <div class="col-spec d-flex justify-content-center ms-3 mt-2"><strong>Habilitations</strong></div>
             </div>
     
-            <div v-for="hab in habilitations" :key="hab" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }">
+            <div v-for="hab in habilitations" :key="hab" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }" class="position-relative">
                 <div v-for="kn in verifKns(hab.id)" :key="kn" class="habilit" :style="operateurHabilit(kn, hab.id)" style="position: absolute;"></div>
     
                 <div class="col-spec d-flex justify-content-between ms-2">
@@ -21,11 +21,11 @@
                     <i :class="classKnManquant(personnel.id)" title="Aucun contrôle sur la période saisie"></i>
                 </div>
     
-                <div class="progressbar" :style="{ left: (personnel.dentree.semaine - 1) * size + 140 + 'px', width: calculateWidth(personnel) + 'px' }" v-if="personnel.dentree">
+                <!-- <div class="progressbar" :style="{ left: (personnel.dentree.semaine - 1) * size + 140 + 'px', width: calculateWidth(personnel) + 'px' }" v-if="personnel.dentree">
                     <div class="progressbar-content">{{ contratLabel(personnel) }}</div>
-                </div>
+                </div> -->
     
-                <div v-for="kn in verifKns(hab.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
+                <div v-for="kn in verifKns(hab.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
                     {{ kn.sami }}
                 </div>
             </div>
@@ -47,15 +47,17 @@
 <style lang="scss" scoped>
 
 .control-result-item {
-    position: relative;
+    position: absolute;
     z-index: 1;
     width: 40px;
+    top:0px;
 }
 
 .col-spec {
     max-width:  85px;
     min-width: 85px;        
     width: 85px;
+    max-height:50px;
     overflow: hidden;
 }
 
@@ -207,8 +209,11 @@ export default {
          * @returns {string} 
          */
         leftkn(kn) {
-            let knDate = new Date(kn.date)
-            return ((knDate.getWeek() * this.size) + 140) + "px"
+            let knDate = new Date(kn.date_done);
+            const startWeek = typeof this.periode[0] !== 'undefined' ? parseInt(this.periode[0].semaine) : 0;
+            const left = (((knDate.getWeek() - startWeek) * this.size) + 140) + "px";
+
+            return left;
         },
 
         /**
@@ -219,7 +224,7 @@ export default {
          * @returns {array}
          */
         verifKns(id) {
-            let rendukn = this.kns.filter(item => item.habilitation_id === id);
+            let rendukn = this.kns.filter(item => item.habilitation_type_id === id);
 
             if (rendukn.length !== 0) {
                 let knlist = [rendukn[rendukn.length - 1]];

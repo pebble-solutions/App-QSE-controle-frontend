@@ -1,28 +1,35 @@
 <template>
 
     <div v-if="echeancier">
-        <div v-if="echeancier.priorite == false">
 
-            <div  v-for="habilitation in filteredHabilitations" :key="habilitation.id" class="my-3">
-                <tabEcheancierPersonnel
-                    :operateurs = "filteredOperateurs"
-                    :periode = "periode"
-                    :habilitation = "habilitation"
-                    :kns = "filteredKns(habilitation.id, 'habilitation')"
-                    :contrats = "contrats"
-                />
-
+        <div v-if="isPending" class="text-center my-4 fs-4 text-secondary">
+            <span class="spinner-border"></span>
+            Chargement...
+        </div>
+        <template v-else>
+            <div v-if="echeancier.priorite == false">
+    
+                <div  v-for="habilitation in filteredHabilitations" :key="habilitation.id" class="my-3">
+                    <tabEcheancierPersonnel
+                        :operateurs = "filteredOperateurs"
+                        :periode = "periode"
+                        :habilitation = "habilitation"
+                        :kns = "filteredKns(habilitation.id, 'habilitation')"
+                        :contrats = "contrats"
+                    />
+    
+                </div>
             </div>
-        </div>
-
-        <div v-for="personnel in filteredOperateurs" :key="personnel.id" class="my-3" v-else>
-            <tabEcheancierHabilitation 
-                :personnel="personnel" 
-                :kns="filteredKns(personnel.id, 'personnel')" 
-                :periode="periode" 
-                :habilitations="filteredHabilitations"
-            />
-        </div>
+    
+            <div v-for="personnel in filteredOperateurs" :key="personnel.id" class="my-3" v-else>
+                <tabEcheancierHabilitation 
+                    :personnel="personnel" 
+                    :kns="filteredKns(personnel.id, 'personnel')" 
+                    :periode="periode" 
+                    :habilitations="filteredHabilitations"
+                />
+            </div>
+        </template>
     </div>
     <div class="container py-2" v-else>
         
@@ -194,10 +201,9 @@ export default {
          */
         filteredKns(id, type) {
             if(type == 'habilitation') {
-                return this.kns.filter(item => item.habilitation_id == id)
+                return this.kns.filter(item => item.habilitation_type_id == id)
             } else if(type == 'personnel') {
                 let kns = this.kns.filter(item => item.personnel_id__operateur == id);
-                console.log(kns);
                 return kns;
             }
         },
@@ -269,7 +275,7 @@ export default {
     mounted() {
         this.getAllHabilitations();
         this.getAllOperateurs(); 
-        this.getContrats();
+        // this.getContrats();
     }
 }
 

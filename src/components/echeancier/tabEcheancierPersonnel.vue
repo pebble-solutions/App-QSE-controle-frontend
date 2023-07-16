@@ -1,26 +1,26 @@
 <template>
     <div class="my-3">
         <h3 class="fs-5">{{ habilitation.nom }}</h3>
-        <div class="position-relative overflow-scroll">
+        <div class="position-relative overflow-auto">
             <!-- <div :style="{ border: 'solid grey 1px', height: '50px', position: 'relative', left: '85px', width: periode.length * 50 + 'px' }"></div> -->
     
             <div :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * 50 + 140 + 'px' }">
                 <div class="col-spec d-flex justify-content-center mt-2"><strong>Agents</strong></div>
             </div>
     
-            <div v-for="personnel in operateurs" :key="personnel" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }">
-                <div v-for="kn in verifKns(personnel.id)" :key="kn" class="habilit" :style="operateurHabilit(kn,personnel)" style="position: absolute;"></div>
+            <div v-for="personnel in operateurs" :key="personnel" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }" class="position-relative">
+                <div v-for="kn in verifKns(personnel.id)" :key="kn" class="habilit" :style="operateurHabilit(kn, personnel)" style="position: absolute;"></div>
     
-                <div class="col-spec d-flex justify-content-center">
+                <div class="col-spec d-flex justify-content-between">
                     {{ personnel.cache_nom }}
-                    <i :class="classKnManquant(personnel.id)" placeholder="Aucun contrôle sur la période saisie"></i>
+                    <i :class="classKnManquant(personnel.id)" title="Aucun contrôle sur la période saisie"></i>
                 </div>
     
-                <div v-for="contrat in filtredContrats(personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">    
+                <!-- <div v-for="contrat in filtredContrats(personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">    
                     <div class="progressbar-content">{{ contratLabel(contrat) }}</div>
-                </div>
+                </div> -->
     
-                <div v-for="kn in verifKns(personnel.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
+                <div v-for="kn in verifKns(personnel.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
                     {{ kn.sami }}
                 </div>
             </div>
@@ -43,15 +43,18 @@
 <style lang="scss" scoped>
 
 .control-result-item {
-    position: relative;
+    position: absolute;
     z-index: 1;
     width: 40px;
+    top:0px;
 }
 
 .col-spec {
     max-width:  140px;
     min-width: 140px;        
     width: 140px;
+    max-height: 50px;
+    overflow:hidden;
 }
 
 .habilit {
@@ -210,8 +213,11 @@ export default {
          * @returns {string} 
          */
         leftkn(kn) {
-            let knDate = new Date(kn.date)
-            return ((knDate.getWeek() * this.size) + 140) + "px"
+            let knDate = new Date(kn.date_done);
+            const startWeek = typeof this.periode[0] !== 'undefined' ? parseInt(this.periode[0].semaine) : 0;
+            const left = (((knDate.getWeek() - startWeek) * this.size) + 140) + "px";
+
+            return left;
         },
 
         /**
