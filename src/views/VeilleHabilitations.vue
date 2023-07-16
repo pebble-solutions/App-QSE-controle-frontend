@@ -3,7 +3,7 @@
     <div v-if="echeancier">
         <div v-if="echeancier.priorite == false">
 
-            <div  v-for="habilitation in filteredHabilitations" :key="habilitation" class="my-3">
+            <div  v-for="habilitation in filteredHabilitations" :key="habilitation.id" class="my-3">
                 <tabEcheancierPersonnel
                     :operateurs = "filteredOperateurs"
                     :periode = "periode"
@@ -15,10 +15,10 @@
             </div>
         </div>
 
-        <div v-for="personnel in filteredOperateurs" :key="personnel" class="my-3" v-else>
+        <div v-for="personnel in filteredOperateurs" :key="personnel.id" class="my-3" v-else>
             <tabEcheancierHabilitation 
                 :personnel="personnel" 
-                :kns = "filteredKns(personnel.id, 'personnel')" 
+                :kns="filteredKns(personnel.id, 'personnel')" 
                 :periode="periode" 
                 :habilitations="filteredHabilitations"
             />
@@ -193,10 +193,12 @@ export default {
          * @returns {array} tout les kns trié
          */
         filteredKns(id, type) {
-            if(type == 'habilitation'){
+            if(type == 'habilitation') {
                 return this.kns.filter(item => item.habilitation_id == id)
-            } else if(type == 'personnel'){
-                return this.kns.filter(item => item.personnel_id__operateur == id)
+            } else if(type == 'personnel') {
+                let kns = this.kns.filter(item => item.personnel_id__operateur == id);
+                console.log(kns);
+                return kns;
             }
         },
 
