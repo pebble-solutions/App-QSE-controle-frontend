@@ -1,11 +1,13 @@
 <template>
-
-        <div>
-            <UserImage :name = "personnel.cache_nom" size = "lg" style="position: absolute;"/>
-            <h1 style="position: relative; left: 70px; width: 1000px;">{{ personnel.cache_nom }}</h1>
+    <div class="my-3">
+        <div class="d-flex align-items-center my-2 mx-2">
+            <div class="me-2">
+                <UserImage :name="personnel.cache_nom" />
+            </div>
+            <h3 class="my-0 fs-5">{{ personnel.cache_nom }}</h3>
         </div>
 
-        <div class="tablo overflow-scroll mb-3">
+        <div class="position-relative overflow-scroll">
 
             <div :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * 50 + 140 + 'px' }">
                 <div class="col-spec d-flex justify-content-center ms-3 mt-2"><strong>Habilitations</strong></div>
@@ -20,10 +22,10 @@
                 </div>
     
                 <div class="progressbar" :style="{ left: (personnel.dentree.semaine - 1) * size + 140 + 'px', width: calculateWidth(personnel) + 'px' }" v-if="personnel.dentree">
-                    <p>{{ contratLabel(personnel) }}</p>
+                    <div class="progressbar-content">{{ contratLabel(personnel) }}</div>
                 </div>
     
-                <div v-for="kn in verifKns(hab.id)" :key="kn" class="btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
+                <div v-for="kn in verifKns(hab.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
                     {{ kn.sami }}
                 </div>
             </div>
@@ -38,13 +40,13 @@
                 </div>
             </div>
         </div>
-
+    </div>
   </template>
   
 
 <style lang="scss" scoped>
 
-.btn {
+.control-result-item {
     position: relative;
     z-index: 1;
     width: 40px;
@@ -70,11 +72,7 @@
     height: 12px;
     position:absolute;
 }
-
-.tablo{
-    position: relative;
-}
-.progressbar > p {
+.progressbar-content {
     position: relative;
     bottom: 0px;
     left: 10px;
@@ -107,13 +105,12 @@ export default {
         /**
          * Retourne un numero/ chiffre avec une certaine indentation
          * 
-         * @param {int} n 
-         * @param {int} width 
-         * @param {char} z 
+         * @param {number} n 
+         * @param {number} width 
+         * @param {string} z 
          * 
          * @returns {array}
          */
-        // Integrer date.js
         padStart(n, width, z) {
             z = z || '0';
             n = n + '';
@@ -125,7 +122,7 @@ export default {
          * 
          * @returns {number} height 
          */
-         height(){
+        height() {
             return (this.habilitations.length + 1) * 50
         },
 
@@ -136,7 +133,7 @@ export default {
          * 
          * @returns {string} style dynamique 
          */
-         operateurHabilit(kn, id) {
+        operateurHabilit(kn, id) {
             const height = "50px";
             let width;
             let left = 140;
@@ -178,7 +175,7 @@ export default {
          * 
          * @returns {string}
          */
-         classKnManquant(id) {
+        classKnManquant(id) {
             const result = this.kns.some(item => item.personnel_id__operateur === id);
             return result ? '' : 'ms-2 bi bi-exclamation-diamond text-warning';
         },
@@ -190,16 +187,15 @@ export default {
          * 
          * @returns {string} classe bootstraps
          */
-        classSAMI(ref){
-            if (ref == 'S') {
-                return "btn-success"
-            } if (ref == 'A') {
-                return "btn-primary"
-            } if (ref == "M"){
-                return "btn-warning"
-            } if (ref == 'I') {
-                return "btn-danger"
+        classSAMI(ref) {
+            const classList = {
+                s: "btn-success",
+                a: "btn-primary",
+                m: "btn-warning",
+                i: "btn-danger"
             }
+
+            return classList[ref?.toLowerCase()];
         },
 
         /**
@@ -209,7 +205,7 @@ export default {
          * 
          * @returns {string} 
          */
-         leftkn(kn){
+        leftkn(kn) {
             let knDate = new Date(kn.date)
             return ((knDate.getWeek() * this.size) + 140) + "px"
         },
@@ -222,7 +218,7 @@ export default {
          * @returns {array}
          */
         verifKns(id) {
-        let rendukn = this.kns.filter(item => item.habilitation_id === id);
+            let rendukn = this.kns.filter(item => item.habilitation_id === id);
 
             if (rendukn.length !== 0) {
                 let knlist = [rendukn[rendukn.length - 1]];
@@ -284,7 +280,7 @@ export default {
          * 
          * @returns {string}  
          */
-         contratLabel(personnel){
+        contratLabel(personnel){
             if (!personnel.dsortie){
                 return "Contrat : CDI   " + personnel.dentree.jour + '/' + personnel.dentree.mois + "/" + personnel.dentree.annee
             } else {

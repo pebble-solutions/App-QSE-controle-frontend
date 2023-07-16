@@ -1,5 +1,8 @@
 <template>
-    <Spiner v-if="!pending.habilitations && !pending.operateurs"></Spiner>
+    <div class="text-secondary" v-if="pending.echeance || pending.habilitations || pending.operateurs">
+        <span class="spinner-border spinner-border" role="status" aria-hidden="true"></span>
+        Chargement...
+    </div>
 
     <form v-else class="p-2 my-2" @submit.prevent="searchEcheancier()">
 
@@ -35,15 +38,13 @@
 
         <div class="mb-3">
             <label for="kn" class="form-label"><h5>Regrouper</h5></label>
-            <div class="container">
-                <div class="row">
-                    <label class="form-check-label col-4" for="flexSwitchCheckDefault">Opérateurs</label>
-                    <div class="col-1"></div>
-                    <div class="form-check form-switch col-2">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" v-model="requete.priorite" checked>
-                    </div>
-                    <label class="form-check-label col-4" for="flexSwitchCheckChecked">Habilitations</label>
-                </div>
+
+            <div class="btn-group w-100" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="priorite" id="switchOperateurs" autocomplete="off" v-model="requete.priorite" :value="false">
+                <label class="btn btn-outline-secondary" for="switchOperateurs">Par opérateurs</label>
+
+                <input type="radio" class="btn-check" name="priorite" id="switchHabilitation" autocomplete="off" v-model="requete.priorite" :value="true">
+                <label class="btn btn-outline-secondary" for="switchHabilitation">Par habilitations</label>
             </div>
         </div>
         
@@ -77,7 +78,7 @@ export default {
             pending: {
                 echeance: false,
                 habilitations: true,
-                operateurs:true
+                operateurs: true
             },
             allHabilitations: null,
             operateurs: [],
@@ -100,8 +101,11 @@ export default {
          * @returns {Array} 
          */
         restrictSearchOperateurs(list) {
+
+            if(!list) return [];
+
             let filteredList = list.filter((item) => {
-                return item.cache_nom.match(this.displaySearchOperateur);
+                return item.cache_nom?.match(this.displaySearchOperateur);
             });
 
             if (!filteredList) return [];
@@ -163,7 +167,8 @@ export default {
          * Enregistre le résultat de la recherche/ des filtres dans le store.
          */
         searchEcheancier() {
-            let query = this.requete
+            let query = this.requete;
+
             if (query.operateurs == "") {
                 query.operateurs = [];
             }
@@ -171,31 +176,33 @@ export default {
             if (query.habilitation == "") {
                 query.habilitation = [];
             }
-            this.setEcheance(query);
+            this.setEcheance(JSON.parse(JSON.stringify(query)));
         },
 
         /**
          * Charge les données des habilitations via un appel API
          */
         getHabilitations() {
+            this.pending.habilitations = true;
             this.$app.api.get('/v2/characteristic/')
-                .then(data => {
-                    this.allHabilitations = data;
-                })
-                .catch(this.$app.catchError)
-                .finally(() => this.pending.habilitations = false);
+            .then(data => {
+                this.allHabilitations = data;
+            })
+            .catch(this.$app.catchError)
+            .finally(() => this.pending.habilitations = false);
         },
 
         /**
          * Charge les données des opérateurs via un appel API
          */
         getOperateurs() {
+            this.pending.operateurs = true;
             this.$app.api.get('/v2/personnel')
-                .then(data => {
-                    this.operateurs = data;
-                })
-                .catch(this.$app.catchError)
-                .finally(() => this.pending.operateurs = false);
+            .then(data => {
+                this.operateurs = data;
+            })
+            .catch(this.$app.catchError)
+            .finally(() => this.pending.operateurs = false);
         }
     },
 

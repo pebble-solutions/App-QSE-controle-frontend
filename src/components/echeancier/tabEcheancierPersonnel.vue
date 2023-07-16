@@ -1,35 +1,37 @@
 <template>
-    <h1>{{ habilitation.nom }}</h1>
-    <div class="tablo overflow-scroll">
-        <!-- <div :style="{ border: 'solid grey 1px', height: '50px', position: 'relative', left: '85px', width: periode.length * 50 + 'px' }"></div> -->
-
-        <div :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * 50 + 140 + 'px' }">
-            <div class="col-spec d-flex justify-content-center mt-2"><strong>Agents</strong></div>
-        </div>
-
-        <div v-for="personnel in operateurs" :key="personnel" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }">
-            <div v-for="kn in verifKns(personnel.id)" :key="kn" class="habilit" :style="operateurHabilit(kn,personnel)" style="position: absolute;"></div>
-
-            <div class="col-spec d-flex justify-content-center">
-                {{ personnel.cache_nom }}
-                <i :class="classKnManquant(personnel.id)" placeholder="Aucun contrôle sur la période saisie"></i>
+    <div class="my-3">
+        <h3 class="fs-5">{{ habilitation.nom }}</h3>
+        <div class="position-relative overflow-scroll">
+            <!-- <div :style="{ border: 'solid grey 1px', height: '50px', position: 'relative', left: '85px', width: periode.length * 50 + 'px' }"></div> -->
+    
+            <div :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * 50 + 140 + 'px' }">
+                <div class="col-spec d-flex justify-content-center mt-2"><strong>Agents</strong></div>
             </div>
-
-            <div v-for="contrat in filtredContrats(personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">    
-                <p>{{ contratLabel(contrat) }}</p>
+    
+            <div v-for="personnel in operateurs" :key="personnel" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }">
+                <div v-for="kn in verifKns(personnel.id)" :key="kn" class="habilit" :style="operateurHabilit(kn,personnel)" style="position: absolute;"></div>
+    
+                <div class="col-spec d-flex justify-content-center">
+                    {{ personnel.cache_nom }}
+                    <i :class="classKnManquant(personnel.id)" placeholder="Aucun contrôle sur la période saisie"></i>
+                </div>
+    
+                <div v-for="contrat in filtredContrats(personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">    
+                    <div class="progressbar-content">{{ contratLabel(contrat) }}</div>
+                </div>
+    
+                <div v-for="kn in verifKns(personnel.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
+                    {{ kn.sami }}
+                </div>
             </div>
-
-            <div v-for="kn in verifKns(personnel.id)" :key="kn" class="btn m-1" :class="[classSAMI(kn.sami)]" :style="{ bottom: '23px', left: leftkn(kn) }">
-                {{ kn.sami }}
-            </div>
-        </div>
-
-        <div class="d-flex" style="position: absolute; top: 0px;">
-            <div :style="{ border: 'solid grey 1px', width: '140px', height: height() + 'px' }"></div>
-            <div v-for="week in periode" :key="week" class="d-flex flex-row" style="border: solid grey 1px; width: 50px;" :style="{ height: height() + 'px' }">
-                <div>
-                    <div class="ms-2">{{ week.annee.slice(2,4) }}</div>
-                    <div class="text-secondary ms-2">S{{ week.semaine }}</div>
+    
+            <div class="d-flex" style="position: absolute; top: 0px;">
+                <div :style="{ border: 'solid grey 1px', width: '140px', height: height() + 'px' }"></div>
+                <div v-for="week in periode" :key="week" class="d-flex flex-row" style="border: solid grey 1px; width: 50px;" :style="{ height: height() + 'px' }">
+                    <div>
+                        <div class="ms-2">{{ week.annee.slice(2,4) }}</div>
+                        <div class="text-secondary ms-2">S{{ week.semaine }}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,7 +42,7 @@
 
 <style lang="scss" scoped>
 
-.btn {
+.control-result-item {
     position: relative;
     z-index: 1;
     width: 40px;
@@ -67,10 +69,7 @@
     position:absolute;
 }
 
-.tablo{
-    position: relative;
-}
-.progressbar > p {
+.progressbar-content {
     position: relative;
     bottom: 0px;
     left: 10px;
@@ -107,9 +106,9 @@ export default {
         /**
          * Retourne un numero/ chiffre avec une certaine indentation
          * 
-         * @param {int} n 
-         * @param {int} width 
-         * @param {char} z 
+         * @param {number} n 
+         * @param {number} width 
+         * @param {string} z 
          * 
          * @returns {array}
          */
@@ -125,7 +124,7 @@ export default {
          * 
          * @returns {number} height 
          */
-        height(){
+        height() {
             let taille = this.operateurs
             return (taille.length + 1) * 50
         },
@@ -192,16 +191,15 @@ export default {
          * 
          * @returns {string} classe bootstraps
          */
-        classSAMI(ref){
-            if (ref == 'S') {
-                return "btn-success"
-            } if (ref == 'A') {
-                return "btn-primary"
-            } if (ref == "M"){
-                return "btn-warning"
-            } if (ref == 'I') {
-                return "btn-danger"
+        classSAMI(ref) {
+            const classList = {
+                s: "btn-success",
+                a: "btn-primary",
+                m: "btn-warning",
+                i: "btn-danger"
             }
+
+            return classList[ref?.toLowerCase()];
         },
 
         /**
@@ -211,7 +209,7 @@ export default {
          * 
          * @returns {string} 
          */
-        leftkn(kn){
+        leftkn(kn) {
             let knDate = new Date(kn.date)
             return ((knDate.getWeek() * this.size) + 140) + "px"
         },
@@ -224,7 +222,7 @@ export default {
          * @returns {array}
          */
         verifKns(id) {
-        let rendukn = this.kns.filter(item => item.personnel_id__operateur === id);
+            let rendukn = this.kns.filter(item => item.personnel_id__operateur === id);
 
             if (rendukn.length !== 0) {
                 let knlist = [rendukn[rendukn.length - 1]];
@@ -253,7 +251,7 @@ export default {
          * 
          * @returns {array} 
          */
-        filtredContrats(id){
+        filtredContrats(id) {
             let contratsFiltre = this.contrats.filter(e => e.structure__personnel_id == id);
 
             return contratsFiltre.filter(contrat => new Date(contrat.dentree).getWeek() < this.periode[this.periode.length-1].semaine)
@@ -266,7 +264,7 @@ export default {
          * 
          * @returns {string}
          */
-         calculateWidth(contrat) {
+        calculateWidth(contrat) {
             let width;
             let periode = this.periode
             let left = 140;
@@ -295,7 +293,7 @@ export default {
          * 
          * @returns {string}  
          */
-         contratLabel(contrat){
+        contratLabel(contrat) {
             if (contrat.duree_indeterminee == 'OUI'){
                 return "CDI : " + dateFormat(contrat.dentree)
             } else {
