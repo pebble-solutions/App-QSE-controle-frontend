@@ -1,19 +1,20 @@
 <template>
     
     <div>
-        <ControlResultForm :stats="stats" @update="updateItem($event)"></ControlResultForm>
+        <Spinner v-if="pending.validation"></Spinner>
+        <ControlResultForm :stats="stats" @update="updateItem($event)" v-else></ControlResultForm>
     </div>
 
     <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
         <div class="d-flex justify-content-between align-items-center">
             <button class="btn btn-secondary" @click.prevent="retour()" >
-                <i class="bi bi-box-arrow-left me-2"></i>
-                Retour
+                <Spinner v-if=" pending.validation"></Spinner>
+                <span v-else><i class="bi bi-box-arrow-left me-2"></i>Retour</span>
             </button>
 
-            <button class="btn btn-primary" @click.prevent="check()" >
-                <i class="bi bi-save me-2"></i>
-                Vérifier
+            <button class="btn btn-info" @click.prevent="check()" >
+                <Spinner v-if=" pending.validation"></Spinner>
+                <span v-else><i class="bi bi-save me-2"></i>Vérifier</span>
             </button>
         </div>
     </FooterToolbar>
@@ -27,6 +28,7 @@
 import ControlResultForm from '@/components/ControlResultForm.vue';
 import { mapActions, mapState } from 'vuex';
 import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
+import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
     data() {
@@ -46,7 +48,7 @@ export default {
         }
     },
     
-    components: { ControlResultForm, FooterToolbar },
+    components: { ControlResultForm, FooterToolbar, Spinner },
 
     computed: {
         ...mapState(['collecte', 'responses', 'collecte'])
