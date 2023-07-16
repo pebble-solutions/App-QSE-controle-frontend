@@ -33,6 +33,12 @@
                 "href": "/consultation"
             },
             {
+                "label": "Echéancier",
+                "icon": "bi bi-calendar2-check-fill",
+                "key": "echeancier",
+                "href": "/echeancier"
+            },
+            {
                 "label": "Veille Habilitations",
                 "icon": "bi bi-hourglass-split",
                 "key": "habilitation",
@@ -61,7 +67,7 @@
         "header": true,
         "options": {
             "core": {
-                "className": ""
+                "className": "overflow-auto"
             }
         }
     },
