@@ -1,45 +1,63 @@
-<template>
-    <div>
-        <GChart :type="type" :data="chartData" :options="options" v-if="chartDataLoaded" />
-    </div>
+<template v-if="!pending.fetchData">
+    <div id="projectPieChart"></div>
 </template>
 
 <script>
-import { GChart } from 'vue-google-charts'
+import { GoogleCharts } from 'google-charts'
+import { mapState } from 'vuex';
 
 export default {
-    props: {
-        jsonData: {
-            type: Object,
-            required: true
-        }
-    },
-
-    components: { GChart },
-
     data() {
         return {
-            type: "PieChart",
-            chartData: null,
-            chartDataLoaded: false,
-            options: {}
+            chartData: [],
+            pending: {
+                fetchData: true,
+            },
         }
     },
-    mounted() {
-        this.fetchData(this.jsonData);
+    props: {
+        requeteStat: {
+            type: Object,
+            required: true,
+        }
+    },
+    computed: {
+        ...mapState(['statResult'])
     },
     methods: {
-        fetchData(jsonData) {
-            console.log(jsonData);
+        fetchData() {
+            const data = this.statResult;
+
             this.chartData = [
-                ['Projets', 'Amount'],
-                ['Projets 1', 33],
-                ['Project 2', 33],
-                ['Project 3', 33],
-                ['Project 4 ', 33],
+                ['Réponses', 'Nombre']
             ];
-            this.chartDataLoaded = true;
+            data.forEach(collecte => {
+                const id = collecte['projet_id'];
+                const index = this.chartData.findIndex(projet => (projet[0] == 'Projet ' + id));
+                if (index >= 0) {
+                    this.chartData[index][1]++;
+                } else {
+                    this.chartData.push(["Projet " + id, 1]);
+                }
+            });
+        },
+        drawChart() {
+            let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
+            let chartWrap = document.getElementById('projectPieChart');
+            let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
+            let options = {
+                sliceVisibilityThreshold: 1/100
+            };
+            chart.draw(dataTable, options);
         }
-    }
+    },
+    async mounted() {
+        this.pending.fetchData = true;
+        await this.fetchData();
+        this.pending.fetchData = false;
+        GoogleCharts.load(this.drawChart, {
+            packages: ['corechart'],
+        })
+    },
 }
 </script>

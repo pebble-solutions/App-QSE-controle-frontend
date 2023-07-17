@@ -133,8 +133,7 @@
 				</div>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'statistiques'">
-				<!-- <form-stats /> -->
-				<formforstats></formforstats>
+				<FormStatistiques></FormStatistiques>
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'echeancier'">
@@ -178,7 +177,8 @@ import CollecteItem from './components/CollecteItem.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
-import formforstats from './views/formforstats.vue'
+import FormStatistiques from './components/FormStatistiques.vue'
+
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
@@ -319,13 +319,19 @@ export default {
 		/**
 		 * Charge l'ensemble des collectes terminées
 		 */
-		loadCollectesCollection() {
+		loadCollectesCollection() {/*
 			let collecteCollection = new AssetsCollection(this, {
 				assetName: 'collectesCollection',
-				apiRoute: 'v2/collecte/?done=OUI&type=KN'
+				apiRoute: 'v2/collecte/',
+				requestPayload: {
+					done: "OUI",
+					type: "KN",
+					// dd_start: '2023-04-05',
+					// df_start: '2023-04-05',
+
+				}
 			});
-			this.$assets.addCollection('collectes', collecteCollection);
-			// console.log(collecteCollection, this.$assets.getCollection('collectes'));
+			this.$assets.addCollection('collectes', collecteCollection);*/
 		},
 
 		/**
@@ -554,7 +560,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, formforstats}, 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques}, 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
@@ -565,7 +571,7 @@ export default {
 				this.loadProjets();
 				this.loadHabilitationType();
 				this.loadVeille();
-				this.loadCollectesCollection();
+				//this.loadCollectesCollection();
 			}
 		});
 	}

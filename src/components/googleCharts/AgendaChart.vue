@@ -1,27 +1,31 @@
-<template>
+<template v-if="!pending.fetchData">
     <div id="agendaChart"></div>
 </template>
 
 <script>
 import { GoogleCharts } from 'google-charts';
+import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
             chartData: [],
-            chartDataLoaded: false,
+            pending: {
+                fetchData: true,
+            },
         }
     },
+    computed: {
+        ...mapState(['statResult'])
+    },
     methods: {
-        async fetchData() {
-            let collection = this.$assets.getCollection('collectes');
-            await collection.load();
-            const data = collection.getCollection();
+        fetchData() {
+            const data = this.statResult;
 
             const dateOccurrences = {};
             for (const element of data) {
-                if (element['date'] != null) {
-                    const date = element['date'].split(' ')[0];
+                if (element['date_done'] != null) {
+                    const date = element['date_done'].split(' ')[0];
                     dateOccurrences[date] = dateOccurrences[date] ? dateOccurrences[date] + 1 : 1;
                 }
             }
@@ -31,19 +35,23 @@ export default {
                 let subArray = [new Date(key), dateOccurrences[key]];
                 this.chartData.push(subArray);
             }
-            this.chartDataLoaded = true;
         },
 
         drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, true);
             let chartWrap = document.getElementById('agendaChart');
             let chart = new GoogleCharts.api.visualization.Calendar(chartWrap);
-            chart.draw(dataTable);
+            let options = {
+                height: 460
+            };
+            chart.draw(dataTable, options);
         }
     },
 
     async mounted() {
+        this.pending.fetchData = true;
         await this.fetchData();
+        this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['calendar'],
         });

@@ -21,7 +21,7 @@ export const ROUTES_NAMES = {
 				'HabilitationAgent',
 				'ControlHistory',
 				'ControlView'],
+	statistiques: ['Statistiques','NewRequest'],
 	home: ['Home'],
-	statistiques: ['Statistiques'],
 	echeancier: ['Echeancier']
 };

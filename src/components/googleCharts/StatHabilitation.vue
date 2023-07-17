@@ -23,7 +23,7 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Répartition de réponses par KN</h3>
-                    <KnBarChart :jsonData="jsonData"></KnBarChart>
+                    <HabilitationBarChart :requeteStat="requeteStat"></HabilitationBarChart>
                 </div>
             </div>
         </div>
@@ -32,7 +32,8 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <KnPieChart :jsonData="jsonData"></KnPieChart>
+                    <h3 class="card-title fs-4">Répartition des types d'habilitations</h3>
+                    <HabilitationPieChart :requeteStat="requeteStat"></HabilitationPieChart>
                 </div>
             </div>
         </div>
@@ -41,7 +42,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <KnTable :jsonData="jsonData"></KnTable>
+                    <HabilitationTable :requeteStat="requeteStat"></HabilitationTable>
                 </div>
             </div>
         </div>
@@ -49,30 +50,49 @@
 </template>
 
 <script>
+import HabilitationBarChart from './HabilitationBarChart.vue';
+import HabilitationPieChart from './HabilitationPieChart.vue';
+import HabilitationTable from './HabilitationTable.vue';
 import { mapState } from 'vuex';
-import KnBarChart from './KnBarChart.vue';
-import KnPieChart from './KnPieChart.vue';
-import KnTable from './KnTable.vue';
 
 export default {
-    props: {
-        currentHabilitations: {
-            type: Number,
-            required: true
-        },
-        totalHabilitations: {
-            type: Number,
-            required: true
-        }
-    },
-    computed:{
-        ...mapState['collectes'],
-    },
-    components: { KnBarChart, KnPieChart, KnTable},
     data() {
         return {
-            jsonData: { "test": "oui"  }
+            currentHabilitations: 0,
+            totalHabilitations: 0,
         }
     },
+    props: {
+        requeteStat: {
+            type: Object,
+            required: true
+        }
+    },
+    computed: {
+        ...mapState(['statResult'])
+    },
+    methods: {
+        computeHabilitations() {
+            const data = this.statResult;
+            let periodHabilitationsHistory = [];
+            let totalHabilitationsHistory = [];
+            data.forEach(collecte => {
+                if (totalHabilitationsHistory.findIndex(id => id == collecte['habilitation_id']) == -1) {
+                    totalHabilitationsHistory.push(collecte['habilitation_id']);
+                    if (collecte['date_done'] >= this.requeteStat.dd && collecte['date_done'] <= this.requeteStat.df) {
+                        periodHabilitationsHistory.push(collecte['habilitation_id']);
+                    }
+                }
+            });
+            this.currentHabilitations = periodHabilitationsHistory.length;
+            this.totalHabilitations = totalHabilitationsHistory.length;
+            periodHabilitationsHistory = [];
+            totalHabilitationsHistory = [];
+        },
+    },
+    components: { HabilitationBarChart, HabilitationPieChart, HabilitationTable },
+    mounted(){
+        this.computeHabilitations();
+    }
 }
 </script>

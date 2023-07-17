@@ -12,12 +12,12 @@ export default createStore({
 		},
 		openedElement: null,
 		tmpElement: null,
-		blocs:[],
-		lignes:[],
-		responses:[],
+		blocs: [],
+		lignes: [],
+		responses: [],
 		formulaires: [],
 		listActifs: [],
-		habilitations:[],
+		habilitations: [],
 		collectes: [],
 		collecte: null,
 		searchResults: [],
@@ -27,16 +27,17 @@ export default createStore({
 		veilleConfig: [],
 		personnels: [],
 		collectesCollection: [],
+		statResult: [],
 		echeancier: null
 	},
 	getters: {
 		activeStructure(state) {
 			return state.structures.find(e => e.id === state.activeStructureId);
 		},
-		openedElementBlocs (state) {
+		openedElementBlocs(state) {
 			return state.blocs.filter(e => e.information__groupe_id === state.openedElement.id);
 		},
-		opendeElementLignes (state) {
+		opendeElementLignes(state) {
 			return state.lignes.filter(e => e.information__groupe_id === state.openedElement.id);
 		}
 	},
@@ -76,19 +77,19 @@ export default createStore({
 		tmpElement(state, data) {
 			state.tmpElement = data;
 		},
-		
+
 		/** Met à jour les données stockées au niveau du state avec un tableau d'informations
 		 * */
 
 		updateData(state, options) {
 
 			options.data.forEach((element) => {
-			
+
 				let elFound = state[options.key].find(e => e.id === element.id);
 				if (elFound) {
 
 					for (let k in element) {
-				
+
 						elFound[k] = element[k];
 					}
 				}
@@ -108,7 +109,7 @@ export default createStore({
 		setResponse(state, reponse) {
 			let respIndex = state.responses.findIndex(e => e.question == reponse.question);
 
-			if (respIndex === -1){
+			if (respIndex === -1) {
 				state.responses.push(reponse);
 			}
 			else {
@@ -159,7 +160,7 @@ export default createStore({
 		 * @param {Object} state State de Vuex
 		 * @param {Array} data List des éléménts de la stat demandée
 		 */
-		stat (state, data) {
+		stat(state, data) {
 			state.stat = data;
 		},
 
@@ -168,8 +169,12 @@ export default createStore({
 		 * @param {Object} state State de Vuex
 		 * @param {Object} data List des éléménts de la requete
 		 */
-		requeteStat (state, data) {
+		requeteStat(state, data) {
 			state.requeteStat = data;
+		},
+
+		statResult(state, data) {
+			state.statResult = data;
 		},
 
 		/**
@@ -222,7 +227,7 @@ export default createStore({
 				state.collectes = collectes;
 			}
 		},
-		
+
 
 
 		/**
@@ -267,7 +272,7 @@ export default createStore({
 					state.collecte[key] = collecte[key];
 				}
 			}
-			else if(mode == 'add'){
+			else if (mode == 'add') {
 				for (const key in collecte) {
 					state.collecte[key] = collecte[key];
 				}
@@ -281,7 +286,7 @@ export default createStore({
 		 * Enregistre les projets actifs
 		 * @param {Object} state Le state de vueX
 		 * @param {Array} aProjets Liste de projets actifs
-	 	 */
+		   */
 		setProjets(state, aProjets) {
 			state.projets = aProjets;
 		},
@@ -414,12 +419,12 @@ export default createStore({
 					}
 				});
 			}
-			
+
 			else {
 				state[key] = inputData;
 			}
 		},
-	
+
 	},
 	actions: {
 		/**
@@ -453,16 +458,16 @@ export default createStore({
 		@param (object) context l'instance VueX
 		@
 		*/
-		refreshLignes (context, payload){
-			context.commit ('updateData', {
-				key:'lignes',
+		refreshLignes(context, payload) {
+			context.commit('updateData', {
+				key: 'lignes',
 				data: payload
 			});
 		},
 
-		refreshBlocs (context, payload){
-			context.commit ('updateData', {
-				key:'blocs',
+		refreshBlocs(context, payload) {
+			context.commit('updateData', {
+				key: 'blocs',
 				data: payload
 			});
 		},
@@ -477,12 +482,12 @@ export default createStore({
 		 * - string commentaire
 		 * - number bloc
 		 */
-		refreshResponse (context,oReponse) {
-			context.commit ('setResponse', oReponse)
+		refreshResponse(context, oReponse) {
+			context.commit('setResponse', oReponse)
 		},
 
-		refreshFormulaires (context, data) {
-			context.commit ('setFormulaires', data);
+		refreshFormulaires(context, data) {
+			context.commit('setFormulaires', data);
 		},
 
 		/**
@@ -490,8 +495,8 @@ export default createStore({
 		 * @param {Object} context L'instance de vueX
 		 * @param {number} data id du formulaire
 		 */
-		refreshNbTodoFormulaires (context, data) {
-			context.commit ('setFormulaires', data);
+		refreshNbTodoFormulaires(context, data) {
+			context.commit('setFormulaires', data);
 		},
 
 		refreshListActifs(context, data) {
@@ -502,7 +507,7 @@ export default createStore({
 		 * @param {Object} context l'instance de VueX
 		 * @param {Array} data liste des types d'habilitations
 		 */
-		refreshHabilitationType(context, data){
+		refreshHabilitationType(context, data) {
 			context.commit('setHabilitationType', data);
 		},
 		/**
@@ -511,7 +516,7 @@ export default createStore({
 		 * @param	{Object}	context	l'instance de vueX
 		 * @param	{Array}		data	la liste des veilles d'habilitations
 		 */
-		refreshVeilleConfig (context , data) {
+		refreshVeilleConfig(context, data) {
 			context.commit('setVeilleConfig', data)
 		},
 
@@ -546,7 +551,7 @@ export default createStore({
 		 * @param	{object}	collecte	la collecte à ajouter
 		 */
 		addCollectes(contexte, collectes) {
-			contexte.commit('collectes', {collectes, action:'add'})
+			contexte.commit('collectes', { collectes, action: 'add' })
 		},
 
 		updateCollectes(contexte, data) {
@@ -575,7 +580,7 @@ export default createStore({
 		 * @param {Object} context 
 		 * @param {Object} data 
 		 */
-		refreshStat(context,data) {
+		refreshStat(context, data) {
 			context.commit('stat', data)
 		},
 		/**
@@ -583,9 +588,26 @@ export default createStore({
 		 * @param {Object} context 
 		 * @param {Object} data 
 		 */
-		setRequete(context,data) {
-			context.commit('requeteStat', data)
+		setRequete(context, data) {
+			context.commit('requeteStat', data);
 		},
+
+		/**
+		 * charge dans le store les données retournées par l'api stat
+		 */
+		loadStatResult(context, data) {
+			context.commit('statResult',data);
+		},
+
+		/**
+		 * Enregistre la requete de statistique  dans le store
+		 * @param {Object} state State de Vuex
+		 * @param {Object} data List des éléménts de la requete
+		 
+		requeteStat(state, data) {
+			state.requeteStat = data;
+			console.log(this.state.requeteStat, "oui");
+		},*/
 
 		/**
 		 * charge dans le store une requete de stat 
@@ -631,8 +653,6 @@ export default createStore({
 		setCollecte(contexte, collecte) {
 			contexte.commit('collecte', { collecte, mode: 'set' })
 		},
-
-		
 
 		/**
 		 * Met à jour les informations de la collecte chargée dans le store
@@ -745,7 +765,7 @@ export default createStore({
 		 */
 		updatePersonnels(context, data) {
 			context.commit('stateCollection', {
-				action: 'update', 
+				action: 'update',
 				key: 'personnels',
 				data
 			});
@@ -758,7 +778,7 @@ export default createStore({
 		 */
 		resetPersonnels(context) {
 			context.commit('stateCollection', {
-				action: 'reset', 
+				action: 'reset',
 				key: 'personnels'
 			});
 		}

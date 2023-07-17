@@ -27,7 +27,7 @@ export default {
   props: {
     requeteStat: {
       type: Object,
-      required: true
+      required: true,
     },
   },
   computed: {
@@ -43,8 +43,8 @@ export default {
       let totalHabilitationsHIstory = [];
 
       data.forEach(collecte => {
-        const id = collecte['personnel_id__controleur'];
-        const index = this.chartData.findIndex(controleur => (controleur[0] == 'Contrôleur ' + id));
+        const id = collecte['habilitation_id'];
+        const index = this.chartData.findIndex(habilitation => (habilitation[0] == 'Habilitation ' + id));
         if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
           habilitationTypeHistory.push(collecte['habilitation_type_id']);
         }
@@ -73,7 +73,7 @@ export default {
           }
 
         } else {
-          let newRow = ['Contrôleur ' + id, 1, habilitationTypeHistory.length, totalHabilitationsHIstory.length, 0, 0, 0, 0];
+          let newRow = ['Habilitation ' + id, 1, habilitationTypeHistory.length, totalHabilitationsHIstory.length, 0, 0, 0, 0];
           switch (collecte['sami']) {
             case 'S':
               newRow[4]++;

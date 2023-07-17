@@ -1,45 +1,71 @@
-<template>
-    <div>
-        <GChart :type="type" :data="chartData" :options="options" v-if="chartDataLoaded" />
-    </div>
+<template v-if="!pending.fetchData">
+    <div id="operatorPieChart"></div>
 </template>
 
 <script>
-import { GChart } from 'vue-google-charts'
+import { GoogleCharts } from 'google-charts'
+import { mapState } from 'vuex';
 
 export default {
+    data() {
+        return {
+            chartData: null,
+            pending: {
+                fetchData: true,
+            }
+        }
+    },
     props: {
-        jsonData: {
+        requeteStat: {
             type: Object,
             required: true
         }
     },
-
-    components: { GChart },
-
-    data() {
-        return {
-            type: "PieChart",
-            chartData: null,
-            chartDataLoaded: false,
-            options: {}
-        }
+    computed: {
+        ...mapState(['statResult'])
     },
-    mounted() {
-        this.fetchData(this.jsonData);
+    watch: {
+        requeteStat() {
+            this.fetchData();
+        }
     },
     methods: {
-        fetchData(jsonData) {
-            console.log(jsonData);
+        fetchData() {
+            const data = this.statResult;
+
             this.chartData = [
-                ['Opérateurs', 'Amount'],
-                ['Opérateur 1', 33],
-                ['Opérateur 2', 33],
-                ['Opérateur 3', 33],
-                ['Opérateur 4 ', 33],
+                ['Réponses', 'Nombre']
             ];
-            this.chartDataLoaded = true;
+
+            data.forEach(collecte => {
+                const id = collecte['personnel_id__operateur'];
+                const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
+                if (index >= 0) {
+                    this.chartData[index][1]++;
+                } else {
+                    this.chartData.push(["Opérateur " + id, 1]);
+                }
+
+            });
+        },
+        drawChart() {
+            let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
+            let chartWrap = document.getElementById('operatorPieChart');
+            let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
+            let options = {
+                sliceVisibilityThreshold: 1/100
+            };
+            chart.draw(dataTable, options);
         }
-    }
+    },
+    async mounted() {
+        this.pending.fetchData = true;
+        await this.fetchData();
+        this.pending.fetchData = false;
+        GoogleCharts.load(this.drawChart, {
+            packages: ['corechart'],
+        })
+
+    },
 }
 </script>

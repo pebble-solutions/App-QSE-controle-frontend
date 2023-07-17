@@ -1,5 +1,5 @@
 <template v-if="!pending.fetchData">
-    <div id="globalPieChart"></div>
+    <div id="knPieChart"></div>
 </template>
 
 <script>
@@ -12,47 +12,42 @@ export default {
             chartData: null,
             pending: {
                 fetchData: true,
-            },
+            }
+        }
+    },
+    props: {
+        requeteStat: {
+            type: Object,
+            required: true,
         }
     },
     computed: {
         ...mapState(['statResult'])
     },
     methods: {
-        async fetchData() {
-            this.chartData = [
-                ['Réponses', 'Nombre'],
-                ['S', 0],
-                ['A', 0],
-                ['M', 0],
-                ['I', 0],
-            ];
+        fetchData() {
             const data = this.statResult;
+
+            this.chartData = [
+                ['Réponses', 'Nombre']
+            ];
             data.forEach(collecte => {
-                switch (collecte['sami']) {
-                    case 'S':
-                        this.chartData[1][1]++;
-                        break;
-                    case 'A':
-                        this.chartData[2][1]++;
-                        break;
-                    case 'M':
-                        this.chartData[3][1]++;
-                        break;
-                    case 'I':
-                        this.chartData[4][1]++;
-                        break;
-                    default:
-                        break;
+                const id = collecte['habilitation_id'];
+                const index = this.chartData.findIndex(habilitation => (habilitation[0] == 'Habilitation ' + id));
+                if (index >= 0) {
+                    this.chartData[index][1]++;
+                } else {
+                    this.chartData.push(["Habilitation " + id, 1]);
                 }
+
             });
         },
         drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
-            let chartWrap = document.getElementById('globalPieChart');
+            let chartWrap = document.getElementById('knPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
             let options = {
-                colors: ['#198754', '#0074D9', '#FFC107', '#DC3545'],
+                sliceVisibilityThreshold: 1/100
             };
             chart.draw(dataTable, options);
         }
@@ -64,6 +59,7 @@ export default {
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         })
+
     },
 }
 </script>
