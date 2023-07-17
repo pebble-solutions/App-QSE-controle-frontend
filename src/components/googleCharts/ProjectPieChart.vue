@@ -31,26 +31,24 @@ export default {
             this.chartData = [
                 ['Réponses', 'Nombre']
             ];
-            const ids = this.requeteStat.projets;
-
-            ids.forEach(id => {
-                data.forEach(collecte => {
-                    if (collecte['projet_id'] == id) {
-                        const index = this.chartData.findIndex(projet => ( projet[0] == 'Projet ' + id));
-                        if (index >= 0) {
-                            this.chartData[index][1]++;
-                        } else {
-                            this.chartData.push(["Projet " + id, 1]);
-                        }
-                    }
-                });
+            data.forEach(collecte => {
+                const id = collecte['projet_id'];
+                const index = this.chartData.findIndex(projet => (projet[0] == 'Projet ' + id));
+                if (index >= 0) {
+                    this.chartData[index][1]++;
+                } else {
+                    this.chartData.push(["Projet " + id, 1]);
+                }
             });
         },
         drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
             let chartWrap = document.getElementById('projectPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
-            chart.draw(dataTable);
+            let options = {
+                sliceVisibilityThreshold: 1/100
+            };
+            chart.draw(dataTable, options);
         }
     },
     async mounted() {

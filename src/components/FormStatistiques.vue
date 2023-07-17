@@ -50,8 +50,6 @@
         </div>
         <spinner v-else></spinner>
         
-
-        
         <div class="text-center">
             <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.requete">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pending.requete"></span>
@@ -238,20 +236,18 @@ export default {
         searchStat() {
             this.pending.requete = true;
             let query = this.requete
-            if(query.operateurs == ""){
+            if(query.operateurs.length == 0){
                 query.operateurs = []
             }
-            if(query.controleurs == ""){
+            if(query.controleurs.length == 0){
                 query.controleurs = []
             }
-            if(query.habilitation == ""){
+            if(query.habilitation.length == 0){
                 query.habilitation = []
             }
-            if(query.projets == ""){
+            if(query.projets.length == 0){
                 query.projets = []
             }
-            console.log(query,'queru')
-            console.log(this.requete, 'avant init')
             this.setRequete(query);
             this.requete =  {
                 operateurs: [''],
@@ -263,10 +259,7 @@ export default {
                 priorite: true,
                 environnement:'private'
             },
-            console.log(this.requete, 'apres')
             this.pending.requete = false;
-            // this.$router.push({name: 'NewRequest'});
-
         },
 
         /**

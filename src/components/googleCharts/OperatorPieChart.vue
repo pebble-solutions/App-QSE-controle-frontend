@@ -36,26 +36,26 @@ export default {
             this.chartData = [
                 ['Réponses', 'Nombre']
             ];
-            const ids = this.requeteStat.operateurs;
 
-            ids.forEach(id => {
-                data.forEach(collecte => {
-                    if (collecte['personnel_id__operateur'] == id) {
-                        const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
-                        if (index >= 0) {
-                            this.chartData[index][1]++;
-                        } else {
-                            this.chartData.push(["Opérateur " + id, 1]);
-                        }
-                    }
-                });
+            data.forEach(collecte => {
+                const id = collecte['personnel_id__operateur'];
+                const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
+                if (index >= 0) {
+                    this.chartData[index][1]++;
+                } else {
+                    this.chartData.push(["Opérateur " + id, 1]);
+                }
+
             });
         },
         drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
             let chartWrap = document.getElementById('operatorPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
-            chart.draw(dataTable);
+            let options = {
+                sliceVisibilityThreshold: 1/100
+            };
+            chart.draw(dataTable, options);
         }
     },
     async mounted() {

@@ -31,26 +31,25 @@ export default {
             this.chartData = [
                 ['Réponses', 'Nombre']
             ];
-            const ids = this.requeteStat.habilitation;
+            data.forEach(collecte => {
+                const id = collecte['habilitation_id'];
+                const index = this.chartData.findIndex(habilitation => (habilitation[0] == 'Habilitation ' + id));
+                if (index >= 0) {
+                    this.chartData[index][1]++;
+                } else {
+                    this.chartData.push(["Habilitation " + id, 1]);
+                }
 
-            ids.forEach(id => {
-                data.forEach(collecte => {
-                    if (collecte['habilitation_id'] == id) {
-                        const index = this.chartData.findIndex(habilitation => ( habilitation[0] == 'Habilitation ' + id ));
-                        if (index >= 0) {
-                            this.chartData[index][1]++;
-                        } else {
-                            this.chartData.push(["Habilitation " + id, 1]);
-                        }
-                    }
-                });
             });
         },
         drawChart() {
             let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, false);
             let chartWrap = document.getElementById('knPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
-            chart.draw(dataTable);
+            let options = {
+                sliceVisibilityThreshold: 1/100
+            };
+            chart.draw(dataTable, options);
         }
     },
     async mounted() {

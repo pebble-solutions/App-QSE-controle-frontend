@@ -25,10 +25,10 @@
                 </div>
             </div>
         </div>
-            <StatOperateur :requeteStat="requeteStat" v-if="requeteStat"></StatOperateur>
-            <StatHabilitation :requeteStat="requeteStat" v-if="requeteStat"></StatHabilitation>
-            <StatProjet :requeteStat="requeteStat" v-if="requeteStat"></StatProjet>
-            <StatControleur :requeteStat="requeteStat" v-if="requeteStat"></StatControleur>
+            <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
+            <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
+            <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
+            <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
     </div>
     <RouterView></RouterView>
 </template>
@@ -64,8 +64,8 @@ export default {
         sendRequest() {
             let route = 'v2/collecte';
             let query = {
-                dd: this.requeteStat.dd,
-                df: this.requeteStat.df,
+                dd_start: this.requeteStat.dd,
+                df_start: this.requeteStat.df,
                 personnel_id__operateur: this.requeteStat.operateurs.join(','),
                 projet_id: this.requeteStat.projets.join(','),
                 personnel_id__controleur: this.requeteStat.controleurs.join(','),
@@ -73,12 +73,14 @@ export default {
                 done: 'OUI',
                 type: 'KN',
             };
-
+            this.pending.stat = true;
             this.$app.apiGet(route, query)
                 .then((data) => {
+                    console.log("request: ", this.requeteStat);
                     this.loadStatResult(data);
                 })
-                .catch(this.$app.catchError);
+                .catch(this.$app.catchError)
+                .finally(() => this.pending.stat = false);
         }
     },
     watch: {
@@ -89,10 +91,8 @@ export default {
          */
         requeteStat: {
             handler(newValue) {
-                this.pending.stat = true
                 if (newValue.dd && newValue.df) {
                     this.sendRequest();
-                    this.pending.stat = false
                 }
             },
         }
