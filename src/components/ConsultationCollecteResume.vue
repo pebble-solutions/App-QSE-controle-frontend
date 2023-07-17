@@ -81,9 +81,13 @@
                     <div>
                         <template v-if=" levelUser >= 5">
                                 <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-4">
-                                    <i class="bi bi-lock-fill" v-if="locked"></i>
+                                    <i class="bi bi-lock-fill"></i>
+                                    Déverrouiller
                                 </button>
-                                <button class="btn btn-sm btn-warning me-4" v-else><i class="bi bi-unlock-fill"></i></button>
+                                <button class="btn btn-sm btn-warning me-4" v-else disabled>
+                                    <i class="bi bi-unlock-fill"></i>
+                                    Déverrouillé
+                                </button>
                         </template>
                         <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()" v-if="collecte.notes.length >= 1">
                             Historique
@@ -91,7 +95,8 @@
                         </button>
                     </div>
                     <div>
-                        <button v-if="locked & !collecte.unlocked" class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
+                        <button v-if="locked && !collecte.unlocked" class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
+                            <i class="bi bi-cloud-download"></i>
                             Exporter
                         </button>
                     </div>
