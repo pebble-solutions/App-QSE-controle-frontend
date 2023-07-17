@@ -24,18 +24,19 @@
 		</template>
 
 		<template v-slot:list>
-			
+
 			<AppMenu v-if="listMode === 'collecte'">
 				<template v-if="pending.collectes">
 					<Spinner />
 				</template>
 				<template v-else>
-					<AppMenuItem :href="'/collecte/'+col.id" v-for="col in collectes" :key="col.id" >
+					<AppMenuItem :href="'/collecte/' + col.id" v-for="col in collectes" :key="col.id">
 						<div class="d-flex align-items-center justify-content-between">
 							<collecte-item :collecte="col" />
 						</div>
 					</AppMenuItem>
-					<alert-message class-name="m-2" v-if="noVal(collectes)">Vous n'avez aucun contrôle à réaliser.</alert-message>
+					<alert-message class-name="m-2" v-if="noVal(collectes)">Vous n'avez aucun contrôle à
+						réaliser.</alert-message>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'programmation'">
@@ -44,58 +45,58 @@
 				</template>
 				<template v-else>
 					<!-- <alert-message class-name="m-2" v-if="noVal(formulaires)" >Il n'y a aucun contrôle programmé.</alert-message> -->
-					<alert-message class-name="m-2" v-if="!exist(formulaires)" >Il n'y a aucun contrôle programmé</alert-message>
+					<alert-message class-name="m-2" v-if="!exist(formulaires)">Il n'y a aucun contrôle
+						programmé</alert-message>
 					<!-- <alert-message class-name="m-2" v-if="exist(formulaires)" >contrôle</alert-message> -->
 
 
 					<template v-for="form in formulaires" :key="form.id">
-						<AppMenuItem :href="'/programmation/'+form.id" v-if="form.nb_todo" >
+						<AppMenuItem :href="'/programmation/' + form.id" v-if="form.nb_todo">
 							<formulaire-item :num="form.nb_todo" :formulaire="form" />
 						</AppMenuItem>
 					</template>
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
-				<search-control
-					v-model:dd="searchOptions.dd"
-					v-model:df="searchOptions.df"
-					v-model:mode="searchOptions.mode"
-					v-model:pendingSearch="pending.search"
-				></search-control>
+				<search-control v-model:dd="searchOptions.dd" v-model:df="searchOptions.df"
+					v-model:mode="searchOptions.mode" v-model:pendingSearch="pending.search"></search-control>
 				<template v-if="pending.search">
 					<Spinner />
 				</template>
 				<template v-else>
-										
+
 					<template v-for="res in searchResults" :key="res.id">
-						<app-menu-item v-if="this.searchOptions.mode == 'collecte' " :href="'/consultation/'+res.id">
+						<app-menu-item v-if="this.searchOptions.mode == 'collecte'" :href="'/consultation/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'formulaire' && res.nb_done != 0" :href="'/consultation/formulaire/'+res.id" >
-							<formulaire-item :num="res.nb_done" :formulaire="res" ></formulaire-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'formulaire' && res.nb_done != 0"
+							:href="'/consultation/formulaire/' + res.id">
+							<formulaire-item :num="res.nb_done" :formulaire="res"></formulaire-item>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode =='projet' && res.nb_done != 0" :href="'/consultation/projet/'+res.id">
-							<project-item-done :num="res.nb_done" :projet="res" ></project-item-done>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'projet' && res.nb_done != 0"
+							:href="'/consultation/projet/' + res.id">
+							<project-item-done :num="res.nb_done" :projet="res"></project-item-done>
 						</app-menu-item>
 					</template>
 					<alert-message className="m-1" v-if="!searchResults.length">
-						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre recherche.
+						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre
+						recherche.
 					</alert-message>
-					
+
 					<div class="d-grid my-2" v-if="isMoreAvailable && searchOptions.mode === 'collecte'">
 						<button class="btn btn-outline-secondary" @click.prevent="loadMore()" :disabled="pending.loadMore">
 							<span class="spinner-border spinner-border-sm" v-if="pending.loadMore"></span>
 							Charger +
 						</button>
 					</div>
-	
+
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'habilitation'">
 				<!-- <AppMenuItem href="/habilitation/Habilitation"> 
 					<span class="fst-italic fw-lighter">Vue modèle par habilitations</span>
 				</AppMenuItem> -->
-				
+
 				<!--
 				<SearchHab v-model:mode=options.mode ></SearchHab> -->
 				<!-- <template v-if="options.mode == 'byAgent'" >
@@ -108,12 +109,12 @@
 						{{ veille.nom }}
 					</AppMenuItem>
 				</template> -->
-				<template v-for="hab in habilitationType" :key="hab.id" >
-					<AppMenuItem :href="'/habilitationHab/'+hab.id">
+				<template v-for="hab in habilitationType" :key="hab.id">
+					<AppMenuItem :href="'/habilitationHab/' + hab.id">
 						{{ hab.nom }}
 					</AppMenuItem>
 				</template>
-				
+
 				<div class="alert alert-info m-2" v-if="!habilitationType?.length">
 					Il n'y a pas de type d'habilitation enregistré
 				</div>
@@ -122,16 +123,19 @@
 				<!-- <AppMenuItem href="/habilitation/Agent"> 
 					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
 				</AppMenuItem> -->
-					<template v-for="agent in listActifs" :key="agent.id" >
-						<AppMenuItem :href="'/operateur/'+agent.id">
-							{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
-						</AppMenuItem>
-					</template>
-					<div class="alert alert-info m-2" v-if="!listActifs?.length">
-						Il n'y a pas de personnels concernés
-					</div>
+				<template v-for="agent in listActifs" :key="agent.id">
+					<AppMenuItem :href="'/operateur/' + agent.id">
+						{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
+					</AppMenuItem>
+				</template>
+				<div class="alert alert-info m-2" v-if="!listActifs?.length">
+					Il n'y a pas de personnels concernés
+				</div>
 			</AppMenu>
-			
+			<AppMenu v-else-if="listMode === 'statistiques'">
+				<!-- <form-stats /> -->
+				<formforstats></formforstats>
+			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'echeancier'">
 				<FormEcheancier/>
@@ -140,12 +144,12 @@
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
-			
+
 		</template>
-		
+
 		<template v-slot:core v-if="isConnectedUser">
-			<div class="bg-light" >
-				<router-view/>
+			<div class="bg-light">
+				<router-view />
 			</div>
 		</template>
 	</AppWrapper>
@@ -155,7 +159,8 @@
 .fs-7 {
 	font-size: 0.80rem !important;
 }
-.progress-ht{
+
+.progress-ht {
 	height: 25px !important;
 }
 </style>
@@ -173,7 +178,7 @@ import CollecteItem from './components/CollecteItem.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
-
+import formforstats from './views/formforstats.vue'
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
@@ -182,7 +187,7 @@ import AlertMessage from './components/pebble-ui/AlertMessage.vue'
 import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
-import {ROUTES_NAMES} from './js/route';
+import { ROUTES_NAMES } from './js/route';
 // import SearchHab from './components/menu/SearchHab.vue'
 
 
@@ -202,7 +207,7 @@ export default {
 				search: true,
 				actifs: true,
 				loadMore: false,
-				habilitations :true,
+				habilitations: true,
 			},
 			isConnectedUser: false,
 			searchOptions: {
@@ -216,12 +221,12 @@ export default {
 			options: {
 				mode: 'default'
 			},
-			
+
 		}
 	},
 
 	computed: {
-		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults','habilitationType', 'veilleConfig']),
+		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults', 'habilitationType', 'veilleConfig']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -234,15 +239,15 @@ export default {
 		},
 
 		/**
-         * Contrôle si il peut exister plus de résultats sur le serveurs que
-         * de données stockées dans résults.
-         *
-         * On concidère qu'il peut exister des résultats supplémentaires sur le serveur
-         * à partir du moment ou il y a plus de 50 items dans result et que result / 50 est
-         * égal à 1.
-         *
-         * @return {bool}
-         */
+		 * Contrôle si il peut exister plus de résultats sur le serveurs que
+		 * de données stockées dans résults.
+		 *
+		 * On concidère qu'il peut exister des résultats supplémentaires sur le serveur
+		 * à partir du moment ou il y a plus de 50 items dans result et que result / 50 est
+		 * égal à 1.
+		 *
+		 * @return {bool}
+		 */
 		isMoreAvailable() {
             let ln = this.searchResults.length;
             return (ln && ln % this.searchOptions.limit === 0 && !this.noMoreAvailable);
@@ -261,7 +266,7 @@ export default {
 	},
 
 	watch: {
-		$route () {
+		$route() {
 			this.$app.dispatchEvent('menuChanged', 'list');
 		},
 
@@ -285,7 +290,7 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['refreshVeilleConfig','refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults', 'addSearchResults', 'refreshHabilitationType']),
+		...mapActions(['refreshVeilleConfig', 'refreshFormulaires', 'refreshCollectes', 'refreshListActifs', 'refreshProjets', 'setCollectes', 'setSearchResults', 'addSearchResults', 'refreshHabilitationType']),
 
 		/**
 		 * Met à jour les informations de l'utilisateur connecté
@@ -308,7 +313,19 @@ export default {
 		 * @return {Promise<object>}
 		 */
 		loadCollectes() {
-			return this.loadRessources('collecte', {enqueteur_login: 'self', locked: 0});
+			return this.loadRessources('collecte', { enqueteur_login: 'self', locked: 0 });
+		},
+
+		/**
+		 * Charge l'ensemble des collectes terminées
+		 */
+		loadCollectesCollection() {
+			let collecteCollection = new AssetsCollection(this, {
+				assetName: 'collectesCollection',
+				apiRoute: 'v2/collecte/?done=OUI&type=KN'
+			});
+			this.$assets.addCollection('collectes', collecteCollection);
+			// console.log(collecteCollection, this.$assets.getCollection('collectes'));
 		},
 
 		/**
@@ -320,7 +337,7 @@ export default {
 			return this.loadRessources('formulaire')
 		},
 
-		
+
 
 		/**
 		 * Charge l'ensemble des projets depuis le serveur et les stock dans le store
@@ -328,14 +345,12 @@ export default {
 		loadProjets() {
 			this.pending.projets = true;
 			let route = 'projet/GET/list';
-			let query = {'in_production' : true}
+			let query = { 'in_production': true }
 
 			this.$app.apiGet(route, query)
 			.then((data) => {
 				this.refreshProjets(data);
-			})
-			.catch(this.$app.catchError)
-			.finally(() => {this.pending.projets = false});
+			}).catch(this.$app.catchError).finally(() => this.pending.projets = false);
 		},
 
 		/**
@@ -346,23 +361,19 @@ export default {
 			this.$app.apiGet('v2/controle/habilitation/type')
 			.then ((data)=> {
 				this.refreshHabilitationType(data);
-			})
-			.catch(this.$app.catchError)
-			.finally(() => {this.pending.habilitations = false});
+			}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 		},
 		/** charge l'ensemble des veilles paramétrées
-         * 
-         */
+		 * 
+		 */
 		loadVeille() {
-            this.pending.habilitations = true;
+			this.pending.habilitations = true;
 
             this.$app.apiGet('v2/controle/veille')
             .then((data) =>{
 				this.refreshVeilleConfig(data);
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
-
-        },
+            }).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+		},
 
 		/**
 		 * Charge une ressrouce depuis le serveur vers le store.
@@ -373,9 +384,9 @@ export default {
 		 * @return {Promise<object>}
 		 */
 		loadRessources(ressourceName, query) {
-			let route = 'data/GET/'+ressourceName;
-			let pending = ressourceName+'s';
-			let refreshMethod = 'refresh'+ressourceName.charAt(0).toUpperCase() + ressourceName.slice(1)+'s';
+			let route = 'data/GET/' + ressourceName;
+			let pending = ressourceName + 's';
+			let refreshMethod = 'refresh' + ressourceName.charAt(0).toUpperCase() + ressourceName.slice(1) + 's';
 			if (ressourceName == 'collecte') {
 				refreshMethod = 'setCollectes';
 			}
@@ -388,27 +399,25 @@ export default {
 				.then(data => {
 					this[refreshMethod](data);
 					return data;
-				})        
-				.catch(this.$app.catchError)
-				.finally(() => this.pending[pending] = false);
+				}).catch(this.$app.catchError).finally(() => this.pending[pending] = false);
 		},
 
 		/**
 		 * Charge le personnel actifs
 		 */
 		loadAgent() {
-            this.pending.actifs = true;
-            this.$app.apiGet('structurePersonnel/GET/list', {
-                actif: true,
+			this.pending.actifs = true;
+			this.$app.apiGet('structurePersonnel/GET/list', {
+				actif: true,
 				futur: true,
 				structure: "toutes",
 				limit: "aucune"
-            })
-			.then((data) => {
-				this.refreshListActifs(data);
 			})
-			.catch(this.$app.catchError)
-			.finally(this.pending.actifs = false);
+				.then((data) => {
+					this.refreshListActifs(data);
+				})
+				.catch(this.$app.catchError)
+				.finally(this.pending.actifs = false);
 
 			try {
 				let collection = this.$assets.getCollection('personnels');
@@ -422,7 +431,7 @@ export default {
 				});
 				this.$assets.addCollection('personnels', collection);
 			}
-        },
+		},
 
 
 		/**
@@ -448,9 +457,9 @@ export default {
 		exist(val) {
 			let liste = val;
 			let compteur = 0
-			
+
 			for (let form of liste) {
-				let result= form.nb_todo;
+				let result = form.nb_todo;
 				if (result === 0) {
 					compteur += 0
 				}
@@ -461,14 +470,14 @@ export default {
 			} else {
 				return false;
 			}
-		
+
 		},
 
 		/**
-         * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
+		 * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
 		 * 
 		 * @param	{string}	mode 'set' par défaut: enregistre le retour de l'api et 'append' ajoute le retour de l'api aux résultats deja enregistrés
-         */
+		 */
 		loadConsultations(mode) {
 
 			mode = typeof mode === 'undefined' ? 'set' : mode;
@@ -488,7 +497,7 @@ export default {
 						} else {
 							this.addSearchResults(data);
 						}
-					} 
+					}
 					else {
 						this.noMoreAvailable = false;
 						this.searchOptions.start = 0;
@@ -499,32 +508,32 @@ export default {
 				if (mode !== 'append') {
 					this.routeToVue(this.searchOptions.mode);
 				}
-            }).catch(this.$app.catchError).finally(() => { 
+			}).catch(this.$app.catchError).finally(() => {
 				this.pending.search = false;
 				this.pending.loadMore = false;
 			});
 		},
 
 		/**
-         * Charge la suite des données lorsque le nombre de résultats est > à 50
-         * et divisible par 50 en nombre entier.
-         */
+		 * Charge la suite des données lorsque le nombre de résultats est > à 50
+		 * et divisible par 50 en nombre entier.
+		 */
 		loadMore() {
-            if (this.isMoreAvailable) {
-                this.searchOptions.start += this.searchOptions.limit;
-                this.loadConsultations('append');
-            }
-        },
+			if (this.isMoreAvailable) {
+				this.searchOptions.start += this.searchOptions.limit;
+				this.loadConsultations('append');
+			}
+		},
 
 		/**
-         * Affiche la liste des contrôles programmés avec le formulaire
-         * 
-         * @param {object} collecte
-         */
+		 * Affiche la liste des contrôles programmés avec le formulaire
+		 * 
+		 * @param {object} collecte
+		 */
 		routeToVue(mode) {
-			let route = mode === 'collecte' ? '/consultation' : '/consultation/'+mode;
-            this.$router.push(route);
-        },
+			let route = mode === 'collecte' ? '/consultation' : '/consultation/' + mode;
+			this.$router.push(route);
+		},
 
 		/**
 		 * Retourne le nom du groupe auquel appartient la route à analyser.
@@ -545,7 +554,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, formforstats}, 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
@@ -556,9 +565,9 @@ export default {
 				this.loadProjets();
 				this.loadHabilitationType();
 				this.loadVeille();
+				this.loadCollectesCollection();
 			}
 		});
 	}
-
 }
 </script>

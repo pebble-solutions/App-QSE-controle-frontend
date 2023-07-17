@@ -26,6 +26,7 @@ export default createStore({
 		requeteStat: null,
 		veilleConfig: [],
 		personnels: [],
+		collectesCollection: [],
 		echeancier: null
 	},
 	getters: {
@@ -546,6 +547,14 @@ export default createStore({
 		 */
 		addCollectes(contexte, collectes) {
 			contexte.commit('collectes', {collectes, action:'add'})
+		},
+
+		updateCollectes(contexte, data) {
+			contexte.commit('collectes', {
+				action: 'update',
+				key: 'collectes',
+				data
+			})
 		},
 
 		/**
