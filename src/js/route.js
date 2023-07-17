@@ -22,5 +22,6 @@ export const ROUTES_NAMES = {
 				'ControlHistory',
 				'ControlView'],
 	home: ['Home'],
-	statistiques: ['Statistiques']
+	statistiques: ['Statistiques'],
+	echeancier: ['Echeancier']
 };

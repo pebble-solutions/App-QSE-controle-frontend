@@ -2,15 +2,17 @@
   <div class="card" v-if="!pending.control">
     <div class="card-body">
       <!-- Titre -->
-      <div class="fw-light text-secondary text-center mb-1 fw-bold">
-        {{ collecte.id }}
+      <div class="text-secondary text-center mb-1">
+        <span class="fw-light me-2">Habilitation #{{ hab.habilitation_type_id }}</span>
+        <strong>
+          {{ getCharacteristicName(hab.habilitation_type_id)}}
+        </strong>
 
-        {{ filterhabilitationType(hab.habilitation_type_id) }}
       </div>
       <div class="row">
         <!-- Colonne 1 : Validité -->
         <div class="col-lg-3 col-12">
-          <div class="my-1">
+          <div class="">
             <div class="fw-bold col-12">Validité : 3 ans</div>
             <div class="col-12" v-for="hab in habilitationPerso" :key="hab.id">{{ changeFormatDateLit(hab.dd) }}
               au {{ changeFormatDateLit(hab.df) }}
@@ -24,25 +26,31 @@
         <!-- Colonne 2 : Résultat de groupe -->
         <div class="col">
           <div class="d-flex align-items-center justify-content-start my-2">
-            <button v-for="kn in infosHab" :key="kn.id"
-              :class="['btn', 'btn-sm', classNameFromSAMI(kn.sami), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
+            <button v-for="kn in listControlDone" :key="kn.id"
+              :class="['btn', 'btn-sm', classNameFromSAMI(kn.result_var), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
               :data-bs-toggle="'tooltip'" :data-bs-placement="'top'" :title="'#' + kn.id">
-              {{ kn.sami }}
+              {{ kn.result_var }}
             </button>
           </div>
           
         </div>
         
         <div class="col-lg-3 col-12">
-          <div class="my-1">
-            <div>Dernier contrôle : {{ changeFormatDateLit(lastControl) }}</div>
-            <!-- <div>{{ lastControl }} {{ noLastControl }}</div> -->
-            <div class="fw-bold col-12">Veille : 180 jours</div>
-           
+          <template v-if="listControlToDo?.length">
+            <div class="">
+              <div>Dernier contrôle : {{ changeFormatDateLit(lastControl) }}</div>
+              <!-- <div>{{ lastControl }} {{ noLastControl }}</div> -->
+              <div class="fw-bold col-12">Veille : 180 jours</div>
+             
+            </div>
+            <!-- Composant ProgressBar -->
+            <ProgressBar v-if="lastControl" :dd="new Date(lastControl)" :df="delay(lastControl)"></ProgressBar>
+            <AlertMessage v-else> {{ noLastControl }}</AlertMessage>
+          </template>
+          <div class="text-secondary d-flex align-items-center" v-else>
+            <i class="bi bi-calendar2-x me-2"></i>
+            <em>Pas de veille configurée</em>
           </div>
-          <!-- Composant ProgressBar -->
-          <ProgressBar v-if="lastControl" :dd="new Date(lastControl)" :df="delay(lastControl)"></ProgressBar>
-          <AlertMessage v-else> {{ noLastControl }}</AlertMessage>
         </div>
         
         <!-- Colonne 3 : Veille -->
@@ -101,6 +109,19 @@ export default {
       // let nom = habilitationType.nom
       return habilitationType
     },
+
+    /**
+     * Retourne le nom d'une caractéristique (habilitation) par son ID
+     * 
+     * @param {number} id L'ID de la characteristic à chercher
+     * 
+     * @return {string}
+     */
+    getCharacteristicName(id) {
+      const characteristic = this.filterhabilitationType(id);
+      return characteristic?.nom;
+    },
+
     findVeilleConfig(id) {
       let veilleConfig = this.veilleConfig.find((v) => v.objet_id == id);
       this.veille = veilleConfig
@@ -123,7 +144,7 @@ export default {
       this.pending.control = true;
       this.$app.apiGet('data/GET/collecte', {
         tli: id,
-        done: 'OUI'
+        locked: 1
       })
         .then((data) => {
           this.listControlDone = data;

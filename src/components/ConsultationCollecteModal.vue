@@ -39,7 +39,7 @@ export default {
 
     
     methods: {
-        ...mapActions(["setCollecte", "resetResponses", "login"]),
+        ...mapActions(["setCollecte", "resetResponses"]),
 
 
         /**

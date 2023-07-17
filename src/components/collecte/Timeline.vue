@@ -29,8 +29,11 @@
                     <span class="d-none d-sm-inline">Clôturé le</span>
                     {{changeFormatDateLit(collecte.date_done)}}
                 </div>
-                <div v-if="collecte.date_start || collecte.date" class="mb-2"> 
-                    <span v-if="collecte.unlocked" class="badge text-danger bg-info ms-1"><i class="bi bi-unlock-fill me-1"></i>à compléter</span>
+                <div v-if="collecte.unlocked" class="mb-2"> 
+                    <span class="badge text-bg-light text-danger border border-danger rounded-pill">
+                        <i class="bi bi-unlock-fill me-1"></i>
+                        à compléter
+                    </span>
                 </div>
             </div>
         </div>

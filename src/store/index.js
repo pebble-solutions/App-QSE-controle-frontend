@@ -26,7 +26,8 @@ export default createStore({
 		requeteStat: null,
 		veilleConfig: [],
 		personnels: [],
-		collectesCollection: []
+		collectesCollection: [],
+		echeancier: null
 	},
 	getters: {
 		activeStructure(state) {
@@ -96,7 +97,7 @@ export default createStore({
 				}
 			});
 		},
-		
+
 
 		/**
 		 * Met à jour une réponse dans le store
@@ -170,6 +171,17 @@ export default createStore({
 		requeteStat (state, data) {
 			state.requeteStat = data;
 		},
+
+		/**
+		 * Enregistre l'echeance dans le store
+		 * @param {Object} state Le state de l'instance vueX
+		 * @param {Object} echeancier L'objet Login
+		 */
+		setEcheance(state, echeancier) {
+			state.echeancier = echeancier
+		},
+
+
 		/**
 		 * Met à jour la collection des collectes
 		 * 
@@ -573,6 +585,15 @@ export default createStore({
 		 */
 		setRequete(context,data) {
 			context.commit('requeteStat', data)
+		},
+
+		/**
+		 * charge dans le store une requete de stat 
+		 * @param {Object} context 
+		 * @param {Object} data 
+		 */
+		setEcheance(context,data) {
+			context.commit('setEcheance', data)
 		},
 
 		/**
