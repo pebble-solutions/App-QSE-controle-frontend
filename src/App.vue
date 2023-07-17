@@ -4,7 +4,6 @@
 		:cfg="cfg"
 		:cfg-menu="cfgMenu"
 		:cfg-slots="cfgSlots"
-		:sidebar-menu="appMenu"
 		
 		@auth-change="setLocal_user">
 
@@ -16,17 +15,11 @@
 			</div>
 		</template>
 
-
 		<template v-slot:menu>
 			<AppMenu>
-				<AppMenuItem href="/programmation" look="dark" icon="bi bi-calendar-event-fill">Programmation</AppMenuItem>
-				<AppMenuItem href="/" look="dark" icon="bi bi-bar-chart-line-fill">Statistiques</AppMenuItem>
-				<AppMenuItem href="/collecte" look="dark" icon="bi bi-pen-fill">Contrôle</AppMenuItem>
-				<AppMenuItem href="/consultation" look="dark" icon="bi bi-eye-fill">Consultation</AppMenuItem>
-				<AppMenuItem href="/habilitation" look="dark" icon="bi bi-hourglass-split">Veille par habilitations</AppMenuItem>
-				<AppMenuItem href="/operateur" look="dark" icon="bi bi-person-check-fill">Veille par opérateurs</AppMenuItem>
-
-
+				<AppMenuItem :href="menuItem.href" :icon="menuItem.icon" v-for="menuItem in appMenu" :key="menuItem.key" look="dark">
+					{{ menuItem.label }}
+				</AppMenuItem>
 			</AppMenu>
 		</template>
 
@@ -140,6 +133,10 @@
 			</AppMenu>
 			
 
+			<AppMenu v-else-if="listMode === 'echeancier'">
+				<FormEcheancier/>
+			</AppMenu>
+
 			<AppMenu v-else-if="listMode === 'home'">
 				<form-stats />
 			</AppMenu>
@@ -171,6 +168,7 @@ import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapActions, mapState } from 'vuex'
 import CONFIG from "@/config.json"
 import FormStats from './components/FormStats.vue'
+import FormEcheancier from './components/FormEcheancier.vue'
 import CollecteItem from './components/CollecteItem.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
@@ -207,45 +205,6 @@ export default {
 				habilitations :true,
 			},
 			isConnectedUser: false,
-			appMenu: [
-				{
-					label: 'Programmation',
-					icon: 'bi bi-calendar-event-fill',
-					key: 'programmation',
-					href: '/programmation'
-				},
-				{
-					label: 'Statistiques',
-					icon: 'bi bi-bar-chart-line-fill',
-					key: 'stats',
-					href: '/'
-				},
-				{
-					label: 'Contrôle',
-					icon: 'bi bi-pen-fill',
-					key: 'collecte',
-					href: '/collecte'
-				},
-				{
-					label: 'Consultation',
-					icon: 'bi bi-eye-fill',
-					key: 'consultation',
-					href: '/consultation'
-				},
-				{
-					label: 'Veille Habilitations',
-					icon: 'bi bi-hourglass-split',
-					key: 'habilitation',
-					href: '/habilitation'
-				},
-				{
-					label: 'Veille operateurs',
-					icon: 'bi bi-person-check-fill',
-					key: 'habilitation',
-					href: '/operateur'
-				},
-
-			],
 			searchOptions: {
 				dd: null,
 				df: null,
@@ -287,7 +246,16 @@ export default {
 		isMoreAvailable() {
             let ln = this.searchResults.length;
             return (ln && ln % this.searchOptions.limit === 0 && !this.noMoreAvailable);
-        }		
+        },
+
+		/**
+		 * Retourne les items du menu depuis la configuration
+		 * 
+		 * @return {array}
+		 */
+		appMenu() {
+			return this.cfg.appMenu;
+		}
 		
 
 	},
@@ -368,7 +336,6 @@ export default {
 			})
 			.catch(this.$app.catchError)
 			.finally(() => {this.pending.projets = false});
-
 		},
 
 		/**
@@ -378,7 +345,7 @@ export default {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/controle/habilitation/type')
 			.then ((data)=> {
-				this.refreshHabilitationType(data)
+				this.refreshHabilitationType(data);
 			})
 			.catch(this.$app.catchError)
 			.finally(() => {this.pending.habilitations = false});
@@ -391,7 +358,7 @@ export default {
 
             this.$app.apiGet('v2/controle/veille')
             .then((data) =>{
-				this.refreshVeilleConfig(data)
+				this.refreshVeilleConfig(data);
             })
             .catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 
@@ -421,10 +388,9 @@ export default {
 				.then(data => {
 					this[refreshMethod](data);
 					return data;
-				})
-                           
+				})        
 				.catch(this.$app.catchError)
-				.finally(() => this.pending[pending] = false)
+				.finally(() => this.pending[pending] = false);
 		},
 
 		/**
@@ -485,18 +451,19 @@ export default {
 			
 			for (let form of liste) {
 				let result= form.nb_todo;
-				if (result === 0){
+				if (result === 0) {
 					compteur += 0
 				}
 				else compteur += 1;
 			}
-			if (compteur > 0){
-				return true
+			if (compteur > 0) {
+				return true;
 			} else {
-				return false
+				return false;
 			}
 		
 		},
+
 		/**
          * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
 		 * 
@@ -517,9 +484,9 @@ export default {
 				if(this.searchOptions.mode == 'collecte') {
 					if(mode == 'append') {
 						if(!data.length) {
-							this.noMoreAvailable = true
+							this.noMoreAvailable = true;
 						} else {
-							this.addSearchResults(data)
+							this.addSearchResults(data);
 						}
 					} 
 					else {
@@ -578,7 +545,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, //,  , SearchHab 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone}, 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
