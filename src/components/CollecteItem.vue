@@ -9,19 +9,12 @@
 		<div class="d-flex flex-column align-content-between">
 			<div class="d-flex align-items-center">
 				<small class="fw-lighter me-2">#{{collecte.id}}</small>
-				
 				<date-badge :collecte="collecte" />
-
-				<!-- <span v-if="collecte.date"
-					class="badge rounded-pill ms-1"
-					:class="badgeClassName">
-					<i class="bi" :class="remaningIcon"></i>
-					{{ remaningLabel }}
-				</span> -->
-				
-				<span v-if="collecte.unlocked" class="bg-danger"><i class="bi bi-lock-fill"></i></span>
-				<span class="badge rounded-pill ms-1" :class="lockClass" v-else-if="collecte.date_start && !collecte.unlocked"><i class="bi bi-unlock-fill"></i> {{ remainingLock }} J</span>
-				<span v-else></span>
+				<span v-if="collecte.unlocked" class="badge border text-bg-light text-danger rounded-pill ms-2 status-badge">
+					<i class="bi bi-unlock-fill"></i>
+					<span class="status-detail ms-1">Déverrouillé</span>
+				</span>
+				<span class="badge border rounded-pill ms-1" :class="lockClass" v-else-if="collecte.date_start && !collecte.unlocked"><i class="bi bi-unlock-fill"></i> {{ remainingLock }} J</span>
 			</div>
 
 			<personnel-name :personnel-name="collecte.cible_nom" :personnel-id="collecte.cible__structure__personnel_id" />
@@ -36,6 +29,16 @@
 	</div>	
 		
 </template>
+
+<style lang="scss" scoped>
+.status-badge .status-detail {
+	display: none;
+}
+
+.status-badge:hover .status-detail {
+	display: inline;
+}
+</style>
 
 <script>
 
@@ -113,14 +116,16 @@ export default {
 
 			return days;
 		},
+
 		/**
 		 * Retourne le nombre de jours restants avant le verrouillage automatique
+		 * 
 		 * @return	{number}
 		 */
 		remainingLock(){
 			const now = new Date();
 			const collecteDateStart = new Date(this.collecte.date_start);
-			const delay = this.collecte.groupe_lock_timeout
+			const delay = this.collecte.groupe_lock_timeout;
 			
 			const datestartS = collecteDateStart.getTime()/ 1000;
 			const delayS = delay*24*60*60;
@@ -128,13 +133,17 @@ export default {
 			
 			const dateLockSecond =  datestartS - nowS + delayS;
 			
-
-			// const minutes = Math.round(dateLockSecond / 60 );
 			const daysBeforeLock = Math.floor(dateLockSecond / (60* 60 * 24)+1);
 
 			return daysBeforeLock;
 		},
-		lockClass(){
+
+		/**
+		 * Retourne la classe CSS de verrouillage auto
+		 * 
+		 * @return {string}
+		 */
+		lockClass() {
 			return this.getLockClass()
 		},
 
@@ -188,11 +197,18 @@ export default {
 			else return strFuture;
 		},
 
+		/**
+		 * Retourne la classe CSS de verrouillage
+		 * 
+		 * @return {string}
+		 */
 		getLockClass() {
-			if(this.remainingLock > 10) return 'bg-success';
-			else if (this.remainingLock > 5) return 'bg-primary';
-			else if (this.remainingLock >2) return 'bg-warning';
+			if(this.remainingLock > 10) return 'border-secondary text-secondary';
+			else if (this.remainingLock > 5) return 'border-primary text-primary';
+			else if (this.remainingLock > 2) return 'border-warning text-warning';
+			else return 'border-danger text-danger';
 		},
+
         /**
 		 * Récupere le nom du groupe d'information de la collect via un id de
 		 * 

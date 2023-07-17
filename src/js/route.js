@@ -23,4 +23,5 @@ export const ROUTES_NAMES = {
 				'ControlView'],
 	statistiques: ['Statistiques','NewRequest'],
 	home: ['Home'],
+	echeancier: ['Echeancier']
 };

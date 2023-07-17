@@ -27,7 +27,8 @@ export default createStore({
 		veilleConfig: [],
 		personnels: [],
 		collectesCollection: [],
-		statResult: []
+		statResult: [],
+		echeancier: null
 	},
 	getters: {
 		activeStructure(state) {
@@ -175,6 +176,16 @@ export default createStore({
 		statResult(state, data) {
 			state.statResult = data;
 		},
+
+		/**
+		 * Enregistre l'echeance dans le store
+		 * @param {Object} state Le state de l'instance vueX
+		 * @param {Object} echeancier L'objet Login
+		 */
+		setEcheance(state, echeancier) {
+			state.echeancier = echeancier
+		},
+
 
 		/**
 		 * Met à jour la collection des collectes
@@ -597,6 +608,15 @@ export default createStore({
 			state.requeteStat = data;
 			console.log(this.state.requeteStat, "oui");
 		},*/
+
+		/**
+		 * charge dans le store une requete de stat 
+		 * @param {Object} context 
+		 * @param {Object} data 
+		 */
+		setEcheance(context,data) {
+			context.commit('setEcheance', data)
+		},
 
 		/**
 		 * Charge un formulaire sur openedElement

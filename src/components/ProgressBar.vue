@@ -13,10 +13,10 @@ export default {
     
     props: {
         dd:{
-            type: Date,
+            type: String,
         },
         df: {
-            type: Date,
+            type: String,
         }
     },
     computed: {
