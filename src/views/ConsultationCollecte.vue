@@ -2,7 +2,7 @@
     <div class="container py-2 px-2">
         <spinner v-if="pending.collecte" />
         <template v-else>
-            <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
+            <consultation-collecte-resume :collecte="collecte" :levelUser="login.type" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             <router-view></router-view>
         </template>
     </div>
@@ -27,7 +27,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['collectes', 'collecte']),
+        ...mapState(['collectes', 'collecte', 'login' ]),
 
 
         /**
@@ -55,6 +55,7 @@ export default {
             this.$app.apiGet('data/GET/collecte/'+id, {
                 environnement: 'private',
                 afficher_corbeille: 'aussi'
+                
             })
             .then((data) => {
                 this.setCollecte(data);
