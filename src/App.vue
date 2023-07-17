@@ -15,6 +15,14 @@
 			</div>
 		</template>
 
+		<template v-slot:menu>
+			<AppMenu>
+				<AppMenuItem :href="menuItem.href" :icon="menuItem.icon" v-for="menuItem in appMenu" :key="menuItem.key" look="dark">
+					{{ menuItem.label }}
+				</AppMenuItem>
+			</AppMenu>
+		</template>
+
 		<template v-slot:list>
 			
 			<AppMenu v-if="listMode === 'collecte'">
@@ -237,7 +245,16 @@ export default {
 		isMoreAvailable() {
             let ln = this.searchResults.length;
             return (ln && ln % this.searchOptions.limit === 0 && !this.noMoreAvailable);
-        }		
+        },
+
+		/**
+		 * Retourne les items du menu depuis la configuration
+		 * 
+		 * @return {array}
+		 */
+		appMenu() {
+			return this.cfg.appMenu;
+		}
 		
 
 	},
