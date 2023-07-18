@@ -76,7 +76,6 @@ export default {
             this.pending.stat = true;
             this.$app.apiGet(route, query)
                 .then((data) => {
-                    console.log("request: ", this.requeteStat);
                     this.loadStatResult(data);
                 })
                 .catch(this.$app.catchError)
