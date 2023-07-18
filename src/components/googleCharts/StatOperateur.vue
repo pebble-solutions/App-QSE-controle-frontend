@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <!--<div class="row">
         <h1>Opérateur</h1>
         <div class="col-6">
             <div class="card my-2">
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     <div class="row">
         <div class="col-12">
             <div class="card my-2">
@@ -53,26 +53,26 @@
 import OperatorBarChart from './OperatorBarChart.vue';
 import OperatorPieChart from './OperatorPieChart.vue';
 import OperatorTable from './OperatorTable.vue';
-import { mapState } from 'vuex';
+//import { mapState } from 'vuex';
 
 export default {
-    data() {
+    /*data() {
         return {
             currentHabilitations: 0,
             totalHabilitations: 0,
         }
-    },
+    },*/
     props: {
         requeteStat: {
             type: Object,
             required: true
         },
     },
-    computed: {
+    /*computed: {
         ...mapState(['statResult'])
-    },
+    },*/
     methods: {
-        computeHabilitations() {
+        /*computeHabilitations() {
             const data = this.statResult;
             let periodHabilitationsHistory = [];
             let totalHabilitationsHistory = [];
@@ -88,11 +88,11 @@ export default {
             this.totalHabilitations = totalHabilitationsHistory.length;
             periodHabilitationsHistory = [];
             totalHabilitationsHistory = [];
-        },
+        },*/
     },
     components: { OperatorBarChart, OperatorPieChart, OperatorTable },
     mounted() {
-        this.computeHabilitations();
+        //this.computeHabilitations();
     }
 }
 </script>
