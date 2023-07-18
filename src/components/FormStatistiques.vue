@@ -1,7 +1,6 @@
 <template>
     <form class="p-2 my-1" @submit.prevent="searchStat()">
         <div class="row">
-
             <div class=" col-6 mb-3">
                 <label class="form-label" for="DateDebut">Date de début</label>
                 <input type="date" class="form-control" id="dd" name="date" v-model="requete.dd" required>
@@ -235,7 +234,7 @@ export default {
          */
         searchStat() {
             this.pending.requete = true;
-            let query = this.requete
+            let query = {...this.requete};
             if(query.operateurs.length == 0){
                 query.operateurs = []
             }
@@ -249,7 +248,7 @@ export default {
                 query.projets = []
             }
             this.setRequete(query);
-            this.requete =  {
+            /*this.requete =  {
                 operateurs: [''],
                 projets: [''],
                 controleurs: [''],
@@ -258,7 +257,7 @@ export default {
                 habilitation: [''],
                 priorite: true,
                 environnement:'private'
-            },
+            },*/
             this.pending.requete = false;
         },
 
@@ -306,7 +305,6 @@ export default {
         this.getHabilitations();
         this.getOp();
         this.loadCollecte();
-        
     }
 }
 

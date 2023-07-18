@@ -5,7 +5,7 @@
             <div class="card my-2 overflow-auto">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Agenda</h3>
-                        <AgendaChart></AgendaChart>
+                    <AgendaChart></AgendaChart>
                 </div>
             </div>
         </div>
@@ -13,11 +13,10 @@
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Répartition des réponses</h3>
-                        <GlobalPieChart></GlobalPieChart>
+                    <GlobalPieChart></GlobalPieChart>
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="card my-2">
                 <div class="card-body">
@@ -25,10 +24,10 @@
                 </div>
             </div>
         </div>
-            <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
-            <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
-            <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
-            <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
+        <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
+        <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
+        <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
+        <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
     </div>
     <RouterView></RouterView>
 </template>
@@ -55,7 +54,6 @@ export default {
     computed: {
         ...mapState(['requeteStat']),
     },
-
     methods: {
         ...mapActions(['loadStatResult']),
         stats() {
@@ -84,23 +82,19 @@ export default {
         }
     },
     watch: {
-        /**
-         * Ecoute la varible echeancier dans le store 
-         * et fais les appels necessaire au methodes de recuperation de données 
-         * lors du changement de celle-ci
-         */
         requeteStat: {
             handler(newValue) {
                 if (newValue.dd && newValue.df) {
                     this.sendRequest();
                 }
             },
-        }
+        },
     },
     // unmounted(){
     //     this.setRequete(null)
     // },
     mounted() {
+        console.log("mounted ", this.requeteStat);
         /*let collection = this.$assets.getCollection('collectes');
         this.pending.collectes = true;
         collection.load();
