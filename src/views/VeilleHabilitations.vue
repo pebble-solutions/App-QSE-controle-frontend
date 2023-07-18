@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="echeancier">
+    <div v-if="echeancier" class="py-1">
 
         <div v-if="isPending" class="text-center my-4 fs-4 text-secondary">
             <span class="spinner-border"></span>
@@ -21,14 +21,18 @@
                 </div>
             </div>
     
-            <div v-for="personnel in filteredOperateurs" :key="personnel.id" class="my-3" v-else>
-                <tabEcheancierHabilitation 
-                    :personnel="personnel" 
-                    :kns="filteredKns(personnel.id, 'personnel')" 
-                    :periode="periode" 
-                    :habilitations="filteredHabilitations"
-                />
-            </div>
+            <template v-else>
+                <template v-for="personnel in filteredOperateurs" :key="personnel.id">
+                    <tabEcheancierHabilitation 
+                        :personnel="personnel" 
+                        :kns="filteredKns(personnel.id, 'personnel')" 
+                        :periode="periode" 
+                        :habilitations="filteredHabilitations"
+                        :habilitationsPersonnel="getHabilitationByPersonnelId(personnel.id)"
+                        v-if="getHabilitationByPersonnelId(personnel.id)?.length"
+                    />
+                </template>
+            </template>
         </template>
     </div>
     <div class="container py-2" v-else>
@@ -69,11 +73,13 @@ export default {
 		return {
             allHabilitations: [],
             allOperateurs: [],
+            habilitationsPersonnel: [],
             periode: [],
             kns: [],
             contrats: [],
             pending: {
                 habilitationTypes: false,
+                habilitationsPersonnel: false,
                 collectes: false,
                 contrats: false,
                 personnels: false,
@@ -93,8 +99,9 @@ export default {
         echeancier:{
             handler(newValue){
                 if(newValue.dd && newValue.df){
-                    this.getPeriode()
-                    this.getKn()
+                    this.getPeriode();
+                    this.getKn();
+                    this.getHabilitationsPersonnel();
                 }
             },
             deep:true,
@@ -136,7 +143,7 @@ export default {
          * @return {bool}
          */
         isPending() {
-            return (this.pending.habilitationTypes || this.pending.collectes || this.pending.contrats || this.pending.personnels || this.pending.periode) ? true : false;
+            return (this.pending.habilitationTypes || this.pending.collectes || this.pending.contrats || this.pending.personnels || this.pending.periode || this.pending.habilitationsPersonnel) ? true : false;
         }
     },
 
@@ -149,7 +156,7 @@ export default {
         getAllHabilitations() {
             this.pending.habilitationTypes = true;
 
-            this.$app.api.get('/v2/controle/habilitation/type/')
+            this.$app.api.get('/v2/controle/habilitation/type')
             .then(data => {
                 this.allHabilitations = data;
             })
@@ -192,6 +199,27 @@ export default {
         },
 
         /**
+         * Récupère la liste des habilitations du personnel sur le serveur
+         */
+        getHabilitationsPersonnel() {
+            if (this.echeancier) {
+                this.pending.habilitationsPersonnel = true;
+
+                let query = {
+                    personnel_id : this.echeancier.operateurs,
+                    characteristic_id : this.echeancier.habilitation,
+                    dd_active : this.echeancier.dd,
+                    df_active : this.echeancier.df
+                }
+
+                this.$app.api.get('/v2/characteristic/personnel', query)
+                .then(data => {
+                    this.habilitationsPersonnel = data;
+                }).catch(this.$app.catchError).finally(() => this.pending.habilitationsPersonnel = false);
+            }
+        },
+
+        /**
          * Retourne la liste des kns filtré par l'id d'un personnele ou d'une habilkitation
          * 
          * @param {number} id id pour le filtre
@@ -206,6 +234,17 @@ export default {
                 let kns = this.kns.filter(item => item.personnel_id__operateur == id);
                 return kns;
             }
+        },
+
+        /**
+         * Retourne la liste des habilitation pour un personnel
+         * 
+         * @param {number} personnelId ID du personnel à tester
+         * 
+         * @return {array}
+         */
+        getHabilitationByPersonnelId(personnelId) {
+            return this.habilitationsPersonnel.filter(e => e.personnel_id == personnelId);
         },
 
         /**

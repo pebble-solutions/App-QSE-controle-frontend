@@ -7,35 +7,31 @@
             <h3 class="my-0 fs-5">{{ personnel.cache_nom }}</h3>
         </div>
 
-        <div class="position-relative overflow-auto">
+        <div class="position-relative overflow-auto" :style="{height : `${tableHeight}px`}">
 
-            <div :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * 50 + 140 + 'px' }">
-                <div class="col-spec d-flex justify-content-center ms-3 mt-2"><strong>Habilitations</strong></div>
+            <div class="table-grid" :style="{width : `${tableWidth}px`}">
+                <div v-for="n in rows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 2) }"></div>
+                <div v-for="n in cols" class="table-col border border-secondary" :key="n" :style="{ left: getLeftPosition(n, 2) }"></div>
             </div>
-    
-            <div v-for="hab in habilitations" :key="hab" :style="{ border: 'solid grey 1px', height: '50px', width: periode.length * size + 140 + 'px' }" class="position-relative">
-                <div v-for="kn in verifKns(hab.id)" :key="kn" class="habilit" :style="operateurHabilit(kn, hab.id)" style="position: absolute;"></div>
-    
-                <div class="col-spec d-flex justify-content-between ms-2">
-                    <span>{{ labelHabilitation(hab.nom) }}</span>
-                    <i :class="classKnManquant(personnel.id)" title="Aucun contrôle sur la période saisie"></i>
+
+            <div class="table-content" :style="{width : `${tableWidth}px`}">
+                <div class="table-row-content" :style="{top: getTopPosition(1)}">
+                    <div class="table-header mx-2">
+                        <strong>Habilitations</strong>
+                    </div>
+                    <div class="position-absolute text-center" :style="{left:getLeftPosition(index+1), width: `${size}px`}" style="top: 0px" v-for="(week, index) in periode" :key="index">
+                        <div>{{ week.annee.slice(2,4) }}</div>
+                        <div class="text-secondary">S{{ week.semaine }}</div>
+                    </div>
                 </div>
-    
-                <!-- <div class="progressbar" :style="{ left: (personnel.dentree.semaine - 1) * size + 140 + 'px', width: calculateWidth(personnel) + 'px' }" v-if="personnel.dentree">
-                    <div class="progressbar-content">{{ contratLabel(personnel) }}</div>
-                </div> -->
-    
-                <div v-for="kn in verifKns(hab.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
-                    {{ kn.sami }}
-                </div>
-            </div>
-    
-            <div class="d-flex" style="position: absolute; top: 0px;">
-                <div :style="{ border: 'solid grey 1px', width: '140px', height: height() + 'px' }"></div>
-                <div v-for="week in periode" :key="week" class="d-flex flex-row" style="border: solid grey 1px; width: 50px;" :style="{ height: height() + 'px' }">
-                    <div>
-                        <div class="ms-2">{{ week.annee.slice(2,4) }}</div>
-                        <div class="text-secondary ms-2">S{{ week.semaine }}</div>
+
+                <div class="table-row-content" v-for="(habilitation, index) in habilitationsPersonnel" :style="{ top: getTopPosition(index+2) }" :key="index">
+                    <div class="table-header mx-2 fs-7">
+                        {{ getHabilitationNameById(habilitation.characteristic_id) }}
+                    </div>
+
+                    <div v-for="kn in getControlsByCharacteristicTypeId(habilitation.characteristic_id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
+                        {{ kn.sami }}
                     </div>
                 </div>
             </div>
@@ -81,6 +77,51 @@
     left: 10px;
 }
 
+.table-grid, .table-content {
+    position: absolute;
+    top:0px;
+    left:0px;
+    bottom:0px;
+    width:100%;
+}
+
+.table-grid {
+    z-index:1;
+}
+
+.table-content {
+    z-index: 2;
+}
+
+.table-row, .table-row-content {
+    height:50px;
+    position: absolute;
+    left:0px;
+    width:100%;
+}
+
+.table-row {
+    border-left-width: 0px !important;
+    border-right-width: 0px !important;
+}
+
+.table-row-content {
+    overflow: hidden;
+}
+
+.table-col {
+    border-top-width: 0px !important;
+    border-bottom-width: 0px !important;
+    width:50px;
+    position: absolute;
+    top:0px;
+    bottom:0px;
+}
+
+.table-header {
+    line-height: 50px;
+}
+
 </style>
 
 <script>
@@ -93,16 +134,48 @@ export default {
         personnel: Object,
         periode: Array,
         habilitations: Array,
-        kns: Array
+        kns: Array,
+        habilitationsPersonnel: Array
     },
 
     data() {
 		return {
 			size : 50,
+            firstColumnWidth: 200
 		}
 	},
 
     components: {UserImage},
+
+    computed: {
+        /**
+         * Retourne le nombre de lignes du tableau, incluant l'entête
+         */
+        rows() {
+            return Math.round(this.habilitationsPersonnel.length / 2) + 1;
+        },
+
+        /**
+         * Retourne le nombre de colonne du tableau incluant l'entête
+         */
+        cols() {
+            return Math.round(this.periode.length / 2);
+        },
+
+        /**
+         * Retourne la hateur du tableau en pixel
+         */
+        tableHeight() {
+            return (this.habilitationsPersonnel.length + 1) * this.size;
+        },
+
+        /**
+         * Retourne la largeur du tableau
+         */
+        tableWidth() {
+            return this.periode.length * this.size + this.firstColumnWidth;
+        }
+    },
 
     methods: {
         /**
@@ -142,7 +215,7 @@ export default {
             let left = 140;
             const periode = this.periode;
 
-            let temp_kns = this.verifKns(id);
+            let temp_kns = this.getControlsByCharacteristicTypeId(id);
 
             if (kn.habilitation_id != id) {
                 // EN cas ou aucun kn n'a été effectué sur la période
@@ -211,7 +284,7 @@ export default {
         leftkn(kn) {
             let knDate = new Date(kn.date_done);
             const startWeek = typeof this.periode[0] !== 'undefined' ? parseInt(this.periode[0].semaine) : 0;
-            const left = (((knDate.getWeek() - startWeek) * this.size) + 140) + "px";
+            const left = (((knDate.getWeek() - startWeek) * this.size) + this.firstColumnWidth) + "px";
 
             return left;
         },
@@ -223,28 +296,24 @@ export default {
          * 
          * @returns {array}
          */
-        verifKns(id) {
-            let rendukn = this.kns.filter(item => item.habilitation_type_id === id);
+        getControlsByCharacteristicTypeId(id) {
+            let controls = this.kns.filter(item => item.habilitation_type_id === id);
 
-            if (rendukn.length !== 0) {
-                let knlist = [rendukn[rendukn.length - 1]];
-                let kntest = rendukn[rendukn.length - 1];
+            let list = [];
+            let weeks = [];
 
-                for (let i = rendukn.length - 2; i >= 0; i--) {
-                let kn = rendukn[i];
-                let date = new Date(kn.date);
-                let datetest = new Date(kntest.date);
+            for (let i = controls.length; i>0; i--) {
+                const n = i-1;
+                const date = new Date(controls[n].date_done);
+                const yearAndWeek = `${date.getFullYear()}${date.getWeek()}`;
 
-                if (date.getWeek() !== datetest.getWeek()) {
-                    knlist.unshift(kn);
-                    kntest = kn;
+                if (!weeks.includes(yearAndWeek)) {
+                    list.unshift(controls[n]);
+                    weeks.push(yearAndWeek);
                 }
-                }
-
-                rendukn = knlist;
             }
 
-            return rendukn;
+            return list;
         },
 
         /**
@@ -293,9 +362,47 @@ export default {
                 return "Contrat : CDD    " + personnel.dentree.jour + '/' + personnel.dentree.mois + "/" + personnel.dsortie.annee + '>' + personnel.dsortie.jour + '/' + personnel.dsortie.mois + "/" + personnel.dsortie.annee
             }
         },
+
+        /**
+         * Retourne la position depuis le haut en fonction du numéro de la ligne
+         * 
+         * @param {number} n Le numéro de la ligne
+         * @param {number} coef Un coeficient multiplicateur pour tracer la grille (défaut 1)
+         * 
+         * @return {string}
+         */
+        getTopPosition(n, coef) {
+            coef = typeof coef === "undefined" ? 1 : coef;
+            const top = (n-1) * (this.size * coef);
+            return top+"px";
+        },
+
+        /**
+         * Retourne la position de la colonne depuis la gauche en fonction du numéro de la colonne
+         * 
+         * @param {number} n Le numéro de la colonne
+         * @param {number} coef Un coeficient multiplicateur pour tracer la grille (défaut 1)
+         * 
+         * @return {string}
+         */
+        getLeftPosition(n, coef) {
+            coef = typeof coef === "undefined" ? 1 : coef;
+            const left = (n-1) * (this.size * coef) + this.firstColumnWidth;
+            return left+"px";
+        },
+
+        /**
+         * Retourne le nom de l'habilitation par son ID
+         * 
+         * @param {number} id L'ID de l'habilitation à trouver
+         * 
+         * @return {string}
+         */
+        getHabilitationNameById(id) {
+            const habilitation = this.habilitations.find(e => e.id == id);
+            return habilitation ? habilitation.nom : "Habilitation non trouvée";
+        }
     },
 }
 
 </script>
-
-
