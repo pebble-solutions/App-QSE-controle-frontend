@@ -35,7 +35,7 @@
             <label for="projet" class="form-label">Projet</label>
             <input type="text" class="form-control px-2" placeholder="Rechercher projet..." v-model="displaySearchProjets">
             <select class="form-select" id="projet" name="projet" v-model="requete.projets" multiple size="6">
-                <option :value="projets" selected>Tous</option>
+                <option value="" selected>Tous</option>
                 <option v-for="(projet) in restrictSearchProjets(projets)" :value="projet.id" :key="projet.id"> {{ projet.id }} -{{projet.intitule}} </option>
             </select>
         </div>
@@ -172,7 +172,7 @@ export default {
          * 
          * @returns {Array} 
          */
-         restrictSearchProjets(list){
+        restrictSearchProjets(list){
             let filteredList = list.filter((item) => {
                 return item.intitule.match(this.displaySearchProjets);
             });
@@ -247,6 +247,9 @@ export default {
             }
             if(query.projets.length == 0){
                 query.projets = []
+            }
+            if(query.projets[0]==""){
+                query.projets = query.projets.slice(1);
             }
             this.setRequete(query);
             this.requete =  {
