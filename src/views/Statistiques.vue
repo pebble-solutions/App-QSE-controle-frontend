@@ -74,7 +74,6 @@ export default {
             this.pending.stat = true;
             this.$app.apiGet(route, query)
                 .then((data) => {
-                    console.log("request: ", this.requeteStat);
                     this.loadStatResult(data);
                 })
                 .catch(this.$app.catchError)
@@ -94,7 +93,6 @@ export default {
     //     this.setRequete(null)
     // },
     mounted() {
-        console.log("mounted ", this.requeteStat);
         /*let collection = this.$assets.getCollection('collectes');
         this.pending.collectes = true;
         collection.load();
