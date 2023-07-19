@@ -7,7 +7,7 @@
   
   <div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100 position-relative">
     <div class="d-flex align-items-center">
-import BouclageBadgeRouge from '../badges/BouclageBadgeRouge.vue';
+
       <small class="fw-lighter me-2">#{{collecte.id}}</small>
       <date-badge :collecte="collecte" />
       <span v-if="collecte.date_start && !collecte.unlocked" class="badge rounded-pill ms-1 bg-warning">
@@ -46,6 +46,7 @@ import PersonnelName from '../collecte/PersonnelName.vue';
 import FormulaireName from '../collecte/FormulaireName.vue';
 import ProjetName from '../collecte/ProjetName.vue';
 import BouclageBadgeResult from '../badges/BouclageBadgeResult.vue';
+import BouclageBadgeRouge from '../badges/BouclageBadgeRouge.vue';
 
 
 export default {
@@ -111,7 +112,7 @@ export default {
     FormulaireName,
     ProjetName,
     BouclageBadgeResult,
-    BouclageBadgeRouge
+    BouclageBadgeRouge,
 }
 }
 
