@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <h1>Projet</h1>
-        <div class="col-6">
+    <!--    <div class="col-6">
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Habilitations du projet sur la période</h3>
@@ -16,7 +16,7 @@
                     <p>{{ totalHabilitations }}</p>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
     <div class="row">
         <div class="col-12">
@@ -53,22 +53,22 @@
 import ProjectBarChart from './ProjectBarChart.vue';
 import ProjectPieChart from './ProjectPieChart.vue';
 import ProjectTable from './ProjectTable.vue';
-import { mapState } from 'vuex';
+//import { mapState } from 'vuex';
 
 export default {
-    data() {
+    /*data() {
         return {
             currentHabilitations: 0,
             totalHabilitations: 0,
         }
-    },
+    },*/
     props: {
         requeteStat: {
             type: Object,
             required: true,
         },
     },
-    computed: {
+    /*computed: {
         ...mapState(['statResult'])
     },
     methods: {
@@ -89,10 +89,10 @@ export default {
             periodHabilitationsHistory = [];
             totalHabilitationsHistory = [];
         },
-    },
+    },*/
     components: { ProjectBarChart, ProjectPieChart, ProjectTable },
     mounted() {
-        this.computeHabilitations();
+        //this.computeHabilitations();
     }
 }
 </script>

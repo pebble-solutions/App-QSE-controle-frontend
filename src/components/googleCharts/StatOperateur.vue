@@ -1,7 +1,7 @@
 <template>
-    <!--<div class="row">
+    <div class="row">
         <h1>Opérateur</h1>
-        <div class="col-6">
+    <!--    <div class="col-6">
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Habilitations de l'opérateur sur la période</h3>
@@ -16,8 +16,8 @@
                     <p>{{ totalHabilitations }}</p>
                 </div>
             </div>
-        </div>
-    </div>-->
+        </div>-->
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="card my-2">

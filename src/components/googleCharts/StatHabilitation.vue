@@ -1,22 +1,22 @@
 <template>
     <div class="row">
         <h1>Habilitations</h1>
-        <div class="col-6">
+        <div class="col-3">
             <div class="card my-2">
                 <div class="card-body">
-                    <h3 class="card-title fs-4">Habilitations sur la période</h3>
+                    <h3 class="card-title fs-4">Habilitations contrôlées</h3>
                     <p>{{ currentHabilitations }}</p>
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <!--<div class="col-6">
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Toutes les Habilitations</h3>
                     <p>{{ totalHabilitations }}</p>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
     <div class="row">
         <div class="col-12">
