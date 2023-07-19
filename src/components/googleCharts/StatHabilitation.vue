@@ -4,7 +4,7 @@
         <div class="col-3">
             <div class="card my-2">
                 <div class="card-body">
-                    <h3 class="card-title fs-4">Habilitations contrôlées</h3>
+                    <h3 class="card-title fs-4">Habilitations contrôlées sur la période</h3>
                     <p>{{ currentHabilitations }}</p>
                 </div>
             </div>
