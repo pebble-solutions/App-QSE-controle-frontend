@@ -34,6 +34,7 @@
 						</div>
 					</div>
 					<HabMoniteur></HabMoniteur>
+					<JaugeMoyenneSami :average="average"></JaugeMoyenneSami>
 				</template>
 
 
@@ -78,6 +79,7 @@ import UserImage from '../components/pebble-ui/UserImage.vue';
 import { dateFormat } from '../js/collecte';
 import CarteDeControle from '../components/CarteDeControle.vue';
 import HabMoniteur from '../components/HabMoniteur.vue';
+import JaugeMoyenneSami from '../components/JaugeMoyenneSami.vue';
 
 
 
@@ -86,6 +88,7 @@ export default {
 		return {
 			dates: [],
 			collectes: [],
+			average: 1,
 
 		};
 	},
@@ -158,8 +161,8 @@ export default {
 		AlertMessage,
 		UserImage,
 		CarteDeControle,
-		HabMoniteur
-	},
+		HabMoniteur,
+		JaugeMoyenneSami	},
 	beforeMount() {
 		this.loadCollectes();
 	},
