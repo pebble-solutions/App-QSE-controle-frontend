@@ -1,9 +1,20 @@
+Copy code
 <template>
-        <span :class="['badge', getBadgeClass(resultat)]">
-            <i class="bi bi-arrow-repeat"></i> !
-        </span>
+  <span :class="['badge', 'badge-sm', 'badge-square', getBadgeClass(resultat)]">
+    <i class="bi bi-arrow-repeat"></i>
+  </span>
 </template>
 
+<style scoped>
+  .badge-sm {
+    padding: 0.3rem;
+    font-size: 0.7rem;
+  }
+
+  .badge-square {
+    border-radius: 0.25rem;
+  }
+</style>
 <script>
 export default {
     props: {
