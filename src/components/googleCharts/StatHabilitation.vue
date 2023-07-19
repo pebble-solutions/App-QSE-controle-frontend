@@ -28,7 +28,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <!--<div class="row">
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     <div class="row">
         <div class="col-12">
             <div class="card my-2">
@@ -51,7 +51,7 @@
 
 <script>
 import HabilitationBarChart from './HabilitationBarChart.vue';
-import HabilitationPieChart from './HabilitationPieChart.vue';
+//import HabilitationPieChart from './HabilitationPieChart.vue';
 import HabilitationTable from './HabilitationTable.vue';
 import { mapState } from 'vuex';
 
@@ -90,7 +90,7 @@ export default {
             totalHabilitationsHistory = [];
         },
     },
-    components: { HabilitationBarChart, HabilitationPieChart, HabilitationTable },
+    components: { HabilitationBarChart, HabilitationTable },
     mounted(){
         this.computeHabilitations();
     }
