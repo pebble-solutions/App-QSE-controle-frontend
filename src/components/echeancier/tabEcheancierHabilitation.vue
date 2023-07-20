@@ -30,6 +30,12 @@
                         {{ getHabilitationNameById(habilitation.characteristic_id) }}
                     </div>
 
+                    <div class="habilitation-timeline" :style="{left: getLeftPosition(getHabilitationWeekStartInTimeline(habilitation) +1), width: getWidth(getHabilitationWeekEndInTimeline(habilitation), 'px')}">
+                        {{ getHabilitationWeekStartInTimeline(habilitation) }}
+                        {{ getHabilitationWeekEndInTimeline(habilitation) }}
+                        {{ getWidth(getHabilitationWeekEndInTimeline(habilitation), 'px') }}
+                    </div>
+
                     <div v-for="kn in getControlsByCharacteristicTypeId(habilitation.characteristic_id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
                         {{ kn.sami }}
                     </div>
@@ -44,7 +50,7 @@
 
 .control-result-item {
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     width: 40px;
     top:0px;
 }
@@ -57,9 +63,13 @@
     overflow: hidden;
 }
 
-.habilit {
+.habilitation-timeline {
     // background-color: rgba(61, 52, 52, 0.25);
     background-color: rgba(247, 140, 107, 0.55);
+    position:absolute;
+    height:50px;
+    top:0px;
+    z-index:1;
 }
 
 .progressbar {
@@ -125,6 +135,7 @@
 </style>
 
 <script>
+import { mapState } from 'vuex';
 
 import UserImage from '../pebble-ui/UserImage.vue';
 
@@ -148,6 +159,8 @@ export default {
     components: {UserImage},
 
     computed: {
+        ...mapState(['echeancier']),
+
         /**
          * Retourne le nombre de lignes du tableau, incluant l'entête
          */
@@ -401,6 +414,74 @@ export default {
         getHabilitationNameById(id) {
             const habilitation = this.habilitations.find(e => e.id == id);
             return habilitation ? habilitation.nom : "Habilitation non trouvée";
+        },
+
+        /**
+         * Retourne une version concaténé de l'année + semaine (ex 202308)
+         * 
+         * @param {number} fullyear Année complète sur 4 digit
+         * @param {number|string} week Numéro de la semaine sur 1 ou deux digit
+         * 
+         * @return {number}
+         */
+        concatYearWeek(fullyear, week) {
+            const padWeek = String(week).padStart(2, '0');
+            return parseInt(`${fullyear}${padWeek}`);
+        },
+
+        /**
+         * Retourne le numéro de la semaine de début relatif à la timeline
+         * 
+         * La semaine 0 de l'habilitation correspond au début de la timeline. Si l'habilitation commence avant
+         * la timeline, elle est considéré débutant à 0.
+         * 
+         * @param {object} habilitation L'habilitation à tester
+         * 
+         * @return {number}
+         */
+        getHabilitationWeekStartInTimeline(habilitation) {
+            const dateHabilitation = new Date(habilitation.dd);
+            const dateTimeline = new Date(this.echeancier.dd);
+
+            const time_diff = dateHabilitation.getTime() - dateTimeline.getTime();
+            const weeks_diff = Math.trunc(time_diff / (1000 * 3600 * 24) / 7);
+
+            return weeks_diff < 0 ? 0 : weeks_diff;
+        },
+
+        /**
+         * Retourne le numéro de la semaine de fin relatif à la timeline
+         * 
+         * 0 correspond au début de la timeline, X correspond à la fin de la timeline. La valeur retournée est 
+         * entrer 0 et X. Si l'habilitation prend fin après la timeline, X est retourné.
+         * 
+         * @param {object} habilitation L'habilitation à tester
+         * 
+         * @return {number}
+         */
+        getHabilitationWeekEndInTimeline(habilitation) {
+            const dateHabilitationStart = new Date(habilitation.dd);
+            const dateHabilitationEnd = new Date(habilitation.df);
+
+            const time_diff = dateHabilitationEnd.getTime() - dateHabilitationStart.getTime();
+            const weeks_diff = Math.trunc(time_diff / (1000 * 3600 * 24) / 7);
+
+            const timeline_space = this.periode.length - this.getHabilitationWeekStartInTimeline(habilitation);
+
+            return weeks_diff > timeline_space ? timeline_space : weeks_diff;
+        },
+
+        /**
+         * Retourne la largeur d'un élément en fonction du nombre de colonnes à occuper
+         * 
+         * @param {number} cols Numéro de la colonne
+         * @param {string} sx   Le suffixe à ajouter (ex px)
+         * 
+         * @return {number|string}
+         */
+        getWidth(cols, sx) {
+            const width = cols * this.size;
+            return typeof sx !== 'undefined' ? `${width}${sx}` : width;
         }
     },
 }

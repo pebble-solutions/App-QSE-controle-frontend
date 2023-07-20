@@ -253,7 +253,9 @@ export default {
         getAllOperateurs() {
             this.pending.personnels = true;
 
-            this.$app.api.get('/v2/personnel')
+            this.$app.api.get('/v2/personnel', {
+                limit: 'aucune'
+            })
             .then(data => {
                 this.allOperateurs = data;
             })
