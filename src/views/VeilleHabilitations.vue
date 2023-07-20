@@ -275,7 +275,7 @@ export default {
     mounted() {
         this.getAllHabilitations();
         this.getAllOperateurs(); 
-        // this.getContrats();
+        this.getContrats();
     }
 }
 

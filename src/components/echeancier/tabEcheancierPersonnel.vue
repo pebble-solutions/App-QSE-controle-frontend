@@ -15,6 +15,12 @@
                     {{ personnel.cache_nom }}
                     <i :class="classKnManquant(personnel.id)" title="Aucun contrôle sur la période saisie"></i>
                 </div>
+
+                <template v-for="contrat in filtredContrats(personnel.id)" :key="'contrat-'+contrat.id">
+                    <div class="control-result-item bg-secondary rounded text-truncate" :style="calculateWidth(contrat)" v-if="contratIsInPeriode(contrat)" :title="contratLabel(contrat)">
+                       {{ contratLabel(contrat) }}
+                    </div>
+                </template>
     
                 <!-- <div v-for="contrat in filtredContrats(personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">    
                     <div class="progressbar-content">{{ contratLabel(contrat) }}</div>
@@ -102,7 +108,7 @@ export default {
 	},
 
     computed:{
-        ...mapState(['echeancier'])
+        ...mapState(['echeancier']),
     },
 
     methods: {
@@ -264,6 +270,38 @@ export default {
         },
 
         /**
+         * Retourne true si le contrat est entre la periode défini sinon retourne false
+         * 
+         * @param {object}    contrat
+         * 
+         * @return {string}
+         */
+        contratIsInPeriode(contrat) {
+            let weekStart = contrat.dentree ? new Date(contrat.dentree).getWeek() : null;
+            let weekEnd = contrat.dsortie ? new Date(contrat.dsortie).getWeek() : null;
+            let yearStart = contrat.dentree ? new Date(contrat.dentree).getFullYear() : null;
+            let yearEnd = contrat.dsortie ? new Date(contrat.dsortie).getFullYear() : null;
+            let weekPeriodeStart =  this.periode[0].semaine;
+            let weekPeriodeEnd = this.periode[this.periode.length-1].semaine;
+            let yearPeriodeStart = this.periode[0].annee;
+            let yearPeriodeEnd = this.periode[this.periode.length-1].annee;
+
+            console.log(this.periode);
+
+
+            if (yearStart >= yearPeriodeStart && yearStart <= yearPeriodeEnd || (yearEnd && yearEnd >= yearPeriodeStart && yearEnd <= yearPeriodeEnd || !yearEnd)) {
+                if (weekStart >= weekPeriodeStart && weekStart <= weekPeriodeEnd
+                    || weekStart <= weekPeriodeEnd && !weekEnd
+                    || weekStart <= weekPeriodeEnd && weekEnd && weekEnd >= weekPeriodeEnd
+                    || weekStart <= weekPeriodeEnd && weekEnd && weekEnd >= weekPeriodeStart && weekEnd <= weekPeriodeEnd) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        /**
          * Retourne la propriété style (left et width) en px calculée avec la durée du contrat du personnel
          * 
          * @param {Object} contrat 
@@ -271,22 +309,24 @@ export default {
          * @returns {string}
          */
         calculateWidth(contrat) {
-            let width;
-            let periode = this.periode
             let left = 140;
+            let width = 1;
 
-            left = (new Date(contrat.dentree).getWeek() - 1) * this.size + left;
+            let weekStart = contrat.dentree ? new Date(contrat.dentree).getWeek() : null;
+            let weekEnd = contrat.dsortie ? new Date(contrat.dsortie).getWeek() : null;
+            let weekPeriodeStart =  this.periode[0].semaine;
+            let weekPeriodeEnd = this.periode[this.periode.length-1].semaine;
+            let weekStartDiff = weekStart - weekPeriodeStart;
 
-            if (contrat.dsortie) {
-                if(new Date(contrat.dsortie).getWeek() > periode[periode.length-1].semaine){
-                    width =  (periode.length - new Date(contrat.dentree).getWeek() + 1) * this.size;
-                } else {
-                    width = (new Date(contrat.dsortie).getWeek() - new Date(contrat.dentree).getWeek() + 1 + ((new Date(contrat.dsortie).getFullYear() - new Date(contrat.dentree).getFullYear())*52)) * this.size;
-                }
-            } else {
-                width =  (periode.length - new Date(contrat.dentree).getWeek() + 1) * this.size;
+            if (weekStart >= weekPeriodeStart) {
+                left = (weekStartDiff * this.size) + left;
             }
 
+            weekStart = weekStart <= weekPeriodeStart && (weekEnd >= weekPeriodeStart || !weekEnd) ? weekPeriodeStart : weekStart;
+            weekEnd = weekEnd >= weekPeriodeEnd && weekStart <= weekPeriodeEnd || !weekEnd ? weekPeriodeEnd : weekEnd;
+
+            let diff = weekEnd - weekStart;
+            width = (diff+1) * this.size; 
 
             return `left: ${left}px; width: ${width}px;`;
         },
@@ -300,14 +340,27 @@ export default {
          * @returns {string}  
          */
         contratLabel(contrat) {
+            console.log('getLabel', contrat);
             if (contrat.duree_indeterminee == 'OUI'){
-                return "CDI : " + dateFormat(contrat.dentree)
+                if (contrat.dentree) {
+                    return "CDI : " + dateFormat(contrat.dentree);
+                } else {
+                    return "Erreur avec la date d'entree non renseignée";
+                }
             } else {
-                return "CDD : " + dateFormat(contrat.dentree) + '>' + dateFormat(contrat.dsortie)
+                if (contrat.dentree && contrat.dsortie) {
+                    return "CDD : " + dateFormat(contrat.dentree) + '>' + dateFormat(contrat.dsortie)
+                } else {
+                    return "Erreur avec la date d'entree et/ou la date de sortie non renseignée(s)"
+                }
             }
         },
 
     },
+
+    mounted() {
+        console.log('contrats', this.contrats);
+    }
 }
 
 </script>
