@@ -184,7 +184,9 @@ export default {
          */
         getHabilitations() {
             this.pending.habilitations = true;
-            this.$app.api.get('/v2/characteristic/')
+            this.$app.api.get('/v2/characteristic/', {
+                limit: "aucune"
+            })
             .then(data => {
                 this.allHabilitations = data;
             })
@@ -197,7 +199,9 @@ export default {
          */
         getOperateurs() {
             this.pending.operateurs = true;
-            this.$app.api.get('/v2/personnel')
+            this.$app.api.get('/v2/personnel', {
+                limit: "aucune"
+            })
             .then(data => {
                 this.operateurs = data;
             })
