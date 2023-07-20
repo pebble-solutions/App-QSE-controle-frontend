@@ -285,83 +285,6 @@ export default {
         },
 
         /**
-         * Retourne la propriété style (left et width) en px calculée avec la durée du contrat du personnel
-         * 
-         * @param {Object} contrat 
-         * 
-         * @returns {string}
-         */
-        calculateWidth(contrat) {
-            console.log(contrat)
-        //     /** importer js contrat pour avoir la vrai date entree et vrai date sortie du contrat*/
-        //     let left = 140;
-        //     let width = 1;
-        //     let periodeStart = this.echeancier.dd;
-        //     let periodeEnd = this.echeancier.df;
-        //     let initStartContratDate = contrat.dentree;
-        //     let initEndContratDate = contrat.dsortie;
-
-        //     if (contrat.dentree < periodeStart && contrat.dsortie > periodeEnd) {
-        //         initStartContratDate = periodeStart;
-        //     }
-
-        //     if (contrat.dsortie > )
-
-        //     /** init date de debut contrat a la timeline si avant date debut periode */
-        //     /** init date de fin contrat a la timeline si apres date de fin periode ou null */
-
-        //     /** if date debut contrat == date debut periode  */
-        //         /** left = size + left */
-        //     /** else */
-        //         /**  diff d'annee entre la date debut de peridoe et la date de debut contrat*/
-        //             /** si diff */
-        //                 /** nb de week jusqua fin year periode + total de week par année entre + nb de week du debut d'année jusque la date de contrat */
-        //             /** sinon */
-        //                 /** nb de week diff * size + left*/
-
-
-
-        //     /** calculer la longeur de la bar contrat */
-        //         /** calculer diff year entre date debut init et date fin init  */
-        //             /** if diff */
-        //                 /** nb de week jusqua fin year periode + total de week par année entre + nb de week du debut d'année jusque la date de contrat */
-        //             /** else */
-        //                 /** diff week fini init - week debut init  */
-
-
-
-
-
-
-
-
-
-
-        //     let weekStart = contrat.dentree ? new Date(contrat.dentree).getWeek() : null;
-        //     let weekEnd = contrat.dsortie ? new Date(contrat.dsortie).getWeek() : null;
-        //     let weekPeriodeStart =  this.periode[0].semaine;
-        //     let weekPeriodeEnd = this.periode[this.periode.length-1].semaine;
-            
-            
-
-        //     let weekStartDiff = weekStart - weekPeriodeStart;
-
-
-        //     if (weekStart >= weekPeriodeStart) {
-        //         left = (weekStartDiff * this.size) + left;
-        //     }
-
-        //     weekStart = weekStart <= weekPeriodeStart && (weekEnd >= weekPeriodeStart || !weekEnd) ? weekPeriodeStart : weekStart;
-        //     weekEnd = weekEnd >= weekPeriodeEnd && weekStart <= weekPeriodeEnd || !weekEnd ? weekPeriodeEnd : weekEnd;
-
-        //     let diff = weekEnd - weekStart;
-        //     width = (diff+1) * this.size; 
-
-        //     return `left: ${left}px; width: ${width}px;`;
-        },
-
-
-        /**
          * Retourne le type de contrat à afficher en fonction du personnel
          * 
          * @param {Object} contrat
@@ -369,7 +292,6 @@ export default {
          * @returns {string}  
          */
         contratLabel(contrat) {
-            console.log('getLabel', contrat);
             if (contrat.duree_indeterminee == 'OUI'){
                 if (contrat.dentree) {
                     return "CDI : " + dateFormat(contrat.dentree);
@@ -415,9 +337,7 @@ export default {
             const dateTimeline = new Date(this.echeancier.dd);
 
             const time_diff = dateContrat.getTime() - dateTimeline.getTime();
-            const weeks_diff = Math.trunc(time_diff / (1000 * 3600 * 24) / 7);
-            
-            console.log('start', weeks_diff);
+            const weeks_diff = Math.ceil(time_diff / (1000 * 3600 * 24) / 7);
 
             return weeks_diff < 0 ? 0 : weeks_diff;
         },
@@ -436,16 +356,10 @@ export default {
             const dateContratStart = new Date(contrat.dentree);
             const dateContratEnd = new Date(contrat.dsortie ? contrat.dsortie : this.echeancier.df);
 
-            console.log(this.echeancier.df);
-            console.log('rey', dateContratEnd);
-
             const time_diff = dateContratEnd.getTime() - dateContratStart.getTime();
-            const weeks_diff = Math.trunc(time_diff / (1000 * 3600 * 24) / 7);
+            const weeks_diff = Math.ceil(time_diff / (1000 * 3600 * 24) / 7);
 
             const timeline_space = (this.periode.length - this.getContratWeekStartInTimeline(contrat));
-
-            console.log('size', timeline_space);
-            console.log('week', weeks_diff);
 
             return weeks_diff > timeline_space ? timeline_space : weeks_diff;
         },
@@ -464,10 +378,6 @@ export default {
         }
 
     },
-
-    mounted() {
-        console.log('contrats', this.contrats);
-    }
 }
 
 </script>
