@@ -39,7 +39,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['statResult'])
+    ...mapState(['statResult', 'projets'])
   },
   methods: {
     fetchData() {
@@ -55,7 +55,7 @@ export default {
 
       data.forEach(collecte => {
         const id = collecte['projet_id'];
-        const index = this.chartData.findIndex(projet => (projet[0] == 'Projet ' + id));
+        const index = this.chartData.findIndex(projet => (projet[0] == id));
         if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
           habilitationTypeHistory.push(collecte['habilitation_type_id']);
         }

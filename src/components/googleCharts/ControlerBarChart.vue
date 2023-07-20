@@ -16,7 +16,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['statResult'])
+        ...mapState(['statResult', 'personnels'])
     },
     props: {
         requeteStat: {
@@ -32,34 +32,34 @@ export default {
 
             data.forEach(collecte => {
                 const id = collecte['personnel_id__controleur'];
-                const index = this.chartData.findIndex(controleur => (controleur[0] == 'Contrôleur ' + id));
+                const index = this.chartData.findIndex(controleur => (controleur[0] == id));
                 switch (collecte['sami']) {
                     case 'S':
                         if (index >= 0) {
                             this.chartData[index][1]++;
                         } else {
-                            this.chartData.push(['Contrôleur ' + id, 1, 0, 0, 0]);
+                            this.chartData.push([id, 1, 0, 0, 0]);
                         }
                         break;
                     case 'A':
                         if (index >= 0) {
                             this.chartData[index][2]++;
                         } else {
-                            this.chartData.push(['Contrôleur ' + id, 0, 1, 0, 0]);
+                            this.chartData.push([id, 0, 1, 0, 0]);
                         }
                         break;
                     case 'M':
                         if (index >= 0) {
                             this.chartData[index][3]++;
                         } else {
-                            this.chartData.push(['Contrôleur ' + id, 0, 0, 1, 0]);
+                            this.chartData.push([id, 0, 0, 1, 0]);
                         }
                         break;
                     case 'I':
                         if (index >= 0) {
                             this.chartData[index][4]++;
                         } else {
-                            this.chartData.push(['Contrôleur ' + id, 0, 0, 0, 1]);
+                            this.chartData.push([id, 0, 0, 0, 1]);
                         }
                         break;
                     default:
@@ -84,11 +84,23 @@ export default {
                 },
             };
             chart.draw(dataTable, options);
+        },
+        getOperatorById(){
+            let personnels = this.personnels;
+            this.chartData.forEach(chartDataRow => {
+                const personnel = personnels.find(personnel => personnel.id === chartDataRow[0]);
+                if(personnel != null){
+                    chartDataRow[0] = personnel.cache_nom + " " + personnel.matricule;
+                }else {
+                    chartDataRow[0] = 'Contrôleur ' + chartDataRow[0];
+                }
+            });
         }
     },
     async mounted() {
         this.pending.fetchData = true;
         await this.fetchData();
+        this.getOperatorById();
         this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],

@@ -39,7 +39,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['statResult'])
+    ...mapState(['statResult', 'personnels'])
   },
   methods: {
     fetchData() {
@@ -55,7 +55,7 @@ export default {
 
       data.forEach(collecte => {
         const id = collecte['personnel_id__controleur'];
-        const index = this.chartData.findIndex(controleur => (controleur[0] == 'Contrôleur ' + id));
+        const index = this.chartData.findIndex(controleur => (controleur[0] == id));
         if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
           habilitationTypeHistory.push(collecte['habilitation_type_id']);
         }
@@ -143,6 +143,7 @@ export default {
   mounted() {
     this.pending.fetchData = true;
     this.fetchData();
+    this.getOperatorById();
     this.pending.fetchData = false;
   },
 }

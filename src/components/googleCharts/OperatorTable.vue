@@ -39,7 +39,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['statResult'])
+    ...mapState(['statResult', 'personnels'])
   },
   methods: {
     fetchData() {
@@ -143,6 +143,7 @@ export default {
   mounted() {
     this.pending.fetchData = true;
     this.fetchData();
+    this.getOperatorById();
     this.pending.fetchData = false;
   },
 }
