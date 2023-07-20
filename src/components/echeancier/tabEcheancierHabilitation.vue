@@ -7,7 +7,7 @@
             <h3 class="my-0 fs-5">{{ personnel.cache_nom }}</h3>
         </div>
 
-        <div class="position-relative overflow-auto" :style="{height : `${tableHeight}px`}">
+        <div class="position-relative border-bottom border-secondary" :style="{height : `${tableHeight}px`, width : `${tableWidth}px`}">
 
             <div class="table-grid" :style="{width : `${tableWidth}px`}">
                 <div v-for="n in rows" class="table-row border border-secondary" :key="n" :style="{ top: getTopPosition(n, 2) }"></div>
@@ -20,23 +20,29 @@
                         <strong>Habilitations</strong>
                     </div>
                     <div class="position-absolute text-center" :style="{left:getLeftPosition(index+1), width: `${size}px`}" style="top: 0px" v-for="(week, index) in periode" :key="index">
-                        <div>{{ week.annee.slice(2,4) }}</div>
-                        <div class="text-secondary">S{{ week.semaine }}</div>
+                        <div class="pt-1 fs-7 text-muted">{{ week.annee }}</div>
+                        <div>S{{ week.semaine }}</div>
                     </div>
                 </div>
 
-                <div class="table-row-content" v-for="(habilitation, index) in habilitationsPersonnel" :style="{ top: getTopPosition(index+2) }" :key="index">
+                <div class="table-row-content" v-for="(habilitation, index) in usedHabilitations" :style="{ top: getTopPosition(index+2) }" :key="index">
                     <div class="table-header mx-2 fs-7">
-                        {{ getHabilitationNameById(habilitation.characteristic_id) }}
+                        {{ habilitation.nom }}
                     </div>
 
-                    <div class="habilitation-timeline" :style="{left: getLeftPosition(getHabilitationWeekStartInTimeline(habilitation) +1), width: getWidth(getHabilitationWeekEndInTimeline(habilitation), 'px')}">
-                        {{ getHabilitationWeekStartInTimeline(habilitation) }}
-                        {{ getHabilitationWeekEndInTimeline(habilitation) }}
-                        {{ getWidth(getHabilitationWeekEndInTimeline(habilitation), 'px') }}
+                    <div 
+                        class="habilitation-timeline bg-info bg-gradient bg-opacity-25 border border-info fs-7 px-2" 
+                        :style="{left: getLeftPosition(getHabilitationWeekStartInTimeline(habilitationPersonnel) +1), width: getWidth(getHabilitationWeekEndInTimeline(habilitationPersonnel), 'px')}" 
+                        :title="getHabilitationPersonnelLabel(habilitationPersonnel)" 
+                        
+                        v-for="habilitationPersonnel in getHabilitationsPersonnelByTypeId(habilitation.id)" 
+                        :key="habilitationPersonnel.id">
+
+                        {{ getHabilitationPersonnelLabel(habilitationPersonnel) }}
+
                     </div>
 
-                    <div v-for="kn in getControlsByCharacteristicTypeId(habilitation.characteristic_id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
+                    <div v-for="kn in getControlsByCharacteristicTypeId(habilitation.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
                         {{ kn.sami }}
                     </div>
                 </div>
@@ -55,36 +61,15 @@
     top:0px;
 }
 
-.col-spec {
-    max-width:  85px;
-    min-width: 85px;        
-    width: 85px;
-    max-height:50px;
-    overflow: hidden;
-}
-
 .habilitation-timeline {
-    // background-color: rgba(61, 52, 52, 0.25);
-    background-color: rgba(247, 140, 107, 0.55);
     position:absolute;
-    height:50px;
+    height:25px;
+    line-height: 25px;
+    border-radius: 4px;
     top:0px;
     z-index:1;
-}
-
-.progressbar {
-    background-color: rgba(85, 91, 97, 0.60);
-    color: white;
-    font-size: 8px;
-    border-radius: 8px;
-    box-sizing: border-box;
-    height: 12px;
-    position:absolute;
-}
-.progressbar-content {
-    position: relative;
-    bottom: 0px;
-    left: 10px;
+    overflow:hidden;
+    white-space: nowrap;
 }
 
 .table-grid, .table-content {
@@ -138,6 +123,7 @@
 import { mapState } from 'vuex';
 
 import UserImage from '../pebble-ui/UserImage.vue';
+import { dateFormat } from '../../js/date';
 
 export default {
 
@@ -165,7 +151,7 @@ export default {
          * Retourne le nombre de lignes du tableau, incluant l'entête
          */
         rows() {
-            return Math.round(this.habilitationsPersonnel.length / 2) + 1;
+            return Math.trunc(this.habilitationsPersonnel.length / 2) + 1;
         },
 
         /**
@@ -187,6 +173,23 @@ export default {
          */
         tableWidth() {
             return this.periode.length * this.size + this.firstColumnWidth;
+        },
+
+        /**
+         * Retourne la liste des habilitation utilisées par le personnel
+         */
+        usedHabilitations() {
+            let habilitations = [];
+
+            this.habilitationsPersonnel.forEach((habilitationPersonnel) => {
+                const found = habilitations.find(e => e.id == habilitationPersonnel.characteristic_id);
+
+                if (!found) {
+                    habilitations.push(this.getHabilitationById(habilitationPersonnel.characteristic_id));
+                }
+            });
+
+            return habilitations;
         }
     },
 
@@ -213,60 +216,6 @@ export default {
          */
         height() {
             return (this.habilitations.length + 1) * 50
-        },
-
-         /**
-         * Retourne les propriété de style dynamique par rapport aux périodes d'habilitation de l'opérateur
-         * 
-         * @param {Object} kn
-         * 
-         * @returns {string} style dynamique 
-         */
-        operateurHabilit(kn, id) {
-            const height = "50px";
-            let width;
-            let left = 140;
-            const periode = this.periode;
-
-            let temp_kns = this.getControlsByCharacteristicTypeId(id);
-
-            if (kn.habilitation_id != id) {
-                // EN cas ou aucun kn n'a été effectué sur la période
-                width = periode.length * this.size;
-            } else {
-                let knTrie = temp_kns.sort((a, b) => new Date(a.date).getWeek() - new Date(b.date).getWeek());
-                let numIdKn = knTrie.findIndex(opkn => opkn.id === kn.id);
-                let datekn = new Date(kn.date).getWeek();
-
-                if (kn.sami === 'I') {
-                    width = datekn * this.size;
-                    if (knTrie[numIdKn-1]){
-                        width = ( datekn - new Date(knTrie[numIdKn-1].date).getWeek()) * this.size;
-                        left = left + ((new Date(knTrie[numIdKn-1].date).getWeek() + 1) * this.size);
-                    }
-                } else {
-                    if (knTrie[numIdKn+1]){
-                        width = ((new Date(knTrie[numIdKn+1].date).getWeek() - datekn) * this.size);
-                    } else {
-                        width = ((periode.length - datekn) * this.size);
-                    }
-                    left = left + (datekn * this.size );
-                }
-            }
-
-            return `left: ${left}px; width: ${width}px; height: ${height};`;
-        },
-
-        /**
-         * Retourne le nom des classes bootstraps si l'operateur n'a pas de kn sur la periode selectionné
-         * 
-         * @param {number} id 
-         * 
-         * @returns {string}
-         */
-        classKnManquant(id) {
-            const result = this.kns.some(item => item.personnel_id__operateur === id);
-            return result ? '' : 'ms-2 bi bi-exclamation-diamond text-warning';
         },
 
         /**
@@ -330,53 +279,6 @@ export default {
         },
 
         /**
-         * Retourne le nom de l'habilitation pour l'afficahge
-         * 
-         * @param {string} label 
-         * 
-         * @returns {string}
-         */
-        labelHabilitation(label){
-            if (label.includes('Habilitation')){
-                return label.replace(/^Habilitation\s?:?\s?/, "");
-            } else {
-                return label
-            }
-        },
-
-        /**
-         * Retourne la taille en px calculée avec la durée du contrat du personnel
-         * 
-         * @param {Object} personnel 
-         * 
-         * @returns {number}
-         */
-        calculateWidth(personnel) {
-            if (personnel.dsortie) {
-                return (personnel.dsortie.semaine - personnel.dentree.semaine + 1 + ((personnel.dsortie.annee - personnel.dentree.annee)*52)) * this.size;
-            } else {
-                let periode = this.periode
-                return (periode.length - personnel.dentree.semaine + 1) * this.size;
-            }
-        },
-
-
-        /**
-         * Retourne le type de contrat à afficher en fonction du personnel
-         * 
-         * @param {Object} personnel
-         * 
-         * @returns {string}  
-         */
-        contratLabel(personnel){
-            if (!personnel.dsortie){
-                return "Contrat : CDI   " + personnel.dentree.jour + '/' + personnel.dentree.mois + "/" + personnel.dentree.annee
-            } else {
-                return "Contrat : CDD    " + personnel.dentree.jour + '/' + personnel.dentree.mois + "/" + personnel.dsortie.annee + '>' + personnel.dsortie.jour + '/' + personnel.dsortie.mois + "/" + personnel.dsortie.annee
-            }
-        },
-
-        /**
          * Retourne la position depuis le haut en fonction du numéro de la ligne
          * 
          * @param {number} n Le numéro de la ligne
@@ -405,31 +307,6 @@ export default {
         },
 
         /**
-         * Retourne le nom de l'habilitation par son ID
-         * 
-         * @param {number} id L'ID de l'habilitation à trouver
-         * 
-         * @return {string}
-         */
-        getHabilitationNameById(id) {
-            const habilitation = this.habilitations.find(e => e.id == id);
-            return habilitation ? habilitation.nom : "Habilitation non trouvée";
-        },
-
-        /**
-         * Retourne une version concaténé de l'année + semaine (ex 202308)
-         * 
-         * @param {number} fullyear Année complète sur 4 digit
-         * @param {number|string} week Numéro de la semaine sur 1 ou deux digit
-         * 
-         * @return {number}
-         */
-        concatYearWeek(fullyear, week) {
-            const padWeek = String(week).padStart(2, '0');
-            return parseInt(`${fullyear}${padWeek}`);
-        },
-
-        /**
          * Retourne le numéro de la semaine de début relatif à la timeline
          * 
          * La semaine 0 de l'habilitation correspond au début de la timeline. Si l'habilitation commence avant
@@ -444,7 +321,7 @@ export default {
             const dateTimeline = new Date(this.echeancier.dd);
 
             const time_diff = dateHabilitation.getTime() - dateTimeline.getTime();
-            const weeks_diff = Math.trunc(time_diff / (1000 * 3600 * 24) / 7);
+            const weeks_diff = Math.ceil(time_diff / (1000 * 3600 * 24) / 7);
 
             return weeks_diff < 0 ? 0 : weeks_diff;
         },
@@ -464,7 +341,7 @@ export default {
             const dateHabilitationEnd = new Date(habilitation.df);
 
             const time_diff = dateHabilitationEnd.getTime() - dateHabilitationStart.getTime();
-            const weeks_diff = Math.trunc(time_diff / (1000 * 3600 * 24) / 7);
+            const weeks_diff = Math.ceil(time_diff / (1000 * 3600 * 24) / 7);
 
             const timeline_space = this.periode.length - this.getHabilitationWeekStartInTimeline(habilitation);
 
@@ -482,6 +359,39 @@ export default {
         getWidth(cols, sx) {
             const width = cols * this.size;
             return typeof sx !== 'undefined' ? `${width}${sx}` : width;
+        },
+
+        /**
+         * Retourne un libellé indiquant la date de début et de fin d'une habilitation pour un personnel. $
+         * 
+         * @param {object} habilitationPersonnel L'Habilitation du personnel à transformer
+         * 
+         * @return {string}
+         */
+        getHabilitationPersonnelLabel(habilitationPersonnel) {
+            return "Du "+dateFormat(habilitationPersonnel.dd)+" au "+dateFormat(habilitationPersonnel.df);
+        },
+
+        /**
+         * Retourne une habilitation par son ID
+         * 
+         * @param {number} id ID de l'habilitation à trouver
+         * 
+         * @return {object}
+         */
+        getHabilitationById(id) {
+            return this.habilitations.find(e => e.id == id);
+        },
+
+        /**
+         * Retrourne la liste des habilitations du personnel pour un type donné.
+         * 
+         * @param {number} characteristicId L'ID de la caractéristique à trouver
+         * 
+         * @return {array}
+         */
+        getHabilitationsPersonnelByTypeId(characteristicId) {
+            return this.habilitationsPersonnel.filter(e => e.characteristic_id == characteristicId);
         }
     },
 }

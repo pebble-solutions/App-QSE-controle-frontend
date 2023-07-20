@@ -28,7 +28,8 @@ export default createStore({
 		personnels: [],
 		collectesCollection: [],
 		statResult: [],
-		echeancier: null
+		echeancier: null,
+		habilitationsTypes: []
 	},
 	getters: {
 		activeStructure(state) {
@@ -381,49 +382,7 @@ export default createStore({
 			if (['set', 'append'].includes(mode)) {
 				state.collecte.documents.push(document);
 			}
-		},
-
-		/**
-		 * Met à jour une collection du state
-		 * 
-		 * @param {object} state State de VueX
-		 * @param {object} collectionsOptions 
-		 * - action				'set', 'update', 'remove'
-		 * - data				une collection d'objets à intégrer au state
-		 * - key				clé du state dans laquelle sont stockées les données
-		 */
-		stateCollection(state, collectionOptions) {
-			let key = collectionOptions.key;
-			let action = collectionOptions.action ?? 'update';
-			let inputData = collectionOptions.data ?? [];
-
-			if (action == 'update') {
-
-				inputData.forEach(data => {
-					let found = state[key].find(e => e.id == data.id);
-					if (found) {
-						for (const key in data) {
-							found[key] = data[key];
-						}
-					}
-					else {
-						state[key].push(data);
-					}
-				})
-			}
-			else if (action == 'remove') {
-				inputData.forEach(data => {
-					let index = state[key].findIndex(e => e.id == data.id);
-					if (index !== -1) {
-						state[key].splice(index, 1);
-					}
-				});
-			}
-
-			else {
-				state[key] = inputData;
-			}
-		},
+		}
 
 	},
 	actions: {
@@ -754,32 +713,6 @@ export default createStore({
 			context.commit('documentToCollecte', {
 				mode: 'remove',
 				document
-			});
-		},
-
-		/**
-		 * met à jour ou ajoute la collection de personnels dans le state
-		 * 
-		 * @param {object} context instance vuex
-		 * @param {array} data collection de personnels à mettre à jour
-		 */
-		updatePersonnels(context, data) {
-			context.commit('stateCollection', {
-				action: 'update',
-				key: 'personnels',
-				data
-			});
-		},
-
-		/**
-		 * Ré-initialise la collection du personnel
-		 * 
-		 * @param {object} context Instance vuex
-		 */
-		resetPersonnels(context) {
-			context.commit('stateCollection', {
-				action: 'reset',
-				key: 'personnels'
 			});
 		}
 	},

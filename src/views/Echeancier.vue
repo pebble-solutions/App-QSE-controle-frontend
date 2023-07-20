@@ -71,14 +71,14 @@ export default {
 
     data() {
 		return {
-            allHabilitations: [],
+            allHabilitationsTypes: [],
             allOperateurs: [],
             habilitationsPersonnel: [],
             periode: [],
             kns: [],
             contrats: [],
             pending: {
-                habilitationTypes: false,
+                habilitationsTypes: false,
                 habilitationsPersonnel: false,
                 collectes: false,
                 contrats: false,
@@ -118,9 +118,9 @@ export default {
          */
         filteredHabilitations() {
             if(this.echeancier.habilitation.length == 0 || (this.echeancier.habilitation.length == 1 && this.echeancier.habilitation.includes(''))) {
-                return this.allHabilitations;
+                return this.allHabilitationsTypes;
             } else {
-                return this.allHabilitations.filter(item => this.echeancier.habilitation.includes(item.id));
+                return this.allHabilitationsTypes.filter(item => this.echeancier.habilitation.includes(item.id));
             }
         },
 
@@ -143,7 +143,7 @@ export default {
          * @return {bool}
          */
         isPending() {
-            return (this.pending.habilitationTypes || this.pending.collectes || this.pending.contrats || this.pending.personnels || this.pending.periode || this.pending.habilitationsPersonnel) ? true : false;
+            return (this.pending.habilitationsTypes || this.pending.collectes || this.pending.contrats || this.pending.personnels || this.pending.periode || this.pending.habilitationsPersonnel) ? true : false;
         }
     },
 
@@ -153,14 +153,49 @@ export default {
         /**
          * Charge les données des habilitations
          */
-        getAllHabilitations() {
-            this.pending.habilitationTypes = true;
+        async getAllHabilitations() {
+            return this.loadCollection({
+                pending: "habilitationsTypes",
+                name: "habilitationsTypes",
+                payload: {
+                    limit: "aucune"
+                },
+                outputData: "allHabilitationsTypes"
+            });
+        },
 
-            this.$app.api.get('/v2/controle/habilitation/type')
-            .then(data => {
-                this.allHabilitations = data;
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.habilitationTypes = false);
+        /**
+         * Chargue une collection de données
+         * 
+         * @param {object} collectionConfig 
+         * - pending         Clé pending à utiliser pendant le chargement
+         * - name            Nom de la collection
+         * - payload         Payload à envoyer sur la requête
+         * - outputData      Clé dans data sur laquelle stocker une référence vers les données
+         * 
+         * @return {Promise}
+         */
+        async loadCollection(collectionConfig) {
+            const pending = collectionConfig.pending;
+            const name = collectionConfig.name;
+            const payload = collectionConfig.payload;
+            const outputData = collectionConfig.outputData;
+
+            this.pending[pending] = true;
+
+            const collection = this.$assets.getCollection(name);
+
+            try {
+                await collection.load(payload);
+
+                if (outputData) {
+                    this[outputData] = collection.getCollection();
+                }
+            } catch (e) {
+                this.$app.catchError(e);
+            } finally {
+                this.pending[pending] = false;
+            }
         },
 
         /**
@@ -251,15 +286,14 @@ export default {
          * Charge tous les operateurs
          */
         getAllOperateurs() {
-            this.pending.personnels = true;
-
-            this.$app.api.get('/v2/personnel', {
-                limit: 'aucune'
-            })
-            .then(data => {
-                this.allOperateurs = data;
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.personnels = false);
+            return this.loadCollection({
+                pending: "personnels",
+                name: "personnels",
+                payload: {
+                    limit: "aucune"
+                },
+                outputData: "allOperateurs"
+            });
         },
 
         /**
