@@ -19,20 +19,21 @@
 
         <div class="mb-3">
             <label for="habilitation" class="form-label"><h5>Habilitation</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchHab">
+            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="habilitationsTypeSearchValue">
+
             <select class="form-select" id="habilitation_id" name="habilitation" v-model="requete.habilitation" multiple size="5">
                 <option value="" selected>Toutes</option>
-                <option v-for="(hab) in restrictSearchHabilitations(allHabilitations)" :value="hab.id" :key="hab.id">{{hab.label}}</option>
+                <option v-for="(hab) in filteredHabilitationsTypes" :value="hab.id" :key="hab.id">{{hab.nom}}</option>
             </select>
         </div>
 
 
         <div class="mb-3">
             <label for="operateur" class="form-label"><h5>Opérateur</h5></label>
-            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="displaySearchOperateur">
+            <input type="text" class="form-control mb-2 px-2" placeholder="Rechercher..." v-model="operateursSearchValue">
             <select class="form-select" id="cible_personnel" name="operateur" v-model="requete.operateurs" multiple size="5">
                 <option value="" selected>Tous</option>
-                <option v-for="(agent) in restrictSearchOperateurs(operateurs)" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
+                <option v-for="(agent) in filteredOperateurs" :value="agent.id" :key="agent.id">{{agent.cache_nom}}</option>
             </select>
         </div>
 
@@ -66,7 +67,6 @@ export default {
 
     data() {
         return {
-
             requete: {
                 operateurs: [''],
                 dd: null,
@@ -76,15 +76,30 @@ export default {
                 environnement:'private'
             },
             pending: {
-                echeance: false,
-                habilitations: true,
-                operateurs: true
+                echeance: false
             },
-            allHabilitations: null,
-            operateurs: [],
+            allHabilitationsTypes: [],
+            allOperateurs: [],
 
-            displaySearchOperateur : '',
-            displaySearchHab : ''
+            operateursSearchValue : '',
+            habilitationsTypeSearchValue : ''
+        }
+    },
+
+    computed: {
+        /**
+         * Retourne la liste des types d'habilitations classées par nom et filtrés en fonction 
+         * de la recherche
+         */
+        filteredHabilitationsTypes() {
+            return this.filterAndSort(this.allHabilitationsTypes, "nom", this.habilitationsTypeSearchValue);
+        },
+
+        /**
+         * Retourne la liste des opérateurs classés par nom et filtrés en fonction de la recherche
+         */
+        filteredOperateurs() {
+            return this.filterAndSort(this.allOperateurs, "cache_nom", this.operateursSearchValue);
         }
     },
     
@@ -100,19 +115,19 @@ export default {
          * 
          * @returns {Array} 
          */
-        restrictSearchOperateurs(list) {
+        filterAndSort(list, keyName, searchValue) {
 
             if(!list) return [];
 
-            let filteredList = list.filter((item) => {
-                return item.cache_nom?.match(this.displaySearchOperateur);
+            let sortedList = list.filter((item) => {
+                return item[keyName]?.toUpperCase()?.match(searchValue.toUpperCase());
             });
 
-            if (!filteredList) return [];
+            if (!sortedList) return [];
 
-            filteredList.sort((a, b) => {
-                const nameA = a.cache_nom.toUpperCase();
-                const nameB = b.cache_nom.toUpperCase();
+            sortedList.sort((a, b) => {
+                const nameA = a[keyName].toUpperCase();
+                const nameB = b[keyName].toUpperCase();
 
                 if (nameA < nameB) {
                     return -1;
@@ -125,42 +140,7 @@ export default {
                 return 0;
             });
 
-            return filteredList;
-        },
-
-        /**
-         * Retourne la list trié en fonction de la recherche des habilitations et tri alphabetiquement le resultat
-         * 
-         * @param {Array} list
-         * 
-         * @returns {Array} 
-         */
-        restrictSearchHabilitations(list) {
-            if(list) {
-                let filteredList = list.filter((item) => {
-                    return item.label.match(this.displaySearchHab);
-                });
-    
-                filteredList.sort((a, b) => {
-                    const nameA = a.label.toUpperCase();
-                    const nameB = b.label.toUpperCase();
-    
-                    if (nameA < nameB) {
-                        return -1;
-                    }
-    
-                    if (nameA > nameB) {
-                        return 1;
-                    }
-    
-                    return 0;
-                });
-
-                return filteredList;
-            } else {
-                return list
-            }
-
+            return sortedList;
         },
 
         /**
@@ -183,26 +163,14 @@ export default {
          * Charge les données des habilitations via un appel API
          */
         getHabilitations() {
-            this.pending.habilitations = true;
-            this.$app.api.get('/v2/characteristic/')
-            .then(data => {
-                this.allHabilitations = data;
-            })
-            .catch(this.$app.catchError)
-            .finally(() => this.pending.habilitations = false);
+            this.allHabilitationsTypes = this.$assets.getCollection("habilitationsTypes").getCollection();
         },
 
         /**
          * Charge les données des opérateurs via un appel API
          */
         getOperateurs() {
-            this.pending.operateurs = true;
-            this.$app.api.get('/v2/personnel')
-            .then(data => {
-                this.operateurs = data;
-            })
-            .catch(this.$app.catchError)
-            .finally(() => this.pending.operateurs = false);
+            this.allOperateurs = this.$assets.getCollection("personnels").getCollection();
         }
     },
 

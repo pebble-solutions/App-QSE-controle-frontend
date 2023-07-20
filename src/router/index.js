@@ -206,7 +206,7 @@ const routes = [
   {
     path:'/echeancier',
     name: 'Echeancier',
-    component: () => import(/* webpackChunkName: "about" */ '../views/VeilleHabilitations.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Echeancier.vue')
   }
 
 ]

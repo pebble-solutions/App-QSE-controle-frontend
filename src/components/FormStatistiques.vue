@@ -1,7 +1,6 @@
 <template>
     <form class="p-2 my-1" @submit.prevent="searchStat()">
         <div class="row">
-
             <div class=" col-6 mb-3">
                 <label class="form-label" for="DateDebut">Date de début</label>
                 <input type="date" class="form-control" id="dd" name="date" v-model="requete.dd" required>
@@ -35,7 +34,7 @@
             <label for="projet" class="form-label">Projet</label>
             <input type="text" class="form-control px-2" placeholder="Rechercher projet..." v-model="displaySearchProjets">
             <select class="form-select" id="projet" name="projet" v-model="requete.projets" multiple size="6">
-                <option :value="projets" selected>Tous</option>
+                <option value="" selected>Tous</option>
                 <option v-for="(projet) in restrictSearchProjets(projets)" :value="projet.id" :key="projet.id"> {{ projet.id }} -{{projet.intitule}} </option>
             </select>
         </div>
@@ -172,7 +171,7 @@ export default {
          * 
          * @returns {Array} 
          */
-         restrictSearchProjets(list){
+        restrictSearchProjets(list){
             let filteredList = list.filter((item) => {
                 return item.intitule.match(this.displaySearchProjets);
             });
@@ -235,7 +234,7 @@ export default {
          */
         searchStat() {
             this.pending.requete = true;
-            let query = this.requete
+            let query = {...this.requete};
             if(query.operateurs.length == 0){
                 query.operateurs = []
             }
@@ -248,8 +247,11 @@ export default {
             if(query.projets.length == 0){
                 query.projets = []
             }
+            if(query.projets[0]==""){
+                query.projets = query.projets.slice(1);
+            }
             this.setRequete(query);
-            this.requete =  {
+            /*this.requete =  {
                 operateurs: [''],
                 projets: [''],
                 controleurs: [''],
@@ -258,7 +260,7 @@ export default {
                 habilitation: [''],
                 priorite: true,
                 environnement:'private'
-            },
+            },*/
             this.pending.requete = false;
         },
 
@@ -306,7 +308,6 @@ export default {
         this.getHabilitations();
         this.getOp();
         this.loadCollecte();
-        
     }
 }
 
