@@ -17,14 +17,10 @@
                 </div>
 
                 <template v-for="contrat in filtredContrats(personnel.id)" :key="'contrat-'+contrat.id">
-                    <div class="control-result-item bg-secondary rounded text-truncate" :style="calculateWidth(contrat)" v-if="contratIsInPeriode(contrat)" :title="contratLabel(contrat)">
+                    <div class="control-result-item bg-secondary rounded text-truncate" :style="{left: getLeftPosition(getContratWeekStartInTimeline(contrat)+1), width: getWidth(getContratWeekEndInTimeline(contrat), 'px')}" v-if="contratIsInPeriode(contrat)" :title="contratLabel(contrat)">
                        {{ contratLabel(contrat) }}
                     </div>
                 </template>
-    
-                <!-- <div v-for="contrat in filtredContrats(personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">    
-                    <div class="progressbar-content">{{ contratLabel(contrat) }}</div>
-                </div> -->
     
                 <div v-for="kn in verifKns(personnel.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
                     {{ kn.sami }}
@@ -104,6 +100,7 @@ export default {
     data() {
 		return {
 			size : 50,
+            firstColumnWidth: 140
 		}
 	},
 
@@ -277,25 +274,11 @@ export default {
          * @return {string}
          */
         contratIsInPeriode(contrat) {
-            let weekStart = contrat.dentree ? new Date(contrat.dentree).getWeek() : null;
-            let weekEnd = contrat.dsortie ? new Date(contrat.dsortie).getWeek() : null;
-            let yearStart = contrat.dentree ? new Date(contrat.dentree).getFullYear() : null;
-            let yearEnd = contrat.dsortie ? new Date(contrat.dsortie).getFullYear() : null;
-            let weekPeriodeStart =  this.periode[0].semaine;
-            let weekPeriodeEnd = this.periode[this.periode.length-1].semaine;
-            let yearPeriodeStart = this.periode[0].annee;
-            let yearPeriodeEnd = this.periode[this.periode.length-1].annee;
-
-            console.log(this.periode);
-
-
-            if (yearStart >= yearPeriodeStart && yearStart <= yearPeriodeEnd || (yearEnd && yearEnd >= yearPeriodeStart && yearEnd <= yearPeriodeEnd || !yearEnd)) {
-                if (weekStart >= weekPeriodeStart && weekStart <= weekPeriodeEnd
-                    || weekStart <= weekPeriodeEnd && !weekEnd
-                    || weekStart <= weekPeriodeEnd && weekEnd && weekEnd >= weekPeriodeEnd
-                    || weekStart <= weekPeriodeEnd && weekEnd && weekEnd >= weekPeriodeStart && weekEnd <= weekPeriodeEnd) {
+            if (contrat.dentree >= this.echeancier.dd && contrat.dentree <= this.echeancier.df
+                || contrat.dentree <= this.echeancier.df && !contrat.dsortie
+                || contrat.dentree <= this.echeancier.df && contrat.dsortie && contrat.dsortie >= this.echeancier.df
+                || contrat.dentree <= this.echeancier.df && contrat.dsortie && contrat.dsortie >= this.echeancier.dd && contrat.dsortie <= this.echeancier.df) {
                     return true;
-                }
             }
 
             return false;
@@ -309,26 +292,72 @@ export default {
          * @returns {string}
          */
         calculateWidth(contrat) {
-            let left = 140;
-            let width = 1;
+            console.log(contrat)
+        //     /** importer js contrat pour avoir la vrai date entree et vrai date sortie du contrat*/
+        //     let left = 140;
+        //     let width = 1;
+        //     let periodeStart = this.echeancier.dd;
+        //     let periodeEnd = this.echeancier.df;
+        //     let initStartContratDate = contrat.dentree;
+        //     let initEndContratDate = contrat.dsortie;
 
-            let weekStart = contrat.dentree ? new Date(contrat.dentree).getWeek() : null;
-            let weekEnd = contrat.dsortie ? new Date(contrat.dsortie).getWeek() : null;
-            let weekPeriodeStart =  this.periode[0].semaine;
-            let weekPeriodeEnd = this.periode[this.periode.length-1].semaine;
-            let weekStartDiff = weekStart - weekPeriodeStart;
+        //     if (contrat.dentree < periodeStart && contrat.dsortie > periodeEnd) {
+        //         initStartContratDate = periodeStart;
+        //     }
 
-            if (weekStart >= weekPeriodeStart) {
-                left = (weekStartDiff * this.size) + left;
-            }
+        //     if (contrat.dsortie > )
 
-            weekStart = weekStart <= weekPeriodeStart && (weekEnd >= weekPeriodeStart || !weekEnd) ? weekPeriodeStart : weekStart;
-            weekEnd = weekEnd >= weekPeriodeEnd && weekStart <= weekPeriodeEnd || !weekEnd ? weekPeriodeEnd : weekEnd;
+        //     /** init date de debut contrat a la timeline si avant date debut periode */
+        //     /** init date de fin contrat a la timeline si apres date de fin periode ou null */
 
-            let diff = weekEnd - weekStart;
-            width = (diff+1) * this.size; 
+        //     /** if date debut contrat == date debut periode  */
+        //         /** left = size + left */
+        //     /** else */
+        //         /**  diff d'annee entre la date debut de peridoe et la date de debut contrat*/
+        //             /** si diff */
+        //                 /** nb de week jusqua fin year periode + total de week par année entre + nb de week du debut d'année jusque la date de contrat */
+        //             /** sinon */
+        //                 /** nb de week diff * size + left*/
 
-            return `left: ${left}px; width: ${width}px;`;
+
+
+        //     /** calculer la longeur de la bar contrat */
+        //         /** calculer diff year entre date debut init et date fin init  */
+        //             /** if diff */
+        //                 /** nb de week jusqua fin year periode + total de week par année entre + nb de week du debut d'année jusque la date de contrat */
+        //             /** else */
+        //                 /** diff week fini init - week debut init  */
+
+
+
+
+
+
+
+
+
+
+        //     let weekStart = contrat.dentree ? new Date(contrat.dentree).getWeek() : null;
+        //     let weekEnd = contrat.dsortie ? new Date(contrat.dsortie).getWeek() : null;
+        //     let weekPeriodeStart =  this.periode[0].semaine;
+        //     let weekPeriodeEnd = this.periode[this.periode.length-1].semaine;
+            
+            
+
+        //     let weekStartDiff = weekStart - weekPeriodeStart;
+
+
+        //     if (weekStart >= weekPeriodeStart) {
+        //         left = (weekStartDiff * this.size) + left;
+        //     }
+
+        //     weekStart = weekStart <= weekPeriodeStart && (weekEnd >= weekPeriodeStart || !weekEnd) ? weekPeriodeStart : weekStart;
+        //     weekEnd = weekEnd >= weekPeriodeEnd && weekStart <= weekPeriodeEnd || !weekEnd ? weekPeriodeEnd : weekEnd;
+
+        //     let diff = weekEnd - weekStart;
+        //     width = (diff+1) * this.size; 
+
+        //     return `left: ${left}px; width: ${width}px;`;
         },
 
 
@@ -355,6 +384,84 @@ export default {
                 }
             }
         },
+
+        /**
+         * Retourne la position de la colonne depuis la gauche en fonction du numéro de la colonne
+         * 
+         * @param {number} n Le numéro de la colonne
+         * @param {number} coef Un coeficient multiplicateur pour tracer la grille (défaut 1)
+         * 
+         * @return {string}
+         */
+         getLeftPosition(n, coef) {
+            coef = typeof coef === "undefined" ? 1 : coef;
+            const left = (n-1) * (this.size * coef) + this.firstColumnWidth;
+            return left+"px";
+        },
+
+
+        /**
+         * Retourne le numéro de la semaine de début relatif à la timeline
+         * 
+         * La semaine 0 du contrat correspond au début de la timeline. Si le contrat commence avant
+         * la timeline, elle est considéré débutant à 0.
+         * 
+         * @param {object} contrat Le contrat à tester
+         * 
+         * @return {number}
+         */
+         getContratWeekStartInTimeline(contrat) {
+            const dateContrat = new Date(contrat.dentree);
+            const dateTimeline = new Date(this.echeancier.dd);
+
+            const time_diff = dateContrat.getTime() - dateTimeline.getTime();
+            const weeks_diff = Math.trunc(time_diff / (1000 * 3600 * 24) / 7);
+            
+            console.log('start', weeks_diff);
+
+            return weeks_diff < 0 ? 0 : weeks_diff;
+        },
+
+        /**
+         * Retourne le numéro de la semaine de fin relatif à la timeline
+         * 
+         * 0 correspond au début de la timeline, X correspond à la fin de la timeline. La valeur retournée est 
+         * entrer 0 et X. Si le contrat prend fin après la timeline, X est retourné.
+         * 
+         * @param {object} contrat Le contrat à tester
+         * 
+         * @return {number}
+         */
+         getContratWeekEndInTimeline(contrat) {
+            const dateContratStart = new Date(contrat.dentree);
+            const dateContratEnd = new Date(contrat.dsortie ? contrat.dsortie : this.echeancier.df);
+
+            console.log(this.echeancier.df);
+            console.log('rey', dateContratEnd);
+
+            const time_diff = dateContratEnd.getTime() - dateContratStart.getTime();
+            const weeks_diff = Math.trunc(time_diff / (1000 * 3600 * 24) / 7);
+
+            const timeline_space = (this.periode.length - this.getContratWeekStartInTimeline(contrat));
+
+            console.log('size', timeline_space);
+            console.log('week', weeks_diff);
+
+            return weeks_diff > timeline_space ? timeline_space : weeks_diff;
+        },
+
+        /**
+         * Retourne la largeur d'un élément en fonction du nombre de colonnes à occuper
+         * 
+         * @param {number} cols Numéro de la colonne
+         * @param {string} sx   Le suffixe à ajouter (ex px)
+         * 
+         * @return {number|string}
+         */
+         getWidth(cols, sx) {
+            const width = cols * this.size;
+            return typeof sx !== 'undefined' ? `${width}${sx}` : width;
+        }
 
     },
 
