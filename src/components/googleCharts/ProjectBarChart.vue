@@ -22,7 +22,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['statResult'])
+        ...mapState(['statResult', 'projets'])
     },
     methods: {
         fetchData() {
@@ -32,34 +32,34 @@ export default {
 
             data.forEach(collecte => {
                 const id = collecte['projet_id'];
-                const index = this.chartData.findIndex(projet => (projet[0] == 'Projet ' + id));
+                const index = this.chartData.findIndex(projet => (projet[0] == id));
                 switch (collecte['sami']) {
                     case 'S':
                         if (index >= 0) {
                             this.chartData[index][1]++;
                         } else {
-                            this.chartData.push(['Projet ' + id, 1, 0, 0, 0]);
+                            this.chartData.push([id, 1, 0, 0, 0]);
                         }
                         break;
                     case 'A':
                         if (index >= 0) {
                             this.chartData[index][2]++;
                         } else {
-                            this.chartData.push(['Projet ' + id, 0, 1, 0, 0]);
+                            this.chartData.push([id, 0, 1, 0, 0]);
                         }
                         break;
                     case 'M':
                         if (index >= 0) {
                             this.chartData[index][3]++;
                         } else {
-                            this.chartData.push(['Projet ' + id, 0, 0, 1, 0]);
+                            this.chartData.push([id, 0, 0, 1, 0]);
                         }
                         break;
                     case 'I':
                         if (index >= 0) {
                             this.chartData[index][4]++;
                         } else {
-                            this.chartData.push(['Projet ' + id, 0, 0, 0, 1]);
+                            this.chartData.push([id, 0, 0, 0, 1]);
                         }
                         break;
                     default:
@@ -84,11 +84,23 @@ export default {
                 },
             };
             chart.draw(dataTable, options);
+        },
+        getOperatorById(){
+            let projets = this.projets;
+            this.chartData.forEach(chartDataRow => {
+                const projet = projets.find(projet => projet.id === chartDataRow[0]);
+                if(projet != null){
+                    chartDataRow[0] = projet.intitule;
+                }else {
+                    chartDataRow[0] = 'Projet ' + chartDataRow[0];
+                }
+            });
         }
     },
     async mounted() {
         this.pending.fetchData = true;
         await this.fetchData();
+        this.getOperatorById();
         this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],

@@ -95,7 +95,7 @@ export default {
       });
       habilitationTypeHistory = [];
       totalHabilitationsHIstory = [];
-    }
+    },
   },
   mounted() {
     this.pending.fetchData = true;

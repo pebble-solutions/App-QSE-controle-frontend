@@ -31,7 +31,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['statResult'])
+    ...mapState(['statResult', 'personnels'])
   },
   methods: {
     fetchData() {
@@ -44,7 +44,7 @@ export default {
 
       data.forEach(collecte => {
         const id = collecte['personnel_id__controleur'];
-        const index = this.chartData.findIndex(controleur => (controleur[0] == 'Contrôleur ' + id));
+        const index = this.chartData.findIndex(controleur => (controleur[0] == id));
         if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
           habilitationTypeHistory.push(collecte['habilitation_type_id']);
         }
@@ -73,7 +73,7 @@ export default {
           }
 
         } else {
-          let newRow = ['Contrôleur ' + id, 1, habilitationTypeHistory.length, totalHabilitationsHIstory.length, 0, 0, 0, 0];
+          let newRow = [id, 1, habilitationTypeHistory.length, totalHabilitationsHIstory.length, 0, 0, 0, 0];
           switch (collecte['sami']) {
             case 'S':
               newRow[4]++;
@@ -95,11 +95,23 @@ export default {
       });
       habilitationTypeHistory = [];
       totalHabilitationsHIstory = [];
-    }
+    },
+    getOperatorById(){
+            let personnels = this.personnels;
+            this.chartData.forEach(chartDataRow => {
+                const personnel = personnels.find(personnel => personnel.id === chartDataRow[0]);
+                if(personnel != null){
+                    chartDataRow[0] = personnel.cache_nom + " " + personnel.matricule;
+                }else {
+                    chartDataRow[0] = 'Contrôleur ' + chartDataRow[0];
+                }
+            });
+        }
   },
   mounted() {
     this.pending.fetchData = true;
     this.fetchData();
+    this.getOperatorById();
     this.pending.fetchData = false;
   },
 }

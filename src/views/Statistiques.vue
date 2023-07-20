@@ -46,7 +46,8 @@ export default {
     data() {
         return {
             pending: {
-                stat: true
+                stat: true,
+                personnels: true,
             },
         }
     },
@@ -97,6 +98,12 @@ export default {
         this.pending.collectes = true;
         collection.load();
         this.pending.collectes = false;*/
+        let collection = this.$assets.getCollection('personnels');
+        this.pending.personnels = true;
+        collection.load({
+            limit: 'aucune'
+        });
+        this.pending.personnels = false;
     }
 }
 </script>

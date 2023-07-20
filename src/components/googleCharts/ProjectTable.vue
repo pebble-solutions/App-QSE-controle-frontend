@@ -31,7 +31,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['statResult'])
+    ...mapState(['statResult', 'projets'])
   },
   methods: {
     fetchData() {
@@ -44,7 +44,7 @@ export default {
 
       data.forEach(collecte => {
         const id = collecte['projet_id'];
-        const index = this.chartData.findIndex(projet => (projet[0] == 'Projet ' + id));
+        const index = this.chartData.findIndex(projet => (projet[0] == id));
         if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
           habilitationTypeHistory.push(collecte['habilitation_type_id']);
         }
@@ -72,7 +72,7 @@ export default {
               break;
           }
         } else {
-          let newRow = ['Projet ' + id, 1, habilitationTypeHistory.length, totalHabilitationsHIstory.length, 0, 0, 0, 0];
+          let newRow = [id, 1, habilitationTypeHistory.length, totalHabilitationsHIstory.length, 0, 0, 0, 0];
           switch (collecte['sami']) {
             case 'S':
               newRow[4]++;
@@ -94,11 +94,23 @@ export default {
       });
       habilitationTypeHistory = [];
       totalHabilitationsHIstory = [];
-    }
+    },
+    getOperatorById(){
+            let projets = this.projets;
+            this.chartData.forEach(chartDataRow => {
+                const projet = projets.find(projet => projet.id === chartDataRow[0]);
+                if(projet != null){
+                    chartDataRow[0] = projet.intitule;
+                }else {
+                    chartDataRow[0] = 'Projet ' + chartDataRow[0];
+                }
+            });
+        }
   },
   async mounted() {
     this.pending.fetchData = true;
     await this.fetchData();
+    this.getOperatorById();
     this.pending.fetchData = false;
   },
 }
