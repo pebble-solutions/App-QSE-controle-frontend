@@ -4,7 +4,6 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
-import { mapState } from 'vuex';
 
 export default {
     data() {
@@ -27,11 +26,11 @@ export default {
             ];
             data.forEach(collecte => {
                 const id = collecte['habilitation_id'];
-                const index = this.chartData.findIndex(habilitation => (habilitation[0] == 'Habilitation ' + id));
+                const index = this.chartData.findIndex(habilitation => (habilitation[0] == this.getHabilitaitonLabelById(id)));
                 if (index >= 0) {
                     this.chartData[index][1]++;
                 } else {
-                    this.chartData.push(["Habilitation " + id, 1]);
+                    this.chartData.push([this.getHabilitaitonLabelById(id), 1]);
                 }
 
             });
@@ -44,7 +43,12 @@ export default {
                 sliceVisibilityThreshold: 1/100
             };
             chart.draw(dataTable, options);
-        }
+        },
+        getHabilitaitonLabelById(id) {
+			let habilitations = this.$assets.getCollection('habilitationsCharacteristic').getCollection();
+			const habilitation = habilitations.find(e => e.id == id);
+			return habilitation ? habilitation.label : 'Habilitation (' + id + ') non trouvé'
+		}
     },
     mounted() {
         this.fetchData();

@@ -9,7 +9,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="(row, rowIndex) in chartData.slice(1)" :key="rowIndex">
+			<tr v-for="(row, rowIndex) in chartData" :key="rowIndex">
 				<td v-for="(value, columnIndex) in row" :key="columnIndex">
 					<template v-if="columnIndex === 3">
 						<StackedBar :bars="value" :value="true"></StackedBar>
@@ -45,7 +45,7 @@ export default {
 
 			data.forEach(collecte => {
 				const id = collecte['personnel_id__operateur'];
-				const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
+				const index = this.chartData.findIndex(operateur => (operateur[0] == this.getOperatorCacheNomById(id)));
 				if (habilitationHistory.get(id) == null) {
 					habilitationHistory.set(id, []);
 				}

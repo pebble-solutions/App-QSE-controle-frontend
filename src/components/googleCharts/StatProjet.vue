@@ -18,7 +18,7 @@
             </div>
         </div>-->
     </div>
-    <div class="row">
+    <!--<div class="row">
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
@@ -27,8 +27,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!--<div class="row">
+    </div>-->
+    <div class="row">
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-    </div>-->
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="card my-2">
@@ -50,8 +50,8 @@
 </template>
 
 <script>
-import ProjectBarChart from './ProjectBarChart.vue';
-//import ProjectPieChart from './ProjectPieChart.vue';
+//import ProjectBarChart from './ProjectBarChart.vue';
+import ProjectPieChart from './ProjectPieChart.vue';
 import ProjectTable from './ProjectTable.vue';
 //import { mapState } from 'vuex';
 
@@ -90,7 +90,7 @@ export default {
             totalHabilitationsHistory = [];
         },
     },*/
-    components: { ProjectBarChart, ProjectTable },
+    components: { ProjectPieChart, ProjectTable },
     mounted() {
         //this.computeHabilitations();
     }

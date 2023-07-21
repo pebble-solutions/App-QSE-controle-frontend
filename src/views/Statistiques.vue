@@ -40,7 +40,7 @@ import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
-import {mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
     data() {
@@ -98,7 +98,9 @@ export default {
         await personnels.load({
             limit: 'aucune'
         });
-        await habilitations.load();
+        await habilitations.load({
+            limit: 'aucune'
+        });
         this.pending.load = false;
     }
 }

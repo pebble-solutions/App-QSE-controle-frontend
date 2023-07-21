@@ -32,11 +32,11 @@ export default {
 
             data.forEach(collecte => {
                 const id = collecte['personnel_id__operateur'];
-                const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
+                const index = this.chartData.findIndex(operateur => (operateur[0] == this.getOperatorCacheNomById(id)));
                 if (index >= 0) {
                     this.chartData[index][1]++;
                 } else {
-                    this.chartData.push(["Opérateur " + id, 1]);
+                    this.chartData.push([this.getOperatorCacheNomById(id), 1]);
                 }
 
             });
@@ -49,7 +49,12 @@ export default {
                 sliceVisibilityThreshold: 1 / 100
             };
             chart.draw(dataTable, options);
-        }
+        },
+        getOperatorCacheNomById(id) {
+			let personnels = this.$assets.getCollection('personnels').getCollection();
+			const personnel = personnels.find(e => e.id == id);
+			return personnel ? personnel.cache_nom : 'Opérateur (' + id + ') non trouvé'
+		}
     },
     mounted() {
         this.fetchData();

@@ -4,12 +4,16 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
+import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
             chartData: [],
         }
+    },
+    computed: {
+        ...mapState(['projets'])
     },
     props: {
         requeteStat: {
@@ -26,11 +30,11 @@ export default {
             ];
             data.forEach(collecte => {
                 const id = collecte['projet_id'];
-                const index = this.chartData.findIndex(projet => (projet[0] == 'Projet ' + id));
+                const index = this.chartData.findIndex(projet => (projet[0] == this.getProjectIntituleById(id)));
                 if (index >= 0) {
                     this.chartData[index][1]++;
                 } else {
-                    this.chartData.push(["Projet " + id, 1]);
+                    this.chartData.push([this.getProjectIntituleById(id), 1]);
                 }
             });
         },
@@ -42,7 +46,11 @@ export default {
                 sliceVisibilityThreshold: 1 / 100
             };
             chart.draw(dataTable, options);
-        }
+        },
+        getProjectIntituleById(id) {
+			const projet = this.projets.find(e => e.id == id);
+			return projet ? projet.intitule : 'Projet (' + id + ') non trouvé'
+		}
     },
     mounted() {
         this.fetchData();

@@ -44,7 +44,7 @@ export default {
 			const data = this.$assets.getCollection('collectesCollection').getCollection();
 			data.forEach(collecte => {
 				const id = collecte['habilitation_id'];
-				const index = this.chartData.findIndex(habilitation => (habilitation[0] == 'Habilitation ' + id));
+				const index = this.chartData.findIndex(habilitation => (habilitation[0] == this.getHabilitaitonLabelById(id)));
 				if (habilitationHistory.get(id) == null) {
 					habilitationHistory.set(id, []);
 				}
