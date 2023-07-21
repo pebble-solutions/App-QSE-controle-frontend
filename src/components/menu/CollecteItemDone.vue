@@ -1,38 +1,37 @@
 <template>
 
 	<div class="d-flex align-items-center justify-content-between">
-  <div class="me-2">
-    <UserImage :name="collecte.cible_nom ?? '?'"></UserImage>
-  </div>
-  
-  <div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100 position-relative">
-    <div class="d-flex align-items-center">
+		<div class="me-2">
+			<UserImage :name="collecte.cible_nom ?? '?'"></UserImage>
+		</div>
 
-      <small class="fw-lighter me-2">#{{collecte.id}}</small>
-      <date-badge :collecte="collecte" />
-      <span v-if="collecte.date_start && !collecte.unlocked" class="badge rounded-pill ms-1 bg-warning">
-        <i class="bi bi-lock-fill"></i>
-      </span>
-    </div>
-    
-    <personnel-name :personnel-name="collecte.cible_nom" :personnel-id="collecte.cible__structure__personnel_id" />
-    
-    <formulaire-name :name="formulaireName" v-if="formulaireName" />
-    
-    <projet-name :name="collecte.projet_label" v-if="collecte.projet_label" />
-  </div>
-  
-  <div class="position-absolute bottom-1 end-0 translate-middle mb-2 me-4" style="right: 19px;">
-    <BouclageBadgeResult :resultat="collecte.following_result" v-if="collecte.following_result && collecte.following_result != 'null'" />
-	<BouclageBadge v-if="collecte.following_id && (!collecte.following_result || collecte.following_result === 'null')" />
-	<BouclageBadgeRouge v-if="(result_var === 'I' || result_var === 'M') && !collecte.following_id" />
+		<div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100 position-relative">
+			<div class="d-flex align-items-center">
 
-  </div>
-  
-  <div v-if="collecte.result_var && collecte.result_var != 'null'" class="badge fs-6 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">
-    {{collecte.result_var}}
-  </div>
-  <div v-else class="badge fs-6 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">?</div>
+				<small class="fw-lighter me-2">#{{collecte.id}}</small>
+				<date-badge :collecte="collecte" />
+				<span v-if="collecte.date_start && !collecte.unlocked" class="badge rounded-pill ms-1 bg-warning">
+					<i class="bi bi-lock-fill"></i>
+				</span>
+			</div>
+
+			<personnel-name :personnel-name="collecte.cible_nom" :personnel-id="collecte.cible__structure__personnel_id" />
+
+			<formulaire-name :name="formulaireName" v-if="formulaireName" />
+
+			<projet-name :name="collecte.projet_label" v-if="collecte.projet_label" />
+		</div>
+
+		<div 
+			v-if="collecte.result_var && collecte.result_var != 'null'" 
+			class="badge fs-6 text-uppercase border border-light position-relative" 
+			:class="classNameFromSAMI(collecte.result_var)">
+
+			<Bouclage :collecte="collecte" v-if="hasBouclageInfo" />
+
+			{{collecte.result_var}}
+		</div>
+	<div v-else class="badge fs-6 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">?</div>
 </div>
 
 	
@@ -45,8 +44,8 @@ import DateBadge from '../collecte/DateBadge.vue';
 import PersonnelName from '../collecte/PersonnelName.vue';
 import FormulaireName from '../collecte/FormulaireName.vue';
 import ProjetName from '../collecte/ProjetName.vue';
-import BouclageBadgeResult from '../badges/BouclageBadgeResult.vue';
-import BouclageBadgeRouge from '../badges/BouclageBadgeRouge.vue';
+import { classNameFromSAMI } from '../../js/collecte';
+import Bouclage from '../badges/Bouclage.vue';
 
 
 export default {
@@ -54,11 +53,8 @@ export default {
         collecte: Object
     },
 
-	
-
-
     computed: {
-        ...mapState(['formulaires', 'listActifs', 'projets']),
+        ...mapState(['formulaires']),
 
 		/**
 		 * Retourne le nom du formulaire correspondant à la collecte
@@ -67,6 +63,21 @@ export default {
 		 */
 		formulaireName() {
 			return this.getGroupNameFromId(this.collecte.information__groupe_id);
+		},
+
+		/**
+		 * Contrôle si il y a des infos à afficher sur le bouclage
+		 */
+		hasBouclageInfo() {
+			if (['I', 'M'].includes(this.collecte.result_var.toUpperCase())) {
+				return true;
+			}
+
+			if (this.collecte.following_id) {
+				return true;
+			}
+
+			return false;
 		}
     },
 
@@ -95,13 +106,7 @@ export default {
          * @return {string}
          */
         classNameFromSAMI(reponse) {
-            if (typeof reponse === 'string') {
-                if (reponse.toLowerCase() == 's') return 'text-bg-success';
-                else if (reponse.toLowerCase() == 'a') return 'text-bg-primary';
-                else if (reponse.toLowerCase() == 'm') return 'text-bg-warning';
-                else if (reponse.toLowerCase() == 'i') return 'text-bg-danger';
-            }
-            return 'text-bg-secondary';
+			return classNameFromSAMI(reponse);
         },
     },
 
@@ -111,8 +116,7 @@ export default {
     PersonnelName,
     FormulaireName,
     ProjetName,
-    BouclageBadgeResult,
-    BouclageBadgeRouge,
+	Bouclage
 }
 }
 
