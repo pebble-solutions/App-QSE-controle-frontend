@@ -29,6 +29,7 @@ export default createStore({
 		collectesCollection: [],
 		statResult: [],
 		echeancier: null,
+		habilitationsCharacteristic: [],
 		habilitationsTypes: []
 	},
 	getters: {

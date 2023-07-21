@@ -1,6 +1,6 @@
 
 <template>
-    <div class="container" v-if="!pending.stat">
+    <div class="container" v-if="!pending.stat && !pending.load">
         <div class="row">
             <div class="card my-2 overflow-auto">
                 <div class="card-body">
@@ -40,13 +40,14 @@ import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
     data() {
         return {
             pending: {
-                stat: true
+                stat: true,
+                load: true,
             },
         }
     },
@@ -55,36 +56,28 @@ export default {
         ...mapState(['requeteStat']),
     },
     methods: {
-        ...mapActions(['loadStatResult']),
         stats() {
             return this.requeteStat;
         },
-        sendRequest() {
-            let route = 'v2/collecte';
-            let query = {
-                dd_start: this.requeteStat.dd,
-                df_start: this.requeteStat.df,
-                personnel_id__operateur: this.requeteStat.operateurs.join(','),
-                projet_id: this.requeteStat.projets.join(','),
-                personnel_id__controleur: this.requeteStat.controleurs.join(','),
-                habilitation_type_id: this.requeteStat.habilitation.join(','),
-                done: 'OUI',
-                type: 'KN',
-            };
-            this.pending.stat = true;
-            this.$app.apiGet(route, query)
-                .then((data) => {
-                    this.loadStatResult(data);
-                })
-                .catch(this.$app.catchError)
-                .finally(() => this.pending.stat = false);
-        }
     },
     watch: {
         requeteStat: {
-            handler(newValue) {
+            async handler(newValue) {
                 if (newValue.dd && newValue.df) {
-                    this.sendRequest();
+                    this.pending.stat = true;
+                    let collectes = this.$assets.getCollection('collectesCollection');
+                    collectes.reset();
+                    await collectes.load({
+                        dd_start: this.requeteStat.dd,
+                        df_start: this.requeteStat.df,
+                        personnel_id__operateur: this.requeteStat.operateurs.join(','),
+                        projet_id: this.requeteStat.projets.join(','),
+                        personnel_id__controleur: this.requeteStat.controleurs.join(','),
+                        habilitation_type_id: this.requeteStat.habilitation.join(','),
+                        done: 'OUI',
+                        type: 'KN',
+                    });
+                    this.pending.stat = false;
                 }
             },
         },
@@ -92,11 +85,23 @@ export default {
     // unmounted(){
     //     this.setRequete(null)
     // },
-    mounted() {
+    async mounted() {
         /*let collection = this.$assets.getCollection('collectes');
         this.pending.collectes = true;
         collection.load();
         this.pending.collectes = false;*/
+        let collectes = this.$assets.getCollection('collectesCollection');
+        let personnels = this.$assets.getCollection('personnels');
+        let habilitations = this.$assets.getCollection('habilitationsCharacteristic');
+        this.pending.load = true;
+        await collectes.load();
+        await personnels.load({
+            limit: 'aucune'
+        });
+        await habilitations.load({
+            limit: 'aucune'
+        });
+        this.pending.load = false;
     }
 }
 </script>

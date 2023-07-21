@@ -4,15 +4,11 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
-import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
             chartData: [],
-            pending: {
-                fetchData: true,
-            },
         }
     },
     props: {
@@ -21,45 +17,42 @@ export default {
             required: true
         },
     },
-    computed: {
-        ...mapState(['statResult'])
-    },
     methods: {
         fetchData() {
-            const data = this.statResult;
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
 
             this.chartData = [['Opérateurs', 'S', 'A', 'M', 'I']];
 
             data.forEach(collecte => {
                     const id = collecte['personnel_id__operateur'];
-                    const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
+                    const index = this.chartData.findIndex(operateur => (operateur[0] == this.getOperatorCacheNomById(id)));
                     switch (collecte['sami']) {
                         case 'S':
                             if (index >= 0) {
                                 this.chartData[index][1]++;
                             } else {
-                                this.chartData.push(['Opérateur ' + id, 1, 0, 0, 0]);
+                                this.chartData.push([this.getOperatorCacheNomById(id), 1, 0, 0, 0]);
                             }
                             break;
                         case 'A':
                             if (index >= 0) {
                                 this.chartData[index][2]++;
                             } else {
-                                this.chartData.push(['Opérateur ' + id, 0, 1, 0, 0]);
+                                this.chartData.push([this.getOperatorCacheNomById(id), 0, 1, 0, 0]);
                             }
                             break;
                         case 'M':
                             if (index >= 0) {
                                 this.chartData[index][3]++;
                             } else {
-                                this.chartData.push(['Opérateur ' + id, 0, 0, 1, 0]);
+                                this.chartData.push([this.getOperatorCacheNomById(id), 0, 0, 1, 0]);
                             }
                             break;
                         case 'I':
                             if (index >= 0) {
                                 this.chartData[index][4]++;
                             } else {
-                                this.chartData.push(['Opérateur ' + id, 0, 0, 0, 1]);
+                                this.chartData.push([this.getOperatorCacheNomById(id), 0, 0, 0, 1]);
                             }
                             break;
                         default:
@@ -84,12 +77,16 @@ export default {
                 },
             };
             chart.draw(dataTable, options);
-        }
+        },
+		getOperatorCacheNomById(id) {
+			let personnels = this.$assets.getCollection('personnels').getCollection();
+			const personnel = personnels.find(e => e.id == id);
+			return personnel ? personnel.cache_nom : 'Opérateur (' + id + ') non trouvé'
+		}
     },
-    async mounted() {
-        this.pending.fetchData = true;
-        await this.fetchData();
-        this.pending.fetchData = false;
+    mounted() {
+        this.fetchData();
+        this.getOperatorById();
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         });

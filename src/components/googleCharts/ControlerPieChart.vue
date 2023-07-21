@@ -4,15 +4,11 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
-import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
             chartData: [],
-            pending: {
-                fetchData: true,
-            },
         }
     },
     props: {
@@ -21,23 +17,21 @@ export default {
             required: true
         },
     },
-    computed: {
-        ...mapState(['statResult'])
-    },
+
     methods: {
         fetchData() {
-            const data = this.statResult;
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
 
             this.chartData = [
                 ['Réponses', 'Nombre']
             ];
             data.forEach(collecte => {
                 const id = collecte['personnel_id__controleur'];
-                const index = this.chartData.findIndex(controleur => (controleur[0] == 'Contrôleur ' + id));
+                const index = this.chartData.findIndex(controleur => (controleur[0] == this.getControlerCacheNomById(id)));
                 if (index >= 0) {
                     this.chartData[index][1]++;
                 } else {
-                    this.chartData.push(["Contrôleur " + id, 1]);
+                    this.chartData.push([this.getControlerCacheNomById(id), 1]);
                 }
             });
         },
@@ -49,12 +43,15 @@ export default {
                 sliceVisibilityThreshold: 1/100
             };
             chart.draw(dataTable, options);
-        }
+        },
+		getControlerCacheNomById(id) {
+			let personnels = this.$assets.getCollection('personnels').getCollection();
+			const personnel = personnels.find(e => e.id == id);
+			return personnel ? personnel.cache_nom : 'Contrôleur (' + id + ') non trouvé'
+		}
     },
-    async mounted() {
-        this.pending.fetchData = true;
-        await this.fetchData();
-        this.pending.fetchData = false;
+    mounted() {
+        this.fetchData();
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         })

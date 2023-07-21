@@ -4,15 +4,11 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
-import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
             chartData: null,
-            pending: {
-                fetchData: true,
-            }
         }
     },
     props: {
@@ -21,9 +17,6 @@ export default {
             required: true
         }
     },
-    computed: {
-        ...mapState(['statResult'])
-    },
     watch: {
         requeteStat() {
             this.fetchData();
@@ -31,7 +24,7 @@ export default {
     },
     methods: {
         fetchData() {
-            const data = this.statResult;
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
 
             this.chartData = [
                 ['Réponses', 'Nombre']
@@ -39,11 +32,11 @@ export default {
 
             data.forEach(collecte => {
                 const id = collecte['personnel_id__operateur'];
-                const index = this.chartData.findIndex(operateur => (operateur[0] == 'Opérateur ' + id));
+                const index = this.chartData.findIndex(operateur => (operateur[0] == this.getOperatorCacheNomById(id)));
                 if (index >= 0) {
                     this.chartData[index][1]++;
                 } else {
-                    this.chartData.push(["Opérateur " + id, 1]);
+                    this.chartData.push([this.getOperatorCacheNomById(id), 1]);
                 }
 
             });
@@ -53,15 +46,18 @@ export default {
             let chartWrap = document.getElementById('operatorPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
             let options = {
-                sliceVisibilityThreshold: 1/100
+                sliceVisibilityThreshold: 1 / 100
             };
             chart.draw(dataTable, options);
-        }
+        },
+        getOperatorCacheNomById(id) {
+			let personnels = this.$assets.getCollection('personnels').getCollection();
+			const personnel = personnels.find(e => e.id == id);
+			return personnel ? personnel.cache_nom : 'Opérateur (' + id + ') non trouvé'
+		}
     },
-    async mounted() {
-        this.pending.fetchData = true;
-        await this.fetchData();
-        this.pending.fetchData = false;
+    mounted() {
+        this.fetchData();
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         })

@@ -1,24 +1,24 @@
 <template>
     <div class="row">
         <h1>Habilitations</h1>
-        <div class="col-6">
+        <div class="col-3">
             <div class="card my-2">
                 <div class="card-body">
-                    <h3 class="card-title fs-4">Habilitations sur la période</h3>
+                    <h3 class="card-title fs-4">Habilitations contrôlées sur la période</h3>
                     <p>{{ currentHabilitations }}</p>
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <!--<div class="col-6">
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Toutes les Habilitations</h3>
                     <p>{{ totalHabilitations }}</p>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
-    <div class="row">
+    <!--<div class="row">
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     <div class="row">
         <div class="col-12">
             <div class="card my-2">
@@ -50,10 +50,9 @@
 </template>
 
 <script>
-import HabilitationBarChart from './HabilitationBarChart.vue';
+//import HabilitationBarChart from './HabilitationBarChart.vue';
 import HabilitationPieChart from './HabilitationPieChart.vue';
 import HabilitationTable from './HabilitationTable.vue';
-import { mapState } from 'vuex';
 
 export default {
     data() {
@@ -68,12 +67,9 @@ export default {
             required: true
         }
     },
-    computed: {
-        ...mapState(['statResult'])
-    },
     methods: {
         computeHabilitations() {
-            const data = this.statResult;
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
             let periodHabilitationsHistory = [];
             let totalHabilitationsHistory = [];
             data.forEach(collecte => {
@@ -90,7 +86,7 @@ export default {
             totalHabilitationsHistory = [];
         },
     },
-    components: { HabilitationBarChart, HabilitationPieChart, HabilitationTable },
+    components: { HabilitationPieChart, HabilitationTable },
     mounted(){
         this.computeHabilitations();
     }

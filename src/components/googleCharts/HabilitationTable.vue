@@ -1,107 +1,130 @@
 <template v-if="!pending.fetchData">
-  <table class="table">
-    <thead>
-      <tr>
-        <th v-for="(label, index) in chartData[0]" :key="index">{{ label }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(row, rowIndex) in chartData.slice(1)" :key="rowIndex">
-        <td v-for="(value, columnIndex) in row" :key="columnIndex">{{ value }}</td>
-      </tr>
-    </tbody>
-  </table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<th>KN</th>
+				<th>Habilitation contrôlées</th>
+				<th>SAMI</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="(row, rowIndex) in chartData.slice(1)" :key="rowIndex">
+				<td v-for="(value, columnIndex) in row" :key="columnIndex">
+					<template v-if="columnIndex === 3">
+						<StackedBar :bars="value" :value="true"></StackedBar>
+					</template>
+					<template v-else>
+						{{ value }}
+					</template>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </template>
   
 <script>
-import { mapState } from 'vuex';
+import StackedBar from '../../components/pebble-ui/charts/StackedBar.vue'
 export default {
-  data() {
-    return {
-      chartData: [],
-      pending: {
-        fetchData: true,
-      },
-    }
-  },
-  props: {
-    requeteStat: {
-      type: Object,
-      required: true,
-    },
-  },
-  computed: {
-    ...mapState(['statResult'])
-  },
-  methods: {
-    fetchData() {
-      this.chartData = [
-        ['', 'KN', 'Type habilitation', 'Total habilitations', 'S', 'A', 'M', 'I'],
-      ];
-      const data = this.statResult;
-      let habilitationTypeHistory = [];
-      let totalHabilitationsHIstory = [];
-
-      data.forEach(collecte => {
-        const id = collecte['habilitation_id'];
-        const index = this.chartData.findIndex(habilitation => (habilitation[0] == 'Habilitation ' + id));
-        if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
-          habilitationTypeHistory.push(collecte['habilitation_type_id']);
-        }
-        if (totalHabilitationsHIstory.findIndex(id => id == collecte['habilitation_id']) == -1) {
-          totalHabilitationsHIstory.push(collecte['habilitation_id']);
-        }
-        if (index >= 0) {
-          this.chartData[index][1]++;//incrémentation du champ KN
-          this.chartData[index][2] = habilitationTypeHistory.length;
-          this.chartData[index][3] = totalHabilitationsHIstory.length;
-          switch (collecte['sami']) {
-            case 'S':
-              this.chartData[index][4]++;
-              break;
-            case 'A':
-              this.chartData[index][5]++;
-              break;
-            case 'M':
-              this.chartData[index][6]++;
-              break;
-            case 'I':
-              this.chartData[index][7]++;
-              break;
-            default:
-              break;
-          }
-
-        } else {
-          let newRow = ['Habilitation ' + id, 1, habilitationTypeHistory.length, totalHabilitationsHIstory.length, 0, 0, 0, 0];
-          switch (collecte['sami']) {
-            case 'S':
-              newRow[4]++;
-              break;
-            case 'A':
-              newRow[5]++;
-              break;
-            case 'M':
-              newRow[6]++;
-              break;
-            case 'I':
-              newRow[7]++;
-              break;
-            default:
-              break;
-          }
-          this.chartData.push(newRow);
-        }
-      });
-      habilitationTypeHistory = [];
-      totalHabilitationsHIstory = [];
-    }
-  },
-  mounted() {
-    this.pending.fetchData = true;
-    this.fetchData();
-    this.pending.fetchData = false;
-  },
+	data() {
+		return {
+			chartData: [],
+		}
+	},
+	props: {
+		requeteStat: {
+			type: Object,
+			required: true,
+		},
+	},
+	methods: {
+		fetchData() {
+			this.chartData = [];
+			let habilitationHistory = new Map();
+			const data = this.$assets.getCollection('collectesCollection').getCollection();
+			data.forEach(collecte => {
+				const id = collecte['habilitation_id'];
+				const index = this.chartData.findIndex(habilitation => (habilitation[0] == this.getHabilitaitonLabelById(id)));
+				if (habilitationHistory.get(id) == null) {
+					habilitationHistory.set(id, []);
+				}
+				if (!habilitationHistory.get(id).includes(collecte['habilitation_id'])) {
+					habilitationHistory.get(id).push(collecte['habilitation_id']);
+				}
+				if (index >= 0) {
+					this.chartData[index][1]++;//incrémentation du champ KN
+					this.chartData[index][2] = habilitationHistory.get(id).length;
+					switch (collecte['sami']) {
+						case 'S':
+							this.chartData[index][3][0].value++;
+							break;
+						case 'A':
+							this.chartData[index][3][1].value++;
+							break;
+						case 'M':
+							this.chartData[index][3][2].value++;
+							break;
+						case 'I':
+							this.chartData[index][3][3].value++;
+							break;
+						default:
+							this.chartData[index][3][4].value++;
+							break;
+					}
+				} else {
+					let newRow = [this.getHabilitaitonLabelById(id), 1, habilitationHistory.get(id).length, [
+						{
+							color: 'success',
+							value: 0
+						},
+						{
+							color: 'primary',
+							value: 0
+						},
+						{
+							color: 'warning',
+							value: 0
+						},
+						{
+							color: 'danger',
+							value: 0
+						},
+						{
+							color: 'secondary',
+							value: 0
+						},
+					]];
+					switch (collecte['sami']) {
+						case 'S':
+							newRow[3][0].value++;
+							break;
+						case 'A':
+							newRow[3][1].value++;
+							break;
+						case 'M':
+							newRow[3][2].value++;
+							break;
+						case 'I':
+							newRow[3][3].value++;
+							break;
+						default:
+							newRow[3][4].value++;
+							break;
+					}
+					this.chartData.push(newRow);
+				}
+			});
+		},
+		getHabilitaitonLabelById(id) {
+			let habilitations = this.$assets.getCollection('habilitationsCharacteristic').getCollection();
+			const habilitation = habilitations.find(e => e.id == id);
+			return habilitation ? habilitation.label : 'Habilitation (' + id + ') non trouvé'
+		}
+	},
+	components: { StackedBar },
+	mounted() {
+		this.fetchData();
+	},
 }
 </script>
   

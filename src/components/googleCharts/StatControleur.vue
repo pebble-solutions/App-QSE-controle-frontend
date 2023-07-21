@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <h1>Contrôleur</h1>
-        <div class="col-6">
+        <!--<div class="col-6">
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Habilitations du contrôleur sur la période</h3>
@@ -16,9 +16,9 @@
                     <p>{{ totalHabilitations }}</p>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
-    <div class="row">
+    <!--<div class="row">
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     <div class="row">
         <div class="col-12">
             <div class="card my-2">
@@ -50,25 +50,25 @@
 </template>
 
 <script>
-import ControlerBarChart from './ControlerBarChart.vue';
+//import ControlerBarChart from './ControlerBarChart.vue';
 import ControlerPieChart from './ControlerPieChart.vue';
 import ControlerTable from './ControlerTable.vue';
-import { mapState } from 'vuex';
+//import { mapState } from 'vuex';
 
 export default {
-    data() {
+    /*data() {
         return {
             currentHabilitations: 0,
             totalHabilitations: 0,
         }
-    },
+    },*/
     props: {
         requeteStat: {
             type: Object,
             required: true
         }
     },
-    computed: {
+    /*computed: {
         ...mapState(['statResult'])
     },
     methods: {
@@ -89,10 +89,10 @@ export default {
             periodHabilitationsHistory = [];
             totalHabilitationsHistory = [];
         },
-    },
-    components: { ControlerBarChart, ControlerPieChart, ControlerTable},
+    },*/
+    components: { ControlerPieChart, ControlerTable},
     mounted(){
-        this.computeHabilitations();
+        //this.computeHabilitations();
     }
 }
 </script>
