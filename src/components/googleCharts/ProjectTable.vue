@@ -24,22 +24,22 @@
 </template>
   
 <script>
-import StackedBar from '../../components/pebble-ui/charts/StackedBar.vue'
 import { mapState } from 'vuex';
+import StackedBar from '../../components/pebble-ui/charts/StackedBar.vue'
 export default {
 	data() {
 		return {
 			chartData: [],
 		}
 	},
+	computed: {
+		...mapState(['projets'])
+	},
 	props: {
 		requeteStat: {
 			type: Object,
 			required: true,
 		}
-	},
-	computed: {
-		...mapState(['projets'])
 	},
 	methods: {
 		fetchData() {
