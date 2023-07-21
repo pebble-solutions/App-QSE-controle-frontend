@@ -125,7 +125,20 @@
 				</AppMenuItem> -->
 				<template v-for="agent in listActifs" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
-						{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
+						<FicheIndividuelleSuiviItem :agent="agent"/>
+						<!-- <div>
+							<span class="badge rounded-pill text-bg-danger">
+								<i class="bi bi-exclamation-triangle-fill"></i>
+								<span>1</span>
+								<span>Expire</span>
+							</span>
+
+							<span class="badge rounded-pill text-bg-warning">
+
+							</span>
+						</div>
+
+						{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span> -->
 					</AppMenuItem>
 				</template>
 				<div class="alert alert-info m-2" v-if="!listActifs?.length">
@@ -178,6 +191,7 @@ import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
 import FormStatistiques from './components/FormStatistiques.vue'
+import FicheIndividuelleSuiviItem from './components/List/FicheIndividuelleSuiviItem.vue'
 
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
@@ -560,7 +574,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques}, 
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem}, 
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
