@@ -9,7 +9,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="(row, rowIndex) in chartData.slice(1)" :key="rowIndex">
+			<tr v-for="(row, rowIndex) in chartData" :key="rowIndex">
 				<td v-for="(value, columnIndex) in row" :key="columnIndex">
 					<template v-if="columnIndex === 3">
 						<StackedBar :bars="value" :value="true"></StackedBar>
@@ -43,13 +43,13 @@ export default {
 			let habilitationHistory = new Map();
 			const data = this.$assets.getCollection('collectesCollection').getCollection();
 			data.forEach(collecte => {
-				const id = collecte['habilitation_id'];
+				const id = collecte['habilitation_type_id'];
 				const index = this.chartData.findIndex(habilitation => (habilitation[0] == this.getHabilitaitonLabelById(id)));
 				if (habilitationHistory.get(id) == null) {
 					habilitationHistory.set(id, []);
 				}
-				if (!habilitationHistory.get(id).includes(collecte['habilitation_id'])) {
-					habilitationHistory.get(id).push(collecte['habilitation_id']);
+				if (!habilitationHistory.get(id).includes(collecte['habilitation_type_id'])) {
+					habilitationHistory.get(id).push(collecte['habilitation_type_id']);
 				}
 				if (index >= 0) {
 					this.chartData[index][1]++;//incrémentation du champ KN
@@ -118,7 +118,7 @@ export default {
 		getHabilitaitonLabelById(id) {
 			let habilitations = this.$assets.getCollection('habilitationsCharacteristic').getCollection();
 			const habilitation = habilitations.find(e => e.id == id);
-			return habilitation ? habilitation.label : 'Habilitation (' + id + ') non trouvé'
+			return habilitation ? habilitation.label : 'Habilitation (' + id + ') non trouvée'
 		}
 	},
 	components: { StackedBar },

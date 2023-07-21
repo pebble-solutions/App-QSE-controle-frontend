@@ -9,7 +9,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="(row, rowIndex) in chartData.slice(1)" :key="rowIndex">
+			<tr v-for="(row, rowIndex) in chartData" :key="rowIndex">
 				<td v-for="(value, columnIndex) in row" :key="columnIndex">
 					<template v-if="columnIndex === 3">
 						<StackedBar :bars="value" :value="true"></StackedBar>

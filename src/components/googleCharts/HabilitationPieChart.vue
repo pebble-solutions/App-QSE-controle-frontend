@@ -25,7 +25,7 @@ export default {
                 ['Réponses', 'Nombre']
             ];
             data.forEach(collecte => {
-                const id = collecte['habilitation_id'];
+                const id = collecte['habilitation_type_id'];
                 const index = this.chartData.findIndex(habilitation => (habilitation[0] == this.getHabilitaitonLabelById(id)));
                 if (index >= 0) {
                     this.chartData[index][1]++;

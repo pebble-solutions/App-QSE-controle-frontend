@@ -25,7 +25,7 @@ export default {
             this.chartData = [['Habilitations', 'S', 'A', 'M', 'I']];
 
             data.forEach(collecte => {
-                const id = collecte['habilitation_id'];
+                const id = collecte['habilitation_type_id'];
                 const index = this.chartData.findIndex(habilitation => (habilitation[0] == this.getHabilitaitonLabelById(id)));
                 switch (collecte['sami']) {
                     case 'S':
