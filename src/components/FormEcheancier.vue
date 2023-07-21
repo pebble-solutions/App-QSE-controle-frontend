@@ -157,6 +157,15 @@ export default {
             if (query.habilitation == "") {
                 query.habilitation = [];
             }
+
+            if (query.operateurs.length > 1 && !query.operateurs[0]) {
+                query.operateurs.splice(0, 1);
+            }
+
+            if (query.habilitation.length > 1 && !query.habilitation[0]) {
+                query.habilitation.splice(0, 1);
+            }
+
             this.setEcheance(JSON.parse(JSON.stringify(query)));
         },
 
