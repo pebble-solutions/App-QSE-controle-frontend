@@ -312,17 +312,6 @@ export default {
 		},
 
 		/**
-		 * Charge l'ensemble des collectes terminées
-		 */
-		loadCollectesCollection() {
-			let collecteCollection = new AssetsCollection(this, {
-				assetName: 'collectesCollection',
-				apiRoute: 'v2/collecte',
-			});
-			this.$assets.addCollection('collectesCollection', collecteCollection);
-		},
-
-		/**
 		 * Charge l'ensemble des formulaires depuis le serveur et les stock dans le store
 		 * 
 		 * @return {Promise<object>}
@@ -553,6 +542,11 @@ export default {
 					name: "personnels",
 					assetName: 'personnels',
 					apiRoute: 'v2/personnel'
+				},
+				{
+					name: "collectesCollection",
+					assetName: "collectesCollection",
+					apiRoute: "v2/collecte"
 				}
 			];
 
@@ -580,8 +574,6 @@ export default {
 				this.loadHabilitationType();
 				this.loadHabilitation();
 				this.loadVeille();
-				this.loadCollectesCollection();
-				//this.loadCollectesCollection();
 
 				this.initCollections();
 			}
