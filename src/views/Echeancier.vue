@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="echeancier">
+    <div v-if="echeancier" class="py-1">
 
         <div v-if="isPending" class="text-center my-4 fs-4 text-secondary">
             <span class="spinner-border"></span>
@@ -21,14 +21,19 @@
                 </div>
             </div>
     
-            <div v-for="personnel in filteredOperateurs" :key="personnel.id" class="my-3" v-else>
-                <tabEcheancierHabilitation 
-                    :personnel="personnel" 
-                    :kns="filteredKns(personnel.id, 'personnel')" 
-                    :periode="periode" 
-                    :habilitations="filteredHabilitations"
-                />
-            </div>
+            <template v-else>
+                <template v-for="personnel in filteredOperateurs" :key="personnel.id">
+                    <tabEcheancierHabilitation 
+                        :personnel="personnel" 
+                        :kns="filteredKns(personnel.id, 'personnel')" 
+                        :periode="periode" 
+                        :habilitations="filteredHabilitations"
+                        :habilitationsPersonnel="getHabilitationByPersonnelId(personnel.id)"
+                        :contrats="contrats"
+                        v-if="getHabilitationByPersonnelId(personnel.id)?.length"
+                    />
+                </template>
+            </template>
         </template>
     </div>
     <div class="container py-2" v-else>
@@ -67,13 +72,15 @@ export default {
 
     data() {
 		return {
-            allHabilitations: [],
+            allHabilitationsTypes: [],
             allOperateurs: [],
+            habilitationsPersonnel: [],
             periode: [],
             kns: [],
             contrats: [],
             pending: {
-                habilitationTypes: false,
+                habilitationsTypes: false,
+                habilitationsPersonnel: false,
                 collectes: false,
                 contrats: false,
                 personnels: false,
@@ -93,8 +100,10 @@ export default {
         echeancier:{
             handler(newValue){
                 if(newValue.dd && newValue.df){
-                    this.getPeriode()
-                    this.getKn()
+                    this.getPeriode();
+                    this.getKn();
+                    this.getHabilitationsPersonnel();
+                    this.getContrats();
                 }
             },
             deep:true,
@@ -111,9 +120,9 @@ export default {
          */
         filteredHabilitations() {
             if(this.echeancier.habilitation.length == 0 || (this.echeancier.habilitation.length == 1 && this.echeancier.habilitation.includes(''))) {
-                return this.allHabilitations;
+                return this.allHabilitationsTypes;
             } else {
-                return this.allHabilitations.filter(item => this.echeancier.habilitation.includes(item.id));
+                return this.allHabilitationsTypes.filter(item => this.echeancier.habilitation.includes(item.id));
             }
         },
 
@@ -136,7 +145,7 @@ export default {
          * @return {bool}
          */
         isPending() {
-            return (this.pending.habilitationTypes || this.pending.collectes || this.pending.contrats || this.pending.personnels || this.pending.periode) ? true : false;
+            return (this.pending.habilitationsTypes || this.pending.collectes || this.pending.contrats || this.pending.personnels || this.pending.periode || this.pending.habilitationsPersonnel) ? true : false;
         }
     },
 
@@ -146,14 +155,49 @@ export default {
         /**
          * Charge les données des habilitations
          */
-        getAllHabilitations() {
-            this.pending.habilitationTypes = true;
+        async getAllHabilitations() {
+            return this.loadCollection({
+                pending: "habilitationsTypes",
+                name: "habilitationsTypes",
+                payload: {
+                    limit: "aucune"
+                },
+                outputData: "allHabilitationsTypes"
+            });
+        },
 
-            this.$app.api.get('/v2/controle/habilitation/type/')
-            .then(data => {
-                this.allHabilitations = data;
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.habilitationTypes = false);
+        /**
+         * Chargue une collection de données
+         * 
+         * @param {object} collectionConfig 
+         * - pending         Clé pending à utiliser pendant le chargement
+         * - name            Nom de la collection
+         * - payload         Payload à envoyer sur la requête
+         * - outputData      Clé dans data sur laquelle stocker une référence vers les données
+         * 
+         * @return {Promise}
+         */
+        async loadCollection(collectionConfig) {
+            const pending = collectionConfig.pending;
+            const name = collectionConfig.name;
+            const payload = collectionConfig.payload;
+            const outputData = collectionConfig.outputData;
+
+            this.pending[pending] = true;
+
+            const collection = this.$assets.getCollection(name);
+
+            try {
+                await collection.load(payload);
+
+                if (outputData) {
+                    this[outputData] = collection.getCollection();
+                }
+            } catch (e) {
+                this.$app.catchError(e);
+            } finally {
+                this.pending[pending] = false;
+            }
         },
 
         /**
@@ -168,7 +212,8 @@ export default {
                     dd_start : this.echeancier.dd,
                     df_start : this.echeancier.df,
                     personnel_id__operateur : this.echeancier.operateurs,
-                    habilitation_type_id : this.echeancier.habilitation
+                    habilitation_type_id : this.echeancier.habilitation,
+                    locked: true
                 }
 
                 if (this.echeancier.habilitation.length == 0 || this.echeancier.habilitation[0] == "") {
@@ -183,11 +228,36 @@ export default {
                     query.personnel_id__operateur = this.echeancier.operateurs.toString()
                 }
 
-                this.$app.api.get('/v2/collecte', query)
+                this.$app.api.get('/v2/collecte', query, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
                 .then(data => {
                     this.kns = data;
                 })
                 .catch(this.$app.catchError).finally(() => this.pending.collectes = false);
+            }
+        },
+
+        /**
+         * Récupère la liste des habilitations du personnel sur le serveur
+         */
+        getHabilitationsPersonnel() {
+            if (this.echeancier) {
+                this.pending.habilitationsPersonnel = true;
+
+                let query = {
+                    personnel_id : this.echeancier.operateurs.join(","),
+                    characteristic_id : this.echeancier.habilitation.join(","),
+                    dd_active : this.echeancier.dd,
+                    df_active : this.echeancier.df
+                }
+
+                this.$app.api.get('/v2/characteristic/personnel', query)
+                .then(data => {
+                    this.habilitationsPersonnel = data;
+                }).catch(this.$app.catchError).finally(() => this.pending.habilitationsPersonnel = false);
             }
         },
 
@@ -209,16 +279,28 @@ export default {
         },
 
         /**
+         * Retourne la liste des habilitation pour un personnel
+         * 
+         * @param {number} personnelId ID du personnel à tester
+         * 
+         * @return {array}
+         */
+        getHabilitationByPersonnelId(personnelId) {
+            return this.habilitationsPersonnel.filter(e => e.personnel_id == personnelId);
+        },
+
+        /**
          * Charge tous les operateurs
          */
         getAllOperateurs() {
-            this.pending.personnels = true;
-
-            this.$app.api.get('/v2/personnel')
-            .then(data => {
-                this.allOperateurs = data;
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.personnels = false);
+            return this.loadCollection({
+                pending: "personnels",
+                name: "personnels",
+                payload: {
+                    limit: "aucune"
+                },
+                outputData: "allOperateurs"
+            });
         },
 
         /**
@@ -256,10 +338,15 @@ export default {
         /**
          * Charges tout les contrats 
          */
-        getContrats(){
+        getContrats() {
             this.pending.contrats = true;
 
-            this.$app.api.get('/v2/contrat/')
+            this.$app.api.get("/v2/contrat", {
+                pdd: this.echeancier.dd,
+                pdf: this.echeancier.df,
+                structure__personnel_id: this.echeancier.operateurs.join(","),
+                limit: "aucune"
+            })
             .then(data => {
                 this.contrats = data
             })
@@ -274,8 +361,7 @@ export default {
 
     mounted() {
         this.getAllHabilitations();
-        this.getAllOperateurs(); 
-        // this.getContrats();
+        this.getAllOperateurs();
     }
 }
 

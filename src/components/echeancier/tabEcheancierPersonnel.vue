@@ -15,10 +15,12 @@
                     {{ personnel.cache_nom }}
                     <i :class="classKnManquant(personnel.id)" title="Aucun contrôle sur la période saisie"></i>
                 </div>
-    
-                <!-- <div v-for="contrat in filtredContrats(personnel.id)" :key="contrat" class="progressbar" :style="calculateWidth(contrat)">    
-                    <div class="progressbar-content">{{ contratLabel(contrat) }}</div>
-                </div> -->
+
+                <template v-for="contrat in filtredContrats(personnel.id)" :key="'contrat-'+contrat.id">
+                    <div class="control-result-item bg-secondary rounded text-truncate" :style="{left: getLeftPosition(getContratWeekStartInTimeline(contrat)+1), width: getWidth(getContratWeekEndInTimeline(contrat), 'px')}" v-if="contratIsInPeriode(contrat)" :title="contratLabel(contrat)">
+                       {{ contratLabel(contrat) }}
+                    </div>
+                </template>
     
                 <div v-for="kn in verifKns(personnel.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
                     {{ kn.sami }}
@@ -98,11 +100,12 @@ export default {
     data() {
 		return {
 			size : 50,
+            firstColumnWidth: 140
 		}
 	},
 
     computed:{
-        ...mapState(['echeancier'])
+        ...mapState(['echeancier']),
     },
 
     methods: {
@@ -264,33 +267,22 @@ export default {
         },
 
         /**
-         * Retourne la propriété style (left et width) en px calculée avec la durée du contrat du personnel
+         * Retourne true si le contrat est entre la periode défini sinon retourne false
          * 
-         * @param {Object} contrat 
+         * @param {object}    contrat
          * 
-         * @returns {string}
+         * @return {string}
          */
-        calculateWidth(contrat) {
-            let width;
-            let periode = this.periode
-            let left = 140;
-
-            left = (new Date(contrat.dentree).getWeek() - 1) * this.size + left;
-
-            if (contrat.dsortie) {
-                if(new Date(contrat.dsortie).getWeek() > periode[periode.length-1].semaine){
-                    width =  (periode.length - new Date(contrat.dentree).getWeek() + 1) * this.size;
-                } else {
-                    width = (new Date(contrat.dsortie).getWeek() - new Date(contrat.dentree).getWeek() + 1 + ((new Date(contrat.dsortie).getFullYear() - new Date(contrat.dentree).getFullYear())*52)) * this.size;
-                }
-            } else {
-                width =  (periode.length - new Date(contrat.dentree).getWeek() + 1) * this.size;
+        contratIsInPeriode(contrat) {
+            if (contrat.dentree >= this.echeancier.dd && contrat.dentree <= this.echeancier.df
+                || contrat.dentree <= this.echeancier.df && !contrat.dsortie
+                || contrat.dentree <= this.echeancier.df && contrat.dsortie && contrat.dsortie >= this.echeancier.df
+                || contrat.dentree <= this.echeancier.df && contrat.dsortie && contrat.dsortie >= this.echeancier.dd && contrat.dsortie <= this.echeancier.df) {
+                    return true;
             }
 
-
-            return `left: ${left}px; width: ${width}px;`;
+            return false;
         },
-
 
         /**
          * Retourne le type de contrat à afficher en fonction du personnel
@@ -301,11 +293,89 @@ export default {
          */
         contratLabel(contrat) {
             if (contrat.duree_indeterminee == 'OUI'){
-                return "CDI : " + dateFormat(contrat.dentree)
+                if (contrat.dentree) {
+                    return "CDI : " + dateFormat(contrat.dentree);
+                } else {
+                    return "Erreur avec la date d'entree non renseignée";
+                }
             } else {
-                return "CDD : " + dateFormat(contrat.dentree) + '>' + dateFormat(contrat.dsortie)
+                if (contrat.dentree && contrat.dsortie) {
+                    return "CDD : " + dateFormat(contrat.dentree) + '>' + dateFormat(contrat.dsortie)
+                } else {
+                    return "Erreur avec la date d'entree et/ou la date de sortie non renseignée(s)"
+                }
             }
         },
+
+        /**
+         * Retourne la position de la colonne depuis la gauche en fonction du numéro de la colonne
+         * 
+         * @param {number} n Le numéro de la colonne
+         * @param {number} coef Un coeficient multiplicateur pour tracer la grille (défaut 1)
+         * 
+         * @return {string}
+         */
+         getLeftPosition(n, coef) {
+            coef = typeof coef === "undefined" ? 1 : coef;
+            const left = (n-1) * (this.size * coef) + this.firstColumnWidth;
+            return left+"px";
+        },
+
+
+        /**
+         * Retourne le numéro de la semaine de début relatif à la timeline
+         * 
+         * La semaine 0 du contrat correspond au début de la timeline. Si le contrat commence avant
+         * la timeline, elle est considéré débutant à 0.
+         * 
+         * @param {object} contrat Le contrat à tester
+         * 
+         * @return {number}
+         */
+         getContratWeekStartInTimeline(contrat) {
+            const dateContrat = new Date(contrat.dentree);
+            const dateTimeline = new Date(this.echeancier.dd);
+
+            const time_diff = dateContrat.getTime() - dateTimeline.getTime();
+            const weeks_diff = Math.ceil(time_diff / (1000 * 3600 * 24) / 7);
+
+            return weeks_diff < 0 ? 0 : weeks_diff;
+        },
+
+        /**
+         * Retourne le numéro de la semaine de fin relatif à la timeline
+         * 
+         * 0 correspond au début de la timeline, X correspond à la fin de la timeline. La valeur retournée est 
+         * entrer 0 et X. Si le contrat prend fin après la timeline, X est retourné.
+         * 
+         * @param {object} contrat Le contrat à tester
+         * 
+         * @return {number}
+         */
+         getContratWeekEndInTimeline(contrat) {
+            const dateContratStart = new Date(contrat.dentree);
+            const dateContratEnd = new Date(contrat.dsortie ? contrat.dsortie : this.echeancier.df);
+
+            const time_diff = dateContratEnd.getTime() - dateContratStart.getTime();
+            const weeks_diff = Math.ceil(time_diff / (1000 * 3600 * 24) / 7);
+
+            const timeline_space = (this.periode.length - this.getContratWeekStartInTimeline(contrat));
+
+            return weeks_diff > timeline_space ? timeline_space : weeks_diff;
+        },
+
+        /**
+         * Retourne la largeur d'un élément en fonction du nombre de colonnes à occuper
+         * 
+         * @param {number} cols Numéro de la colonne
+         * @param {string} sx   Le suffixe à ajouter (ex px)
+         * 
+         * @return {number|string}
+         */
+         getWidth(cols, sx) {
+            const width = cols * this.size;
+            return typeof sx !== 'undefined' ? `${width}${sx}` : width;
+        }
 
     },
 }

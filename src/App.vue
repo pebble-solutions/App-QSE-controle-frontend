@@ -415,25 +415,9 @@ export default {
 				futur: true,
 				structure: "toutes",
 				limit: "aucune"
-			})
-				.then((data) => {
-					this.refreshListActifs(data);
-				})
-				.catch(this.$app.catchError)
-				.finally(this.pending.actifs = false);
-
-			try {
-				let collection = this.$assets.getCollection('personnels');
-				collection.reset();
-			} catch {
-				let collection = new AssetsCollection(this, {
-					assetName: 'personnels',
-					updateAction: 'updatePersonnels',
-					resetAction: 'resetPersonnels',
-					apiRoute: 'v2/personnel'
-				});
-				this.$assets.addCollection('personnels', collection);
-			}
+			}).then((data) => {
+				this.refreshListActifs(data);
+			}).catch(this.$app.catchError).finally(this.pending.actifs = false);
 		},
 
 
@@ -445,7 +429,6 @@ export default {
 		 * @return {boolean}
 		 */
 		noVal(val) {
-
 			if (!val) return true;
 			if (!val.length) return true;
 			return false;
@@ -456,7 +439,6 @@ export default {
 		 * 
 		 * @param	{array}	le tableau à parcourir
 		 */
-
 		exist(val) {
 			let liste = val;
 			let compteur = 0
@@ -554,6 +536,35 @@ export default {
 				}
 			}
 			return null;
+		},
+
+		/**
+		 * Initialise l'ensemble des collections disponibles dans l'application
+		 */
+		initCollections() {
+
+			const collections = [
+				{
+					name: "habilitationsTypes",
+					assetName: "habilitationsTypes",
+					apiRoute: "v2/controle/habilitation/type"
+				},
+				{
+					name: "personnels",
+					assetName: 'personnels',
+					apiRoute: 'v2/personnel'
+				}
+			];
+
+			collections.forEach((c) => {
+				try {
+					const collection = this.$assets.getCollection(c.name);
+					collection.reset();
+				} catch {
+					const collection = new AssetsCollection(this, c);
+					this.$assets.addCollection(c.name, collection);
+				}
+			});
 		}
 	},
 
@@ -570,6 +581,9 @@ export default {
 				this.loadHabilitation();
 				this.loadVeille();
 				this.loadCollectesCollection();
+				//this.loadCollectesCollection();
+
+				this.initCollections();
 			}
 		});
 	}
