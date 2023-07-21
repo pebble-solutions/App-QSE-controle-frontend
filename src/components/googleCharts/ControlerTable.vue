@@ -44,18 +44,20 @@ export default {
   methods: {
     fetchData() {
       this.chartData = [];
+      let habilitationHistory = new Map();
       const data = this.$assets.getCollection('collectesCollection').getCollection();
-      let habilitationTypeHistory = [];
-
       data.forEach(collecte => {
         const id = collecte['personnel_id__controleur'];
-        const index = this.chartData.findIndex(controleur => (controleur[0] == id));
-        if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
-          habilitationTypeHistory.push(collecte['habilitation_type_id']);
-        }
+        const index = this.chartData.findIndex(controleur => (controleur[0] == this.getControlerCacheNomById(id)));
+				if (habilitationHistory.get(id) == null) {
+					habilitationHistory.set(id, []);
+				}
+        if (!habilitationHistory.get(id).includes(collecte['habilitation_id'])) {
+					habilitationHistory.get(id).push(collecte['habilitation_id']);
+				}
         if (index >= 0) {
           this.chartData[index][1]++;//incrémentation du champ KN
-          this.chartData[index][2] = habilitationTypeHistory.length;
+					this.chartData[index][2] = habilitationHistory.get(id).length;
           switch (collecte['sami']) {
             case 'S':
               this.chartData[index][3][0].value++;
@@ -75,7 +77,7 @@ export default {
           }
 
         } else {
-          let newRow = ['Contrôleur ' + id, 1, habilitationTypeHistory.length, [
+          let newRow = [this.getControlerCacheNomById(id), 1, habilitationHistory.get(id).length, [
             {
               color: 'success',
               value: 0
@@ -117,7 +119,11 @@ export default {
           this.chartData.push(newRow);
         }
       });
-      habilitationTypeHistory = [];
+    },
+    getControlerCacheNomById(id){
+      let personnels = this.$assets.getCollection('personnels').getCollection();
+      const personnel = personnels.find(e => e.id == id);
+      return personnel ? personnel.cache_nom : 'Contrôleur (' + id + ') non trouvé'
     }
   },
   components: { StackedBar },

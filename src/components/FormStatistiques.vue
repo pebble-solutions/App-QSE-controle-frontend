@@ -258,20 +258,19 @@ export default {
             if (query.projets.length == 0) {
                 query.projets = []
             }
+            if (query.operateurs[0] == "") {
+                query.operateurs = query.operateurs.slice(1);
+            }
+            if (query.controleurs[0] == "") {
+                query.controleurs = query.controleurs.slice(1);
+            }
+            if (query.habilitation[0] == "") {
+                query.habilitation = query.habilitation.slice(1);
+            }
             if (query.projets[0] == "") {
                 query.projets = query.projets.slice(1);
             }
             this.setRequete(query);
-            /*this.requete =  {
-                operateurs: [''],
-                projets: [''],
-                controleurs: [''],
-                dd: null,
-                df: null,
-                habilitation: [''],
-                priorite: true,
-                environnement:'private'
-            },*/
             this.pending.requete = false;
         },
 
