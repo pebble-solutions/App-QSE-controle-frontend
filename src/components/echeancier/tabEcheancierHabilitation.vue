@@ -38,7 +38,7 @@
                         v-for="habilitationPersonnel in getHabilitationsPersonnelByTypeId(habilitation.id)" 
                         :key="habilitationPersonnel.id">
 
-                        {{ getHabilitationPersonnelLabel(habilitationPersonnel) }}
+                        <span class="label-timeline">{{ getHabilitationPersonnelLabel(habilitationPersonnel) }}</span>
                     </div>
 
                     <template v-for="contrat in personnelContrats" :key="contrat.id">
@@ -47,13 +47,32 @@
                             :style="{left: getLeftPosition(getWeekStartInTimeline(contrat.dentree) +1), width: getWidth(getWeekEndInTimeline(contrat.dsortie_reelle ? contrat.dsortie_relle : contrat.dsortie), 'px')}" 
                             v-if="isContratInPeriode(contrat)" 
                             :title="getContratLabel(contrat)">
-                            {{ getContratLabel(contrat) }}
+                            <span class="label-timeline">{{ getContratLabel(contrat) }}</span>
                         </div>
                     </template>
 
-                    <div v-for="kn in getControlsByCharacteristicTypeId(habilitation.id)" :key="kn" class="control-result-item btn m-1" :class="[classSAMI(kn.sami)]" :style="{ left: leftkn(kn) }">
-                        {{ kn.sami }}
-                    </div>
+                    <template 
+                        v-for="(kn, index) in getControlsByCharacteristicTypeId(habilitation.id)" 
+                        :key="kn">
+
+                        <div 
+                            class="control-timeline bg-gradient"
+                            :class="[getHabilitationBg(kn)]"
+                            :style="{ left: getLeftPosition(getWeekStartInTimeline(kn.date_done) +1), width: getWidth(getControlValidityWeeks(index, habilitation.id, 26), 'px') }"></div>
+                        
+                        <div 
+                            class="control-timeline bg-danger bg-gradient fs-7"
+                            :style="{ left: getLeftPosition(getWeekStartInTimeline(kn.date_done) + 1 + getControlValidityWeeks(index, habilitation.id, 26)), width: getWidth(getControlBlankWeeks(index, habilitation.id), 'px') }"
+                            v-if="getControlBlankWeeks(index, habilitation.id)"
+                            title="Contrôle expiré">
+                        </div>
+
+                        <div 
+                            class="control-result-item rounded m-1" 
+                            :class="[classSAMI(kn.sami)]" 
+                            :style="{ left: getLeftPosition(getWeekStartInTimeline(kn.date_done) +1) }"
+                            :title="kn.date_done">{{ kn.sami }}</div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -67,18 +86,28 @@
     position: absolute;
     z-index: 2;
     width: 40px;
+    line-height: 40px;
+    height: 40px;
+    text-align:center;
     top:0px;
 }
 
 .habilitation-timeline, 
+.control-timeline, 
 .contrat-timeline {
     position:absolute;
-    height:25px;
-    line-height: 25px;
-    border-radius: 4px;
-    z-index:1;
     overflow:hidden;
     white-space: nowrap;
+}
+
+.habilitation-timeline, 
+.contrat-timeline {
+    height:25px;
+    z-index:1;
+}
+
+.label-timeline {
+    line-height: 25px;
 }
 
 .habilitation-timeline {
@@ -87,6 +116,12 @@
 
 .contrat-timeline {
     top:25px;
+}
+
+.control-timeline {
+    height:5px;
+    z-index: 2;
+    top:20px;
 }
 
 .table-grid, .table-content {
@@ -141,6 +176,7 @@ import { mapState } from 'vuex';
 
 import UserImage from '../pebble-ui/UserImage.vue';
 import { dateFormat } from '../../js/date';
+import { diffDate } from '../../js/date';
 
 export default {
 
@@ -252,28 +288,13 @@ export default {
          */
         classSAMI(ref) {
             const classList = {
-                s: "btn-success",
-                a: "btn-primary",
-                m: "btn-warning",
-                i: "btn-danger"
+                s: "text-bg-success",
+                a: "text-bg-primary",
+                m: "text-bg-warning",
+                i: "text-bg-danger"
             }
 
             return classList[ref?.toLowerCase()];
-        },
-
-        /**
-         * Retourne le nomb de pixel de decalage du kn en fonction de sa date
-         * 
-         * @param {object} kn 
-         * 
-         * @returns {string} 
-         */
-        leftkn(kn) {
-            let knDate = new Date(kn.date_done);
-            const startWeek = typeof this.periode[0] !== 'undefined' ? parseInt(this.periode[0].semaine) : 0;
-            const left = (((knDate.getWeek() - startWeek) * this.size) + this.firstColumnWidth) + "px";
-
-            return left;
         },
 
         /**
@@ -342,12 +363,7 @@ export default {
          * @return {number}
          */
         getWeekStartInTimeline(refDd) {
-            const dateRef = new Date(refDd);
-            const dateTimeline = new Date(this.echeancier.dd);
-
-            const time_diff = dateRef.getTime() - dateTimeline.getTime();
-            const weeks_diff = Math.ceil(time_diff / (1000 * 3600 * 24) / 7);
-
+            const weeks_diff = Math.ceil( diffDate(this.echeancier.dd, refDd, 'week'));
             return weeks_diff < 0 ? 0 : weeks_diff;
         },
 
@@ -363,11 +379,8 @@ export default {
          * @return {number}
          */
         getWeekEndInTimeline(refDd, refDf) {
-            const dateRefStart = new Date(refDd);
-            const dateRefEnd = new Date(refDf ? refDf : this.echeancier.df);
-
-            const time_diff = dateRefEnd.getTime() - dateRefStart.getTime();
-            const weeks_diff = Math.ceil(time_diff / (1000 * 3600 * 24) / 7);
+            refDf = refDf ? refDf : this.echeancier.df;
+            const weeks_diff = Math.ceil( diffDate(refDd, refDf, 'week'));
 
             const timeline_space = this.periode.length - this.getWeekStartInTimeline(refDd);
 
@@ -395,7 +408,7 @@ export default {
          * @return {string}
          */
         getHabilitationPersonnelLabel(habilitationPersonnel) {
-            return "Du "+dateFormat(habilitationPersonnel.dd)+" au "+dateFormat(habilitationPersonnel.df);
+            return "Habilité du "+dateFormat(habilitationPersonnel.dd)+" au "+dateFormat(habilitationPersonnel.df);
         },
 
         /**
@@ -428,10 +441,11 @@ export default {
          * @return {string}
          */
         isContratInPeriode(contrat) {
+            const dsortie = contrat.dsortie_reelle ?? contrat.dsortie;
             if (contrat.dentree >= this.echeancier.dd && contrat.dentree <= this.echeancier.df
-                || contrat.dentree <= this.echeancier.df && !contrat.dsortie
-                || contrat.dentree <= this.echeancier.df && contrat.dsortie && contrat.dsortie >= this.echeancier.df
-                || contrat.dentree <= this.echeancier.df && contrat.dsortie && contrat.dsortie >= this.echeancier.dd && contrat.dsortie <= this.echeancier.df) {
+                || contrat.dentree <= this.echeancier.df && !dsortie
+                || contrat.dentree <= this.echeancier.df && dsortie && dsortie >= this.echeancier.df
+                || contrat.dentree <= this.echeancier.df && dsortie && dsortie >= this.echeancier.dd && dsortie <= this.echeancier.df) {
                     return true;
             }
 
@@ -464,6 +478,52 @@ export default {
 
             return label;
         },
+
+        /**
+         * Retourne le nombre de semaines de validité d'un contrôle par rapport au suivant,
+         * borné sur a timeline
+         * 
+         * @param {number} index                L'index du contrôle dans la collection des controles
+         * @param {number} characteristicId     ID de la characteristique à tester
+         * @param {number} expirationLimit      Nombre de semaine à expiration
+         * 
+         * @return {number}
+         */
+        getControlValidityWeeks(index, characteristicId, expirationLimit) {
+            const controls = this.getControlsByCharacteristicTypeId(characteristicId);
+            const currentControl = controls[index];
+            const nextControl = controls[index+1];
+
+            const dateStart = currentControl.date_done;
+            const dateEnd = nextControl ? nextControl.date_done : this.echeancier.df;
+
+            const weeks_diff = Math.ceil( diffDate(dateStart, dateEnd, 'week'));
+
+            return weeks_diff > expirationLimit && expirationLimit ? expirationLimit : weeks_diff;
+        },
+
+        /**
+         * Retourne la classe CSS d'arrière plan en fonction du résultat d'un KN
+         * 
+         * @param {object}          control         Le contrôle à tester
+         * 
+         * @return {string}
+         */
+        getHabilitationBg(control) {
+            const classList = {
+                s: "bg-success",
+                a: "bg-primary",
+                m: "bg-warning",
+                i: "bg-danger"
+            }
+
+            return classList[control.sami?.toLowerCase()];
+        },
+
+        getControlBlankWeeks(index, characteristicId) {
+            const diff = this.getControlValidityWeeks(index, characteristicId) - this.getControlValidityWeeks(index, characteristicId, 26);
+            return diff > 0 ? diff : 0;
+        }
     },
 }
 

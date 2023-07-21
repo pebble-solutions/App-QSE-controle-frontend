@@ -22,14 +22,25 @@ export function calculateDiffDate(sd, sf) {
  * 
  * @param {string} sd Date de début de l'intervalle 
  * @param {string} ed Date de fin de l'intervalle 
+ * @param {string} format 'milliseconde' (par défaut), 'day', 'week'
  * 
  * @returns {number} La diférence en milliseconde
  */
-export function diffDate(sd, ed) {
+export function diffDate(sd, ed, format) {
+	format = typeof format === 'undefined' ? 'milliseconde' : format;
+
     let dd = new Date(sqlDateToIso(sd));
     let df = new Date(sqlDateToIso(ed));
 
     let diff = df - dd;
+
+	if (['day', 'week'].includes(format)) {
+		diff = diff / (1000 * 3600 * 24);
+	}
+	
+	if (format == 'week') {
+		diff = diff / 7;
+	}
 
     return diff;
 }

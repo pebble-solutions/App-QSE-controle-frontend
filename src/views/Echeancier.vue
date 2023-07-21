@@ -212,7 +212,8 @@ export default {
                     dd_start : this.echeancier.dd,
                     df_start : this.echeancier.df,
                     personnel_id__operateur : this.echeancier.operateurs,
-                    habilitation_type_id : this.echeancier.habilitation
+                    habilitation_type_id : this.echeancier.habilitation,
+                    locked: true
                 }
 
                 if (this.echeancier.habilitation.length == 0 || this.echeancier.habilitation[0] == "") {
@@ -227,7 +228,11 @@ export default {
                     query.personnel_id__operateur = this.echeancier.operateurs.toString()
                 }
 
-                this.$app.api.get('/v2/collecte', query)
+                this.$app.api.get('/v2/collecte', query, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
                 .then(data => {
                     this.kns = data;
                 })
