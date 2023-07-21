@@ -4,33 +4,26 @@
 
 <script>
 import { GoogleCharts } from 'google-charts';
-import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
             chartData: [],
-            pending: {
-                fetchData: true,
-            },
         }
-    },
-    computed: {
-        ...mapState(['statResult'])
     },
     methods: {
         fetchData() {
-            const data = this.statResult;
-
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
             const dateOccurrences = {};
-            for (const element of data) {
+            data.forEach(element => {
                 if (element['date_done'] != null) {
                     const date = element['date_done'].split(' ')[0];
                     dateOccurrences[date] = dateOccurrences[date] ? dateOccurrences[date] + 1 : 1;
                 }
-            }
-
+            });
+        
             this.chartData = [];
+
             for (const key in dateOccurrences) {
                 let subArray = [new Date(key), dateOccurrences[key]];
                 this.chartData.push(subArray);
@@ -48,10 +41,8 @@ export default {
         }
     },
 
-    async mounted() {
-        this.pending.fetchData = true;
-        await this.fetchData();
-        this.pending.fetchData = false;
+    mounted() {
+        this.fetchData();
         GoogleCharts.load(this.drawChart, {
             packages: ['calendar'],
         });

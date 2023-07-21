@@ -53,7 +53,6 @@
 import HabilitationBarChart from './HabilitationBarChart.vue';
 //import HabilitationPieChart from './HabilitationPieChart.vue';
 import HabilitationTable from './HabilitationTable.vue';
-import { mapState } from 'vuex';
 
 export default {
     data() {
@@ -68,12 +67,9 @@ export default {
             required: true
         }
     },
-    computed: {
-        ...mapState(['statResult'])
-    },
     methods: {
         computeHabilitations() {
-            const data = this.statResult;
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
             let periodHabilitationsHistory = [];
             let totalHabilitationsHistory = [];
             data.forEach(collecte => {

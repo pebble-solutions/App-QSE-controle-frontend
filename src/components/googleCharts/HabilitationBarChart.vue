@@ -4,15 +4,11 @@
 
 <script>
 import { GoogleCharts } from 'google-charts'
-import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
             chartData: [],
-            pending: {
-                fetchData: true,
-            },
         }
     },
     props: {
@@ -21,13 +17,10 @@ export default {
             required: true
         }
     },
-    computed: {
-        ...mapState(['statResult'])
-    },
     methods: {
         async fetchData() {
 
-            const data = this.statResult;
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
 
             this.chartData = [['Habilitations', 'S', 'A', 'M', 'I']];
 
@@ -88,10 +81,8 @@ export default {
             chart.draw(dataTable, options);
         }
     },
-    async mounted() {
-        this.pending.fetchData = true;
-        await this.fetchData();
-        this.pending.fetchData = false;
+    mounted() {
+        this.fetchData();
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         });

@@ -10,13 +10,10 @@ export default {
     data() {
         return {
             chartData: [],
-            pending: {
-                fetchData: true,
-            },
         }
     },
     computed: {
-        ...mapState(['statResult', 'personnels'])
+        ...mapState(['personnels'])
     },
     props: {
         requeteStat: {
@@ -26,7 +23,7 @@ export default {
     },
     methods: {
         fetchData() {
-            const data = this.statResult;
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
 
             this.chartData = [['Contrôleurs', 'S', 'A', 'M', 'I']];
 
@@ -97,11 +94,9 @@ export default {
             });
         }
     },
-    async mounted() {
-        this.pending.fetchData = true;
-        await this.fetchData();
+    mounted() {
+        this.fetchData();
         this.getOperatorById();
-        this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         });

@@ -28,7 +28,8 @@ export default createStore({
 		personnels: [],
 		collectesCollection: [],
 		statResult: [],
-		echeancier: null
+		echeancier: null,
+		habilitationsCharacteristic: [],
 	},
 	getters: {
 		activeStructure(state) {

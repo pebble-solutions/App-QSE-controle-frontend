@@ -1,11 +1,5 @@
 <template>
-
-	<AppWrapper
-		:cfg="cfg"
-		:cfg-menu="cfgMenu"
-		:cfg-slots="cfgSlots"
-		
-		@auth-change="setLocal_user">
+	<AppWrapper :cfg="cfg" :cfg-menu="cfgMenu" :cfg-slots="cfgSlots" @auth-change="setLocal_user">
 
 		<template v-slot:header>
 			<div class="d-none d-sm-block">
@@ -17,7 +11,8 @@
 
 		<template v-slot:menu>
 			<AppMenu>
-				<AppMenuItem :href="menuItem.href" :icon="menuItem.icon" v-for="menuItem in appMenu" :key="menuItem.key" look="dark">
+				<AppMenuItem :href="menuItem.href" :icon="menuItem.icon" v-for="menuItem in appMenu" :key="menuItem.key"
+					look="dark">
 					{{ menuItem.label }}
 				</AppMenuItem>
 			</AppMenu>
@@ -137,7 +132,7 @@
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'echeancier'">
-				<FormEcheancier/>
+				<FormEcheancier />
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'home'">
@@ -249,9 +244,9 @@ export default {
 		 * @return {bool}
 		 */
 		isMoreAvailable() {
-            let ln = this.searchResults.length;
-            return (ln && ln % this.searchOptions.limit === 0 && !this.noMoreAvailable);
-        },
+			let ln = this.searchResults.length;
+			return (ln && ln % this.searchOptions.limit === 0 && !this.noMoreAvailable);
+		},
 
 		/**
 		 * Retourne les items du menu depuis la configuration
@@ -261,7 +256,7 @@ export default {
 		appMenu() {
 			return this.cfg.appMenu;
 		}
-		
+
 
 	},
 
@@ -319,19 +314,12 @@ export default {
 		/**
 		 * Charge l'ensemble des collectes terminées
 		 */
-		loadCollectesCollection() {/*
+		loadCollectesCollection() {
 			let collecteCollection = new AssetsCollection(this, {
 				assetName: 'collectesCollection',
-				apiRoute: 'v2/collecte/',
-				requestPayload: {
-					done: "OUI",
-					type: "KN",
-					// dd_start: '2023-04-05',
-					// df_start: '2023-04-05',
-
-				}
+				apiRoute: 'v2/collecte',
 			});
-			this.$assets.addCollection('collectes', collecteCollection);*/
+			this.$assets.addCollection('collectesCollection', collecteCollection);
 		},
 
 		/**
@@ -354,31 +342,40 @@ export default {
 			let query = { 'in_production': true }
 
 			this.$app.apiGet(route, query)
-			.then((data) => {
-				this.refreshProjets(data);
-			}).catch(this.$app.catchError).finally(() => this.pending.projets = false);
+				.then((data) => {
+					this.refreshProjets(data);
+				}).catch(this.$app.catchError).finally(() => this.pending.projets = false);
 		},
 
 		/**
-		 * charge la liste des habilitations depuis le serveur et les charge dans le store
+		 * charge la liste des habilitations type depuis le serveur et les charge dans le store
 		 */
 		loadHabilitationType() {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/controle/habilitation/type')
-			.then ((data)=> {
-				this.refreshHabilitationType(data);
-			}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+				.then((data) => {
+					this.refreshHabilitationType(data);
+				}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 		},
+
+		loadHabilitation() {
+			let collection = new AssetsCollection(this, {
+				assetName: 'habilitationsCharacteristic',
+				apiRoute: 'v2/characteristic'
+			});
+			this.$assets.addCollection('habilitationsCharacteristic', collection);
+		},
+
 		/** charge l'ensemble des veilles paramétrées
 		 * 
 		 */
 		loadVeille() {
 			this.pending.habilitations = true;
 
-            this.$app.apiGet('v2/controle/veille')
-            .then((data) =>{
-				this.refreshVeilleConfig(data);
-            }).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+			this.$app.apiGet('v2/controle/veille')
+				.then((data) => {
+					this.refreshVeilleConfig(data);
+				}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 		},
 
 		/**
@@ -495,10 +492,10 @@ export default {
 				this.pending.search = true;
 			}
 
-            searchConsultation(this.searchOptions, this.$app).then(data => {
-				if(this.searchOptions.mode == 'collecte') {
-					if(mode == 'append') {
-						if(!data.length) {
+			searchConsultation(this.searchOptions, this.$app).then(data => {
+				if (this.searchOptions.mode == 'collecte') {
+					if (mode == 'append') {
+						if (!data.length) {
 							this.noMoreAvailable = true;
 						} else {
 							this.addSearchResults(data);
@@ -560,8 +557,8 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques}, 
-	
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques },
+
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
 			this.$router.push('/programmation');
@@ -570,8 +567,9 @@ export default {
 				this.loadAgent();
 				this.loadProjets();
 				this.loadHabilitationType();
+				this.loadHabilitation();
 				this.loadVeille();
-				//this.loadCollectesCollection();
+				this.loadCollectesCollection();
 			}
 		});
 	}

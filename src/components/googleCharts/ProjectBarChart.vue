@@ -10,9 +10,6 @@ export default {
     data() {
         return {
             chartData: [],
-            pending: {
-                fetchData: true,
-            },
         }
     },
     props: {
@@ -22,11 +19,11 @@ export default {
         }
     },
     computed: {
-        ...mapState(['statResult', 'projets'])
+        ...mapState(['projets'])
     },
     methods: {
         fetchData() {
-            const data = this.statResult;
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
 
             this.chartData = [['Projets', 'S', 'A', 'M', 'I']];
 
@@ -85,23 +82,21 @@ export default {
             };
             chart.draw(dataTable, options);
         },
-        getOperatorById(){
+        getOperatorById() {
             let projets = this.projets;
             this.chartData.forEach(chartDataRow => {
                 const projet = projets.find(projet => projet.id === chartDataRow[0]);
-                if(projet != null){
+                if (projet != null) {
                     chartDataRow[0] = projet.intitule;
-                }else {
+                } else {
                     chartDataRow[0] = 'Projet ' + chartDataRow[0];
                 }
             });
         }
     },
-    async mounted() {
-        this.pending.fetchData = true;
-        await this.fetchData();
+    mounted() {
+        this.fetchData();
         this.getOperatorById();
-        this.pending.fetchData = false;
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
         });

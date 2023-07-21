@@ -2,7 +2,10 @@
   <table class="table">
     <thead>
       <tr>
-        <th v-for="(label, index) in chartData[0]" :key="index">{{ label }}</th>
+        <th></th>
+        <th>KN</th>
+        <th>Habilitation contrôlées</th>
+        <th>SAMI</th>
       </tr>
     </thead>
     <tbody>
@@ -22,14 +25,10 @@
   
 <script>
 import StackedBar from '../../components/pebble-ui/charts/StackedBar.vue'
-import { mapState } from 'vuex';
 export default {
   data() {
     return {
       chartData: [],
-      pending: {
-        fetchData: true,
-      },
     }
   },
   props: {
@@ -38,20 +37,11 @@ export default {
       required: true,
     },
   },
-  computed: {
-    ...mapState(['statResult'])
-  },
   methods: {
     fetchData() {
-      /*this.chartData = [
-  ['', 'KN', 'Type habilitation', 'Total habilitations', 'S', 'A', 'M', 'I'],
-];*/
-      this.chartData = [
-        ['', 'KN', 'Habilitations contrôlées', 'SAMI'],
-      ];
-      const data = this.statResult;
+      this.chartData = [];
+      const data = this.$assets.getCollection('collectesCollection').getCollection();
       let habilitationTypeHistory = [];
-      //let totalHabilitationsHIstory = [];
 
       data.forEach(collecte => {
         const id = collecte['habilitation_id'];
@@ -59,28 +49,20 @@ export default {
         if (habilitationTypeHistory.findIndex(id => id == collecte['habilitation_type_id']) == -1) {
           habilitationTypeHistory.push(collecte['habilitation_type_id']);
         }
-        /*if (totalHabilitationsHIstory.findIndex(id => id == collecte['habilitation_id']) == -1) {
-          totalHabilitationsHIstory.push(collecte['habilitation_id']);
-        }*/
         if (index >= 0) {
           this.chartData[index][1]++;//incrémentation du champ KN
           this.chartData[index][2] = habilitationTypeHistory.length;
-          //this.chartData[index][3] = totalHabilitationsHIstory.length;
           switch (collecte['sami']) {
             case 'S':
-              //this.chartData[index][4]++;
               this.chartData[index][3][0].value++;
               break;
             case 'A':
-              //this.chartData[index][5]++;
               this.chartData[index][3][1].value++;
               break;
             case 'M':
-              //this.chartData[index][6]++;
               this.chartData[index][3][2].value++;
               break;
             case 'I':
-              //this.chartData[index][7]++;
               this.chartData[index][3][3].value++;
               break;
             default:
@@ -89,7 +71,6 @@ export default {
           }
 
         } else {
-          //let newRow = ['Habilitation ' + id, 1, habilitationTypeHistory.length, totalHabilitationsHIstory.length, 0, 0, 0, 0];
           let newRow = ['Habilitation ' + id, 1, habilitationTypeHistory.length, [
             {
               color: 'success',
@@ -114,19 +95,15 @@ export default {
           ]];
           switch (collecte['sami']) {
             case 'S':
-              //newRow[4]++;
               newRow[3][0].value++;
               break;
             case 'A':
-              //newRow[5]++;
               newRow[3][1].value++;
               break;
             case 'M':
-              //newRow[6]++;
               newRow[3][2].value++;
               break;
             case 'I':
-              //newRow[7]++;
               newRow[3][3].value++;
               break;
             default:
@@ -137,14 +114,11 @@ export default {
         }
       });
       habilitationTypeHistory = [];
-      //totalHabilitationsHIstory = [];
     }
   },
   components: { StackedBar },
   mounted() {
-    this.pending.fetchData = true;
     this.fetchData();
-    this.pending.fetchData = false;
   },
 }
 </script>
