@@ -125,7 +125,7 @@
 				</AppMenuItem> -->
 				<template v-for="agent in listActifs" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
-						<FicheIndividuelleSuiviItem :agent="agent" :stat="statByAgent(agent.id)"/>
+						<FicheIndividuelleSuiviItem :agent="agent" :stats="getStatsByAgent(agent.id)"/>
 					</AppMenuItem>
 				</template>
 				<div class="alert alert-info m-2" v-if="!listActifs?.length">
@@ -209,7 +209,7 @@ export default {
 				actifs: true,
 				loadMore: false,
 				habilitations: true,
-				statAlert: true
+				stats: true
 			},
 			isConnectedUser: false,
 			searchOptions: {
@@ -223,7 +223,7 @@ export default {
 			options: {
 				mode: 'default'
 			},
-			characteristicPersonnelStatAlert: []
+			characteristicPersonnelStats: []
 
 		}
 	},
@@ -566,16 +566,16 @@ export default {
 		 * 
 		 * @return {Promise<object>}
 		 */
-		loadCharacteristicPersonnelStatAlert() {
-			this.pending.statAlert = true;
+		loadCharacteristicPersonnelStats() {
+			this.pending.stats = true;
 
 			this.pending.actifs = true;
-			this.$app.apiGet('v2/characteristicPersonnel/stat/alert')
+			this.$app.apiGet('v2/characteristicPersonnel/stats')
 			.then((data) => {
-				this.characteristicPersonnelStatAlert = data;
+				this.characteristicPersonnelStats = data;
 			})
 			.catch(this.$app.catchError)
-			.finally(this.pending.statAlert = false);
+			.finally(this.pending.stats = false);
 		},
 
 		/**
@@ -585,10 +585,9 @@ export default {
 		 * 
 		 * @return {array}
 		 */
-		statByAgent(agentId) {
-			let statByAgent = this.characteristicPersonnelStatAlert.find(e => e.personnel_id == agentId);
-
-			return statByAgent;
+		getStatsByAgent(agentId) {
+			let statsByAgent = this.characteristicPersonnelStats.find(e => e.personnel_id == agentId);
+			return statsByAgent;
 		}
 	},
 
@@ -603,7 +602,7 @@ export default {
 				this.loadProjets();
 				this.loadHabilitationType();
 				this.loadVeille();
-				this.loadCharacteristicPersonnelStatAlert();
+				this.loadCharacteristicPersonnelStats();
 				//this.loadCollectesCollection();
 			}
 		});

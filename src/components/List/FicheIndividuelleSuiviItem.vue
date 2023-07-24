@@ -50,7 +50,7 @@
 export default {
     props: {
         agent: Object,
-        stat: Array
+        stats: Array
     },
 
     data() {
@@ -109,10 +109,10 @@ export default {
 
     mounted() {
 
-        if (this.stat) {
-            this.nbTotalHabilitation = this.stat.total;
-            this.nbExpired = this.stat.expired;
-            this.nbExpirationWarning = this.stat.expirationWarning;
+        if (this.stats) {
+            this.nbTotalHabilitation = this.stats.total;
+            this.nbExpired = this.stats.expired;
+            this.nbExpirationWarning = this.stats.expirationWarning;
         }
     },
 };
