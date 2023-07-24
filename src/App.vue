@@ -125,7 +125,7 @@
 				</AppMenuItem> -->
 				<template v-for="agent in listActifs" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
-						<FicheIndividuelleSuiviItem :agent="agent"/>
+						<FicheIndividuelleSuiviItem :agent="agent" :stat="statByAgent(agent.id)"/>
 						<!-- <div>
 							<span class="badge rounded-pill text-bg-danger">
 								<i class="bi bi-exclamation-triangle-fill"></i>
@@ -222,6 +222,7 @@ export default {
 				actifs: true,
 				loadMore: false,
 				habilitations: true,
+				statAlert: true
 			},
 			isConnectedUser: false,
 			searchOptions: {
@@ -235,6 +236,7 @@ export default {
 			options: {
 				mode: 'default'
 			},
+			characteristicPersonnelStatAlert: []
 
 		}
 	},
@@ -276,7 +278,6 @@ export default {
 			return this.cfg.appMenu;
 		}
 		
-
 	},
 
 	watch: {
@@ -571,6 +572,36 @@ export default {
 				}
 			}
 			return null;
+		},
+
+		/**
+		 * Charge les states de characteristic personnel par personnel
+		 * 
+		 * @return {Promise<object>}
+		 */
+		loadCharacteristicPersonnelStatAlert() {
+			this.pending.statAlert = true;
+
+			this.pending.actifs = true;
+			this.$app.apiGet('v2/characteristicPersonnel/stat/alert')
+			.then((data) => {
+				this.characteristicPersonnelStatAlert = data;
+			})
+			.catch(this.$app.catchError)
+			.finally(this.pending.statAlert = false);
+		},
+
+		/**
+		 * Retourn les states du personnel qui correspond a l'agent fournis en parametre
+		 * 
+		 * @param {integer} agentId l'id de l'agent
+		 * 
+		 * @return {array}
+		 */
+		statByAgent(agentId) {
+			let statByAgent = this.characteristicPersonnelStatAlert.find(e => e.personnel_id == agentId);
+
+			return statByAgent;
 		}
 	},
 
@@ -585,6 +616,7 @@ export default {
 				this.loadProjets();
 				this.loadHabilitationType();
 				this.loadVeille();
+				this.loadCharacteristicPersonnelStatAlert();
 				//this.loadCollectesCollection();
 			}
 		});

@@ -2,12 +2,14 @@
     <div>
         {{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
 
-        <div class="badge-group" v-if="nbHabilitation">
-            <span v-for="badge in badges" :key="badge.label" class="badge status-badge" :class="'text-bg-'+badge.style">
-                <i class="bi" :class="badge.icon"></i>
-                <span class="mx-1">{{ getHabiliationNb(badge.style) }}</span>
-                <span class="status-detail">{{ badge.label }}</span>
-            </span>
+        <div class="badge-group" v-if="nbTotalHabilitation">
+            <template v-for="badge in badges" :key="badge.label">
+                <span class="badge status-badge" :class="'text-bg-'+badge.style" v-if="getHabiliationNb(badge.style) > 0">
+                    <i class="bi" :class="badge.icon"></i>
+                    <span class="mx-1">{{ getHabiliationNb(badge.style) }}</span>
+                    <span class="status-detail">{{ badge.label }}</span>
+                </span>
+            </template>
         </div>
 
     </div>
@@ -47,14 +49,15 @@
 
 export default {
     props: {
-        agent: Object
+        agent: Object,
+        stat: Array
     },
 
     data() {
         return {
-            nbHabilitation: 5,
-            nbExpire: 1,
-            nbSoonExpire: 2,
+            nbTotalHabilitation: 0,
+            nbExpired: 0,
+            nbExpirationWarning: 0,
             badges: [
                 {
                     style: "secondary",
@@ -76,24 +79,40 @@ export default {
     },
 
     methods: {
+        /**
+         * Retourne le nombre a afficher en fonction du style du badge
+         * 
+         * @param {string} badgeStyle le style du badge
+         * 
+         * @return {number}
+         */
         getHabiliationNb(badgeStyle) {
             let dataNb;
 
             switch (badgeStyle) {
                 case "danger":
-                    dataNb = this.nbExpire;
+                    dataNb = this.nbExpired;
                     break;
 
                 case "warning":
-                    dataNb = this.nbSoonExpire;
+                    dataNb = this.nbExpirationWarning;
                     break;
             
                 default:
-                    dataNb = this.nbHabilitation;
+                    dataNb = this.nbTotalHabilitation;
                     break;
             }
 
             return dataNb;
+        },
+    },
+
+    mounted() {
+
+        if (this.stat) {
+            this.nbTotalHabilitation = this.stat.total;
+            this.nbExpired = this.stat.expired;
+            this.nbExpirationWarning = this.stat.expirationWarning;
         }
     },
 };
