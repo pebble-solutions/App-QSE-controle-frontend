@@ -1,7 +1,7 @@
 <template>
     <form class="m-1" @submit.prevent="searchStat()">
-        <div class="row">
-            <div class=" col-6 mb-3">
+        <div class="row g-3">
+            <div class="col-6 mb-3">
                 <label class="form-label" for="DateDebut">Date de début</label>
                 <input type="date" class="form-control" id="dd" name="date" v-model="requete.dd" required>
             </div>
