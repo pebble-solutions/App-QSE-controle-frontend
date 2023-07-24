@@ -11,6 +11,7 @@
             <strong>{{ nomPersonnel }}</strong>
             <small class="me-2">{{ nomHabilitationType }}</small>
             <small class="me-2">Contrôlé il y a {{ months }} mois et {{ days }} jours</small>
+            <small class="me-2">Dernier contrôle : {{ habilitationPersonnel.last_control_result ?? 'Inconnu' }}</small>
             <StackedBar :bars="bars" :totalValue="totalValue"></StackedBar>
         </div>
     </div>
