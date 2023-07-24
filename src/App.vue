@@ -126,19 +126,6 @@
 				<template v-for="agent in listActifs" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
 						<FicheIndividuelleSuiviItem :agent="agent" :stat="statByAgent(agent.id)"/>
-						<!-- <div>
-							<span class="badge rounded-pill text-bg-danger">
-								<i class="bi bi-exclamation-triangle-fill"></i>
-								<span>1</span>
-								<span>Expire</span>
-							</span>
-
-							<span class="badge rounded-pill text-bg-warning">
-
-							</span>
-						</div>
-
-						{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span> -->
 					</AppMenuItem>
 				</template>
 				<div class="alert alert-info m-2" v-if="!listActifs?.length">
