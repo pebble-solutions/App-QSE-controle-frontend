@@ -104,15 +104,7 @@
 						{{ veille.nom }}
 					</AppMenuItem>
 				</template> -->
-				<template v-for="hab in habilitationType" :key="hab.id">
-					<AppMenuItem :href="'/habilitationHab/' + hab.id">
-						{{ hab.nom }}
-					</AppMenuItem>
-				</template>
-
-				<div class="alert alert-info m-2" v-if="!habilitationType?.length">
-					Il n'y a pas de type d'habilitation enregistré
-				</div>
+				<HabilitationList />
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'operateur'">
 				<!-- <AppMenuItem href="/habilitation/Agent"> 
@@ -183,6 +175,7 @@ import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
+import HabilitationList from './components/habilitation/List.vue'
 // import SearchHab from './components/menu/SearchHab.vue'
 
 
@@ -221,7 +214,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults', 'habilitationType', 'veilleConfig']),
+		...mapState(['openedElement', 'collectes', 'formulaires', 'listActifs', 'projets', 'searchResults', 'veilleConfig']),
 
 		/**
 		 * Détermine quelle liste afficher :
@@ -342,9 +335,9 @@ export default {
 		loadHabilitationType() {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/controle/habilitation/type')
-				.then((data) => {
-					this.refreshHabilitationType(data);
-				}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+			.then((data) => {
+				this.refreshHabilitationType(data);
+			}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 		},
 
 		loadHabilitation() {
@@ -547,6 +540,11 @@ export default {
 					name: "collectesCollection",
 					assetName: "collectesCollection",
 					apiRoute: "v2/collecte"
+				},
+				{
+					name: "habilitationsPersonnels",
+					assetName: "habilitationsPersonnels",
+					apiRoute: "v2/characteristic/personnel"
 				}
 			];
 
@@ -562,7 +560,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, HabilitationList },
 
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

@@ -42,12 +42,12 @@
                 "label": "Veille Habilitations",
                 "icon": "bi bi-hourglass-split",
                 "key": "habilitation",
-                "href": "/habilitation"
+                "href": "/habilitationPersonnel"
             },
             {
                 "label": "Veille operateurs",
                 "icon": "bi bi-person-check-fill",
-                "key": "habilitation",
+                "key": "operateur",
                 "href": "/operateur"
             }
         ]
