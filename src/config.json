@@ -45,7 +45,7 @@
                 "href": "/habilitationPersonnel"
             },
             {
-                "label": "Veille operateurs",
+                "label": "Fiche individuelle de suivi",
                 "icon": "bi bi-person-check-fill",
                 "key": "operateur",
                 "href": "/operateur"

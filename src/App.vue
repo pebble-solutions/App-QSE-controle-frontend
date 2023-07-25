@@ -112,7 +112,7 @@
 				</AppMenuItem> -->
 				<template v-for="agent in listActifs" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
-						{{ agent.cache_nom }}<span class="fw-lighter ms-1"> #{{ agent.id }}</span>
+						<FicheIndividuelleSuiviItem :agent="agent" :stats="getStatsByAgent(agent.id)"/>
 					</AppMenuItem>
 				</template>
 				<div class="alert alert-info m-2" v-if="!listActifs?.length">
@@ -165,6 +165,7 @@ import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
 import FormStatistiques from './components/FormStatistiques.vue'
+import FicheIndividuelleSuiviItem from './components/List/FicheIndividuelleSuiviItem.vue'
 
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
@@ -175,7 +176,7 @@ import SearchControl from './components/SearchControl.vue'
 import { searchConsultation } from './js/search-consultation'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
-import HabilitationList from './components/habilitation/List.vue'
+import HabilitationList from './components/habilitation/List.vue';
 // import SearchHab from './components/menu/SearchHab.vue'
 
 
@@ -196,6 +197,7 @@ export default {
 				actifs: true,
 				loadMore: false,
 				habilitations: true,
+				stats: true
 			},
 			isConnectedUser: false,
 			searchOptions: {
@@ -209,6 +211,7 @@ export default {
 			options: {
 				mode: 'default'
 			},
+			characteristicPersonnelStats: []
 
 		}
 	},
@@ -249,8 +252,6 @@ export default {
 		appMenu() {
 			return this.cfg.appMenu;
 		}
-
-
 	},
 
 	watch: {
@@ -557,11 +558,38 @@ export default {
 					this.$assets.addCollection(c.name, collection);
 				}
 			});
+		},
+
+		/**
+		 * Charge les states de characteristic personnel par personnel
+		 */
+		loadCharacteristicPersonnelStats() {
+			this.pending.stats = true;
+
+			this.pending.actifs = true;
+			this.$app.apiGet('v2/characteristicPersonnel/stats')
+			.then((data) => {
+				this.characteristicPersonnelStats = data;
+			})
+			.catch(this.$app.catchError)
+			.finally(this.pending.stats = false);
+		},
+
+		/**
+		 * Retourn les states du personnel qui correspond a l'agent fournis en parametre
+		 * 
+		 * @param {integer} agentId l'id de l'agent
+		 * 
+		 * @return {array}
+		 */
+		getStatsByAgent(agentId) {
+			let statsByAgent = this.characteristicPersonnelStats.find(e => e.personnel_id == agentId);
+			return statsByAgent;
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, HabilitationList },
-
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList },
+	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
 			this.$router.push('/programmation');
@@ -574,6 +602,8 @@ export default {
 				this.loadVeille();
 
 				this.initCollections();
+				this.loadCharacteristicPersonnelStats();
+				//this.loadCollectesCollection();
 			}
 		});
 	}
