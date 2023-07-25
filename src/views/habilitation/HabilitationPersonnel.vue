@@ -1,13 +1,15 @@
 <template>
-    
     <router-view />
-
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 
 export default {
-
+    computed: {
+        ...mapState(['pending']),
+    },
     methods: {
         /**
          * Charge les informations des habilitations du personnel depuis la collection
@@ -26,11 +28,41 @@ export default {
             catch (e) {
                 this.$app.catchError(e);
             }
-        }
+        },
+        /**
+         * Charge la liste du personnel 
+         */
+        async loadPersonnels() {
+            const collection = this.$assets.getCollection("personnels");
+            try {
+                await collection.load({
+                    limit: 'aucune'
+                });
+            }
+            catch (e) {
+                this.$app.catchError(e);
+            }
+        },
+        /**
+         * Charge habilitationCharacteristic
+         */
+         async loadHabilitationsCharacteristic() {
+            const collection = this.$assets.getCollection("habilitationsCharacteristic");
+            try {
+                await collection.load({
+                    limit: 'aucune'
+                });
+            }
+            catch (e) {
+                this.$app.catchError(e);
+            }
+        },
     },
 
-    async mounted() {
-        await this.loadHabilitationsPersonnels();
+    mounted() {
+        this.loadHabilitationsPersonnels();
+        this.loadPersonnels();
+        this.loadHabilitationsCharacteristic();
     }
 }
 
