@@ -30,7 +30,12 @@ export default createStore({
 		statResult: [],
 		echeancier: null,
 		habilitationsCharacteristic: [],
-		habilitationsTypes: []
+		habilitationsTypes: [],
+		pending: {
+			collectesCollection: false,
+			personnels: false,
+			habilitationsCharacteristic: false,
+		},
 	},
 	getters: {
 		activeStructure(state) {
