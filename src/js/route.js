@@ -13,6 +13,8 @@ export const ROUTES_NAMES = {
 				'newCollecte'
 				],
 	habilitation: ['Habilitation',
+				'HabilitationPersonnel',
+				'HabilitationPersonnelStatus',
 				'HabilitationHabilitation',
 				'habilitationByHab',
 				'NewCollecteVeille'],

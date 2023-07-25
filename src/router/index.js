@@ -149,7 +149,7 @@ const routes = [
   {
     path: '/habilitation',
     name: 'Habilitation',
-    component: () => import("../views/Habilitation.vue"),
+    component: () => import("../views/habilitation/Habilitation.vue"),
   },
   {
     path: '/habilitationHab/:id',
@@ -207,7 +207,19 @@ const routes = [
     path:'/echeancier',
     name: 'Echeancier',
     component: () => import(/* webpackChunkName: "about" */ '../views/Echeancier.vue')
-  }
+  },
+  {
+    path: '/habilitationPersonnel',
+    name: 'HabilitationPersonnel',
+    component: () => import("../views/habilitation/HabilitationPersonnel.vue"),
+    children: [
+      {
+        path: ':id',
+        name: 'HabilitationPersonnelStatus',
+        component: () => import("../views/habilitation/HabilitationPersonnelStatus.vue"),
+      }
+    ]
+  },
 
 ]
 

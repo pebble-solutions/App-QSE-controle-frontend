@@ -9,7 +9,7 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-6 col-lg-4 col-12">
-                            <img src="../assets/veilleHabilitation.jpg" class="img-fluid" alt="veille sur habilitation" />
+                            <img src="../../assets/veilleHabilitation.jpg" class="img-fluid" alt="veille sur habilitation" />
                         </div>
                         <div class="col display-6 ">
                             <p class="fs-4 text-start">Utilisez cet espace pour veiller les contrôles par habilitations</p>
@@ -56,11 +56,11 @@
 </template>
 <script>
 import {mapState} from 'vuex';
-import Spinner from '../components/pebble-ui/Spinner.vue';
-import JaugeMoyenneSami from '../components/JaugeMoyenneSami.vue';
+import Spinner from '../../components/pebble-ui/Spinner.vue';
+import JaugeMoyenneSami from '../../components/JaugeMoyenneSami.vue';
 
 // import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
-import {dateFormat} from '../js/collecte';
+import {dateFormat} from '../../js/collecte';
 
 
 export default {
