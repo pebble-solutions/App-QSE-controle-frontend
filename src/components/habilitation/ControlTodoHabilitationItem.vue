@@ -4,19 +4,25 @@
             <UserImage :name="nomPersonnel" v-if="nomPersonnel"></UserImage>
         </div>
         <div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100">
-            <div class="d-flex align-items-center">
-                <small class="fw-lighter me-2">#{{ habilitationPersonnel.id }}</small>
+            <div class="d-flex align-items-center text-secondary">
+                <span class="fw-lighter me-2">#{{ habilitationPersonnel.id }}</span>
+                <strong v-if="!pending.habilitationsCharacteristic">{{ nomHabilitationType }}</strong>
             </div>
             <strong v-if="!pending.personnels">{{ nomPersonnel }}</strong>
-            <small class="me-2" v-if="!pending.habilitationsCharacteristic">{{ nomHabilitationType }}</small>
-            <small class="me-2">Contrôlé il y a {{ months }} mois et {{ days }} jours</small>
 
-            <span class="me-2 badge rounded-pill" :class="SAMIClassName" v-if="habilitationPersonnel.last_control_result">{{
-                habilitationPersonnel.last_control_result }}</span>
+            <div v-if="habilitationPersonnel.last_control_result">
+                <span class="d-flex align-items-center"> 
+                    <span class="badge rounded-pill" :class="SAMIClassName">{{habilitationPersonnel.last_control_result }}</span> 
+                    <span class="ms-2">il y a {{ months }} mois et {{ days }} jours</span>
+                </span>
+            </div>
+            <span class="badge border border-danger text-bg-light text-danger rounded-pill ms-2" v-else>
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span class="ms-1">Non contrôlé</span>
+            </span>
 
-            <span class="badge border border-danger text-bg-light text-danger rounded-pill ms-2" v-else><i
-                    class="bi bi-exclamation-triangle-fill"></i><span class="ms-1">Non contrôlé</span></span>
             <StackedBar :bars="bars" :totalValue="totalValue"></StackedBar>
+
         </div>
     </div>
 </template>
