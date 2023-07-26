@@ -11,9 +11,10 @@
             <strong v-if="!pending.personnels">{{ nomPersonnel }}</strong>
 
             <div v-if="habilitationPersonnel.last_control_result">
-                <span class="d-flex align-items-center"> 
-                    <span class="badge rounded-pill" :class="SAMIClassName">{{habilitationPersonnel.last_control_result }}</span> 
-                    <span class="ms-2">il y a {{ months }} mois et {{ days }} jours</span>
+                <span class="d-flex align-items-center">
+                    <span class="badge rounded-pill" :class="SAMIClassName">{{ habilitationPersonnel.last_control_result
+                    }}</span>
+                    <span class="ms-2">il y a {{years}} ans {{ months }} mois et {{ days }} jours</span>
                 </span>
             </div>
             <span class="badge border border-danger text-bg-light text-danger rounded-pill ms-2" v-else>
@@ -21,7 +22,8 @@
                 <span class="ms-1">Non contrôlé</span>
             </span>
 
-            <StackedBar :bars="bars" :totalValue="totalValue"></StackedBar>
+            <!--<StackedBar :bars="bars" :totalValue="totalValue"></StackedBar>-->
+
 
         </div>
     </div>
@@ -30,7 +32,7 @@
 <script>
 import { mapState } from 'vuex';
 import UserImage from '../pebble-ui/UserImage.vue'
-import StackedBar from '../pebble-ui/charts/StackedBar.vue'
+//import StackedBar from '../pebble-ui/charts/StackedBar.vue'
 import { classNameFromSAMI } from '../../js/collecte';
 export default {
     data() {
@@ -39,6 +41,7 @@ export default {
             habilitationsCharacteristic: null,
             nomPersonnel: '',
             nomHabilitationType: '',
+            years: 0,
             months: 0,
             days: 0,
             bars: [],
@@ -86,7 +89,9 @@ export default {
             }
         },
         computeMonthAndDays() {
-            this.months = Math.ceil(this.habilitationPersonnel.last_control_days / (365 / 12));
+            const totalMonths = Math.ceil(this.habilitationPersonnel.last_control_days / (365 / 12));
+            this.years = Math.trunc(totalMonths / 12);
+            this.months = totalMonths % 12;
             this.days = Math.ceil(this.habilitationPersonnel.last_control_days % (365 / 12));
         },
         computeStackedBar() {
@@ -107,7 +112,7 @@ export default {
         },
     },
     components: {
-        StackedBar, UserImage
+        UserImage
     },
     async mounted() {
         let personnels = this.$assets.getCollection('personnels');
