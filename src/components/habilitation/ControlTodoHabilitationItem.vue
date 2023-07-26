@@ -14,7 +14,7 @@
                 <span class="d-flex align-items-center">
                     <span class="badge rounded-pill" :class="SAMIClassName">{{ habilitationPersonnel.last_control_result
                     }}</span>
-                    <span class="ms-2">il y a {{years}} ans {{ months }} mois et {{ days }} jours</span>
+                    <span class="ms-2">il y a {{ years }} ans {{ months }} mois et {{ days }} jours</span>
                 </span>
             </div>
             <span class="badge border border-danger text-bg-light text-danger rounded-pill ms-2" v-else>
@@ -22,6 +22,11 @@
                 <span class="ms-1">Non contrôlé</span>
             </span>
 
+            <span :class="badgeClass">
+                <i class="bi bi-hourglass"></i>
+                <span class="ms-1" v-if="daysUntilControl >= 0">À contrôler dans {{ daysUntilControl }} jours</span>
+                <span v-else>Contrôle expiré depuis {{ -1 * daysUntilControl }} jours</span>
+            </span>
             <!--<StackedBar :bars="bars" :totalValue="totalValue"></StackedBar>-->
 
 
@@ -46,6 +51,8 @@ export default {
             days: 0,
             bars: [],
             totalValue: 0,
+            daysUntilControl: 0,
+            badgeClass: '',
         }
     },
     props: {
@@ -110,6 +117,21 @@ export default {
             var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
             this.totalValue = Difference_In_Days;
         },
+        buildBadgeClass() {
+            const duration = Math.ceil((365 / 12) * 6); //6 mois
+            const daysUntilControl = duration - this.habilitationPersonnel.last_control_days;
+            console.log(daysUntilControl);
+            if (daysUntilControl > 30) {
+                this.badgeClass = 'badge border border-success text-bg-light text-success rounded-pill ms-2';
+            } else if (daysUntilControl > 15 && daysUntilControl <= 30) {
+                this.badgeClass = 'badge border border-primary text-bg-light text-primary rounded-pill ms-2';
+            } else if (daysUntilControl >= 0 && daysUntilControl <= 15) {
+                this.badgeClass = 'badge border border-warning text-bg-light text-warning rounded-pill ms-2';
+            } else if (daysUntilControl < 0) {
+                this.badgeClass = 'badge border border-danger text-bg-light text-danger rounded-pill ms-2';
+            }
+            this.daysUntilControl = daysUntilControl;
+        },
     },
     components: {
         UserImage
@@ -130,6 +152,8 @@ export default {
         if (!this.pending.habilitationsCharacteristic) {
             this.getHabilitionName();
         }
+
+        this.buildBadgeClass();
     },
 }
 </script>
