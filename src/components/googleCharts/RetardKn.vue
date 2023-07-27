@@ -24,7 +24,7 @@ export default {
     },
     mounted(){
         const data = this.$assets.getCollection('collectesCollection').getCollection();
-        const lateKn = data.filter(collecte => collecte.date_prevue < collecte.date_done);
+        const lateKn = data.filter(collecte => collecte.date_prevue.split(' ')[0] < collecte.date_done.split(' ')[0]);
         this.lateKn = lateKn.length;
         this.inTimeKn = data.length - lateKn.length;
     }
