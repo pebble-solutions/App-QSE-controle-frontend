@@ -2,32 +2,36 @@
 <template>
     <div class="container" v-if="!pending.load && !emptyData && !pending.stat">
         <div class="row">
-            <div class="card my-2 overflow-auto">
-                <div class="card-body">
-                    <h3 class="card-title fs-4">Agenda</h3>
-                    <AgendaChart></AgendaChart>
+            <div class="col-12">
+                <div class="card my-2 overflow-auto">
+                    <div class="card-body">
+                        <h3 class="card-title fs-4">Agenda</h3>
+                        <AgendaChart></AgendaChart>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="card my-2">
-                <div class="card-body">
-                    <h3 class="card-title fs-4">Répartition des réponses</h3>
-                    <GlobalPieChart></GlobalPieChart>
+            <div class="col-12">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h3 class="card-title fs-4">Répartition des réponses</h3>
+                        <GlobalPieChart></GlobalPieChart>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="card my-2">
-                <div class="card-body">
-                    <GlobalTable></GlobalTable>
+            <div class="col-12">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <GlobalTable></GlobalTable>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="card my-2">
-                <RetardKn></RetardKn>
-            </div>
+            <RetardKn></RetardKn>
         </div>
         <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
         <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
@@ -84,10 +88,10 @@ export default {
                         done: 'OUI',
                         type: 'KN',
                     });
-                    if(collectes.getCollection().length == 0){
+                    if (collectes.getCollection().length == 0) {
                         this.emptyData = true;
                         window.alert("Aucune donnée pour les filtres sélectionnés");
-                    }else {this.emptyData = false;}
+                    } else { this.emptyData = false; }
                     this.pending.stat = false;
                 }
             },
