@@ -110,12 +110,12 @@
 				<!-- <AppMenuItem href="/habilitation/Agent"> 
 					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
 				</AppMenuItem> -->
-				<template v-for="agent in listActifs" :key="agent.id">
+				<template v-for="agent in filterListPersonnelActifWithStructure" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
 						<FicheIndividuelleSuiviItem :agent="agent" :stats="getStatsByAgent(agent.id)"/>
 					</AppMenuItem>
 				</template>
-				<div class="alert alert-info m-2" v-if="!listActifs?.length">
+				<div class="alert alert-info m-2" v-if="!filterListPersonnelActifWithStructure?.length">
 					Il n'y a pas de personnels concernés
 				</div>
 			</AppMenu>
@@ -251,6 +251,16 @@ export default {
 		 */
 		appMenu() {
 			return this.cfg.appMenu;
+		},
+
+		filterListPersonnelActifWithStructure() {
+			let found = [];
+
+			if (this.listActifs) {
+				found = this.listActifs.filter(e => e.structure == this.$app.active_structure_id);
+			}
+
+			return found;
 		}
 	},
 
