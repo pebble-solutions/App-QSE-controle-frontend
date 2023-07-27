@@ -51,8 +51,8 @@ export default {
             return personnel ? personnel.cache_nom : 'Contrôleur (' + id + ') non trouvé'
         },
         /**
- * Génère une couleur différente de celles utilisées pour le SAMI
- */
+        * Génère une couleur différente de celles utilisées pour le SAMI
+        */
         generateColor() {
             const hexCharacters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F"]
             let hexColor = "#";
@@ -61,7 +61,7 @@ export default {
                 hexColor += hexCharacters[hexIndex];
             }
             if (this.SAMIColor(hexColor)) {
-                this.generateColor();
+                hexColor = this.generateColor();
             }
             return hexColor;
         },
