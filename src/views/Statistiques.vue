@@ -58,7 +58,7 @@ export default {
     },
     components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable, Spinner },
     computed: {
-        ...mapState(['requeteStat']),
+        ...mapState(['requeteStat', 'pending']),
     },
     methods: {
         stats() {
@@ -93,10 +93,6 @@ export default {
     //     this.setRequete(null)
     // },
     async mounted() {
-        /*let collection = this.$assets.getCollection('collectes');
-        this.pending.collectes = true;
-        collection.load();
-        this.pending.collectes = false;*/
         let collectes = this.$assets.getCollection('collectesCollection');
         let personnels = this.$assets.getCollection('personnels');
         let habilitations = this.$assets.getCollection('habilitationsCharacteristic');
