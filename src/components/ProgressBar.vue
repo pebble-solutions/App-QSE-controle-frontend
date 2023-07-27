@@ -43,6 +43,7 @@ export default {
            
             return data
         },
+        
         percent(){
             const now = new Date();
             const beginDate = new Date(this.dd);
@@ -59,19 +60,39 @@ export default {
     },
     methods: {
         returnClass(data){  
-            if(50>=data.consoPerCent && data.consoPerCent>=0) {
-                return 'bg-success'
+            // if(50>=data.consoPerCent && data.consoPerCent>=0) {
+            //     return 'bg-success'
+            // }
+            // else if(70>=data.consoPerCent && data.consoPerCent>=51){
+            //     return 'bg-info'
+            // } 
+            // else if(85>=data.consoPerCent && data.consoPerCent>=71){
+            //     return 'bg-warning'
+            // }
+            // else if(100>data.consoPerCent && data.consoPerCent>=86){
+            //     return 'bg-danger text-light'
+            // }
+            // else return 'bg-secondary text-light'
+
+            if (180 < data.restinDays) {
+                return 'bg-success';
             }
-            else if(70>=data.consoPerCent && data.consoPerCent>=51){
-                return 'bg-info'
-            } 
-            else if(85>=data.consoPerCent && data.consoPerCent>=71){
-                return 'bg-warning'
+
+            if (120 < data.restinDays && 180 >= data.restinDays) {
+                return 'bg-info';
             }
-            else if(100>data.consoPerCent && data.consoPerCent>=86){
-                return 'bg-danger text-light'
+
+            if (90 < data.restinDays && 120 >= data.restinDays) {
+                return 'bg-warning';
             }
-            else return 'bg-secondary text-light'
+
+            if (0 < data.restinDays && 90>= data.restinDays) {
+                return 'bg-danger text-light';
+            }
+
+            if (0 >= data.restinDays) {
+                return 'bg-dark text-light';
+            }
             
         },
 
@@ -84,7 +105,9 @@ export default {
 
         returnLabel(data){
             if(data.restinDays <= 0) {
-                return 'expiré depuis '+Math.abs(data.restinDays)+' jours'
+                console.log(typeof data.restinDays);
+                return data.restinDays;
+                //return 'expiré depuis '+Math.abs(data.restinDays)+' jours'
             }
             else{
                 if(data.consoPerCent >= 71){
@@ -92,6 +115,17 @@ export default {
                 }
 
             }
+        },
+
+        /**
+         * Convertie un nombre de jour en Y ans M month D jours
+         * 
+         * @param {number} $nbDay 
+         * 
+         * @return {string}
+         */
+        convertNbDayInYearMonthDay(nbDay) {
+            console.log(nbDay);
         }
     }
 }
