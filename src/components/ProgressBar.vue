@@ -4,7 +4,6 @@
             {{ returnLabel(varTime) }}
         </div>
     </div> 
-    <!-- <div>{{ varTime }}</div> -->
 </template>
 
 <script>
@@ -17,14 +16,36 @@ export default {
         },
         df: {
             type: String,
-        }
+        },
+        value: Object
     },
     computed: {
+        /**
+         * Return the habiliation begin date
+         */
+        valueDd() {
+            if (this.dd) {
+                return new Date(this.dd);
+            } else {
+                return new Date(this.value.dd);
+            }
+        },
+
+        /**
+         * Return the habiliation begin date
+         */
+        valueDf() {
+            if (this.df) {
+                return new Date(this.df);
+            } else {
+                return new Date(this.value.df);
+            }
+        },
 
         varTime(){
             const now = new Date();
-            const endDate = new Date(this.df);
-            const beginDate = new Date(this.dd)
+            const endDate = this.valueDf;
+            const beginDate = this.valueDd;
             let nowTime = now.getTime()/1000;
             let endTime = endDate.getTime()/1000;
             let beginTime = beginDate.getTime()/1000;
@@ -40,13 +61,13 @@ export default {
             let consoPerCent = Math.ceil((consoDays/totalDays)*100)
 
             let data = {restinDays,consoPerCent,totalDays}
-           
+
             return data
         },
         
         percent(){
             const now = new Date();
-            const beginDate = new Date(this.dd);
+            const beginDate = new Date(this.valueDd);
 
             let nowTime = now.getTime()/1000;
             let beginTime = beginDate.getTime()/1000;
@@ -60,20 +81,6 @@ export default {
     },
     methods: {
         returnClass(data){  
-            // if(50>=data.consoPerCent && data.consoPerCent>=0) {
-            //     return 'bg-success'
-            // }
-            // else if(70>=data.consoPerCent && data.consoPerCent>=51){
-            //     return 'bg-info'
-            // } 
-            // else if(85>=data.consoPerCent && data.consoPerCent>=71){
-            //     return 'bg-warning'
-            // }
-            // else if(100>data.consoPerCent && data.consoPerCent>=86){
-            //     return 'bg-danger text-light'
-            // }
-            // else return 'bg-secondary text-light'
-
             if (180 < data.restinDays) {
                 return 'bg-success';
             }
@@ -96,24 +103,27 @@ export default {
             
         },
 
-        returnStyle(data){
+        returnStyle(data) {
             if(data.consoPerCent>0){
                return "width:"+data.consoPerCent +"%"
             }
             else return "width: 100%"
         },
 
-        returnLabel(data){
+        /**
+         * return the sentence to display in the progress bar
+         * in function if it's expired or not
+         * 
+         * @param {object} data contient restinDay, consoPerCent et totalDays de l'habilitation
+         * 
+         * @return {string}
+         */
+        returnLabel(data) {
             if(data.restinDays <= 0) {
-                console.log(typeof data.restinDays);
-                return data.restinDays;
-                //return 'expiré depuis '+Math.abs(data.restinDays)+' jours'
+                return "expiré depuis " + this.convertNbDayInYearMonthDay(Math.abs(data.restinDays));
             }
             else{
-                if(data.consoPerCent >= 71){
-                    return 'reste '+data.restinDays+' jours'
-                }
-
+                return 'Renouvellement sous ' + this.convertNbDayInYearMonthDay(Math.abs(data.restinDays));
             }
         },
 
@@ -125,9 +135,23 @@ export default {
          * @return {string}
          */
         convertNbDayInYearMonthDay(nbDay) {
-            console.log(nbDay);
+            console.log('nb de day to convert', nbDay);
+            const DaysInOneYear = 365.25;
+            const DaysInOneMonth = 30.4167;
+
+            let years = Math.floor(nbDay / DaysInOneYear);
+            let remainingDaysAfterYears = nbDay % DaysInOneYear;
+
+            let months = Math.floor(remainingDaysAfterYears / DaysInOneMonth);
+            let days = Math.floor(remainingDaysAfterYears % DaysInOneMonth);
+
+            let yearsLabel = years + " an" + (years > 1 ? 's ' : ' ');
+            let monthsLabel = months + ' mois ';
+            let andLabel = years || months ? 'et ' : '';
+            
+            return (years > 0 ? yearsLabel : '') + (months > 0 ? monthsLabel : '') + (days > 1 ? andLabel + days + ' jours' : '');
         }
-    }
+    },
 }
 
 </script>
