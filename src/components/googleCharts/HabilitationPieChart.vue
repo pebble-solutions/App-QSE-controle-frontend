@@ -62,7 +62,7 @@ export default {
                 hexColor += hexCharacters[hexIndex];
             }
             if (this.SAMIColor(hexColor)) {
-                this.generateColor();
+                hexColor = this.generateColor();
             }
             return hexColor;
         },
