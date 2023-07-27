@@ -24,6 +24,11 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="card my-2">
+                <RetardKn></RetardKn>
+            </div>
+        </div>
         <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
         <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
         <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
@@ -40,6 +45,7 @@ import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
+import RetardKn from '../components/googleCharts/RetardKn.vue'
 import { mapState } from 'vuex'
 
 export default {
@@ -52,7 +58,7 @@ export default {
             emptyData: false,
         }
     },
-    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable },
+    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable, RetardKn },
     computed: {
         ...mapState(['requeteStat']),
     },
