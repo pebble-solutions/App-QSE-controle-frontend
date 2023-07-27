@@ -1,6 +1,6 @@
 <template>
-    <div v-if="isReady()">
-        <form class="p-2 my-1" @submit.prevent="searchStat()">
+    <div >
+        <form class="p-2 my-1" @submit.prevent="searchStat()" v-if="isReady">
             <div class="row">
                 <div class=" col-6 mb-3">
                     <label class="form-label" for="DateDebut">Date de début</label>
@@ -71,8 +71,8 @@
                 </button>
             </div>
         </form>
+        <Spinner v-else></Spinner>
     </div>
-    <spinner v-else></spinner>
 </template>
 
 <script>
@@ -99,9 +99,6 @@ export default {
             operateurs: [],
             controleurs: [],
             collecte: '',
-            pending: {
-                load: true,
-            },
 
             displaySearch: '',
             displaySearchHab: '',
@@ -110,14 +107,12 @@ export default {
         }
     },
     computed: {
-        ...mapState(['projets', 'pending'])
-    },
-    watch: {
-        pending: {
-            deep: true,
-            handler() {
-                this.isReady();
-            },
+        ...mapState(['projets', 'pending']),
+        isReady() {
+            if (!this.pending.collectesCollection && !this.pending.personnels && !this.pending.habilitationsCharacteristic) {
+                return true;
+            }
+            return false;
         },
     },
     methods: {
@@ -311,9 +306,6 @@ export default {
             let collection = this.$assets.getCollection('collectesCollection');
             this.collecte = collection.getCollection();
         },
-        isReady() {
-            return !this.pending.collectesCollection && !this.pending.personnels && !this.habilitationsCharacteristic;
-        }
     },
 
     mounted() {
