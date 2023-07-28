@@ -271,7 +271,7 @@ export default {
         },
 
         /**
-         * Retourne la longueur de la ligne du tableau
+         * Retourne la hauteur de la ligne du tableau
          * 
          * @returns {number} height 
          */
@@ -390,7 +390,7 @@ export default {
         /**
          * Retourne la largeur d'un élément en fonction du nombre de colonnes à occuper
          * 
-         * @param {number} cols Numéro de la colonne
+         * @param {number} cols Nombre de la colonne
          * @param {string} sx   Le suffixe à ajouter (ex px)
          * 
          * @return {number|string}

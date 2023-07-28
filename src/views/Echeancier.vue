@@ -10,7 +10,7 @@
             <div v-if="echeancier.priorite == false">
     
                 <div  v-for="habilitation in filteredHabilitations" :key="habilitation.id" class="my-3">
-                    <tabEcheancierPersonnel
+                    <HabilitationGroup
                         :operateurs = "filteredOperateurs"
                         :periode = "periode"
                         :habilitation = "habilitation"
@@ -23,7 +23,7 @@
     
             <template v-else>
                 <template v-for="personnel in filteredOperateurs" :key="personnel.id">
-                    <tabEcheancierHabilitation 
+                    <PersonnelGroup 
                         :personnel="personnel" 
                         :kns="filteredKns(personnel.id, 'personnel')" 
                         :periode="periode" 
@@ -64,8 +64,8 @@
 
 <script>
 
-import tabEcheancierPersonnel from '../components/echeancier/tabEcheancierPersonnel.vue'
-import tabEcheancierHabilitation from '../components/echeancier/tabEcheancierHabilitation.vue';
+import HabilitationGroup from '../components/echeancier/HabilitationGroup.vue'
+import PersonnelGroup from '../components/echeancier/PersonnelGroup.vue';
 import { mapActions, mapState } from 'vuex';
 
 export default {
@@ -89,7 +89,7 @@ export default {
 		}
 	},
 
-    components: {tabEcheancierPersonnel, tabEcheancierHabilitation},
+    components: {HabilitationGroup, PersonnelGroup},
 
     watch:{
         /**
