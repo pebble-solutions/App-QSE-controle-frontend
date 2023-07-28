@@ -4,7 +4,7 @@
         size="lg"
         @submit="saveCollecte()" 
         @modal-hide="routeToParent()" 
-        :submitBtn="true" 
+        :submitBtn="noteContent" 
         :cancelBtn="true">
 
         <FormEditCollecteAdmin :collecte="collecte" @modification="collecteChange" @stringdate="justificationDate"></FormEditCollecteAdmin>
