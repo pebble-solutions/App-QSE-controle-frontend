@@ -14,7 +14,7 @@
                 <span class="d-flex align-items-center">
                     <span class="badge rounded-pill" :class="SAMIClassName">{{ habilitationPersonnel.last_control_result
                     }}</span>
-                    <span class="ms-2">il y a {{ years }} ans {{ months }} mois et {{ days }} jours</span>
+                    <span class="ms-2">Il y a {{ yearsMonthsDays }}</span>
                 </span>
             </div>
             <span class="badge border border-danger text-bg-light text-danger rounded-pill ms-2" v-else>
@@ -22,7 +22,7 @@
                 <span class="ms-1">Non contrôlé</span>
             </span>
 
-            <span :class="badgeClass">
+            <span :class="badgeClass" class="badge border text-bg-light rounded-pill">
                 <i class="bi bi-hourglass"></i>
                 <span class="ms-1" v-if="daysUntilControl >= 0">À contrôler dans {{ daysUntilControl }} jours</span>
                 <span v-else>Contrôle expiré depuis {{ -1 * daysUntilControl }} jours</span>
@@ -46,9 +46,6 @@ export default {
             habilitationsCharacteristic: null,
             nomPersonnel: '',
             nomHabilitationType: '',
-            years: 0,
-            months: 0,
-            days: 0,
             bars: [],
             totalValue: 0,
             daysUntilControl: 0,
@@ -60,8 +57,33 @@ export default {
     },
     computed: {
         ...mapState(['pending']),
+
         SAMIClassName() {
             return classNameFromSAMI(this.habilitationPersonnel.last_control_result);
+        },
+
+        /**
+         * Retourne le nombre de jours passés depuis le dernier contrôle au format
+         * X ans X mois X jours
+         */
+        yearsMonthsDays() {
+            const totalMonths = Math.ceil(this.habilitationPersonnel.last_control_days / (365 / 12));
+
+            const values = {
+                an: Math.trunc(totalMonths / 12),
+                mois: totalMonths % 12,
+                jour: Math.ceil(this.habilitationPersonnel.last_control_days % (365 / 12))
+            };
+
+            let phrase = [];
+
+            for (const key in values) {
+                if (values[key]) {
+                    phrase.push(values[key]+ " " + this.plural(key, values[key]));
+                }
+            }
+
+            return phrase.join(" ");
         },
 
     },
@@ -79,6 +101,17 @@ export default {
         },
     },
     methods: {
+        /**
+         * Passe une chaine de caractère au pluriel en fonction d'une quantité
+         * 
+         * @param {string} str La chaîne à transformer
+         * @param {number} qt La quantité
+         */
+        plural(str, qt) {
+            const invariables = ['mois'];
+            return qt > 1 && !invariables.includes(str) ? `${str}s` : str;
+        },
+
         getName() {
             const personnel = this.personnels.getCollection().find(e => e.id == this.habilitationPersonnel.personnel_id);
             if (personnel != null) {
@@ -95,12 +128,7 @@ export default {
                 this.nomHabilitationType = '?';
             }
         },
-        computeMonthAndDays() {
-            const totalMonths = Math.ceil(this.habilitationPersonnel.last_control_days / (365 / 12));
-            this.years = Math.trunc(totalMonths / 12);
-            this.months = totalMonths % 12;
-            this.days = Math.ceil(this.habilitationPersonnel.last_control_days % (365 / 12));
-        },
+
         computeStackedBar() {
             this.bars = [
                 {
@@ -122,13 +150,13 @@ export default {
             const daysUntilControl = duration - this.habilitationPersonnel.last_control_days;
             console.log(daysUntilControl);
             if (daysUntilControl > 30) {
-                this.badgeClass = 'badge border border-success text-bg-light text-success rounded-pill ms-2';
+                this.badgeClass = 'border-success text-success';
             } else if (daysUntilControl > 15 && daysUntilControl <= 30) {
-                this.badgeClass = 'badge border border-primary text-bg-light text-primary rounded-pill ms-2';
+                this.badgeClass = 'border-primary text-primary';
             } else if (daysUntilControl >= 0 && daysUntilControl <= 15) {
-                this.badgeClass = 'badge border border-warning text-bg-light text-warning rounded-pill ms-2';
+                this.badgeClass = 'border-warning text-warning';
             } else if (daysUntilControl < 0) {
-                this.badgeClass = 'badge border border-danger text-bg-light text-danger rounded-pill ms-2';
+                this.badgeClass = 'border-danger text-danger';
             }
             this.daysUntilControl = daysUntilControl;
         },
@@ -143,7 +171,6 @@ export default {
         this.personnels = personnels;
         this.habilitationsCharacteristic = habilitationsCharacteristic;
 
-        this.computeMonthAndDays();
         this.computeStackedBar();
 
         if (!this.pending.personnels) {
