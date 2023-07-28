@@ -110,12 +110,12 @@
 				<!-- <AppMenuItem href="/habilitation/Agent"> 
 					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
 				</AppMenuItem> -->
-				<template v-for="agent in filterListPersonnelActifWithStructure" :key="agent.id">
+				<template v-for="agent in personnelsActifsInCurrentStructure" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
 						<FicheIndividuelleSuiviItem :agent="agent" :stats="getStatsByAgent(agent.id)"/>
 					</AppMenuItem>
 				</template>
-				<div class="alert alert-info m-2" v-if="!filterListPersonnelActifWithStructure?.length">
+				<div class="alert alert-info m-2" v-if="!personnelsActifsInCurrentStructure?.length">
 					Il n'y a pas de personnels concernés
 				</div>
 			</AppMenu>
@@ -177,9 +177,6 @@ import { searchConsultation } from './js/search-consultation'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
 import HabilitationList from './components/habilitation/List.vue';
-// import SearchHab from './components/menu/SearchHab.vue'
-
-
 
 export default {
 
@@ -253,7 +250,12 @@ export default {
 			return this.cfg.appMenu;
 		},
 
-		filterListPersonnelActifWithStructure() {
+		/**
+		 * Filtre la liste actif du personnel de tte les structure pour retourner que le personnel actif de la structure currente
+		 * 
+		 * @return {array}
+		 */
+		personnelsActifsInCurrentStructure() {
 			let found = [];
 
 			if (this.listActifs) {
@@ -613,7 +615,6 @@ export default {
 
 				this.initCollections();
 				this.loadCharacteristicPersonnelStats();
-				//this.loadCollectesCollection();
 			}
 		});
 	}
