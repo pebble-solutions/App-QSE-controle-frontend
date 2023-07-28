@@ -1,13 +1,13 @@
 <template>
     <div v-if="varTime" class="progress progress-ht" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-bar progress-ht overflow-visible text-light" role="progressbar"    :class="returnClass(varTime)" :style="returnStyle(varTime)" >
-            {{ returnLabel(varTime) }}
+        <div class="progress-bar progress-ht overflow-visible text-light" role="progressbar"    :class="returnClass(varTime)" :style="widthStyle(varTime)" >
+            {{ barLabel(varTime) }}
         </div>
     </div> 
-    <!-- <div>{{ varTime }}</div> -->
 </template>
 
 <script>
+import {daysToYearMonthDay} from '../js/date.js';
 
 export default {
     
@@ -17,83 +17,118 @@ export default {
         },
         df: {
             type: String,
-        }
+        },
+        value: Object
     },
-    computed: {
 
-        varTime(){
+    computed: {
+        /**
+         * Retourne la date de début de la référence en fonction des propriétés passées au composant.
+         */
+        valueDd() {
+            if (this.dd) {
+                return new Date(this.dd);
+            } else {
+                return new Date(this.value.dd);
+            }
+        },
+
+        /**
+         * Retourne la date de fin de la référence en fonction des propriétés passées au composant.
+         */
+        valueDf() {
+            if (this.df) {
+                return new Date(this.df);
+            } else {
+                return new Date(this.value.df);
+            }
+        },
+
+        varTime() {
             const now = new Date();
-            const endDate = new Date(this.df);
-            const beginDate = new Date(this.dd)
+            const endDate = this.valueDf;
+            const startDate = this.valueDd;
             let nowTime = now.getTime()/1000;
             let endTime = endDate.getTime()/1000;
-            let beginTime = beginDate.getTime()/1000;
+            let beginTime = startDate.getTime()/1000;
 
             let consoTime = nowTime - beginTime;
             let restTime = endTime - nowTime;
             let totalTime = endTime - beginTime;
 
-            let restinDays = Math.floor(restTime / (60*60*24));
+            let remainingDays = Math.floor(restTime / (60*60*24));
             let totalDays = Math.floor(totalTime) /(60*60*24);
             let consoDays = Math.floor(consoTime)/(60*24*60);
 
-            let consoPerCent = Math.ceil((consoDays/totalDays)*100)
+            let consoPerCent = Math.ceil((consoDays/totalDays)*100);
 
-            let data = {restinDays,consoPerCent,totalDays}
-           
-            return data
+            let data = {remainingDays,consoPerCent,totalDays};
+
+            return data;
         },
-        percent(){
+        
+        percent() {
             const now = new Date();
-            const beginDate = new Date(this.dd);
+            const startDate = new Date(this.valueDd);
 
             let nowTime = now.getTime()/1000;
-            let beginTime = beginDate.getTime()/1000;
+            let beginTime = startDate.getTime()/1000;
 
             let time = nowTime-beginTime;
             let consoDays = Math.floor(time /(60*60*24));
             let  percent = Math.floor(consoDays/ 11);
-            return percent
+
+            return percent;
         }
 
     },
     methods: {
-        returnClass(data){  
-            if(50>=data.consoPerCent && data.consoPerCent>=0) {
-                return 'bg-success'
+        returnClass(data) {  
+            if (180 < data.remainingDays) {
+                return 'bg-success';
             }
-            else if(70>=data.consoPerCent && data.consoPerCent>=51){
-                return 'bg-info'
-            } 
-            else if(85>=data.consoPerCent && data.consoPerCent>=71){
-                return 'bg-warning'
+
+            if (120 < data.remainingDays && 180 >= data.remainingDays) {
+                return 'bg-info';
             }
-            else if(100>data.consoPerCent && data.consoPerCent>=86){
-                return 'bg-danger text-light'
+
+            if (90 < data.remainingDays && 120 >= data.remainingDays) {
+                return 'bg-warning';
             }
-            else return 'bg-secondary text-light'
-            
+
+            if (0 < data.remainingDays && 90>= data.remainingDays) {
+                return 'bg-danger text-light';
+            }
+
+            if (0 >= data.remainingDays) {
+                return 'bg-dark text-light';
+            }  
         },
 
-        returnStyle(data){
-            if(data.consoPerCent>0){
-               return "width:"+data.consoPerCent +"%"
+        widthStyle(data) {
+            if (data.consoPerCent>0) {
+               return "width:"+data.consoPerCent +"%";
             }
-            else return "width: 100%"
+
+            return "width: 100%";
         },
 
-        returnLabel(data){
-            if(data.restinDays <= 0) {
-                return 'expiré depuis '+Math.abs(data.restinDays)+' jours'
+        /**
+         * return the sentence to display in the progress bar
+         * in function if it's expired or not
+         * 
+         * @param {object} data contient restinDay, consoPerCent et totalDays de l'habilitation
+         * 
+         * @return {string}
+         */
+        barLabel(data) {
+            if (data.remainingDays <= 0) {
+                return "expiré depuis " + daysToYearMonthDay(Math.abs(data.remainingDays));
+            } else {
+                return 'Renouvellement sous ' + daysToYearMonthDay(Math.abs(data.remainingDays));
             }
-            else{
-                if(data.consoPerCent >= 71){
-                    return 'reste '+data.restinDays+' jours'
-                }
-
-            }
-        }
-    }
+        },
+    },
 }
 
 </script>
