@@ -31,6 +31,7 @@ export default createStore({
 		echeancier: null,
 		habilitationsCharacteristic: [],
 		habilitationsTypes: [],
+		habilitationsPersonnels: [],
 		pending: {
 			collectesCollection: true,
 			habilitationsPersonnels: false,
