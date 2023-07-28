@@ -29,6 +29,9 @@
         <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
         <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
     </div>
+    <div v-else-if="pending.spinner">
+        <Spinner></Spinner>
+    </div>
     <RouterView></RouterView>
 </template>
 
@@ -40,6 +43,7 @@ import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
+import Spinner from '../components/pebble-ui/Spinner.vue';
 import { mapState } from 'vuex'
 
 export default {
@@ -48,13 +52,14 @@ export default {
             pending: {
                 stat: true,
                 load: true,
+                spinner: false,
             },
             emptyData: false,
         }
     },
-    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable },
+    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable, Spinner },
     computed: {
-        ...mapState(['requeteStat']),
+        ...mapState(['requeteStat', 'pending']),
     },
     methods: {
         stats() {
@@ -66,6 +71,7 @@ export default {
             async handler(newValue) {
                 if (newValue.dd && newValue.df) {
                     this.pending.stat = true;
+                    this.pending.spinner = true;
                     let collectes = this.$assets.getCollection('collectesCollection');
                     collectes.reset();
                     await collectes.load({
@@ -78,10 +84,11 @@ export default {
                         done: 'OUI',
                         type: 'KN',
                     });
-                    if(collectes.getCollection().length == 0){
+                    this.pending.spinner = false;
+                    if(collectes.getCollection().length == 0) {
                         this.emptyData = true;
                         window.alert("Aucune donnée pour les filtres sélectionnés");
-                    }else {this.emptyData = false;}
+                    } else {this.emptyData = false;}
                     this.pending.stat = false;
                 }
             },
@@ -91,10 +98,6 @@ export default {
     //     this.setRequete(null)
     // },
     async mounted() {
-        /*let collection = this.$assets.getCollection('collectes');
-        this.pending.collectes = true;
-        collection.load();
-        this.pending.collectes = false;*/
         let collectes = this.$assets.getCollection('collectesCollection');
         let personnels = this.$assets.getCollection('personnels');
         let habilitations = this.$assets.getCollection('habilitationsCharacteristic');
