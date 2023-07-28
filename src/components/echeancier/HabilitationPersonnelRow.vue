@@ -1,29 +1,23 @@
 <template>
     
-    <div class="table-row-content" :style="{ top: getTopPosition(rowIndex+2) }">
+    <div class="table-row-content" :style="{ top: getTopPosition(rowIndex+2, 'px') }">
         <div class="table-header mx-2 fs-7">
             {{ rowLabel }}
         </div>
 
-        <div  
-            class="habilitation-timeline bg-info bg-gradient bg-opacity-25 border border-info fs-7 px-2" 
-            :style="{left: getLeftPosition(getWeekStartInTimeline(habilitationPersonnel.dd) +1), width: getWidth(getWeekEndInTimeline(habilitationPersonnel.dd, habilitationPersonnel.df), 'px')}" 
-            :title="getHabilitationPersonnelLabel(habilitationPersonnel)" 
-            
-            v-for="habilitationPersonnel in getHabilitationsPersonnelByTypeId(habilitationType.id)" 
-            :key="habilitationPersonnel.id">
+        <habilitation-timeline-bar 
+            :habilitationPersonnel="habilitationPersonnel" 
+            :left="getLeftPosition(getWeekStartInTimeline(habilitationPersonnel.dd) +1)"
+            :width="getWidth(getWeekEndInTimeline(habilitationPersonnel.dd, habilitationPersonnel.df))"
+            v-for="habilitationPersonnel in habilitationsPersonnels" 
+            :key="habilitationPersonnel.id" />
 
-            <span class="label-timeline">{{ getHabilitationPersonnelLabel(habilitationPersonnel) }}</span>
-        </div>
-
-        <template v-for="contrat in personnelContrats" :key="contrat.id">
-            <div 
-                class="contrat-timeline bg-secondary bg-gradient bg-opacity-25 border border-secondary text-secondary fs-7 px-2" 
-                :style="{left: getLeftPosition(getWeekStartInTimeline(contrat.dentree) +1), width: getWidth(getWeekEndInTimeline(contrat.dsortie_reelle ? contrat.dsortie_relle : contrat.dsortie), 'px')}" 
-                v-if="isContratInPeriode(contrat)" 
-                :title="getContratLabel(contrat)">
-                <span class="label-timeline">{{ getContratLabel(contrat) }}</span>
-            </div>
+        <template v-for="contrat in contrats" :key="contrat.id">
+            <contrat-timeline-bar 
+                :contrat="contrat"
+                :left="getLeftPosition(getWeekStartInTimeline(contrat.dentree) +1)"
+                :width="getWidth(getWeekEndInTimeline(contrat.dsortie_reelle ? contrat.dsortie_relle : contrat.dsortie))" 
+                v-if="isContratInPeriode(contrat)" />
         </template>
 
         <template 
@@ -54,12 +48,22 @@
 
 <script>
 
+import { WeeksGrid } from '../../js/grid/WeeksGrid';
+import ContratTimelineBar from './ContratTimelineBar.vue';
+import HabilitationTimelineBar from './HabilitationTimelineBar.vue';
+
 export default {
+    components: { HabilitationTimelineBar, ContratTimelineBar },
     props: {
         rowIndex: Number,
         habilitationType: Object,
+        habilitationsPersonnels: Array,
+        contrats: Array,
+        collectes: Array,
         personnel: Object,
-        rowLabel: String
+        rowLabel: String,
+        grid: WeeksGrid,
+        echeancier: Object
     },
 
     data() {
@@ -69,13 +73,44 @@ export default {
     },
 
     methods: {
+        getTopPosition(n, sx, coef) {
+            return this.grid.getTopPosition(n, sx, coef);
+        },
+
+        getLeftPosition(n, sx, coef) {
+            return this.grid.getLeftPosition(n, sx, coef);
+        },
+
+        getWeekStartInTimeline(refDd) {
+            return this.grid.getWeekStartInTimeline(refDd);
+        },
+
+        getWeekEndInTimeline(refDd, refDf) {
+            return this.grid.getWeekEndInTimeline(refDd, refDf);
+        },
+
+        getWidth(cols, sx) {
+            return this.grid.getWidth(cols, sx);
+        },
+
         /**
-         * Récupère la liste des habilitations du personnel sur le type d'habilitation fournie
+         * Retourne true si le contrat est entre la periode défini sinon retourne false
+         * 
+         * @param {object}    contrat
+         * 
+         * @return {string}
          */
-        getHabilitationsPersonnels() {
-            const collection = this.$assets.getCollection("habilitationsPersonnels").getCollection();
-            this.habilitationsPersonnels = collection.filter(e => e.habilitation_type_id == this.habilitationType.id && e.personnel_id == this.personnel.id);
-        }
+        isContratInPeriode(contrat) {
+            const dsortie = contrat.dsortie_reelle ?? contrat.dsortie;
+            if (contrat.dentree >= this.echeancier.dd && contrat.dentree <= this.echeancier.df
+                || contrat.dentree <= this.echeancier.df && !dsortie
+                || contrat.dentree <= this.echeancier.df && dsortie && dsortie >= this.echeancier.df
+                || contrat.dentree <= this.echeancier.df && dsortie && dsortie >= this.echeancier.dd && dsortie <= this.echeancier.df) {
+                    return true;
+            }
+
+            return false;
+        },
     },
 
     mounted() {

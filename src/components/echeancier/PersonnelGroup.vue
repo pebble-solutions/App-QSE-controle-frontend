@@ -80,7 +80,7 @@
   </template>
   
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 .control-result-item {
     position: absolute;

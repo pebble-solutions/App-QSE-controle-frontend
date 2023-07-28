@@ -13,12 +13,12 @@ export class WeeksGrid {
      * Retourne la position depuis le haut en fonction du numéro de la ligne
      * 
      * @param {number} n        Le numéro de la ligne
-     * @param {number} coef     Un coeficient multiplicateur pour tracer la grille (défaut 1)
      * @param {string} sx       Suffixe à ajouter à l'unité (ex : px)
+     * @param {number} coef     Un coeficient multiplicateur pour tracer la grille (défaut 1)
      * 
      * @return {string}
      */
-    getTopPosition(n, coef, sx) {
+    getTopPosition(n, sx, coef) {
         coef = typeof coef === "undefined" ? 1 : coef;
         const top = (n-1) * (this.columnWidth * coef);
         return sx ? `${top}${sx}` : top;
@@ -33,7 +33,7 @@ export class WeeksGrid {
      * 
      * @return {string}
      */
-    getLeftPosition(n, coef, sx) {
+    getLeftPosition(n, sx, coef) {
         coef = typeof coef === "undefined" ? 1 : coef;
         const left = (n-1) * (this.columnWidth * coef) + this.firstColumnWidth;
         return sx ? `${left}${sx}` : left;
@@ -66,7 +66,7 @@ export class WeeksGrid {
      * @return {number}
      */
     getWeekEndInTimeline(refDd, refDf) {
-        refDf = refDf ? refDf : this.echeancier.df;
+        refDf = refDf ? refDf : this.dateEnd;
         const weeks_diff = Math.ceil( diffDate(refDd, refDf, 'week'));
 
         const timeline_space = this.periode.length - this.getWeekStartInTimeline(refDd);
