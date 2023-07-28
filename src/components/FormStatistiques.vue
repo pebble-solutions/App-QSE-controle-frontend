@@ -109,7 +109,7 @@ export default {
     computed: {
         ...mapState(['projets', 'pending']),
         isReady() {
-            if (!this.pending.collectesCollection && !this.pending.personnels && !this.pending.habilitationsCharacteristic) {
+            if (!this.pending.personnels && !this.pending.habilitationsCharacteristic) {
                 return true;
             }
             return false;
@@ -302,16 +302,11 @@ export default {
             this.operateurs = personnels.getCollection();
             this.controleurs = personnels.getCollection();
         },
-        loadCollecte() {
-            let collection = this.$assets.getCollection('collectesCollection');
-            this.collecte = collection.getCollection();
-        },
     },
 
     mounted() {
         this.getHabilitations();
         this.getOp();
-        this.loadCollecte();
     }
 }
 
