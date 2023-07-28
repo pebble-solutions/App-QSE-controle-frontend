@@ -3,8 +3,7 @@
         <last-control-filter-form />
 
         <template v-for="habilitationPersonnel in habilitationsPersonnels" :key="habilitationPersonnel.id">
-            <app-menu-item v-if="habilitationPersonnel.last_control_result"
-                :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
+            <app-menu-item :href="'/habilitationPersonnel/' + habilitationPersonnel.id">
                 <control-todo-habilitation-item :habilitationPersonnel="habilitationPersonnel" />
             </app-menu-item>
         </template>
