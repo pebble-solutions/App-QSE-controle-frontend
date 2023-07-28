@@ -46,31 +46,36 @@ export default {
 
         createNote(){
             let modification = [];
+            this.noteContent = null;
 
-            if (this.collecte.enqueteur_nom != this.collecteModifie.enqueteur_nom){
+            if (this.collecte.enqueteur__structure__personnel_id != this.collecteModifie.enqueteur__structure__personnel_id){
                 modification.push(" Changement de contrôleur de "+ this.collecte.enqueteur_nom + " vers " + this.collecteModifie.enqueteur_nom)
-            } 
-            if (this.collecte.cible_nom != this.collecteModifie.cible_nom){
+            }
+            if (this.collecte.cible__structure__personnel_id != this.collecteModifie.cible__structure__personnel_id){
                 modification.push(" Changement d'opérateur de " + this.collecte.cible_nom + " vers " + this.collecteModifie.cible_nom)
             }
             if (this.dateDoneModifString){
                 modification.push(this.dateDoneModifString)
             }
-    
+
             if(modification.length){
                 let note = this.login.login + " à modifié le contrôle :";
                 this.noteContent = note + modification;
             }
         },
-        
+
+
         /**
          * Met a jour les valeurs des données de la collecte et créer les notes associées aux modifications
          */
         saveCollecte(){
-            this.$app.apiPatch('v2/collecte/'+id+'/admin', {
+            this.$app.apiPatch('v2/collecte/'+ this.$route.params.idCollecte +'/headers', {
                     comment : this.noteContent,
+                    enqueteur__structure__personnel_id : this.collecteModifie.enqueteur__structure__personnel_id,
                     enqueteur_nom : this.collecteModifie.enqueteur_nom,
-                    cible_nom : this.collecteModifie.cible_nom
+                    cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
+                    cible_nom : this.collecteModifie.cible_nom,
+                    date_done : this.collecteModifie.date_done
                 })
                 .then((data) =>{
                     this.refreshCollecte(data);
