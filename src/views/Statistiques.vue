@@ -1,6 +1,6 @@
 
 <template>
-    <div class="container" v-if="!pending.stat && !pending.load">
+    <div class="container" v-if="!pending.load && !emptyData && !pending.stat">
         <div class="row">
             <div class="card my-2 overflow-auto">
                 <div class="card-body">
@@ -54,6 +54,7 @@ export default {
                 load: true,
                 spinner: false,
             },
+            emptyData: false,
         }
     },
     components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable, Spinner },
@@ -84,6 +85,10 @@ export default {
                         type: 'KN',
                     });
                     this.pending.spinner = false;
+                    if(collectes.getCollection().length == 0) {
+                        this.emptyData = true;
+                        window.alert("Aucune donnée pour les filtres sélectionnés");
+                    } else {this.emptyData = false;}
                     this.pending.stat = false;
                 }
             },

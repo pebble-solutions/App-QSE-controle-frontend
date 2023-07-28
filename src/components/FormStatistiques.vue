@@ -1,7 +1,7 @@
 <template>
-    <div >
+    <div>
         <form class="p-2 my-1" @submit.prevent="searchStat()" v-if="isReady">
-            <div class="row">
+            <div class="row g-3">
                 <div class=" col-6 mb-3">
                     <label class="form-label" for="DateDebut">Date de début</label>
                     <input type="date" class="form-control" id="dd" name="date" v-model="requete.dd" required>
@@ -126,7 +126,7 @@ export default {
          */
         restrictSearch(list) {
             let filteredList = list.filter((item) => {
-                return item.cache_nom.match(this.displaySearch);
+                return item.cache_nom?.match(this.displaySearch);
             });
 
             filteredList.sort((a, b) => {
@@ -154,7 +154,7 @@ export default {
         */
         restrictSearchControleurs(list) {
             let filteredList = list.filter((item) => {
-                return item.cache_nom.match(this.displaySearchControleurs);
+                return item.cache_nom?.match(this.displaySearchControleurs);
             });
 
             filteredList.sort((a, b) => {

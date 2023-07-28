@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="echeancier" class="py-1">
+    <div v-if="echeancier" class="absolute-workspace bg-light">
 
         <div v-if="isPending" class="text-center my-4 fs-4 text-secondary">
             <span class="spinner-border"></span>

@@ -39,15 +39,15 @@
                 "href": "/echeancier"
             },
             {
-                "label": "Veille Habilitations",
+                "label": "Contrôles à programmer",
                 "icon": "bi bi-hourglass-split",
                 "key": "habilitation",
-                "href": "/habilitation"
+                "href": "/habilitationPersonnel"
             },
             {
-                "label": "Veille operateurs",
+                "label": "Fiche individuelle de suivi",
                 "icon": "bi bi-person-check-fill",
-                "key": "habilitation",
+                "key": "operateur",
                 "href": "/operateur"
             }
         ]

@@ -33,6 +33,7 @@ export default createStore({
 		habilitationsTypes: [],
 		pending: {
 			collectesCollection: true,
+			habilitationsPersonnels: false,
 			personnels: true,
 			habilitationsCharacteristic: true,
 		},
