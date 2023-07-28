@@ -103,6 +103,11 @@ const routes = [
         path: 'new',
         name: 'newCollecte',
         component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteNew.vue')
+      },
+      {
+        path: 'edit',
+        name: 'editCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteEdit.vue')
       }
     ]
   },

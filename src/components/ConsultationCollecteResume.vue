@@ -1,6 +1,4 @@
 <template>
-   
-
     <div v-if="collecte">
         <div class="card my-2">
             <div class="card-header" v-if="timeline">
@@ -89,9 +87,13 @@
                                     Déverrouillé
                                 </button>
                         </template>
-                        <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()" v-if="collecte.notes.length >= 1">
+                        <button class="position-relative btn btn-sm btn-outline-secondary me-4" @click.prevent="displayNotes()" v-if="collecte.notes.length >= 1">
                             Historique
                             <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
+                        </button>
+
+                        <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="$router.push($route.path + '/edit')" v-if="levelUser >= 5">
+                            Modifier
                         </button>
                     </div>
                     <div>
@@ -200,7 +202,7 @@ import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
 import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
 
@@ -210,7 +212,7 @@ export default {
             pending: {
                 pdf: false
             },
-            locked: true
+            locked: true,
         }
     },
     props: {
@@ -230,11 +232,11 @@ export default {
     
                
     },
-   
+
 
     computed: {
 
-        
+
         /**
          * Racourcis vers la liste des blocs
          * @return {array}
@@ -431,7 +433,7 @@ export default {
                 this.$app.apiGet('v2/controle/enquete/'+id+'/pdf')
                 .then((data) => {window.open(data.url, "_blank")})
                 .catch(this.$app.catchError).finally(() => this.pending.pdf = false);
-         }
+        },
     },
 
     components: { UserImage, FileItem, Timeline, AlertMessage }

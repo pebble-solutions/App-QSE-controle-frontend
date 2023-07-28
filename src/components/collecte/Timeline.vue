@@ -24,10 +24,10 @@
                     <span v-else-if="collecte.date"> du {{changeFormatDateLit(collecte.date)}}</span>
                     <span v-else> date non définie</span>
                 </h4>
-                <div class="text-primary border border-primary badge rounded-pill text-bg-light" v-if="collecte.date_done">
+                <div class="text-primary border border-primary badge rounded-pill text-bg-light d-flex² align-items-center" v-if="collecte.date_done">
                     <i class="bi bi-calendar-check me-1"></i>
                     <span class="d-none d-sm-inline">Clôturé le</span>
-                    {{changeFormatDateLit(collecte.date_done)}}
+                    <span class="ms-1">{{changeFormatDateLit(collecte.date_done)}}</span>
                 </div>
                 <div v-if="collecte.unlocked" class="mb-2"> 
                     <span class="badge text-bg-light text-danger border border-danger rounded-pill">
@@ -91,8 +91,9 @@ export default {
         route: {
             type: String,
             default: 'consultation'
-        }
+        },
     },
+
     computed: {
         /**
 		 * Retourne le nombre de jours restants avant le verrouillage automatique
@@ -171,7 +172,7 @@ export default {
 
     },
 
-    components: {  TimelineNavElement, TimelineProgElement },
+    components: {  TimelineNavElement, TimelineProgElement},
     
 }
 
