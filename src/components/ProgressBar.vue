@@ -1,12 +1,13 @@
 <template>
     <div v-if="varTime" class="progress progress-ht" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-bar progress-ht overflow-visible text-light" role="progressbar"    :class="returnClass(varTime)" :style="returnStyle(varTime)" >
-            {{ returnLabel(varTime) }}
+        <div class="progress-bar progress-ht overflow-visible text-light" role="progressbar"    :class="returnClass(varTime)" :style="widthStyle(varTime)" >
+            {{ barLabel(varTime) }}
         </div>
     </div> 
 </template>
 
 <script>
+import {daysToYearMonthDay} from '../js/date.js';
 
 export default {
     
@@ -19,9 +20,10 @@ export default {
         },
         value: Object
     },
+
     computed: {
         /**
-         * Return the habiliation begin date
+         * Retourne la date de début de la référence en fonction des propriétés passées au composant.
          */
         valueDd() {
             if (this.dd) {
@@ -32,7 +34,7 @@ export default {
         },
 
         /**
-         * Return the habiliation begin date
+         * Retourne la date de fin de la référence en fonction des propriétés passées au composant.
          */
         valueDf() {
             if (this.df) {
@@ -42,72 +44,73 @@ export default {
             }
         },
 
-        varTime(){
+        varTime() {
             const now = new Date();
             const endDate = this.valueDf;
-            const beginDate = this.valueDd;
+            const startDate = this.valueDd;
             let nowTime = now.getTime()/1000;
             let endTime = endDate.getTime()/1000;
-            let beginTime = beginDate.getTime()/1000;
+            let beginTime = startDate.getTime()/1000;
 
             let consoTime = nowTime - beginTime;
             let restTime = endTime - nowTime;
             let totalTime = endTime - beginTime;
 
-            let restinDays = Math.floor(restTime / (60*60*24));
+            let remainingDays = Math.floor(restTime / (60*60*24));
             let totalDays = Math.floor(totalTime) /(60*60*24);
             let consoDays = Math.floor(consoTime)/(60*24*60);
 
-            let consoPerCent = Math.ceil((consoDays/totalDays)*100)
+            let consoPerCent = Math.ceil((consoDays/totalDays)*100);
 
-            let data = {restinDays,consoPerCent,totalDays}
+            let data = {remainingDays,consoPerCent,totalDays};
 
-            return data
+            return data;
         },
         
-        percent(){
+        percent() {
             const now = new Date();
-            const beginDate = new Date(this.valueDd);
+            const startDate = new Date(this.valueDd);
 
             let nowTime = now.getTime()/1000;
-            let beginTime = beginDate.getTime()/1000;
+            let beginTime = startDate.getTime()/1000;
 
             let time = nowTime-beginTime;
             let consoDays = Math.floor(time /(60*60*24));
             let  percent = Math.floor(consoDays/ 11);
-            return percent
+
+            return percent;
         }
 
     },
     methods: {
-        returnClass(data){  
-            if (180 < data.restinDays) {
+        returnClass(data) {  
+            if (180 < data.remainingDays) {
                 return 'bg-success';
             }
 
-            if (120 < data.restinDays && 180 >= data.restinDays) {
+            if (120 < data.remainingDays && 180 >= data.remainingDays) {
                 return 'bg-info';
             }
 
-            if (90 < data.restinDays && 120 >= data.restinDays) {
+            if (90 < data.remainingDays && 120 >= data.remainingDays) {
                 return 'bg-warning';
             }
 
-            if (0 < data.restinDays && 90>= data.restinDays) {
+            if (0 < data.remainingDays && 90>= data.remainingDays) {
                 return 'bg-danger text-light';
             }
 
-            if (0 >= data.restinDays) {
+            if (0 >= data.remainingDays) {
                 return 'bg-dark text-light';
-            }
-            
+            }  
         },
 
-        returnStyle(data) {
-            if(data.consoPerCent>0){
-               return "width:"+data.consoPerCent +"%"
+        widthStyle(data) {
+            if (data.consoPerCent>0) {
+               return "width:"+data.consoPerCent +"%";
             }
-            else return "width: 100%"
+
+            return "width: 100%";
         },
 
         /**
@@ -118,39 +121,13 @@ export default {
          * 
          * @return {string}
          */
-        returnLabel(data) {
-            if(data.restinDays <= 0) {
-                return "expiré depuis " + this.convertNbDayInYearMonthDay(Math.abs(data.restinDays));
-            }
-            else{
-                return 'Renouvellement sous ' + this.convertNbDayInYearMonthDay(Math.abs(data.restinDays));
+        barLabel(data) {
+            if (data.remainingDays <= 0) {
+                return "expiré depuis " + daysToYearMonthDay(Math.abs(data.remainingDays));
+            } else {
+                return 'Renouvellement sous ' + daysToYearMonthDay(Math.abs(data.remainingDays));
             }
         },
-
-        /**
-         * Convertie un nombre de jour en Y ans M month D jours
-         * 
-         * @param {number} $nbDay 
-         * 
-         * @return {string}
-         */
-        convertNbDayInYearMonthDay(nbDay) {
-            console.log('nb de day to convert', nbDay);
-            const DaysInOneYear = 365.25;
-            const DaysInOneMonth = 30.4167;
-
-            let years = Math.floor(nbDay / DaysInOneYear);
-            let remainingDaysAfterYears = nbDay % DaysInOneYear;
-
-            let months = Math.floor(remainingDaysAfterYears / DaysInOneMonth);
-            let days = Math.floor(remainingDaysAfterYears % DaysInOneMonth);
-
-            let yearsLabel = years + " an" + (years > 1 ? 's ' : ' ');
-            let monthsLabel = months + ' mois ';
-            let andLabel = years || months ? 'et ' : '';
-            
-            return (years > 0 ? yearsLabel : '') + (months > 0 ? monthsLabel : '') + (days > 1 ? andLabel + days + ' jours' : '');
-        }
     },
 }
 

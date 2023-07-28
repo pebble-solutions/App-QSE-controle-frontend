@@ -22,7 +22,7 @@
                                         </span>
                                     </div>
                                     <ProgressBar
-                                    :value = hab
+                                    :value="hab"
                                     ></ProgressBar>
                                 </a>
                             </RouterLink>

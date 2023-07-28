@@ -336,3 +336,28 @@ export function listIntervalMonths(dateStart, dateEnd) {
 
 	return months;
 }
+
+
+/**
+ * Convertie un nombre de jour en Y ans M month D jours
+ * 
+ * @param {number} $nbDays 
+ * 
+ * @return {string}
+ */
+export function daysToYearMonthDay(nbDays) {
+	const DaysInOneYear = 365.25;
+	const DaysInOneMonth = 30.4167;
+
+	let years = Math.floor(nbDays / DaysInOneYear);
+	let remainingDaysAfterYears = nbDays % DaysInOneYear;
+
+	let months = Math.floor(remainingDaysAfterYears / DaysInOneMonth);
+	let days = Math.floor(remainingDaysAfterYears % DaysInOneMonth);
+
+	let yearsLabel = years + " an" + (years > 1 ? 's ' : ' ');
+	let monthsLabel = months + ' mois ';
+	let andLabel = years || months ? 'et ' : '';
+
+	return (years > 0 ? yearsLabel : '') + (months > 0 ? monthsLabel : '') + (days > 1 ? andLabel + days + ' jours' : '');
+}
