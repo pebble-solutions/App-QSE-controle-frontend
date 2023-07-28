@@ -9,11 +9,20 @@
 
         <FormEditCollecteAdmin :collecte="collecte" @modification="collecteChange" @stringdate="justificationDate"></FormEditCollecteAdmin>
 
-        <div class="card" v-if="noteContent">
-            <div class="card-body">
-                <h5 class="card-title">Note de la collecte #{{ $route.params.idCollecte }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Note justificative</h6>
-                <p class="card-text">{{ noteContent }}</p>
+        <div v-if="noteContent">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Note de la collecte #{{ $route.params.idCollecte }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Note justificative</h6>
+                    <p class="card-text">{{ noteContent }}</p>
+                </div>
+            </div>
+    
+            <div class="mb-3 mt-3">
+                <label for="formComment" class="form-label fs-5 ms-2">Justification</label>
+                <i class="bi bi-exclamation-triangle text-warning ms-3" v-if="!comment"></i>
+                <textarea class="form-control" id="formComment" rows="3" placeholder="Veuillez entrez une justification..." v-model="comment" required></textarea>
+                {{ comment }}
             </div>
         </div>
 
@@ -32,7 +41,8 @@ export default {
         return {
             collecteModifie: {},
             dateDoneModifString: null,
-            noteContent: null
+            noteContent: null,
+            comment: null
         }
     },
 
@@ -70,7 +80,7 @@ export default {
          */
         saveCollecte(){
             this.$app.apiPatch('v2/collecte/'+ this.$route.params.idCollecte +'/headers', {
-                    comment : this.noteContent,
+                    comment : this.comment,
                     enqueteur__structure__personnel_id : this.collecteModifie.enqueteur__structure__personnel_id,
                     enqueteur_nom : this.collecteModifie.enqueteur_nom,
                     cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
