@@ -22,7 +22,6 @@
                 <label for="formComment" class="form-label fs-5 ms-2">Justification</label>
                 <i class="bi bi-exclamation-triangle text-warning ms-3" v-if="!comment"></i>
                 <textarea class="form-control" id="formComment" rows="3" placeholder="Veuillez entrez une justification..." v-model="comment" required></textarea>
-                {{ comment }}
             </div>
         </div>
 
