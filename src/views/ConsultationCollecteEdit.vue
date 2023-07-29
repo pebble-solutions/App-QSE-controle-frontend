@@ -3,8 +3,8 @@
         :title="'Modification des informations du controle #' + $route.params.idCollecte"
         size="lg"
         @submit="saveCollecte()" 
-        @modal-hide="routeToParent()" 
-        :submitBtn="noteContent" 
+        @modal-hide="routeToParent()"
+        :submitBtn="valueButton"
         :cancelBtn="true">
 
         <FormEditCollecteAdmin :collecte="collecte" @modification="collecteChange" @stringdate="justificationDate"></FormEditCollecteAdmin>
@@ -47,6 +47,14 @@ export default {
 
     computed: {
         ...mapState(['collecte', 'login']),
+
+        valueButton(){
+            if(this.noteContent){
+                return true;
+            } else {
+                return false
+            }
+        }
     },
 
     methods: {
@@ -78,7 +86,7 @@ export default {
          * Met a jour les valeurs des données de la collecte et créer les notes associées aux modifications
          */
         saveCollecte(){
-            this.$app.apiPatch('v2/collecte/'+ this.$route.params.idCollecte +'/headers', {
+            this.$app.api.patch('v2/collecte/'+ this.$route.params.idCollecte +'/headers', {
                     comment : this.comment,
                     enqueteur__structure__personnel_id : this.collecteModifie.enqueteur__structure__personnel_id,
                     enqueteur_nom : this.collecteModifie.enqueteur_nom,
@@ -106,8 +114,7 @@ export default {
          * Retourne a la vue précédente
          */
         routeToParent() {
-            this.$router.push({ path: '/consultation/' + this.$route.params.idCollecte })
-            // this.$router.back();
+            this.$router.back()
         },
     },
 

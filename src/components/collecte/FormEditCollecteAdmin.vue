@@ -76,11 +76,14 @@ export default {
                 if(newVal.enqueteur__structure__personnel_id != this.collecte.enqueteur__structure__personnel_id){
                     let enqueteur = this.personnels.filter(item => item.id == newVal.enqueteur__structure__personnel_id)
                     this.collecteModif.enqueteur_nom = enqueteur[0].cache_nom
+                } else{
+                    this.collecteModif.enqueteur_nom = this.collecte.enqueteur_nom
                 }
                 if(newVal.cible__structure__personnel_id != this.collecte.cible__structure__personnel_id){
                     let cible = this.personnels.filter(item => item.id == newVal.cible__structure__personnel_id)
                     this.collecteModif.cible_nom = cible[0].cache_nom
-
+                } else {
+                    this.collecteModif.cible_nom = this.collecte.cible_nom
                 }
                 if(this.changeFormatDateLit(this.collecte.date_done) != this.changeFormatDateLit(newVal.date_done)){
                     let valModif = " Changement de date de clôture de " + this.changeFormatDateLit(this.collecte.date_done) + " vers " + this.changeFormatDateLit(newVal.date_done);
