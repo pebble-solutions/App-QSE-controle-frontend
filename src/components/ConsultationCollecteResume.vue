@@ -109,7 +109,8 @@
                         <div class="d-flex flex-column">
                             <span>{{changeFormatDateLit(note.date)}}</span>
                             <span>{{note.titre }}</span>
-                            <span>{{note.note}}</span>
+                            <!-- <span>{{note.note}}</span> -->
+                            <span v-html="formatNoteText(note.note)"></span>
                         </div>
                     </div>
                 </div>
@@ -299,6 +300,14 @@ export default {
         displayNotes(){
             this.readNotes =!this.readNotes
 
+        },
+
+        /**
+         * Retourne la valeur du contenu de la note afin qu'elle soit lisible en html
+         */
+        formatNoteText(text) {
+            if (!text) return '';
+            return text.replace(/\n/g, '<br>');
         },
 
         /**
