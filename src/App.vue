@@ -256,15 +256,6 @@ export default {
 
 	watch: {
 		$route() {
-			
-			// console.log(this.$route.name)
-			// if(this.$route.name == "consultationCollecte"){
-			// 	console.log(this.$route)
-			// } else {
-			// 	console.log("OUI")
-			// 	this.$app.dispatchEvent('menuChanged', 'list');
-			// }
-
 			this.$app.dispatchEvent('menuChanged', 'list');
 		},
 
