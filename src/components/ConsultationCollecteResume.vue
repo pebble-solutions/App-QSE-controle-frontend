@@ -87,7 +87,7 @@
                                     Déverrouillé
                                 </button>
                         </template>
-                        <button class="position-relative btn btn-sm btn-outline-secondary me-4" @click.prevent="displayNotes()" v-if="collecte.notes.length >= 1">
+                        <button class="position-relative btn btn-sm btn-outline-secondary me-4" @click.prevent="toggleNotes()" v-if="collecte.notes.length >= 1">
                             Historique
                             <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
                         </button>
@@ -102,18 +102,6 @@
                             Exporter
                         </button>
                     </div>
-                </div>
-                <div>
-                    <div v-if="readNotes" class="list-group col-12 col-md-6 mt-2">
-                    <div class ="list-group-item" v-for="note in collecte.notes" :key="note.id">
-                        <div class="d-flex flex-column">
-                            <span>{{changeFormatDateLit(note.date)}}</span>
-                            <span>{{note.titre }}</span>
-                            <!-- <span>{{note.note}}</span> -->
-                            <span v-html="formatNoteText(note.note)"></span>
-                        </div>
-                    </div>
-                </div>
                 </div>
                 
             </div>
@@ -188,6 +176,15 @@
             variant="warning" v-else>
                 Ce contrôle n'est pas consultable car il n'est pas clôturé.
         </alert-message>
+
+        <app-modal :closeBtn="true" @modal-hide="toggleNotes(false)" title="Historique des opérations" v-if="readNotes">
+            <div>
+                <div class="my-2 card card-body" v-for="note in collecte.notes" :key="note.id">
+                    <div class="text-secondary mb-2 text-center">{{changeFormatDateLit(note.date)}} <strong>{{note.titre }}</strong></div>
+                    <div class="note-content" v-html="note.note__md"></div>
+                </div>
+            </div>
+        </app-modal>
         
         <!-- <div class="text-center my-3" v-if="!readonly">
             <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">
@@ -197,13 +194,22 @@
     </div>
 </template>
 
+<style lang="scss" scoped>
+.note-content {
+    p {
+        margin-bottom: 0 !important;
+    }
+}
+</style>
+
 <script>
 import {classNameFromSAMI, dateFormat} from '../js/collecte';
 import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
 import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
-import { mapActions, mapState } from 'vuex';
+import { mapActions } from 'vuex';
+import AppModal from './pebble-ui/AppModal.vue';
 
 export default {
 
@@ -296,10 +302,11 @@ export default {
 
         /**
          * change la valeur de readNotes permettant la visualisation ou non des notes
+         * 
+         * @param {boolean} val         Valeur à affecter. Si pas de valeur alors inversion
          */
-        displayNotes(){
-            this.readNotes =!this.readNotes
-
+        toggleNotes(val) {
+            this.readNotes = typeof val === "undefined" ? !this.readNotes : val;
         },
 
         /**
@@ -445,6 +452,6 @@ export default {
         },
     },
 
-    components: { UserImage, FileItem, Timeline, AlertMessage }
+    components: { UserImage, FileItem, Timeline, AlertMessage, AppModal }
 }
 </script> 
