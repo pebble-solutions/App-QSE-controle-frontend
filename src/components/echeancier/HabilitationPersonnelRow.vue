@@ -76,10 +76,11 @@ export default {
          * @return {string}
          */
         displayRowLabel() {
+            const maxlen = this.useUserImage ? 18 : 25;
             let label = this.rowLabel.replace(/^Habilitation\s*:\s*/, "");
 
-            if (label.length > 25) {
-                label = this.label.substring(0, 24) + "...";
+            if (label.length > maxlen) {
+                label = label.substring(0, maxlen-1) + "...";
             }
 
             return label;

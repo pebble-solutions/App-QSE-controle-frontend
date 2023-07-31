@@ -74,7 +74,11 @@ export default {
                 const found = habilitationsTypes.find(e => e.id == habilitationPersonnel.characteristic_id);
 
                 if (!found) {
-                    habilitationsTypes.push(this.getHabilitationById(habilitationPersonnel.characteristic_id));
+                    const habilitationType = this.getHabilitationById(habilitationPersonnel.characteristic_id); 
+                    habilitationsTypes.push(habilitationType ? habilitationType : {
+                        id: habilitationPersonnel.characteristic_id,
+                        nom: "!Habilitation inconnue"
+                    });
                 }
             });
 
