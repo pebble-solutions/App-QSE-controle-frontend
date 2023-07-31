@@ -7,7 +7,10 @@
                 <div class="me-2" v-if="useUserImage">
                     <UserImage :name="rowLabel" />
                 </div>
-                {{ displayRowLabel }}
+                <span :class="labelClassName">
+                    <i class="bi" :class="labelIcon" v-if="labelIcon"></i> 
+                    {{ displayRowLabel }}
+                </span>
             </div>
         </div>
 
@@ -78,12 +81,31 @@ export default {
         displayRowLabel() {
             const maxlen = this.useUserImage ? 18 : 25;
             let label = this.rowLabel.replace(/^Habilitation\s*:\s*/, "");
+            label = this.rowLabel.replace(/^!/, "");
 
             if (label.length > maxlen) {
                 label = label.substring(0, maxlen-1) + "...";
             }
 
             return label;
+        },
+
+        /**
+         * Classe CSS du libellé de ligne.
+         * Le libellé est affiché en rouge lorsqu'il commencer par le caractère "!"
+         * 
+         * @return {string}
+         */
+        labelClassName() {
+            return this.rowLabel.match(/^!/) ? "text-danger" : "";
+        },
+
+        /**
+         * Icone du libellé de ligne
+         * Le libellé prend un point d'esclamation lorsqu'il commence par le caractère "!"
+         */
+        labelIcon() {
+            return this.rowLabel.match(/^!/) ? "bi-exclamation-triangle-fill" : "";
         }
     },
 
