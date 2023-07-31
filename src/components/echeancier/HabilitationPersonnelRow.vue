@@ -1,8 +1,14 @@
 <template>
     
     <div class="table-row-content" :style="{ top: getTopPosition(rowIndex+2, 'px') }">
-        <div class="table-header mx-2 fs-7">
-            {{ rowLabel }}
+        <div class="table-header mx-2 fs-7" :title="rowLabel">
+
+            <div class="d-flex align-items-center">
+                <div class="me-2" v-if="useUserImage">
+                    <UserImage :name="rowLabel" />
+                </div>
+                {{ displayRowLabel }}
+            </div>
         </div>
 
         <habilitation-timeline-bar 
@@ -16,7 +22,7 @@
             <contrat-timeline-bar 
                 :contrat="contrat"
                 :left="getLeftPosition(getWeekStartInTimeline(contrat.dentree) +1)"
-                :width="getWidth(getWeekEndInTimeline(contrat.dsortie_reelle ? contrat.dsortie_relle : contrat.dsortie))" 
+                :width="getWidth(getWeekEndInTimeline(contrat.dentree, contrat.dsortie_reelle ? contrat.dsortie_relle : contrat.dsortie))" 
                 v-if="isContratInPeriode(contrat)" />
         </template>
 
@@ -40,14 +46,14 @@
 
 <script>
 import { diffDate } from '../../js/date';
-
+import UserImage from '../pebble-ui/UserImage.vue';
 import { WeeksGrid } from '../../js/grid/WeeksGrid';
 import ContratTimelineBar from './ContratTimelineBar.vue';
 import ControlTimelineResult from './ControlTimelineResult.vue';
 import HabilitationTimelineBar from './HabilitationTimelineBar.vue';
 
 export default {
-    components: { HabilitationTimelineBar, ContratTimelineBar, ControlTimelineResult },
+    components: { HabilitationTimelineBar, ContratTimelineBar, ControlTimelineResult, UserImage },
     props: {
         rowIndex: Number,
         habilitationType: Object,
@@ -56,7 +62,28 @@ export default {
         controls: Array,
         personnel: Object,
         rowLabel: String,
-        grid: WeeksGrid
+        grid: WeeksGrid,
+        useUserImage: {
+            type: Boolean,
+            default: false
+        }
+    },
+
+    computed: {
+        /**
+         * Retourne une version nettoyée et réduite du libellé de ligne
+         * 
+         * @return {string}
+         */
+        displayRowLabel() {
+            let label = this.rowLabel.replace(/^Habilitation\s*:\s*/, "");
+
+            if (label.length > 25) {
+                label = this.label.substring(0, 24) + "...";
+            }
+
+            return label;
+        }
     },
 
     methods: {

@@ -22,7 +22,7 @@
                 :habilitationsPersonnels="getHabilitationsPersonnelByTypeId(habilitationType.id)"
                 :habilitationType="habilitationType"
                 
-                v-for="(habilitationType, index) in usedHabilitations"
+                v-for="(habilitationType, index) in usedHabilitationsTypes"
                 :key="index" />
 
         
@@ -43,8 +43,8 @@ export default {
     props:{
         personnel: Object,
         periode: Array,
-        habilitations: Array,
-        kns: Array,
+        habilitationsTypes: Array,
+        controls: Array,
         habilitationsPersonnel: Array,
         contrats: Array
     },
@@ -65,18 +65,18 @@ export default {
         /**
          * Retourne la liste des habilitation utilisées par le personnel
          */
-        usedHabilitations() {
-            let habilitations = [];
+        usedHabilitationsTypes() {
+            let habilitationsTypes = [];
 
             this.habilitationsPersonnel.forEach((habilitationPersonnel) => {
-                const found = habilitations.find(e => e.id == habilitationPersonnel.characteristic_id);
+                const found = habilitationsTypes.find(e => e.id == habilitationPersonnel.characteristic_id);
 
                 if (!found) {
-                    habilitations.push(this.getHabilitationById(habilitationPersonnel.characteristic_id));
+                    habilitationsTypes.push(this.getHabilitationById(habilitationPersonnel.characteristic_id));
                 }
             });
 
-            return habilitations;
+            return habilitationsTypes;
         },
 
         /**
@@ -97,7 +97,7 @@ export default {
          * @returns {array}
          */
         getControlsByCharacteristicTypeId(id) {
-            let controls = this.kns.filter(item => item.habilitation_type_id === id);
+            let controls = this.controls.filter(item => item.habilitation_type_id === id);
 
             let list = [];
             let weeks = [];
@@ -124,7 +124,7 @@ export default {
          * @return {object}
          */
         getHabilitationById(id) {
-            return this.habilitations.find(e => e.id == id);
+            return this.habilitationsTypes.find(e => e.id == id);
         },
 
         /**

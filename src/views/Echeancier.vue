@@ -9,13 +9,14 @@
         <template v-else>
             <div v-if="echeancier.priorite == false">
     
-                <div  v-for="habilitation in filteredHabilitations" :key="habilitation.id" class="my-3">
+                <div  v-for="habilitationType in filteredHabilitationsTypes" :key="habilitationType.id" class="my-3">
                     <HabilitationGroup
-                        :operateurs = "filteredOperateurs"
-                        :periode = "periode"
-                        :habilitation = "habilitation"
-                        :kns = "filteredKns(habilitation.id, 'habilitation')"
-                        :contrats = "contrats"
+                        :operateurs="filteredOperateurs"
+                        :periode="periode"
+                        :habilitationType="habilitationType"
+                        :controls="filteredKns(habilitationType.id, 'habilitation')"
+                        :contrats="contrats"
+                        :habilitationsPersonnels="getHabilitationsPersonnelsByTypeId(habilitationType.id)"
                     />
     
                 </div>
@@ -25,9 +26,9 @@
                 <template v-for="personnel in filteredOperateurs" :key="personnel.id">
                     <PersonnelGroup 
                         :personnel="personnel" 
-                        :kns="filteredKns(personnel.id, 'personnel')" 
+                        :controls="filteredKns(personnel.id, 'personnel')" 
                         :periode="periode" 
-                        :habilitations="filteredHabilitations"
+                        :habilitationsTypes="filteredHabilitationsTypes"
                         :habilitationsPersonnel="getHabilitationByPersonnelId(personnel.id)"
                         :contrats="contrats"
                         v-if="getHabilitationByPersonnelId(personnel.id)?.length"
@@ -118,7 +119,7 @@ export default {
          * 
          * @returns {array}
          */
-        filteredHabilitations() {
+        filteredHabilitationsTypes() {
             if(this.echeancier.habilitation.length == 0 || (this.echeancier.habilitation.length == 1 && this.echeancier.habilitation.includes(''))) {
                 return this.allHabilitationsTypes;
             } else {
@@ -287,6 +288,18 @@ export default {
          */
         getHabilitationByPersonnelId(personnelId) {
             return this.habilitationsPersonnel.filter(e => e.personnel_id == personnelId);
+        },
+
+        /**
+         * Retourne la liste des habilitations du personnel pour un type donné
+         * 
+         * @param {number} habilitationTypeId ID du type en référence
+         * 
+         * @return {array}
+         */
+        getHabilitationsPersonnelsByTypeId(habilitationTypeId) {
+            console.log(this.habilitationsPersonnel);
+            return this.habilitationsPersonnel.filter(e => e.characteristic_id == habilitationTypeId);
         },
 
         /**
