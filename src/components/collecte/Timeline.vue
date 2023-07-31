@@ -24,7 +24,7 @@
                     <span v-else-if="collecte.date"> du {{changeFormatDateLit(collecte.date)}}</span>
                     <span v-else> date non définie</span>
                 </h4>
-                <div class="text-primary border border-primary badge rounded-pill text-bg-light d-flex² align-items-center" v-if="collecte.date_done">
+                <div class="text-primary border border-primary badge rounded-pill text-bg-light d-flex align-items-center" v-if="collecte.date_done">
                     <i class="bi bi-calendar-check me-1"></i>
                     <span class="d-none d-sm-inline">Clôturé le</span>
                     <span class="ms-1">{{changeFormatDateLit(collecte.date_done)}}</span>
