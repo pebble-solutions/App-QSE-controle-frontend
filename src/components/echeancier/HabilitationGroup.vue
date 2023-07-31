@@ -71,9 +71,10 @@ export default {
 
                 if (!found) {
                     const operateur = this.getOperateurById(habilitationPersonnel.personnel_id);
-                    if (operateur) {
-                        operateurs.push(operateur);
-                    }
+                    operateurs.push(operateur ? operateur : {
+                        id: habilitationPersonnel.personnel_id,
+                        cache_nom: "!Opérateur inconnu"
+                    });
                 }
             });
 
