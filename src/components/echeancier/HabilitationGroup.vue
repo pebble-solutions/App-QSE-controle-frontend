@@ -71,7 +71,7 @@ export default {
                     const operateur = this.getOperateurById(habilitationPersonnel.personnel_id);
                     operateurs.push(operateur ? operateur : {
                         id: habilitationPersonnel.personnel_id,
-                        cache_nom: "!Opérateur inconnu"
+                        cache_nom: "!Opérateur "+habilitationPersonnel.personnel_id+" inconnu"
                     });
                 }
             });
