@@ -75,7 +75,7 @@ export default {
                     const habilitationType = this.getHabilitationById(habilitationPersonnel.characteristic_id); 
                     habilitationsTypes.push(habilitationType ? habilitationType : {
                         id: habilitationPersonnel.characteristic_id,
-                        nom: "!Habilitation inconnue"
+                        nom: "!Habilitation "+habilitationPersonnel.characteristic_id+" inconnue"
                     });
                 }
             });
