@@ -22,7 +22,7 @@ export function searchConsultation(searchParams, app) {
     }
 
     return new Promise((resolve, reject) => {
-        if (!['collecte', 'projet', 'formulaire'].includes(searchParams.mode)) {
+        if (!['collecte', 'projet', 'formulaire','kn_wtbcl','ss_operateur','ss_controleur','operateur','controleur'].includes(searchParams.mode)) {
             throw new Error("Erreur dans le mode d'information sélectionné.");
         }
     

@@ -1,13 +1,5 @@
 <template>
     <form @submit.prevent="search()" class="m-1">
-        <div class="input-group mb-1">
-            <input type="date" class="form-control" id="dateDebutDone"  v-model="searchDd">
-            <input type="date" class="form-control" id="dateFinDone" v-model="searchDf">
-            <button class="btn btn-primary" type="submit" :disabled="pendingSearch">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pendingSearch"></span>
-                <i class="bi bi-funnel" v-else></i>
-            </button>
-        </div>
         <div class="dropdown d-grid mb-1">
             <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pendingSearch"></span>
@@ -24,7 +16,29 @@
                 </button>
             </ul>
         </div>
-        
+        <div class="input-group mb-1">
+            <input type="date" class="form-control" id="dateDebutDone"  v-model="searchDd">
+            <input type="date" class="form-control" id="dateFinDone" v-model="searchDf">
+            <button class="btn btn-primary" type="submit" :disabled="pendingSearch">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="pendingSearch"></span>
+                <i class="bi bi-funnel" v-else></i>
+            </button>
+        </div>
+        <div v-if="currentModeLabel == 'Contrôles non-bouclés'" class="d-flex justify-content-around mt-2">
+
+            <input type="checkbox" class="btn-check" id="btn-check-S" autocomplete="off">
+            <label class="btn btn-outline-success" for="btn-check-S" style="width:40px">S</label><br>
+
+            <input type="checkbox" class="btn-check" id="btn-check-A" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btn-check-A" style="width:40px">A</label><br>
+
+            <input type="checkbox" class="btn-check" id="btn-check-2-M" checked autocomplete="off">
+            <label class="btn btn-outline-warning" for="btn-check-2-M" style="width:40px">M</label><br>
+
+            <input type="checkbox" class="btn-check" id="btn-check-2-I" checked autocomplete="off">
+            <label class="btn btn-outline-danger" for="btn-check-2-I" style="width:40px">I</label><br>
+
+        </div>
     </form>
     
 </template>
@@ -66,12 +80,13 @@ export default {
                 collecte: "Tous les contrôles",
                 formulaire: "Grouper par questionnaire",
                 projet: "Grouper par projet",
+                kn_wtbcl: "Contrôles non-bouclés",
+                ss_operateur: "Contrôles non-affectés à un opérateur",
+                ss_controleur: "Contrôles non-affectés à un contrôleur",
+                operateur: "Grouper par opérateur",
+                controleur: "Grouper par contrôleur"
                 
-
-            },
-            
-
-
+            }
         }
 
     },
