@@ -298,7 +298,6 @@ export default {
          * @return {array}
          */
         getHabilitationsPersonnelsByTypeId(habilitationTypeId) {
-            console.log(this.habilitationsPersonnel);
             return this.habilitationsPersonnel.filter(e => e.characteristic_id == habilitationTypeId);
         },
 

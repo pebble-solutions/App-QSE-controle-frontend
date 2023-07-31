@@ -4,8 +4,6 @@
             <h3 class="my-0 fs-5">{{ habilitationTypeDisplayName }}</h3>
         </div>
 
-        <pre>{{ usedOperateurs }}</pre>
-
         <weeks-grid-table
             :grid="grid"
             headerLabel="Opérateur"
