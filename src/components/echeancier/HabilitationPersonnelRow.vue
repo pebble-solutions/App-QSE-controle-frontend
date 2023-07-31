@@ -21,55 +21,42 @@
         </template>
 
         <template 
-            v-for="(kn, rowIndex) in getControlsByCharacteristicTypeId(habilitationType.id)" 
-            :key="kn">
+            v-for="(control, rowIndex) in controls" 
+            :key="control">
 
-            <div 
-                class="control-timeline bg-gradient"
-                :class="[getHabilitationBg(kn)]"
-                :style="{ left: getLeftPosition(getWeekStartInTimeline(kn.date_done) +1), width: getWidth(getControlValidityWeeks(rowIndex, habilitationType.id, 26), 'px') }"></div>
-            
-            <div 
-                class="control-timeline bg-danger bg-gradient fs-7"
-                :style="{ left: getLeftPosition(getWeekStartInTimeline(kn.date_done) + 1 + getControlValidityWeeks(rowIndex, habilitationType.id, 26)), width: getWidth(getControlBlankWeeks(rowIndex, habilitationType.id), 'px') }"
-                v-if="getControlBlankWeeks(rowIndex, habilitationType.id)"
-                title="Contrôle expiré">
-            </div>
-
-            <div 
-                class="control-result-item rounded m-1" 
-                :class="[classSAMI(kn.sami)]" 
-                :style="{ left: getLeftPosition(getWeekStartInTimeline(kn.date_done) +1) }"
-                :title="kn.date_done">{{ kn.sami }}</div>
+            <control-timeline-result 
+                :blankWidth="getWidth(getControlBlankWeeks(rowIndex))"
+                :control="control"
+                :left="getLeftPosition(getWeekStartInTimeline(control.date_done) +1)"
+                :width="getWidth(getControlValidityWeeks(rowIndex, 26))" />
         </template>
     </div>
 
 </template>
 
+<style lang="scss" scoped>
+@import "../grid/grid.scss";
+</style>
+
 <script>
+import { diffDate } from '../../js/date';
 
 import { WeeksGrid } from '../../js/grid/WeeksGrid';
 import ContratTimelineBar from './ContratTimelineBar.vue';
+import ControlTimelineResult from './ControlTimelineResult.vue';
 import HabilitationTimelineBar from './HabilitationTimelineBar.vue';
 
 export default {
-    components: { HabilitationTimelineBar, ContratTimelineBar },
+    components: { HabilitationTimelineBar, ContratTimelineBar, ControlTimelineResult },
     props: {
         rowIndex: Number,
         habilitationType: Object,
         habilitationsPersonnels: Array,
         contrats: Array,
-        collectes: Array,
+        controls: Array,
         personnel: Object,
         rowLabel: String,
-        grid: WeeksGrid,
-        echeancier: Object
-    },
-
-    data() {
-        return {
-            habilitationsPersonnels: []
-        }
+        grid: WeeksGrid
     },
 
     methods: {
@@ -102,19 +89,50 @@ export default {
          */
         isContratInPeriode(contrat) {
             const dsortie = contrat.dsortie_reelle ?? contrat.dsortie;
-            if (contrat.dentree >= this.echeancier.dd && contrat.dentree <= this.echeancier.df
-                || contrat.dentree <= this.echeancier.df && !dsortie
-                || contrat.dentree <= this.echeancier.df && dsortie && dsortie >= this.echeancier.df
-                || contrat.dentree <= this.echeancier.df && dsortie && dsortie >= this.echeancier.dd && dsortie <= this.echeancier.df) {
+            if (contrat.dentree >= this.grid.dateStart && contrat.dentree <= this.grid.dateEnd
+                || contrat.dentree <= this.grid.dateEnd && !dsortie
+                || contrat.dentree <= this.grid.dateEnd && dsortie && dsortie >= this.grid.dateEnd
+                || contrat.dentree <= this.grid.dateEnd && dsortie && dsortie >= this.grid.dateStart && dsortie <= this.grid.dateEnd) {
                     return true;
             }
 
             return false;
         },
-    },
 
-    mounted() {
-        this.getHabilitationsPersonnels();
+        /**
+         * Retourne la période entre de contôles valides (période d'invalidité du KN)
+         * 
+         * @param {number} index                Index du contrôle dans la collection des contrôles
+         * @param {number} characteristicId     Déprécié
+         * 
+         * @return {number}
+         */
+        getControlBlankWeeks(index) {
+            const diff = this.getControlValidityWeeks(index) - this.getControlValidityWeeks(index, 26);
+            return diff > 0 ? diff : 0;
+        },
+
+        /**
+         * Retourne le nombre de semaines de validité d'un contrôle par rapport au suivant,
+         * borné sur a timeline
+         * 
+         * @param {number} index                L'index du contrôle dans la collection des controles
+         * @param {number} expirationLimit      Nombre de semaines à expiration
+         * 
+         * @return {number}
+         */
+        getControlValidityWeeks(index, expirationLimit) {
+            const controls = this.controls;
+            const currentControl = controls[index];
+            const nextControl = controls[index+1];
+
+            const dateStart = currentControl.date_done;
+            const dateEnd = nextControl ? nextControl.date_done : this.grid.dateEnd;
+
+            const weeks_diff = Math.ceil( diffDate(dateStart, dateEnd, 'week'));
+
+            return weeks_diff > expirationLimit && expirationLimit ? expirationLimit : weeks_diff;
+        },
     }
 }
 </script>

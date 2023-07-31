@@ -1,12 +1,25 @@
-import { diffDate } from "../date";
+import { diffDate, listIntervalWeeks } from "../date";
 
 export class WeeksGrid {
 
+    /**
+     * Initialise la grille
+     * 
+     * @param {object} options 
+     * - columnWidth {number} La largeur de chaque colonne
+     * - rowHeight {number} Hauteur de chaque ligne
+     * - firstColumnWidth {number} La largeur de la première colonne
+     * - dateStart {string} La date de début de la période YYYY-MM-DD
+     * - dateEnd {string} La date de fin de la période YYYY-MM-DD
+     * - rows {number} Le nombre de lignes dans le tableau, hors ligne d'en-tête
+     */
     constructor(options) {
         this.columnWidth = options.columnWidth;
+        this.rowHeight = options.rowHeight;
         this.firstColumnWidth = options.firstColumnWidth;
         this.dateStart = options.dateStart;
         this.dateEnd = options.dateEnd;
+        this.rows = options.rows
     }
 
     /**
@@ -69,7 +82,7 @@ export class WeeksGrid {
         refDf = refDf ? refDf : this.dateEnd;
         const weeks_diff = Math.ceil( diffDate(refDd, refDf, 'week'));
 
-        const timeline_space = this.periode.length - this.getWeekStartInTimeline(refDd);
+        const timeline_space = this.getWeeks().length - this.getWeekStartInTimeline(refDd);
 
         return weeks_diff > timeline_space ? timeline_space : weeks_diff;
     }
@@ -85,5 +98,38 @@ export class WeeksGrid {
     getWidth(cols, sx) {
         const width = cols * this.columnWidth;
         return typeof sx !== 'undefined' ? `${width}${sx}` : width;
+    }
+
+    /**
+     * Retourne la liste des semaines de la période
+     * 
+     * @return {Array}
+     */
+    getWeeks() {
+        return listIntervalWeeks(this.dateStart, this.dateEnd);
+    }
+
+    /**
+     * Retourne la largeur complète de la grille
+     * 
+     * @param {string} sx           Suffixe à ajouter (ex : px)
+     * 
+     * @return {string|number}
+     */
+    getTableWidth(sx) {
+        const width = this.getWeeks().length * this.columnWidth + this.firstColumnWidth;
+        return sx ? `${width}px` : width;
+    }
+
+    /**
+     * Retourne la hauteur complète de la grille, incluant la ligne d'entête
+     * 
+     * @param {string} sx           Suffixe à ajouter (ex : px)
+     * 
+     * @return {string|number}
+     */
+    getTableHeight(sx) {
+        const height = (this.rows) * this.rowHeight;
+        return sx ? `${height}px` : height;
     }
 }

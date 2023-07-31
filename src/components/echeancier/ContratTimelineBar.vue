@@ -22,7 +22,7 @@ export default {
         width: Number
     },
 
-    compted: {
+    computed: {
         /**
          * Retourne le libellé du contrat incluant la date de début et de fin
          * 
