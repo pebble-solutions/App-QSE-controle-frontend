@@ -124,7 +124,7 @@
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'echeancier'">
-				<FormEcheancier />
+				<FilterFormEcheancier />
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'home'">
@@ -159,7 +159,7 @@ import AppMenuItem from '@/components/pebble-ui/AppMenuItem.vue'
 import { mapActions, mapState } from 'vuex'
 import CONFIG from "@/config.json"
 import FormStats from './components/FormStats.vue'
-import FormEcheancier from './components/FormEcheancier.vue'
+import FilterFormEcheancier from './components/echeancier/FilterForm.vue'
 import CollecteItem from './components/CollecteItem.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
@@ -600,7 +600,7 @@ export default {
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList },
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
