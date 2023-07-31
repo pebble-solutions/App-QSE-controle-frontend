@@ -7,6 +7,8 @@
             <h3 class="my-0 fs-5">{{ personnel.cache_nom }}</h3>
         </div>
 
+        <pre>{{ usedHabilitationsTypes }}</pre>
+
         <weeks-grid-table
             :grid="grid"
             headerLabel="Habilitations"
@@ -148,7 +150,7 @@ export default {
                 firstColumnWidth: this.firstColumnWidth,
                 dateStart: this.echeancier.dd,
                 dateEnd: this.echeancier.df,
-                rows: this.habilitationsPersonnel.length + 1
+                rows: this.usedHabilitationsTypes.length + 1
             });
         }
     },

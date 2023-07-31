@@ -4,6 +4,8 @@
             <h3 class="my-0 fs-5">{{ habilitationTypeDisplayName }}</h3>
         </div>
 
+        <pre>{{ usedOperateurs }}</pre>
+
         <weeks-grid-table
             :grid="grid"
             headerLabel="Opérateur"
@@ -145,7 +147,7 @@ export default {
                 firstColumnWidth: this.firstColumnWidth,
                 dateStart: this.echeancier.dd,
                 dateEnd: this.echeancier.df,
-                rows: this.habilitationsPersonnels.length + 1
+                rows: this.usedOperateurs.length + 1
             });
         }
 
