@@ -11,6 +11,7 @@
  * - {number} limit         Retourner maximum Y résultats depuis l'enregistrement X
  * - {number} formulaire    ID d'un formulaire limitant le retour
  * - {number} projet_id     ID d'un projet limitant le retour
+ * - {array}  kns           Liste des valeur SAMI des controles filtrés 
  * @param {object} app Instance de AppJS
  * 
  * @returns {Promise<array>}
@@ -36,7 +37,8 @@ export function searchConsultation(searchParams, app) {
             stats_df: null,
             done: null,
             formulaire: searchParams.formulaire ?? null,
-            projet_id: searchParams.projet_id ?? null
+            projet_id: searchParams.projet_id ?? null,
+            kns: null
         };
     
         let url = `data/GET/${searchParams.mode}`;

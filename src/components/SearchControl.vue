@@ -25,18 +25,10 @@
             </button>
         </div>
         <div v-if="currentModeLabel == 'Contrôles non-bouclés'" class="d-flex justify-content-around mt-2">
-
-            <input type="checkbox" class="btn-check" id="btn-check-S" autocomplete="off">
-            <label class="btn btn-outline-success" for="btn-check-S" style="width:40px">S</label><br>
-
-            <input type="checkbox" class="btn-check" id="btn-check-A" autocomplete="off">
-            <label class="btn btn-outline-primary" for="btn-check-A" style="width:40px">A</label><br>
-
-            <input type="checkbox" class="btn-check" id="btn-check-2-M" checked autocomplete="off">
-            <label class="btn btn-outline-warning" for="btn-check-2-M" style="width:40px">M</label><br>
-
-            <input type="checkbox" class="btn-check" id="btn-check-2-I" checked autocomplete="off">
-            <label class="btn btn-outline-danger" for="btn-check-2-I" style="width:40px">I</label><br>
+            <div v-for="(label, index) in valueSAMI" >
+                <input type="checkbox" class="btn-check" :id="'btn-' + index" autocomplete="off" :value="label" v-model="valueSAMI[index].value">
+                <label class="btn " :class="label.style" :for="'btn-' + index" style="width:40px">{{ index }}</label><br>
+            </div>
 
         </div>
     </form>
@@ -86,6 +78,13 @@ export default {
                 operateur: "Grouper par opérateur",
                 controleur: "Grouper par contrôleur"
                 
+            },
+
+            valueSAMI: {
+                S:{ value: false, style:'btn-outline-success'},
+                A:{ value: false, style:'btn-outline-primary'},
+                M:{ value: true, style:'btn-outline-warning'},
+                I:{ value: true, style:'btn-outline-danger'},
             }
         }
 
@@ -169,13 +168,16 @@ export default {
          * Lance une recherche, met à jour les informations sur le store.
          */
         search() {
+            let knsFilter = Object.keys(this.valueSAMI).filter((sami) => this.valueSAMI[sami].value);
+
             this.updateVal('pendingSearch', true)
                       searchConsultation({
                 dd: this.searchDd,
                 df: this.searchDf,
                 mode: this.searchMode,
                 start: this.searchStart,
-                limit: this.searchLimit
+                limit: this.searchLimit,
+                kns: knsFilter
             }, this.$app).then(data => {
                 this.$emit('search-result', data);
                 this.setSearchResults(data);
