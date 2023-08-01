@@ -79,7 +79,8 @@ export default {
          * Charger plus de resultats
          */
         async loadMore() {
-            this.collection.requestPayload.start = this.collection.requestPayload.start ?? this.collection.requestPayload.start + this.collection.requestPayload.limit;
+            const start = this.collection.requestPayload.start ? this.collection.requestPayload.start + this.collection.requestPayload.limit : this.collection.requestPayload.limit ;
+            this.collection.requestPayload.start = start;
             try {
                 const data = await this.collection.load();
                 if (!data.length) this.noMoreAvailable = true;
