@@ -67,10 +67,12 @@
                         <strong class="d-block">Aucune action corrective proposée</strong>
                     </div>
                     <alert-message
-                        icon="bi-info-square-fill" 
-                        className="mt-3" 
+                        :variant="classNameFromSAMI(collecte.following_result, {s: 'success', a: 'primary', m: 'warning', i: 'danger'})" 
+                        className="mt-3 py-2 d-flex align-items-center" 
                         v-if="collecte.following_id">
-                        Bouclage #{{ collecte.following_id }}
+
+                        <sami-badge :result="collecte.following_result" />
+                        <span class="ms-2">Bouclé par le contrôle #{{ collecte.following_id }}</span>
                     </alert-message>
                 </template>
             </div>
@@ -78,14 +80,14 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <template v-if=" levelUser >= 5">
-                                <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-4">
-                                    <i class="bi bi-lock-fill"></i>
-                                    Déverrouiller
-                                </button>
-                                <button class="btn btn-sm btn-warning me-4" v-else disabled>
-                                    <i class="bi bi-unlock-fill"></i>
-                                    Déverrouillé
-                                </button>
+                            <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-4">
+                                <i class="bi bi-lock-fill"></i>
+                                Déverrouiller
+                            </button>
+                            <button class="btn btn-sm btn-warning me-4" v-else disabled>
+                                <i class="bi bi-unlock-fill"></i>
+                                Déverrouillé
+                            </button>
                         </template>
                         <button class="position-relative btn btn-sm btn-outline-secondary me-4" @click.prevent="toggleNotes()" v-if="collecte.notes.length >= 1">
                             Historique
@@ -210,6 +212,7 @@ import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 import { mapActions } from 'vuex';
 import AppModal from './pebble-ui/AppModal.vue';
+import SamiBadge from './collecte/SamiBadge.vue';
 
 export default {
 
@@ -310,20 +313,11 @@ export default {
         },
 
         /**
-         * Retourne la valeur du contenu de la note afin qu'elle soit lisible en html
-         */
-        formatNoteText(text) {
-            if (!text) return '';
-            return text.replace(/\n/g, '<br>');
-        },
-
-        /**
          * envoie une requete API pour dévérouiller la collecte
          * 
          * @param {id}  id de la collecte à déverouiller
          */
-
-         unlock(id){
+        unlock(id){
             this.pending.unlock = true
             let comment = prompt ('indiquer le motif de dévérouillage de la collecte #'+id);
             if (comment){
@@ -418,12 +412,13 @@ export default {
         /**
          * Retourne une classe CSS par rapport à une réponse S A M I
          * 
-         * @param {string} reponse S A M I
+         * @param {string} reponse      S A M I
+         * @param {object} dict         Dictionnaire des classes CSS
          * 
          * @return {string}
          */
-        classNameFromSAMI(reponse) {
-            return classNameFromSAMI(reponse);
+        classNameFromSAMI(reponse, dict) {
+            return classNameFromSAMI(reponse, dict);
         },
 
         /**
@@ -452,6 +447,6 @@ export default {
         },
     },
 
-    components: { UserImage, FileItem, Timeline, AlertMessage, AppModal }
+    components: { UserImage, FileItem, Timeline, AlertMessage, AppModal, SamiBadge }
 }
-</script> 
+</script>
