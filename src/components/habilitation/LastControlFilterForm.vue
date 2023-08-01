@@ -72,7 +72,7 @@ export default {
             collection.requestPayload = collection.requestPayload ?? {};
             collection.requestPayload.last_control_limit = this.requestPayload.last_control_limit;
             collection.requestPayload.last_control = 1;
-            
+            this.selectQueryParameter(collection);
 
             try {
                 await collection.load();
@@ -86,7 +86,22 @@ export default {
          */
         setMode(groupFilter) {
             this.currentGroup = groupFilter;
-        }
+        },
+        selectQueryParameter(collection) {
+            switch (this.currentGroup) {
+                case 'Tous':
+                    //Rien à donner en paramètre
+                    break;
+                case 'Contrôlés':
+                    collection.requestPayload.last_control_result = '*'
+                    break;
+                case 'Non contrôlés':
+                    collection.requestPayload.last_control_result = ''
+                    break;
+                default:
+                    break;
+            }
+        },
     }
 
 }
