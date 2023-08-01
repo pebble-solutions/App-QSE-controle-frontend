@@ -25,6 +25,7 @@
             <div class="col-12">
                 <div class="card my-2">
                     <div class="card-body">
+                        <h3 class="card-title fs-4">Répartition des kn en retard</h3>
                         <GlobalTable></GlobalTable>
                     </div>
                 </div>
