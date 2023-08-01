@@ -114,7 +114,7 @@ export default {
 
         getPersonnel(){
             // this.app.apiGet("/v2/personnel")
-            this.$app.apiGet('structurePersonnel/GET/list').then((data) => {
+            this.$app.apiGet('/v2/personnel',{limit:'aucune'}).then((data) => {
                 this.personnels = data;
 			}).catch(this.$app.catchError);
         }
