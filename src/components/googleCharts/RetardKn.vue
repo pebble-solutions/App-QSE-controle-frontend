@@ -1,34 +1,40 @@
-<template>
-    <div class="col-6">
-        <div class="card my-2">
-            <div class="card-body">
-                <h3 class="card-title fs-4">KN dans les temps </h3>
-                <p>{{ inTimeKn }}</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="card my-2">
-            <div class="card-body">
-                <h3 class="card-title fs-4">KN en retard</h3>
-                <p>{{ lateKn }}</p>
-            </div>
-        </div>
-    </div>
+<template v-if="!pending.fetchData">
+    <div id="retardPieChart"></div>
 </template>
 <script>
+import { GoogleCharts } from 'google-charts'
 export default {
     data() {
         return {
-            inTimeKn: 0,
-            lateKn: 0,
+            chartData: null,
+        }
+    },
+    methods: {
+        fetchData() {
+            this.chartData = [
+                ['En retard', 0],
+                ['À l\'heure', 0],
+            ];
+            const data = this.$assets.getCollection('collectesCollection').getCollection();
+            const lateKn = data.filter(collecte => collecte.date_prevue.split(' ')[0] < collecte.date_done.split(' ')[0]);
+            this.chartData[0][1] = lateKn.length;
+            this.chartData[1][1] = data.length - lateKn.length;
+        },
+        drawChart() {
+            let dataTable = GoogleCharts.api.visualization.arrayToDataTable(this.chartData, true);
+            let chartWrap = document.getElementById('retardPieChart');
+            let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
+            let options = {
+                colors: ['#dc3545', '#198754'],
+            };
+            chart.draw(dataTable, options);
         }
     },
     mounted() {
-        const data = this.$assets.getCollection('collectesCollection').getCollection();
-        const lateKn = data.filter(collecte => collecte.date_prevue.split(' ')[0] < collecte.date_done.split(' ')[0]);
-        this.lateKn = lateKn.length;
-        this.inTimeKn = data.length - lateKn.length;
+        this.fetchData();
+        GoogleCharts.load(this.drawChart, {
+            packages: ['corechart'],
+        });
     }
 }
 </script>

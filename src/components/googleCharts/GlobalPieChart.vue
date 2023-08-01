@@ -12,7 +12,7 @@ export default {
         }
     },
     methods: {
-        async fetchData() {
+        fetchData() {
             this.chartData = [
                 ['Réponses', 'Nombre'],
                 ['S', 0],
