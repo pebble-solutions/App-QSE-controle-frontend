@@ -4,16 +4,26 @@ import fr from 'date-and-time/locale/fr';
 /**
  * Retourne une classe CSS par rapport à une réponse S A M I
  * 
- * @param {string} reponse S A M I
+ * @param {string} reponse      S A M I
+ * @param {object} dict         Le dictionnaire des classes CSS à utiliser
  * 
  * @return {string}
  */
-export function classNameFromSAMI(reponse) {
+export function classNameFromSAMI(reponse, dict) {
+
+    if (typeof dict === "undefined") {
+        dict = {
+            s: 'text-bg-success',
+            a: 'text-bg-primary',
+            m: 'text-bg-warning',
+            i: 'text-bg-danger'
+        };
+    }
+
     if (typeof reponse === 'string') {
-        if (reponse.toLowerCase() == 's') return 'text-bg-success';
-        else if (reponse.toLowerCase() == 'a') return 'text-bg-primary';
-        else if (reponse.toLowerCase() == 'm') return 'text-bg-warning';
-        else if (reponse.toLowerCase() == 'i') return 'text-bg-danger';
+        if (typeof dict[reponse.toLowerCase()] !== "undefined") {
+            return dict[reponse.toLowerCase()];
+        }
     }
     return 'text-bg-secondary';
 }
