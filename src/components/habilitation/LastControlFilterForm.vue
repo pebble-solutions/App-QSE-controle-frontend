@@ -85,7 +85,19 @@ export default {
          * @param {String} groupFilter 
          */
         setMode(groupFilter) {
-            this.currentGroup = groupFilter;
+            switch (groupFilter) {
+                case 'tous':
+                    this.currentGroup = 'Tous';
+                    break;
+                case 'controles':
+                    this.currentGroup = 'Contrôlés';
+                    break;
+                case 'nonControles':
+                    this.currentGroup = 'Non contrôlés';
+                    break;
+                default:
+                    break;
+            }
         },
         selectQueryParameter(collection) {
             switch (this.currentGroup) {
