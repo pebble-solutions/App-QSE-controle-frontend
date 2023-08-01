@@ -5,7 +5,7 @@
                 <div class="text-primary text-bg-light d-flex align-items-center row">
                     <div class="col-2"></div>
                     <i class="bi bi-calendar-check me-1 col-1"></i>
-                    <span class="d-none d-sm-inline col-3">Clôturé le</span>
+                    <span class="d-none d-sm-inline col-3">Date de contrôle</span>
                     <input type="date" class="form-control text-primary text-bg-light col" :value="collecteModif.date_done ? collecteModif.date_done.slice(0, 10) : ''" @input="updateDateDoneCollecte">
                     <div class="col-2"></div>
                 </div>
