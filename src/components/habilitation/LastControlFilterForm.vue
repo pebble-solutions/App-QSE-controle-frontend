@@ -1,5 +1,5 @@
 <template>
-    <form method="get" @submit.prevent="timeFilter()" class="m-1">
+    <form method="get" @submit.prevent="filter()" class="m-1">
         <div class="input-group">
             <select name="last_control_limit" id="last_control_limit" class="form-select"
                 v-model="requestPayload.last_control_limit">
@@ -11,32 +11,19 @@
                 <i class="bi bi-funnel" v-else></i>
             </button>
         </div>
+        <div class="my-2">
             <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardTous" checked autocomplete="off"
                 v-on:click="setMode('Tous')">
             <label class="btn btn-outline-secondary" for="filtreRetardTous">Tous</label>
 
-            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardControle" checked autocomplete="off"
+            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardControle" autocomplete="off"
                 v-on:click="setMode('Contrôlés')">
             <label class="btn btn-outline-secondary" for="filtreRetardControle">Contrôlés</label>
 
-            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardNonControle" checked
-                autocomplete="off" v-on:click="setMode('Non contrôlés')">
+            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardNonControle" autocomplete="off"
+                v-on:click="setMode('Non contrôlés')">
             <label class="btn btn-outline-secondary" for="filtreRetardNonControle">Non contrôlés</label>
-        <!--<div class="dropdown d-grid mb-1">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
-                    v-if="pending.habilitationsPersonnels"></span>
-                <i class="bi bi-list" v-else></i>
-                {{ currentGroup }}
-            </button>
-            <ul class="dropdown-menu">
-                <button type="button" class="dropdown-item d-flex align-items-center justify-content-between"
-                    @click.prevent="setMode(index)" v-for="(label, index) in selectGroupsOptions" :key="index">
-                    {{ label }}
-                    <i class="bi bi-check text-success" v-if="index == mode"></i>
-                </button>
-            </ul>
-        </div>-->
+        </div>
     </form>
 </template>
 
@@ -91,31 +78,22 @@ export default {
             catch (e) {
                 this.$app.catchError(e);
             }
-        },/**
+        },
+        /**
          * Change la valeur du filtre actif à la sélection dans le menu et applique le filtre courant
          * @param {String} groupFilter 
          */
         setMode(groupFilter) {
-            /*switch (groupFilter) {
-                case 'tous':
-                    this.currentGroup = 'Tous';
-                    break;
-                case 'controles':
-                    this.currentGroup = 'Contrôlés';
-                    break;
-                case 'nonControles':
-                    this.currentGroup = 'Non contrôlés';
-                    break;
-                default:
-                    break;
-            }*/
-            console.log(groupFilter);
             this.currentGroup = groupFilter;
         },
+        /**
+         * adapte le contenu de la requête en fonction du mode sélectionné
+         * @param {collection habilitationPersonnels} collection 
+         */
         selectQueryParameter(collection) {
             switch (this.currentGroup) {
                 case 'Tous':
-                    //Rien à donner en paramètre
+                    delete collection.requestPayload.last_control_result
                     break;
                 case 'Contrôlés':
                     collection.requestPayload.last_control_result = '*'
