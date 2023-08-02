@@ -11,7 +11,18 @@
                 <i class="bi bi-funnel" v-else></i>
             </button>
         </div>
-        <div class="dropdown d-grid mb-1">
+            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardTous" checked autocomplete="off"
+                v-on:click="setMode('Tous')">
+            <label class="btn btn-outline-secondary" for="filtreRetardTous">Tous</label>
+
+            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardControle" checked autocomplete="off"
+                v-on:click="setMode('Contrôlés')">
+            <label class="btn btn-outline-secondary" for="filtreRetardControle">Contrôlés</label>
+
+            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardNonControle" checked
+                autocomplete="off" v-on:click="setMode('Non contrôlés')">
+            <label class="btn btn-outline-secondary" for="filtreRetardNonControle">Non contrôlés</label>
+        <!--<div class="dropdown d-grid mb-1">
             <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
                     v-if="pending.habilitationsPersonnels"></span>
@@ -25,7 +36,7 @@
                     <i class="bi bi-check text-success" v-if="index == mode"></i>
                 </button>
             </ul>
-        </div>
+        </div>-->
     </form>
 </template>
 
@@ -85,7 +96,7 @@ export default {
          * @param {String} groupFilter 
          */
         setMode(groupFilter) {
-            switch (groupFilter) {
+            /*switch (groupFilter) {
                 case 'tous':
                     this.currentGroup = 'Tous';
                     break;
@@ -97,7 +108,9 @@ export default {
                     break;
                 default:
                     break;
-            }
+            }*/
+            console.log(groupFilter);
+            this.currentGroup = groupFilter;
         },
         selectQueryParameter(collection) {
             switch (this.currentGroup) {
