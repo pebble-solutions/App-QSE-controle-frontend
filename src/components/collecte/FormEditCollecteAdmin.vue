@@ -5,7 +5,7 @@
                 <div class="text-primary text-bg-light d-flex align-items-center row">
                     <div class="col-2"></div>
                     <i class="bi bi-calendar-check me-1 col-1"></i>
-                    <span class="d-none d-sm-inline col-3">Clôturé le</span>
+                    <span class="d-none d-sm-inline col-3">Date de contrôle</span>
                     <input type="date" class="form-control text-primary text-bg-light col" :value="collecteModif.date_done ? collecteModif.date_done.slice(0, 10) : ''" @input="updateDateDoneCollecte">
                     <div class="col-2"></div>
                 </div>
@@ -57,11 +57,11 @@ export default {
     data() {
         return {
             collecteModif: {},
-            personnels : []
         }
     },
     props: {
-        collecte: Object,     
+        collecte: Object,  
+        personnels: Array   
     },
 
     emits: ['modification','stringdate'],
@@ -112,18 +112,10 @@ export default {
             this.collecteModif.date_done = event.target.value;
         },
 
-        getPersonnel(){
-            // this.app.apiGet("/v2/personnel")
-            this.$app.apiGet('structurePersonnel/GET/list').then((data) => {
-                this.personnels = data;
-			}).catch(this.$app.catchError);
-        }
-
     },
 
     mounted(){
         this.collecteModif = JSON.parse(JSON.stringify(this.collecte));
-        this.getPersonnel();
     },
 
     components: { UserImage }

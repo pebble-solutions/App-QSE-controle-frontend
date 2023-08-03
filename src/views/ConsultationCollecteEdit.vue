@@ -7,7 +7,7 @@
         :submitBtn="valueButton"
         :cancelBtn="true">
 
-        <FormEditCollecteAdmin :collecte="collecte" @modification="collecteChange" @stringdate="justificationDate"></FormEditCollecteAdmin>
+        <FormEditCollecteAdmin :collecte="collecte" :personnels="personnels" @modification="collecteChange" @stringdate="justificationDate"></FormEditCollecteAdmin>
 
         <div v-if="noteContent">
             <div class="card">
@@ -41,7 +41,8 @@ export default {
             collecteModifie: {},
             dateDoneModifString: null,
             noteContent: null,
-            comment: null
+            comment: null,
+            personnels: []
         }
     },
 
@@ -92,7 +93,7 @@ export default {
                     enqueteur_nom : this.collecteModifie.enqueteur_nom,
                     cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
                     cible_nom : this.collecteModifie.cible_nom,
-                    date_done : this.collecteModifie.date_done
+                    date_start : this.collecteModifie.date_start
                 })
                 .then((data) =>{
                     this.refreshCollecte(data);
@@ -111,11 +112,24 @@ export default {
         },
 
         /**
+         * Charge tout le personnel via un appel API (sans limite)
+         */
+        getPersonnel(){
+            this.$app.apiGet('/v2/personnel',{limit:'aucune'}).then((data) => {
+                this.personnels = data;
+			}).catch(this.$app.catchError);
+        },
+
+        /**
          * Retourne a la vue précédente
          */
         routeToParent() {
             this.$router.back()
         },
+    },
+
+    mounted(){
+        this.getPersonnel();
     },
 
     components: { AppModal, FormEditCollecteAdmin }
