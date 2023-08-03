@@ -4,7 +4,7 @@
             <div class="d-flex align-items-baseline justify-content-between mb-2">
                 <h4 class="fs-5 card-title">Nombre d'items évalués </h4>
                 <div class="badge fs-5 text-uppercase ms-1" :class="classNameFromSAMI(collecte.result_var)" >
-                    {{collecte.nb_reponse}}/{{collecte.nb_question}}
+                    {{ collecte.nb_reponse }}/{{ collecte.nb_question }}
                 </div>
             </div>
         </div>
@@ -52,6 +52,26 @@ export default {
     props: {
         stats: Array,
         groupsAndQuestions: Array
-    }
+    },
+
+    methods: {
+        /**
+         * Retourne une classe CSS par rapport à une réponse S A M I
+         * 
+         * @param {string} reponse S A M I
+         * 
+         * @return {string}
+         */
+        classNameFromSAMI(reponse) {
+            if (typeof reponse === 'string') {
+                if (reponse.toLowerCase() == 's') return 'text-bg-success';
+                else if (reponse.toLowerCase() == 'a') return 'text-bg-primary';
+                else if (reponse.toLowerCase() == 'm') return 'text-bg-warning';
+                else if (reponse.toLowerCase() == 'i') return 'text-bg-danger';
+            }
+
+            return 'text-bg-secondary';
+        },
+    },
 };
 </script>

@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div v-if="stats.length && groupsAndQuestions.length">
+            <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions">
                 <h3>Stats</h3>
                 
                 <StatsQuestionControlleByHabilitation :stats="stats" :groups-and-questions="groupsAndQuestions"/>
@@ -66,7 +66,9 @@ export default{
     data() {
         return {
             pending: {
-                agent:false
+                agent: false,
+                groupsAndQuestions: true,
+                formulaireStats: true
             },
             habilitationFromPerso: '',
             listControlDone: '',
@@ -89,7 +91,7 @@ export default{
 
     watch: {
         /**
-         * Lance la methode getGroupsAndQuestions pour recuperer au pret de la pays les blocs et lignes
+         * Lance la methode getGroupsAndQuestions pour recuperer au pret de l'api les blocs et lignes
          * 
          * @param {number} newVal id de information groupe (forumlaire)
          */
@@ -123,6 +125,35 @@ export default{
          */
         getFormulaire(payload) {
             this.formulaireId = payload;
+        },
+
+        /**
+         * Récupere les blocs et question (ligne) du formulaire
+         * 
+         * @param {number} formulaireId ID du formulaire
+         */
+        getGroupsAndQuestions(formulaireId) {
+            this.pending.groupsAndQuestions = true;
+
+            this.$app.api.get(`v2/informationGroupe/${formulaireId}/blocsandlignes`)
+            .then((data) => {
+                this.groupsAndQuestions = data;
+            }).catch(this.$app.catchError).finally(() => this.pending.groupsAndQuestions = false);
+        },
+
+        /**
+         * Récupere les stats du formulaire 
+         * 
+         * @param {number} formulaireId ID du formulaire
+         */
+        loadFormulaireStats(formulaireId) {
+            this.pending.formulaireStats = true;
+
+            this.$app.api.get(`v2/informationGroupe/${formulaireId}/stats`, {
+                "personnel_id": this.currentPersonnel()
+            }).then((data) => {
+                this.stats = data;
+            }).catch(this.$app.catchError).finally(() => this.pending.formulaireStats = false);
         },
        
         /**
@@ -165,7 +196,6 @@ export default{
          */
         this.loadHabilitationFromPersonnel(this.$route.params.id);
     }
-    
 }
 
 
