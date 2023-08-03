@@ -41,11 +41,7 @@ export default {
                 { value: 91, label: "3 mois" },
                 { value: 183, label: "6 mois" }
             ],
-            selectGroupsOptions: {
-                tous: "Tous",
-                controles: "Contrôlés",
-                nonControles: "Non contrôlés",
-            },
+
             requestPayload: {
                 last_control_limit: 91
             },
@@ -55,9 +51,6 @@ export default {
 
     computed: {
         ...mapState(['pending']),
-        currentGroupFilter() {
-            return this.selectGroupsOptions
-        },
     },
 
     methods: {
@@ -88,7 +81,7 @@ export default {
         },
         /**
          * adapte le contenu de la requête en fonction du mode sélectionné
-         * @param {collection habilitationPersonnels} collection 
+         * @param {array} collection 
          */
         selectQueryParameter(collection) {
             switch (this.currentGroup) {
