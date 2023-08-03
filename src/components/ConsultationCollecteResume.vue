@@ -234,7 +234,16 @@ export default {
                
     },
 
-
+    watch:{
+        collecte: {
+            handler(newVal){
+                if (newVal) {
+                    
+                }
+            },
+            deep:true
+        },
+    },
     computed: {
 
 

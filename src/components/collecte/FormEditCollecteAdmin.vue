@@ -28,7 +28,6 @@
                     </div>
                     
                     <div class="mb-2 col border-start border-dark">
-                        
                         <div class="d-flex align-items-center">
                             <user-image :name="collecteModif.enqueteur_nom" />
                             <div class="w-100 ps-2">
