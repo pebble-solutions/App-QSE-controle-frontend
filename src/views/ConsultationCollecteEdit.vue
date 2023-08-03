@@ -104,9 +104,7 @@ export default {
             })
             .then((data) =>{
                 this.collecte.enqueteur__structure__personnel_id = data.enqueteur__structure__personnel_id;
-                this.collecte.enqueteur_nom = data.enqueteur_nom;
                 this.collecte.cible__structure__personnel_id = data.cible__structure__personnel_id;
-                this.collecte.cible_nom = data.cible_nom;
                 this.collecte.date_start = data.date_start;
                 this.collecte.tlc = data.tlc;
                 this.collecte.tli = data.tli;
