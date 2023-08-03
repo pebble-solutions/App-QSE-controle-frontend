@@ -103,6 +103,7 @@ export default {
                 date_start : this.collecteModifie.date_start
             })
             .then((data) =>{
+                console.log(data)
                 this.collecte.enqueteur__structure__personnel_id = data.enqueteur__structure__personnel_id;
                 this.collecte.cible__structure__personnel_id = data.cible__structure__personnel_id;
                 this.collecte.date_start = data.date_start;
