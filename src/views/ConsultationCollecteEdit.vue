@@ -49,7 +49,12 @@ export default {
     computed: {
         ...mapState(['collecte', 'login']),
 
-        valueButton(){
+        /**
+         * Retourne la veleur du bouton enregistrer 
+         *  - true si une valeur à été modifié
+         *  - false sinon
+         */
+        valueButton() {
             if(this.noteContent){
                 return true;
             } else {
@@ -62,7 +67,10 @@ export default {
 
         ...mapActions(['refreshCollecte']),
 
-        createNote(){
+        /**
+         * Modifie la valeur de la note à afficher
+         */
+        createNote() {
             let modification = [];
             this.noteContent = null;
 
@@ -86,27 +94,42 @@ export default {
         /**
          * Met a jour les valeurs des données de la collecte et créer les notes associées aux modifications
          */
-        saveCollecte(){
+        saveCollecte() {
             this.$app.api.patch('v2/collecte/'+ this.$route.params.idCollecte +'/headers', {
-                    comment : this.comment,
-                    enqueteur__structure__personnel_id : this.collecteModifie.enqueteur__structure__personnel_id,
-                    enqueteur_nom : this.collecteModifie.enqueteur_nom,
-                    cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
-                    cible_nom : this.collecteModifie.cible_nom,
-                    date_start : this.collecteModifie.date_start
-                })
-                .then((data) =>{
-                    this.refreshCollecte(data);
-                })
-                .catch(this.$app.catchError).finally(() => this.routeToParent());
+                comment : this.comment,
+                enqueteur__structure__personnel_id : this.collecteModifie.enqueteur__structure__personnel_id,
+                enqueteur_nom : this.collecteModifie.enqueteur_nom,
+                cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
+                cible_nom : this.collecteModifie.cible_nom,
+                date_start : this.collecteModifie.date_start
+            })
+            .then((data) =>{
+                console.log(data)
+                this.collecte.enqueteur__structure__personnel_id = data.enqueteur__structure__personnel_id;
+                this.collecte.cible__structure__personnel_id = data.cible__structure__personnel_id;
+                this.collecte.date_start = data.date_start;
+                this.collecte.tlc = data.tlc;
+                this.collecte.tli = data.tli;
+            })
+            .catch(this.$app.catchError).finally(() => this.routeToParent());
         },
 
-        collecteChange(payload){
+        /**
+         * Met a jour la valeur de la collecte modifié lors de la reception de l'evenement associé
+         * 
+         * @param {Object} payload 
+         */
+        collecteChange(payload) {
             this.collecteModifie = payload;
             this.createNote()
         },
 
-        justificationDate(payload){
+        /**
+         * Met a jour la phrase de de la note lors de la modification de la date
+         * 
+         * @param {Object} payload 
+         */
+        justificationDate(payload) {
             this.dateDoneModifString = payload;
             this.createNote()
         },
@@ -125,7 +148,7 @@ export default {
          */
         routeToParent() {
             this.$router.back()
-        },
+        }
     },
 
     mounted(){
