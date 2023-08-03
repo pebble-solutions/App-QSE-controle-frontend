@@ -57,11 +57,11 @@ export default {
     data() {
         return {
             collecteModif: {},
-            personnels : []
         }
     },
     props: {
-        collecte: Object,     
+        collecte: Object,  
+        personnels: Array   
     },
 
     emits: ['modification','stringdate'],
@@ -112,18 +112,10 @@ export default {
             this.collecteModif.date_done = event.target.value;
         },
 
-        getPersonnel(){
-            // this.app.apiGet("/v2/personnel")
-            this.$app.apiGet('/v2/personnel',{limit:'aucune'}).then((data) => {
-                this.personnels = data;
-			}).catch(this.$app.catchError);
-        }
-
     },
 
     mounted(){
         this.collecteModif = JSON.parse(JSON.stringify(this.collecte));
-        this.getPersonnel();
     },
 
     components: { UserImage }
