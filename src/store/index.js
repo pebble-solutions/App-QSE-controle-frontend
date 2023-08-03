@@ -286,6 +286,16 @@ export default createStore({
 					state.collecte[key] = collecte[key];
 				}
 			}
+			else if (mode == 'setHeaders') {
+				const headers = ["enqueteur__structure__personnel_id", "cible__structure__personnel_id", "cible_nom", "enqueteur_nom", 
+					"date_start", "tlc", "tli"];
+
+				headers.forEach(header => {
+					if (typeof collecte[header] !== 'undefined') {
+						state.collecte[header] = collecte[header];
+					}
+				});
+			}
 			else {
 				state.collecte = collecte;
 			}
@@ -619,6 +629,20 @@ export default createStore({
 		 */
 		setCollecte(contexte, collecte) {
 			contexte.commit('collecte', { collecte, mode: 'set' })
+		},
+
+		/**
+		 * Charge une collecte dans le store
+		 * 
+		 * @param {object} contexte L'instance vueX
+		 * @param {object} collecte La collecte à charger dans le store
+		 */
+		setCollecteHeaders(contexte, collecte) {
+			contexte.commit('collecte', { collecte, mode: 'setHeaders' });
+			contexte.commit('collectes', {
+				action: 'refresh',
+				collectes: [collecte]
+			})
 		},
 
 		/**
