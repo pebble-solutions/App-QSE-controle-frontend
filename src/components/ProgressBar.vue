@@ -1,6 +1,5 @@
 <template>
-    <div v-if="varTime" class="progress progress-ht" role="progressbar" aria-label="Example with label" aria-valuenow="25"
-        aria-valuemin="0" aria-valuemax="100">
+    <div v-if="varTime" class="progress progress-ht" role="progressbar" aria-valuemin="0" aria-valuemax="100">
         <div class="progress-bar progress-ht overflow-visible text-light" role="progressbar" :class="returnClass(varTime)"
             :style="returnStyle(varTime)">
             {{ returnLabel(varTime) }}
@@ -102,7 +101,7 @@ export default {
          * Enlève les espaces au début et à la fin puis ajoute une majuscule au début si nécessaire
          * @param {String} label 
          */
-        cleanLabel(label){
+        cleanLabel(label) {
             let lowerCaseLabel = label.slice(0);
             return lowerCaseLabel.charAt(0).toUpperCase() + lowerCaseLabel.slice(1);
         },
