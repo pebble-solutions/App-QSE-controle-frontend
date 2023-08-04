@@ -19,15 +19,15 @@
             v-for="habilitationPersonnel in habilitationsPersonnels" :key="habilitationPersonnel.id" />
 
         <template v-for="contrat in contrats" :key="contrat.id">
-            <contrat-timeline-bar :contrat="contrat" :left="getLeftPosition(getWeekStartInTimeline(contrat.dentree) + 1)"
-                :width="getWidth(getWeekEndInTimeline(contrat.dentree, contrat.dsortie_reelle ? contrat.dsortie_reelle : contrat.dsortie))"
+            <contrat-timeline-bar :contrat="contrat" :left="getLeftPosition(getWeekStartInTimeline(contratDateStart(contrat)) + 1)"
+                :width="getWidth(getWeekEndInTimeline(contratDateStart(contrat), contratDateEnd(contrat)))"
                 v-if="isContratInPeriode(contrat)" />
         </template>
 
         <template v-for="(control, rowIndex) in controls" :key="control">
 
             <control-timeline-result :blankWidth="getWidth(getControlBlankWeeks(rowIndex))" :control="control"
-                :left="getLeftPosition(getWeekStartInTimeline(control.date_done) + 1)"
+                :left="getLeftPosition(getWeekStartInTimeline(control.date_start) + 1)"
                 :width="getWidth(getControlValidityWeeks(rowIndex, 26))" />
         </template>
     </div>
@@ -44,6 +44,7 @@ import { WeeksGrid } from '../../js/grid/WeeksGrid';
 import ContratTimelineBar from './ContratTimelineBar.vue';
 import ControlTimelineResult from './ControlTimelineResult.vue';
 import HabilitationTimelineBar from './HabilitationTimelineBar.vue';
+import { getSelfDateEnd, getSelfDateStart } from '../../js/contrat';
 
 export default {
     components: { HabilitationTimelineBar, ContratTimelineBar, ControlTimelineResult, UserImage },
@@ -173,6 +174,20 @@ export default {
 
             return weeks_diff > expirationLimit && expirationLimit ? expirationLimit : weeks_diff;
         },
+
+        /**
+         * Retourne la date de début du contrat
+         */
+        contratDateStart(contrat) {
+            return getSelfDateStart(contrat);
+        },
+
+        /**
+         * Retourne la date de fin du contrat
+         */
+        contratDateEnd(contrat) {
+            return getSelfDateEnd(contrat);
+        }
     },
 }
 </script>
