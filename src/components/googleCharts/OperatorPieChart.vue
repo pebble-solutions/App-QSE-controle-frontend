@@ -54,7 +54,7 @@ export default {
 			let personnels = this.$assets.getCollection('personnels').getCollection();
 			const personnel = personnels.find(e => e.id == id);
 			return personnel ? personnel.cache_nom : 'Opérateur (' + id + ') non trouvé'
-		}
+		},
     },
     mounted() {
         this.fetchData();
