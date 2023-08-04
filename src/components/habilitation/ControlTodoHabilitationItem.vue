@@ -4,7 +4,7 @@
             <UserImage :name="nomPersonnel" v-if="nomPersonnel"></UserImage>
         </div>
         <div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100">
-            <div class="d-flex align-items-center text-secondary">
+            <div class="d-flex align-items-center">
                 <span class="fw-lighter me-2">#{{ habilitationPersonnel.id }}</span>
                 <strong v-if="!pending.habilitationsCharacteristic">{{ nomHabilitationType }}</strong>
             </div>
@@ -12,8 +12,7 @@
 
             <div v-if="habilitationPersonnel.last_control_result">
                 <span class="d-flex align-items-center">
-                    <span class="badge rounded-pill" :class="SAMIClassName">{{ habilitationPersonnel.last_control_result
-                    }}</span>
+                    <span class="badge rounded-pill" :class="SAMIClassName">{{ habilitationPersonnel.last_control_result }}</span>
                     <span class="ms-2">Il y a {{ yearsMonthsDays }}</span>
                 </span>
             </div>
@@ -159,27 +158,39 @@ export default {
             }
             this.daysUntilControl = daysUntilControl;
         },
+
+        /**
+         * Récupère les informations liées aux collections
+         */
+        initFromCollections() {
+            this.computeStackedBar();
+
+            if (!this.pending.personnels) {
+                this.getName();
+            }
+            if (!this.pending.habilitationsCharacteristic) {
+                this.getHabilitionName();
+            }
+
+            this.buildBadgeClass();
+        }
     },
     components: {
         UserImage
     },
-    async mounted() {
+
+    mounted() {
         let personnels = this.$assets.getCollection('personnels');
         let habilitationsCharacteristic = this.$assets.getCollection('habilitationsCharacteristic');
 
         this.personnels = personnels;
         this.habilitationsCharacteristic = habilitationsCharacteristic;
 
-        this.computeStackedBar();
-
-        if (!this.pending.personnels) {
-            this.getName();
-        }
-        if (!this.pending.habilitationsCharacteristic) {
-            this.getHabilitionName();
-        }
-
-        this.buildBadgeClass();
+        this.initFromCollections();
     },
+
+    updated() {
+        this.initFromCollections();
+    }
 }
 </script>
