@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div v-if="!pending.formulaireStats && !pending.groupsAndQuestions">
+            <div v-if="hasStats">
                 <h3>Stats</h3>
                 
                 <StatsQuestionControlleByHabilitation :stats="stats" :groups-and-questions="groupsAndQuestions"/>
@@ -86,6 +86,17 @@ export default{
          */
         currentPersonnel() {
             return this.listActifs.find((e) => e.id == this.$route.params.id);
+        },
+
+        /**
+         * return true si les données de groupsAndQuestions et formulaireStats ont été recupere via l'api
+         */
+        hasStats() {
+            if (this.pending.groupsAndQuestions && this.pending.formulaireStats) {
+                return false;
+            }
+
+            return true;
         }
     },
 
@@ -97,6 +108,7 @@ export default{
          */
         formulaireId(newVal) {
             this.getGroupsAndQuestions(newVal);
+            this.loadFormulaireStats(newVal);
         }
     },
     
@@ -150,7 +162,7 @@ export default{
             this.pending.formulaireStats = true;
 
             this.$app.api.get(`v2/informationGroupe/${formulaireId}/stats`, {
-                "personnel_id": this.currentPersonnel()
+                "personnel_id": this.currentPersonnel
             }).then((data) => {
                 this.stats = data;
             }).catch(this.$app.catchError).finally(() => this.pending.formulaireStats = false);
