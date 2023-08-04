@@ -1,12 +1,12 @@
 <template>
-    <div class="card">
-      <div class="card-body">
-        <div class="fw-bold mb-4 text-center">
-            Note moyenne : {{ getAverage(n1Obj) }}/10
-        </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="fw-bold mb-4 text-center">
+        Note moyenne : {{ getAverage(n1Obj) }}/10 <span style="color:rgba(128, 128, 128, 0.6);">(générale : {{ getAverage(n2Obj) }}) </span>
+      </div>
 
-        <div class="progress-container">
-          <div class="progress">
+      <div class="progress-container">
+        <div class="progress">
             <div
               class="progress-bar bg-success"
               role="progressbar"
@@ -48,85 +48,82 @@
               I
             </div>
           </div>
-          <div class="indicator" :style="{ left: calculateProgressPosition(n1Obj) + '%' }"></div>
-          <div class="generalIndicator" :style="{ left: calculateProgressPosition(n2Obj) + '%' }">
-          <div class="average-display text-center">
-          {{ getAverage(n2Obj) }}
-          </div>
-        </div>
-          <div class="userImageIndicator" :style="{ left: calculateProgressPosition(n1Obj) + '%' }">
-            <UserImage size='sm' name='H'></UserImage>
-        </div>
+        <div class="indicator" :style="{ left: calculateProgressPosition(n1Obj) + '%' }"></div>
+        <div class="generalIndicator" :style="{ left: calculateProgressPosition(n2Obj) + '%' }"></div>
+        <div class="userImageIndicator" :style="{ left: calculateProgressPosition(n1Obj) + '%' }">
+          <UserImage size="sm" name="H"></UserImage>
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import UserImage from './pebble-ui/UserImage.vue';
+  </div>
+</template>
 
-  export default {
+<script>
+import UserImage from './pebble-ui/UserImage.vue';
 
-    props: {
-      n1: {
-        type: Number,
-        required: true,
-      },
-      n2: {
-        type: Number,
-        required: true,
-      },
+export default {
+  props: {
+    n1: {
+      type: Number,
+      required: true,
     },
-
-    computed: {
-        n1Obj() {
-        return { value: this.n1 };
-      },
-      n2Obj() {
-        return { value: this.n2 };
-      },
+    n2: {
+      type: Number,
+      required: true,
     },
-
-    methods: {
-          calculateProgressPosition(obj) {
-        const minAverage = 1;
-        const maxAverage = 4;
-        const minPosition = 12.5;
-        const maxPosition = 87.5;
-        const average = obj.value;
-
-        const position = Math.min(
-          Math.max(
-            ((average - minAverage) / (maxAverage - minAverage)) *
-              (maxPosition - minPosition) +
-              minPosition,
-            minPosition
-          ),
-          maxPosition
-        );
-
-        return maxPosition - position + minPosition; // Invert the progress
-      },
-        getAverage(obj) {
-        const average = obj.value;
-        const calculatedAverage = ((average - 1) / 3) * 10;
-        const roundedAverage = Math.round(calculatedAverage);
-
-        // Vérifier si la partie décimale est nulle
-        if (calculatedAverage % 1 === 0) {
-          return roundedAverage.toString();
-        } else {
-          return calculatedAverage.toFixed(1);
-        }
-      },
-      
+  },
+  computed: {
+    n1Obj() {
+      return { value: this.n1 };
     },
+    n2Obj() {
+      return { value: this.n2 };
+    },
+    n3Obj() {
+      return { value: 5 - this.n1 }; // Calculer la note "M" en soustrayant la note "S" de 5
+    },
+    n4Obj() {
+      return { value: 5 - this.n2 }; // Calculer la note "I" en soustrayant la note "A" de 5
+    },
+  },
+  methods: {
+    calculateProgressPosition(obj) {
+      const minAverage = 0;
+      const maxAverage = 10;
+      const minPosition = 12.5;
+      const maxPosition = 87.5;
+      const average = obj.value;
 
-    components: { UserImage},
-  
+      const position = Math.min(
+        Math.max(
+          ((average - minAverage) / (maxAverage - minAverage)) * (maxPosition - minPosition) + minPosition,
+          minPosition
+        ),
+        maxPosition
+      );
 
-  };
-  </script>
+      return maxPosition - position + minPosition; // Inverser la progression
+    },
+    getProgressBarWidth(obj) {
+      return (obj.value / 10) * 100; // Convertir la note en pourcentage pour la barre de progression
+    },
+    
+    getAverage(obj) {
+    const average = obj.value;
+    const roundedAverage = Math.round(average * 10) / 10; // Arrondir la moyenne à une décimale
+
+    // Vérifier si la partie décimale est nulle
+    if (roundedAverage % 1 === 0) {
+      return roundedAverage.toFixed(0); // Afficher la moyenne sans décimale si elle est nulle
+    } else {
+      return roundedAverage.toFixed(1); // Sinon, afficher une décimale
+    }
+  },
+
+  },
+  components: { UserImage },
+};
+</script>
   
   <style scoped>
   .card-body {
@@ -176,19 +173,19 @@
   border-bottom: 10px solid black;
   z-index: 1;
 
-
+ */
    .generalIndicator {
   position: absolute;
-  bottom: -6px;
+  top: -10px;
   transform: translate(-50%, -50%);
   width: 0;
   height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 10px solid grey;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 22px solid rgba(128, 128, 128, 0.5); /* Gris transparent */
   z-index: 1;
 }
-} */
+
 
   .userImageIndicator {
   position: absolute;
@@ -196,17 +193,20 @@
   transform: translate(-50%, -50%);
   z-index: 2;
 }
-.generalIndicator {
+
+
+/* .generalIndicator {
         position: absolute;
         top: 35%;
         transform: translate(-50%, -50%);
         border-left: 2px solid rgba(247, 140, 107, 0.3);
         border-right: 2px solid rgba(247, 140, 107, 0.3);
         width: 10%;
-        height: 30px; /* Adjust according to your needs */
-        background-color: rgba(247, 140, 107, 0.4); /* Semi-transparent orange */
-        z-index: 0; /* To place it behind progress-container */
+        height: 30px; 
+        background-color: rgba(247, 140, 107, 0.4); 
+        z-index: 0; 
     }
+    */
 
     .average-display {
     position: absolute;

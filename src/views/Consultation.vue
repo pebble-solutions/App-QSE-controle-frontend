@@ -22,7 +22,7 @@
 
         <h3 class="fs-8 my-3 text-center">Test du composant JaugeMoyenneSami.vue</h3>
 
-        <JaugeMoyenneSami :n1="3.2" :n2="3.8" />
+        <JaugeMoyenneSami :n1="7.2" :n2="8" />
 
     </div>
     
