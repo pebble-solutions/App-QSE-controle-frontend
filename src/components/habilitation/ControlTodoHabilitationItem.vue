@@ -17,7 +17,7 @@
                     <span class="ms-2">Il y a {{ yearsMonthsDays }}</span>
                 </span>
             </div>
-            <span class="badge border border-danger text-bg-light text-danger rounded-pill ms-2" v-else>
+            <span class="badge border border-danger text-bg-light text-danger rounded-pill" v-else>
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <span class="ms-1">Non contrôlé</span>
             </span>

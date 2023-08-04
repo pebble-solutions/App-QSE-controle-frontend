@@ -11,7 +11,7 @@
                 <i class="bi bi-funnel" v-else></i>
             </button>
         </div>
-        <div class="my-2">
+        <div class="my-2 btn-group w-100">
             <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardTous" checked autocomplete="off"
                 v-on:click="setMode('Tous')">
             <label class="btn btn-outline-secondary" for="filtreRetardTous">Tous</label>
