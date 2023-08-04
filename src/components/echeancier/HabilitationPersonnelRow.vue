@@ -1,6 +1,5 @@
 <template>
-    
-    <div class="table-row-content" :style="{ top: getTopPosition(rowIndex+2, 'px') }">
+    <div class="table-row-content" :style="{ top: getTopPosition(rowIndex + 2, 'px') }">
         <div class="table-header mx-2 fs-7" :title="rowLabel">
 
             <div class="d-flex align-items-center">
@@ -8,39 +7,30 @@
                     <UserImage :name="rowLabel" />
                 </div>
                 <span :class="labelClassName">
-                    <i class="bi" :class="labelIcon" v-if="labelIcon"></i> 
+                    <i class="bi" :class="labelIcon" v-if="labelIcon"></i>
                     {{ displayRowLabel }}
                 </span>
             </div>
         </div>
 
-        <habilitation-timeline-bar 
-            :habilitationPersonnel="habilitationPersonnel" 
-            :left="getLeftPosition(getWeekStartInTimeline(habilitationPersonnel.dd) +1)"
+        <habilitation-timeline-bar :habilitationPersonnel="habilitationPersonnel"
+            :left="getLeftPosition(getWeekStartInTimeline(habilitationPersonnel.dd) + 1)"
             :width="getWidth(getWeekEndInTimeline(habilitationPersonnel.dd, habilitationPersonnel.df))"
-            v-for="habilitationPersonnel in habilitationsPersonnels" 
-            :key="habilitationPersonnel.id" />
+            v-for="habilitationPersonnel in habilitationsPersonnels" :key="habilitationPersonnel.id" />
 
         <template v-for="contrat in contrats" :key="contrat.id">
-            <contrat-timeline-bar 
-                :contrat="contrat"
-                :left="getLeftPosition(getWeekStartInTimeline(contrat.dentree) +1)"
-                :width="getWidth(getWeekEndInTimeline(contrat.dentree, contrat.dsortie_reelle ? contrat.dsortie_relle : contrat.dsortie))" 
+            <contrat-timeline-bar :contrat="contrat" :left="getLeftPosition(getWeekStartInTimeline(contrat.dentree) + 1)"
+                :width="getWidth(getWeekEndInTimeline(contrat.dentree, contrat.dsortie_reelle ? contrat.dsortie_reelle : contrat.dsortie))"
                 v-if="isContratInPeriode(contrat)" />
         </template>
 
-        <template 
-            v-for="(control, rowIndex) in controls" 
-            :key="control">
+        <template v-for="(control, rowIndex) in controls" :key="control">
 
-            <control-timeline-result 
-                :blankWidth="getWidth(getControlBlankWeeks(rowIndex))"
-                :control="control"
-                :left="getLeftPosition(getWeekStartInTimeline(control.date_done) +1)"
+            <control-timeline-result :blankWidth="getWidth(getControlBlankWeeks(rowIndex))" :control="control"
+                :left="getLeftPosition(getWeekStartInTimeline(control.date_done) + 1)"
                 :width="getWidth(getControlValidityWeeks(rowIndex, 26))" />
         </template>
     </div>
-
 </template>
 
 <style lang="scss" scoped>
@@ -84,7 +74,7 @@ export default {
             label = this.rowLabel.replace(/^!/, "");
 
             if (label.length > maxlen) {
-                label = label.substring(0, maxlen-1) + "...";
+                label = label.substring(0, maxlen - 1) + "...";
             }
 
             return label;
@@ -143,7 +133,7 @@ export default {
                 || contrat.dentree <= this.grid.dateEnd && !dsortie
                 || contrat.dentree <= this.grid.dateEnd && dsortie && dsortie >= this.grid.dateEnd
                 || contrat.dentree <= this.grid.dateEnd && dsortie && dsortie >= this.grid.dateStart && dsortie <= this.grid.dateEnd) {
-                    return true;
+                return true;
             }
 
             return false;
@@ -174,15 +164,15 @@ export default {
         getControlValidityWeeks(index, expirationLimit) {
             const controls = this.controls;
             const currentControl = controls[index];
-            const nextControl = controls[index+1];
+            const nextControl = controls[index + 1];
 
             const dateStart = currentControl.date_done;
             const dateEnd = nextControl ? nextControl.date_done : this.grid.dateEnd;
 
-            const weeks_diff = Math.ceil( diffDate(dateStart, dateEnd, 'week'));
+            const weeks_diff = Math.ceil(diffDate(dateStart, dateEnd, 'week'));
 
             return weeks_diff > expirationLimit && expirationLimit ? expirationLimit : weeks_diff;
         },
-    }
+    },
 }
 </script>

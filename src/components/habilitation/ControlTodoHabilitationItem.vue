@@ -148,7 +148,6 @@ export default {
         buildBadgeClass() {
             const duration = Math.ceil((365 / 12) * 6); //6 mois
             const daysUntilControl = duration - this.habilitationPersonnel.last_control_days;
-            console.log(daysUntilControl);
             if (daysUntilControl > 30) {
                 this.badgeClass = 'border-success text-success';
             } else if (daysUntilControl > 15 && daysUntilControl <= 30) {
