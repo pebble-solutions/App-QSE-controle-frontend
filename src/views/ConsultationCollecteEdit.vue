@@ -7,7 +7,7 @@
         :submitBtn="valueButton"
         :cancelBtn="true">
 
-        <FormEditCollecteAdmin :collecte="collecte" @modification="collecteChange" @stringdate="justificationDate"></FormEditCollecteAdmin>
+        <FormEditCollecteAdmin :collecte="collecte" :personnels="personnels" @modification="collecteChange" @stringdate="justificationDate"></FormEditCollecteAdmin>
 
         <div v-if="noteContent">
             <div class="card">
@@ -41,14 +41,20 @@ export default {
             collecteModifie: {},
             dateDoneModifString: null,
             noteContent: null,
-            comment: null
+            comment: null,
+            personnels: []
         }
     },
 
     computed: {
         ...mapState(['collecte', 'login']),
 
-        valueButton(){
+        /**
+         * Retourne la veleur du bouton enregistrer 
+         *  - true si une valeur à été modifié
+         *  - false sinon
+         */
+        valueButton() {
             if(this.noteContent){
                 return true;
             } else {
@@ -59,9 +65,12 @@ export default {
 
     methods: {
 
-        ...mapActions(['refreshCollecte']),
+        ...mapActions(['setCollecteHeaders', 'updateSearchResults']),
 
-        createNote(){
+        /**
+         * Modifie la valeur de la note à afficher
+         */
+        createNote() {
             let modification = [];
             this.noteContent = null;
 
@@ -85,29 +94,49 @@ export default {
         /**
          * Met a jour les valeurs des données de la collecte et créer les notes associées aux modifications
          */
-        saveCollecte(){
+        saveCollecte() {
             this.$app.api.patch('v2/collecte/'+ this.$route.params.idCollecte +'/headers', {
-                    comment : this.comment,
-                    enqueteur__structure__personnel_id : this.collecteModifie.enqueteur__structure__personnel_id,
-                    enqueteur_nom : this.collecteModifie.enqueteur_nom,
-                    cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
-                    cible_nom : this.collecteModifie.cible_nom,
-                    date_done : this.collecteModifie.date_done
-                })
-                .then((data) =>{
-                    this.refreshCollecte(data);
-                })
-                .catch(this.$app.catchError).finally(() => this.routeToParent());
+                comment : this.comment,
+                enqueteur__structure__personnel_id : this.collecteModifie.enqueteur__structure__personnel_id,
+                enqueteur_nom : this.collecteModifie.enqueteur_nom,
+                cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
+                cible_nom : this.collecteModifie.cible_nom,
+                date_start : this.collecteModifie.date_start
+            })
+            .then((data) =>{
+                this.setCollecteHeaders(data);
+                this.updateSearchResults([data]);
+            })
+            .catch(this.$app.catchError).finally(() => this.routeToParent());
         },
 
-        collecteChange(payload){
+        /**
+         * Met a jour la valeur de la collecte modifié lors de la reception de l'evenement associé
+         * 
+         * @param {Object} payload 
+         */
+        collecteChange(payload) {
             this.collecteModifie = payload;
             this.createNote()
         },
 
-        justificationDate(payload){
+        /**
+         * Met a jour la phrase de de la note lors de la modification de la date
+         * 
+         * @param {Object} payload 
+         */
+        justificationDate(payload) {
             this.dateDoneModifString = payload;
             this.createNote()
+        },
+
+        /**
+         * Charge tout le personnel via un appel API (sans limite)
+         */
+        getPersonnel(){
+            this.$app.apiGet('/v2/personnel',{limit:'aucune'}).then((data) => {
+                this.personnels = data;
+			}).catch(this.$app.catchError);
         },
 
         /**
@@ -115,7 +144,11 @@ export default {
          */
         routeToParent() {
             this.$router.back()
-        },
+        }
+    },
+
+    mounted(){
+        this.getPersonnel();
     },
 
     components: { AppModal, FormEditCollecteAdmin }
