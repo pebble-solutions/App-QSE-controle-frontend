@@ -1,0 +1,48 @@
+.control-result-item {
+    position: absolute;
+    z-index: 2;
+    width: 40px;
+    line-height: 40px;
+    height: 40px;
+    text-align:center;
+    top:0px;
+}
+
+.habilitation-timeline, 
+.control-timeline, 
+.contrat-timeline {
+    position:absolute;
+    white-space: nowrap;
+}
+
+.habilitation-timeline, 
+.contrat-timeline {
+    height:25px;
+    overflow:hidden;
+    z-index:1;
+}
+
+.label-timeline {
+    line-height: 25px;
+}
+
+.habilitation-timeline {
+    top:0px;
+}
+
+.contrat-timeline {
+    top:25px;
+}
+
+.control-timeline {
+    height:5px;
+    z-index: 2;
+    top:20px;
+}
+
+.control-timeline.control-expired::before {
+    content: "Contrôle expiré";
+    display: block;
+    position: absolute;
+    top: -15px;
+}

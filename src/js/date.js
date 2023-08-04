@@ -253,6 +253,14 @@ export function listIntervalDays(dateStart, dateEnd) {
 	return days;
 }
 
+/**
+ * Retourne la liste des semaines entre une date de début et une date de fin
+ * 
+ * @param {string} dateStart 	Date de début de l'interval
+ * @param {string} dateEnd 		Date de fin de l'interval
+ * 
+ * @returns {Array}
+ */
 export function listIntervalWeeks(dateStart, dateEnd) {
 	let weeks = [];
 
@@ -275,7 +283,8 @@ export function listIntervalWeeks(dateStart, dateEnd) {
 			weeks.push({
 				n,
 				start,
-				week: start.getWeek()
+				week: start.getWeek(),
+				year: start.getFullYear()
 			});
 
 			start = null;
@@ -289,7 +298,8 @@ export function listIntervalWeeks(dateStart, dateEnd) {
 		weeks.push({
 			n,
 			start,
-			week: start.getWeek()
+			week: start.getWeek(),
+			year: start.getFullYear()
 		});
 	}
 

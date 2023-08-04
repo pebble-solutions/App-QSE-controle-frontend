@@ -9,13 +9,14 @@
         <template v-else>
             <div v-if="echeancier.priorite == false">
     
-                <div  v-for="habilitation in filteredHabilitations" :key="habilitation.id" class="my-3">
-                    <tabEcheancierPersonnel
-                        :operateurs = "filteredOperateurs"
-                        :periode = "periode"
-                        :habilitation = "habilitation"
-                        :kns = "filteredKns(habilitation.id, 'habilitation')"
-                        :contrats = "contrats"
+                <div  v-for="habilitationType in filteredHabilitationsTypes" :key="habilitationType.id" class="my-3">
+                    <HabilitationGroup
+                        :operateurs="filteredOperateurs"
+                        :periode="periode"
+                        :habilitationType="habilitationType"
+                        :controls="filteredKns(habilitationType.id, 'habilitation')"
+                        :contrats="contrats"
+                        :habilitationsPersonnels="getHabilitationsPersonnelsByTypeId(habilitationType.id)"
                     />
     
                 </div>
@@ -23,11 +24,11 @@
     
             <template v-else>
                 <template v-for="personnel in filteredOperateurs" :key="personnel.id">
-                    <tabEcheancierHabilitation 
+                    <PersonnelGroup 
                         :personnel="personnel" 
-                        :kns="filteredKns(personnel.id, 'personnel')" 
+                        :controls="filteredKns(personnel.id, 'personnel')" 
                         :periode="periode" 
-                        :habilitations="filteredHabilitations"
+                        :habilitationsTypes="filteredHabilitationsTypes"
                         :habilitationsPersonnel="getHabilitationByPersonnelId(personnel.id)"
                         :contrats="contrats"
                         v-if="getHabilitationByPersonnelId(personnel.id)?.length"
@@ -64,8 +65,8 @@
 
 <script>
 
-import tabEcheancierPersonnel from '../components/echeancier/tabEcheancierPersonnel.vue'
-import tabEcheancierHabilitation from '../components/echeancier/tabEcheancierHabilitation.vue';
+import HabilitationGroup from '../components/echeancier/HabilitationGroup.vue'
+import PersonnelGroup from '../components/echeancier/PersonnelGroup.vue';
 import { mapActions, mapState } from 'vuex';
 
 export default {
@@ -89,7 +90,7 @@ export default {
 		}
 	},
 
-    components: {tabEcheancierPersonnel, tabEcheancierHabilitation},
+    components: {HabilitationGroup, PersonnelGroup},
 
     watch:{
         /**
@@ -118,7 +119,7 @@ export default {
          * 
          * @returns {array}
          */
-        filteredHabilitations() {
+        filteredHabilitationsTypes() {
             if(this.echeancier.habilitation.length == 0 || (this.echeancier.habilitation.length == 1 && this.echeancier.habilitation.includes(''))) {
                 return this.allHabilitationsTypes;
             } else {
@@ -287,6 +288,17 @@ export default {
          */
         getHabilitationByPersonnelId(personnelId) {
             return this.habilitationsPersonnel.filter(e => e.personnel_id == personnelId);
+        },
+
+        /**
+         * Retourne la liste des habilitations du personnel pour un type donné
+         * 
+         * @param {number} habilitationTypeId ID du type en référence
+         * 
+         * @return {array}
+         */
+        getHabilitationsPersonnelsByTypeId(habilitationTypeId) {
+            return this.habilitationsPersonnel.filter(e => e.characteristic_id == habilitationTypeId);
         },
 
         /**

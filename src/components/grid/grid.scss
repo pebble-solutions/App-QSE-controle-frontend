@@ -1,0 +1,44 @@
+.table-grid, .table-content {
+    position: absolute;
+    top:0px;
+    left:0px;
+    bottom:0px;
+    width:100%;
+}
+
+.table-grid {
+    z-index:1;
+}
+
+.table-content {
+    z-index: 2;
+}
+
+.table-row, .table-row-content {
+    height:50px;
+    position: absolute;
+    left:0px;
+    width:100%;
+}
+
+.table-row {
+    border-left-width: 0px !important;
+    border-right-width: 0px !important;
+}
+
+.table-row-content {
+    overflow: hidden;
+}
+
+.table-col {
+    border-top-width: 0px !important;
+    border-bottom-width: 0px !important;
+    width:50px;
+    position: absolute;
+    top:0px;
+    bottom:0px;
+}
+
+.table-header {
+    line-height: 50px;
+}
