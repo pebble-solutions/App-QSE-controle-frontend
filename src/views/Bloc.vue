@@ -19,7 +19,7 @@
         <form-section :questions="lignes" :collecte="collecte" />
     </div>
     <div v-else>
-        <spinner></spinner>
+        <spinner></spinner> 
     </div>
 
     <FooterToolbar v-if="bloc" wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
