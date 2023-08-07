@@ -143,6 +143,7 @@
                                         <span class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
                                             {{question.ligne}}
                                         </span>
+                                        <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
                                         <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)" v-if="['sami', 'integer', 'float'].includes(question.type)">{{getQuestionReponse(question)}}</strong>
                                     </div>
 

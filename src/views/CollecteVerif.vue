@@ -108,23 +108,25 @@ export default {
          * Envoie les données a l'api pour valider le KN
          */
         validate() {
-            if (confirm('Une fois clôturé, le contrôle ne sera plus modifiable.')){
-                this.pending.validation = true;
-                this.$app.apiPost('v2/collecte/'+this.collecte.id+'/validate')
-                .then((data) => {
-                    return this.refreshCollectes([data]);
-                })
-                .then(() => {
-                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
-                        environnement: 'private'
-                    });
-                })
-                .then((collecte) => {
-                    this.refreshCollecte(collecte);
-                    this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
-
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
+            if(this.alertQuestionManquante()){
+                if (confirm('Une fois clôturé, le contrôle ne sera plus modifiable.')){
+                    this.pending.validation = true;
+                    this.$app.apiPost('v2/collecte/'+this.collecte.id+'/validate')
+                    .then((data) => {
+                        return this.refreshCollectes([data]);
+                    })
+                    .then(() => {
+                        return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                            environnement: 'private'
+                        });
+                    })
+                    .then((collecte) => {
+                        this.refreshCollecte(collecte);
+                        this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
+    
+                    })
+                    .catch(this.$app.catchError).finally(() => this.pending.validation = false);
+                }
             }
         },
         /**
@@ -146,8 +148,35 @@ export default {
             else return 'bg-secondary'
         },
 
+        /**
+         * Verifie si les questions obligatoires ont des réponses.
+         *  - Si aucune réponse n'est fournie, alors une alerte est envoyée
+         * 
+         * @returns {boolean}
+         */
+         alertQuestionManquante(){
+            const questionsManquantes = [];
 
-      
+            let lignes = this.collecte.formulaire.questions;
+
+            if (this.collecte && this.collecte.reponses && lignes) {
+                for (const reponse of this.collecte.reponses) {
+                    const ligneCourante = lignes[reponse.ligne - 1];
+
+                    if (reponse.ligne && ligneCourante && ligneCourante.obligatoire === "OUI" && !reponse.data) {
+                        questionsManquantes.push(ligneCourante.ligne);
+                    }
+                }
+            }
+
+            if (questionsManquantes.length) {
+                alert("Impossible de clôturer le contrôle car toutes les questions obligatoires n'ont pas été complétées : " + questionsManquantes.join(", "));
+                return false
+            } else {
+                return true
+            }
+
+        }
       
     },
     
