@@ -86,7 +86,7 @@ export default {
                     this.collecteModif.cible_nom = this.collecte.cible_nom
                 }
                 if(this.changeFormatDateLit(this.collecte.date_done) != this.changeFormatDateLit(newVal.date_done)){
-                    let valModif = " Changement de date de clôture de " + this.changeFormatDateLit(this.collecte.date_done) + " vers " + this.changeFormatDateLit(newVal.date_done);
+                    let valModif = " Modification de la date de contrôle de " + this.changeFormatDateLit(this.collecte.date_done) + " vers " + this.changeFormatDateLit(newVal.date_done);
                     this.$emit('stringdate', valModif);
                 }
                 this.$emit('modification', newVal)
