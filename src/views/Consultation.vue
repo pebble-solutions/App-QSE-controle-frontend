@@ -20,9 +20,9 @@
             </div>
         </div>  
 
-        <h3 class="fs-8 my-3 text-center">Test du composant JaugeMoyenneSami.vue</h3>
+        <h3 class="fs-8 my-3 text-center">Tests : </h3>
 
-        <JaugeMoyenneSami :n1="7.2" :n2="8" />
+        <toto></toto>
 
     </div>
     
@@ -34,7 +34,7 @@
 </style>
 <script>
 import {mapState} from 'vuex'; 
-import JaugeMoyenneSami from '../components/JaugeMoyenneSami.vue';
+import toto from '../components/toto.vue';
 
 export default {
 
@@ -43,7 +43,7 @@ export default {
     },
 
     components: {
-        JaugeMoyenneSami,
+        toto,
     },
 }
 </script>
