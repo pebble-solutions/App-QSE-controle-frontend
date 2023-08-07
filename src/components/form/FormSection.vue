@@ -5,7 +5,7 @@
     </div> 
     <div class="d-flex justify-content-center mt-3" v-else>
         <alert-message variant="warning w-50 text-center">Aucune question renseignée</alert-message> 
-    </div>
+    </div> 
 
 </template>
 
