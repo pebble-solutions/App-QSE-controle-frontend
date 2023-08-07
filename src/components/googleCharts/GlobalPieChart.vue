@@ -19,6 +19,7 @@ export default {
                 ['A', 0],
                 ['M', 0],
                 ['I', 0],
+                ['Inconnu', 0],
             ];
             const data = this.$assets.getCollection('collectesCollection').getCollection();
             data.forEach(collecte => {
@@ -36,6 +37,7 @@ export default {
                         this.chartData[4][1]++;
                         break;
                     default:
+                        this.chartData[5][1]++;
                         break;
                 }
             });
@@ -45,7 +47,7 @@ export default {
             let chartWrap = document.getElementById('globalPieChart');
             let chart = new GoogleCharts.api.visualization.PieChart(chartWrap);
             let options = {
-                colors: ['#198754', '#0074D9', '#FFC107', '#DC3545'],
+                colors: ['#198754', '#0074D9', '#FFC107', '#DC3545', '#6C757D'],
             };
             chart.draw(dataTable, options);
         }
