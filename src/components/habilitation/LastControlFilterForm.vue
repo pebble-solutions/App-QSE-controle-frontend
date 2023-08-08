@@ -6,29 +6,25 @@
                 <option v-for="option in selectTimeOptions" :key="option.value" :value="option.value">{{ option.label }}
                 </option>
             </select>
-            <button class="btn btn-primary" type="submit" :disabled="pending.habilitationsPersonnels">
+            <button class="btn btn-primary" type="button" :disabled="pending.habilitationsPersonnels"
+                @click="changeFilterForm">
                 <span class="spinner-border spinner-border-sm" v-if="pending.habilitationsPersonnels"></span>
                 <i class="bi bi-funnel" v-else></i>
             </button>
+            <button class="btn btn-primary" type="submit" :disabled="pending.habilitationsPersonnels">
+                <span class="spinner-border spinner-border-sm" v-if="pending.habilitationsPersonnels"></span>
+                <i class="bi bi-search" v-else></i>
+            </button>
         </div>
-        <div class="my-2 btn-group w-100">
-            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardTous" checked autocomplete="off"
-                v-on:click="setMode('Tous')">
-            <label class="btn btn-outline-secondary" for="filtreRetardTous">Tous</label>
-
-            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardControle" autocomplete="off"
-                v-on:click="setMode('Contrôlés')">
-            <label class="btn btn-outline-secondary" for="filtreRetardControle">Contrôlés</label>
-
-            <input type="radio" class="btn-check" name="filtreRetard" id="filtreRetardNonControle" autocomplete="off"
-                v-on:click="setMode('Non contrôlés')">
-            <label class="btn btn-outline-secondary" for="filtreRetardNonControle">Non contrôlés</label>
+        <div>
+            <ControlForm v-if="showFilterForm" @formSubmitted="recieveForm"></ControlForm>
         </div>
     </form>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import ControlForm from './ControlForm.vue';
 
 export default {
 
@@ -41,18 +37,18 @@ export default {
                 { value: 91, label: "3 mois" },
                 { value: 183, label: "6 mois" }
             ],
-
             requestPayload: {
                 last_control_limit: 91
             },
-            currentGroup: "Tous",
+            showFilterForm: false,
+            additionalParams: [],
         }
     },
 
     computed: {
         ...mapState(['pending']),
     },
-
+    components: { ControlForm },
     methods: {
         /**
          * Lance la recherche
@@ -63,8 +59,9 @@ export default {
             collection.requestPayload = collection.requestPayload ?? {};
             collection.requestPayload.last_control_limit = this.requestPayload.last_control_limit;
             collection.requestPayload.last_control = 1;
-            this.selectQueryParameter(collection);
-
+            for (const [key, value] of Object.entries(this.additionalParams)) {
+                collection.requestPayload[key] = value;
+            }
             try {
                 await collection.load();
             }
@@ -73,33 +70,21 @@ export default {
             }
         },
         /**
-         * Change la valeur du filtre actif à la sélection dans le menu et applique le filtre courant
-         * @param {String} groupFilter 
+         * Change la valeur de showFilterForm et la retourne
          */
-        setMode(groupFilter) {
-            this.currentGroup = groupFilter;
+        changeFilterForm() {
+            this.showFilterForm = !this.showFilterForm;
+            return this.showFilterForm;
         },
         /**
-         * adapte le contenu de la requête en fonction du mode sélectionné
-         * @param {array} collection 
+         * Déclenché à la réception de l'évènement envoyé par le formulaire dans le composant enfant
          */
-        selectQueryParameter(collection) {
-            switch (this.currentGroup) {
-                case 'Tous':
-                    delete collection.requestPayload.last_control_result
-                    break;
-                case 'Contrôlés':
-                    collection.requestPayload.last_control_result = '*'
-                    break;
-                case 'Non contrôlés':
-                    collection.requestPayload.last_control_result = ''
-                    break;
-                default:
-                    break;
-            }
+        recieveForm(childParams){
+            this.additionalParams = childParams;
+            this.showFilterForm = false;
+            this.filter();
         },
     }
-
 }
 
 </script>
