@@ -92,7 +92,7 @@ export default{
          * return true si les données de groupsAndQuestions et formulaireStats ont été recupere via l'api
          */
         hasStats() {
-            if (this.pending.groupsAndQuestions && this.pending.formulaireStats) {
+            if (!this.groupsAndQuestions.length && !this.stats.length) {
                 return false;
             }
 
@@ -147,8 +147,9 @@ export default{
         getGroupsAndQuestions(formulaireId) {
             this.pending.groupsAndQuestions = true;
 
-            this.$app.api.get(`v2/informationGroupe/${formulaireId}/blocsandlignes`)
-            .then((data) => {
+            this.$app.api.get(`v2/informationGroupe/${formulaireId}`, {
+                'blocsandlignes': 1
+            }).then((data) => {
                 this.groupsAndQuestions = data;
             }).catch(this.$app.catchError).finally(() => this.pending.groupsAndQuestions = false);
         },
@@ -197,9 +198,12 @@ export default{
      */
      beforeRouteUpdate(to) {
         if (to.params.id != this.personnel_id) {
-            this.loadHabilitationFromPersonnel (to.params.id);
-
+            this.loadHabilitationFromPersonnel(to.params.id);
+            this.loadFormulaireStats(this.formulaireId)
         }
+
+        // this.stats = [];
+        // this.groupsAndQuestions = [];
     },
 
     beforeMount() {
