@@ -35,6 +35,7 @@ import Spinner from '../components/pebble-ui/Spinner.vue';
 import FormSection from '../components/form/FormSection.vue';
 import BlocNavigationButtons from '../components/form/BlocNavigationButtons.vue';
 import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
+import { listMissingMandatoryQuestions } from '../js/collecte';
 
 export default {
     data() {
@@ -141,17 +142,7 @@ export default {
          *  - Si aucune réponse n'est fournie, alors une alerte est envoyée
          */
         alertQuestionManquante(){
-            const questionsManquantes = [];
-
-            if (this.collecte && this.collecte.reponses && this.lignes) {
-                for (const reponse of this.collecte.reponses) {
-                    const ligneCourante = this.lignes[reponse.ligne - 1];
-
-                    if (reponse.ligne && ligneCourante && ligneCourante.obligatoire === "OUI" && !reponse.data) {
-                        questionsManquantes.push(ligneCourante.ligne);
-                    }
-                }
-            }
+            const questionsManquantes = listMissingMandatoryQuestions(this.collecte?.reponses, this.lignes)
 
             if (questionsManquantes.length) {
                 alert("Question obligatoire non renseignée : " + questionsManquantes.join(", "));

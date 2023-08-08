@@ -69,6 +69,7 @@ import ConsultationCollecteResume from '../components/ConsultationCollecteResume
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
+import { listMissingMandatoryQuestions } from '../js/collecte';
 export default {
 
     components:{ ConsultationCollecteResume, Spinner, AlertMessage,  FooterToolbar }, 
@@ -108,7 +109,7 @@ export default {
          * Envoie les données a l'api pour valider le KN
          */
         validate() {
-            if(this.alertQuestionManquante()){
+            if(this.alertQuestionManquante()) {
                 if (confirm('Une fois clôturé, le contrôle ne sera plus modifiable.')){
                     this.pending.validation = true;
                     this.$app.apiPost('v2/collecte/'+this.collecte.id+'/validate')
@@ -154,20 +155,9 @@ export default {
          * 
          * @returns {boolean}
          */
-         alertQuestionManquante(){
-            const questionsManquantes = [];
-
-            let lignes = this.collecte.formulaire.questions;
-
-            if (this.collecte && this.collecte.reponses && lignes) {
-                for (const reponse of this.collecte.reponses) {
-                    const ligneCourante = lignes[reponse.ligne - 1];
-
-                    if (reponse.ligne && ligneCourante && ligneCourante.obligatoire === "OUI" && !reponse.data) {
-                        questionsManquantes.push(ligneCourante.ligne);
-                    }
-                }
-            }
+        alertQuestionManquante() {
+            const lignes = this.collecte.formulaire.questions;
+            const questionsManquantes = listMissingMandatoryQuestions(this.collecte?.reponses, lignes);
 
             if (questionsManquantes.length) {
                 alert("Impossible de clôturer le contrôle car toutes les questions obligatoires n'ont pas été complétées : " + questionsManquantes.join(", "));
