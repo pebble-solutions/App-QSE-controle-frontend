@@ -37,18 +37,17 @@
             </select>
         </div>
 
-        <!-- Désactivé pour stabilisation -->
-        <!-- <div class="mb-3">
+        <div class="mb-3">
             <label for="kn" class="form-label"><h5>Regrouper</h5></label>
 
             <div class="btn-group w-100" role="group" aria-label="Basic radio toggle button group">
                 <input type="radio" class="btn-check" name="priorite" id="switchOperateurs" autocomplete="off" v-model="requete.priorite" :value="false">
-                <label class="btn btn-outline-secondary" for="switchOperateurs">Par opérateurs</label>
+                <label class="btn btn-outline-secondary" for="switchOperateurs">Par habilitations</label>
 
                 <input type="radio" class="btn-check" name="priorite" id="switchHabilitation" autocomplete="off" v-model="requete.priorite" :value="true">
-                <label class="btn btn-outline-secondary" for="switchHabilitation">Par habilitations</label>
+                <label class="btn btn-outline-secondary" for="switchHabilitation">Par opérateurs</label>
             </div>
-        </div> -->
+        </div>
         
         <div class="text-center">
             <button class="btn btn-primary btn-lg" type="submit" :disabled="pending.echeance">
