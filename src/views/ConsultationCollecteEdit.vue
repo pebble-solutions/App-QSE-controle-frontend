@@ -39,7 +39,7 @@ export default {
     data() {
         return {
             collecteModifie: {},
-            dateDoneModifString: null,
+            dateStartModifString: null,
             noteContent: null,
             comment: null,
             personnels: []
@@ -80,8 +80,8 @@ export default {
             if (this.collecte.cible__structure__personnel_id != this.collecteModifie.cible__structure__personnel_id){
                 modification.push(" Changement d'opérateur de " + this.collecte.cible_nom + " vers " + this.collecteModifie.cible_nom)
             }
-            if (this.dateDoneModifString){
-                modification.push(this.dateDoneModifString)
+            if (this.dateStartModifString){
+                modification.push(this.dateStartModifString)
             }
 
             if(modification.length){
@@ -126,7 +126,7 @@ export default {
          * @param {Object} payload 
          */
         justificationDate(payload) {
-            this.dateDoneModifString = payload;
+            this.dateStartModifString = payload;
             this.createNote()
         },
 

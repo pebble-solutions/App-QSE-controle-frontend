@@ -6,7 +6,7 @@
                     <div class="col-2"></div>
                     <i class="bi bi-calendar-check me-1 col-1"></i>
                     <span class="d-none d-sm-inline col-3">Date de contrôle</span>
-                    <input type="date" class="form-control text-primary text-bg-light col" :value="collecteModif.date_done ? collecteModif.date_done.slice(0, 10) : ''" @input="updateDateDoneCollecte">
+                    <input type="date" class="form-control text-primary text-bg-light col" :value="collecteModif.date_start ? collecteModif.date_start.slice(0, 10) : ''" @input="updateDateStartCollecte">
                     <div class="col-2"></div>
                 </div>
             </div>
@@ -84,8 +84,8 @@ export default {
                 } else {
                     this.collecteModif.cible_nom = this.collecte.cible_nom
                 }
-                if(this.changeFormatDateLit(this.collecte.date_done) != this.changeFormatDateLit(newVal.date_done)){
-                    let valModif = " Modification de la date de contrôle de " + this.changeFormatDateLit(this.collecte.date_done) + " vers " + this.changeFormatDateLit(newVal.date_done);
+                if(this.changeFormatDateLit(this.collecte.date_start) != this.changeFormatDateLit(newVal.date_start)){
+                    let valModif = " Modification de la date de contrôle de " + this.changeFormatDateLit(this.collecte.date_start) + " vers " + this.changeFormatDateLit(newVal.date_start);
                     this.$emit('stringdate', valModif);
                 }
                 this.$emit('modification', newVal)
@@ -105,10 +105,10 @@ export default {
         },
 
          /**
-         * Recupere l'evenement lors de la modification de la date_done de la collecte et modifie la valeur de la dateDoneCollecte
+         * Recupere l'evenement lors de la modification de la date_start de la collecte et modifie la valeur de la dateDoneCollecte
          */
-        updateDateDoneCollecte(event) {
-            this.collecteModif.date_done = event.target.value;
+        updateDateStartCollecte(event) {
+            this.collecteModif.date_start = event.target.value;
         },
 
     },
