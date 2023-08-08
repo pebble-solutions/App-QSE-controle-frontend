@@ -10,7 +10,7 @@
                 <FormModuleSAMIHeader :value="value" v-if="question.type == 'sami'" />
             </button>
         </h3>
-
+        <
         <div :id="bodyId" class="accordion-collapse collapse show" :aria-labelledby="headerId">
             <div class="accordion-body">
 
