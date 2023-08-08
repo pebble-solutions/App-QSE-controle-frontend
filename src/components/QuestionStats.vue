@@ -161,9 +161,6 @@ export default {
   
  
 <style scoped>
-
-
-
 .progress {
     position: relative;
     height: 20px;
@@ -263,7 +260,7 @@ export default {
 
 .progress-container {
     /* ... (vos autres propriétés) ... */
-    margin-bottom: 0; /* Réinitialisez la marge inférieure */
+    margin-bottom: 0;
+    /* Réinitialisez la marge inférieure */
 }
-
 </style>
