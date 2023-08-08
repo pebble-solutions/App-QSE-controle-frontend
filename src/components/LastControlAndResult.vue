@@ -52,7 +52,8 @@ export default {
 .last-control-and-result {
 	display: flex;
 	align-items: center;
-	justify-content: flex-end; /* Aligner tout à droite */
+	justify-content: flex-end;
+	/* Aligner tout à droite */
 }
 
 .text-container {
@@ -61,7 +62,8 @@ export default {
 }
 
 .text-line {
-	margin-bottom: -2px; /* Ajuster la marge entre les deux lignes de texte */
+	margin-bottom: -2px;
+	/* Ajuster la marge entre les deux lignes de texte */
 }
 
 .button-container {
