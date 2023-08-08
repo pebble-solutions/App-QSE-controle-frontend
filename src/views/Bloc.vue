@@ -102,6 +102,7 @@ export default {
                 this.getReponses(collecte);
             })
             .then(() => {
+                this.alertQuestionManquante();
                 if (to === 'end') {
                     this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});
                 }
@@ -133,6 +134,28 @@ export default {
 
                 this.refreshResponse(itemReponse);
             })
+        },
+
+        /**
+         * Verifie si les questions obligatoires ont des réponses.
+         *  - Si aucune réponse n'est fournie, alors une alerte est envoyée
+         */
+        alertQuestionManquante(){
+            const questionsManquantes = [];
+
+            if (this.collecte && this.collecte.reponses && this.lignes) {
+                for (const reponse of this.collecte.reponses) {
+                    const ligneCourante = this.lignes[reponse.ligne - 1];
+
+                    if (reponse.ligne && ligneCourante && ligneCourante.obligatoire === "OUI" && !reponse.data) {
+                        questionsManquantes.push(ligneCourante.ligne);
+                    }
+                }
+            }
+
+            if (questionsManquantes.length) {
+                alert("Question obligatoire non renseignée : " + questionsManquantes.join(", "));
+            }
         }
         
     },
