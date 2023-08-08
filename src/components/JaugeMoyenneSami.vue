@@ -1,8 +1,8 @@
 <template>
-	<div class="card">
-		<div class="card-body">
-			<div class="fw-bold mb-4 text-center">
-				Note moyenne : {{ getAverage(n1Obj) }}/10 <span style="color:rgba(128, 128, 128, 0.6);">(générale : {{
+	<div class="">
+		<div class="">
+			<div class="fs-7 fw-bold mb-4 text-center">
+				moyenne : {{ getAverage(n1Obj) }}/10 <span style="color:rgba(128, 128, 128, 0.6);">(générale : {{
 					getAverage(n2Obj) }}) </span>
 			</div>
 

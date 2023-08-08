@@ -18,12 +18,8 @@
                     </div>
                 </div>
             </div>
-        </div>  
-
+        </div> 
         <h3 class="fs-8 my-3 text-center">Tests : </h3>
-
-        <toto></toto>
-
     </div>
     
 </template>
@@ -34,7 +30,7 @@
 </style>
 <script>
 import {mapState} from 'vuex'; 
-import toto from '../components/toto.vue';
+
 
 export default {
 
@@ -43,7 +39,7 @@ export default {
     },
 
     components: {
-        toto,
+    
     },
 }
 </script>

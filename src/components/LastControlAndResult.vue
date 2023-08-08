@@ -8,12 +8,12 @@
 
 			<!-- Ligne 2 : Date -->
 			<div class="text-line">
-				<div class="fw-bold fs-8">{{ changeFormatDateLit(lastControl) }}</div>
+				<div class="fs-7">{{ changeFormatDateLit(lastControl) }}</div>
 			</div>
 		</div>
 
 		<!-- Bouton -->
-		<div class="button-container mt-1"> <!-- Ajoutez la marge supérieure ici -->
+		<div class="button-container">
 			<button
 				:class="['btn', 'btn-sm', classNameFromSAMI(result), 'me-2', 'fs-6', 'px-2', 'text-nowrap', 'btn-square']"
 				style="pointer-events: none;">
@@ -61,12 +61,11 @@ export default {
 }
 
 .text-line {
-	margin-bottom: -5px; /* Ajuster la marge entre les deux lignes de texte */
+	margin-bottom: -2px; /* Ajuster la marge entre les deux lignes de texte */
 }
 
 .button-container {
-	margin-left: 5px; /* Ajuster la marge entre le texte et le bouton */
-
+	margin-left: auto;
 }
 
 .btn-square {

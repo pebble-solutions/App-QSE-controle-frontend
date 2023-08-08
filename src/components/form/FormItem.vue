@@ -5,14 +5,18 @@
         <h3 class="accordion-header" :id="headerId">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#'+bodyId" aria-expanded="true" :aria-controls="bodyId">
                 <span>{{question.ligne}}</span>
+                
                 <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
-
+                
                 <FormModuleSAMIHeader :value="value" v-if="question.type == 'sami'" />
+               <JaugeMoyenneSami class="col-12" :n1="6.8" :n2="9"/> 
             </button>
         </h3>
-        <
+        
         <div :id="bodyId" class="accordion-collapse collapse show" :aria-labelledby="headerId">
             <div class="accordion-body">
+                
+                
 
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
 
@@ -52,6 +56,7 @@ import FormModuleNumber from './FormModuleNumber.vue';
 import FormModuleSAMI from './FormModuleSAMI.vue';
 import FormModuleSAMIHeader from './FormModuleSAMIHeader.vue';
 import FormModuleText from './FormModuleText.vue';
+import JaugeMoyenneSami from '../JaugeMoyenneSami.vue';
 
 export default {
 
@@ -240,7 +245,7 @@ export default {
         this.initValues();
     },
 
-    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate }
+    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate, JaugeMoyenneSami }
 }
 
 </script>
