@@ -92,7 +92,7 @@ export default{
          * return true si les données de groupsAndQuestions et formulaireStats ont été recupere via l'api
          */
         hasStats() {
-            if (!this.groupsAndQuestions.length && !this.stats.length) {
+            if (this.pending.groupsAndQuestions && this.pending.formulaireStats) {
                 return false;
             }
 
@@ -147,7 +147,7 @@ export default{
         getGroupsAndQuestions(formulaireId) {
             this.pending.groupsAndQuestions = true;
 
-            this.$app.api.get(`v2/informationGroupe/${formulaireId}`, {
+            this.$app.api.get(`v2/information-groupe/${formulaireId}`, {
                 'blocsandlignes': 1
             }).then((data) => {
                 this.groupsAndQuestions = data;
@@ -162,8 +162,10 @@ export default{
         loadFormulaireStats(formulaireId) {
             this.pending.formulaireStats = true;
 
-            this.$app.api.get(`v2/informationGroupe/${formulaireId}/stats`, {
-                "personnel_id": this.currentPersonnel
+            console.log(formulaireId);
+
+            this.$app.api.get(`v2/information-groupe/${formulaireId}/stats`, {
+                "personnel_id": this.currentPersonnel.id
             }).then((data) => {
                 this.stats = data;
             }).catch(this.$app.catchError).finally(() => this.pending.formulaireStats = false);
@@ -191,6 +193,13 @@ export default{
 		changeFormatDateLit(el) {
 			return dateFormat(el);
 		},
+
+        resetStats() {
+            this.groupsAndQuestions = [];
+            this.stats = [];
+            this.pending.formulaireStats = true;
+            this.pending.groupsAndQuestions = true;
+        }
     },
 
     /**
@@ -199,11 +208,8 @@ export default{
      beforeRouteUpdate(to) {
         if (to.params.id != this.personnel_id) {
             this.loadHabilitationFromPersonnel(to.params.id);
-            this.loadFormulaireStats(this.formulaireId)
+            this.resetStats();
         }
-
-        // this.stats = [];
-        // this.groupsAndQuestions = [];
     },
 
     beforeMount() {
