@@ -72,7 +72,7 @@ export default {
         n1Obj() {
             return { value: this.n1 };
         },
-        // n2Obj représente la note "A" (Avis)
+        // n2Obj représente la note "A" (Avis) test
         n2Obj() {
             return { value: this.n2 };
         },
