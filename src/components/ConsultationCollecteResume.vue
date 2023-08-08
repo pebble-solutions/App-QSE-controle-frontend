@@ -89,14 +89,15 @@
                                 Déverrouillé
                             </button>
                         </template>
+                        <button class="position-relative btn btn-sm btn-outline-admin" @click.prevent="$router.push($route.path + '/edit')" v-if="levelUser >= 5">
+                            <i class="bi bi-pencil-fill"></i>
+                            Modifier
+                        </button>
                         <button class="position-relative btn btn-sm btn-outline-secondary me-4" @click.prevent="toggleNotes()" v-if="collecte.notes.length >= 1">
                             Historique
                             <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
                         </button>
 
-                        <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="$router.push($route.path + '/edit')" v-if="levelUser >= 5">
-                            Modifier
-                        </button>
                     </div>
                     <div>
                         <button v-if="locked && !collecte.unlocked" class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
