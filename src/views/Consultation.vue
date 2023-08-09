@@ -32,25 +32,6 @@ import { mapState } from 'vuex';
 
 
 export default {
-    // methods: {
-    //              /**
-    //              * 
-    //             * Récupere les stats du formulaire
-    //             * @param {number} formulaireId ID du formulaire
-    //              */
-
-    //     loadFormulaireStats(formulaireId) {
-
-    //         this.$app.api.get('v2/information-groupe/'+formulaireId+'/stats').then((data) => {
-    //             console.log(data);
-    //             this.stats = data;
-    //         }).catch(this.$app.catchError);
-    //     },
-    // },
-    // mounted() {
-    //     this.loadFormulaireStats(1);
-    // },
-
 
     computed: {
         ...mapState(['formulaires']),
