@@ -20,7 +20,6 @@
             </div>
         </div>
         <h3 class="fs-8 my-3 text-center">Tests : </h3>
-        <QuestionStats />
     </div>
 </template>
 <style scoped>
@@ -30,7 +29,6 @@
 </style>
 <script>
 import { mapState } from 'vuex';
-import QuestionStats from '../components/QuestionStats.vue';
 
 
 export default {
@@ -56,10 +54,6 @@ export default {
 
     computed: {
         ...mapState(['formulaires']),
-    },
-
-    components: {
-        QuestionStats
     },
 }
 </script>
