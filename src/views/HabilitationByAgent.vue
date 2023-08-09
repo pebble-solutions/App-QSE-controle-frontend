@@ -83,6 +83,8 @@ export default{
 
         /**
          * retourne les informations du personnel depuis l'id passé dans l'url
+         * 
+         * @return {object}
          */
         currentPersonnel() {
             return this.listActifs.find((e) => e.id == this.$route.params.id);
@@ -90,9 +92,14 @@ export default{
 
         /**
          * return true si les données de groupsAndQuestions et formulaireStats ont été recupere via l'api
+         * 
+         * @return {boolean}
          */
         hasStats() {
-            if (this.pending.groupsAndQuestions && this.pending.formulaireStats) {
+            if (this.pending.groupsAndQuestions || this.pending.formulaireStats || !this.formulaireId) {
+                console.log('hasNotformulaireId', this.formulaireId);
+                console.log('formulaireStats', this.pending.formulaireStats);
+                console.log('groupsAndQuestions', this.pending.groupsAndQuestions)
                 return false;
             }
 
@@ -118,6 +125,8 @@ export default{
          * en fonction de l'id fourni
          * 
          * @param {Number} id du personnel 
+         * 
+         * @return {proxy}
          */
         loadHabilitationFromPersonnel(id) {
             this.pending.agent = true;
@@ -143,6 +152,8 @@ export default{
          * Récupere les blocs et question (ligne) du formulaire
          * 
          * @param {number} formulaireId ID du formulaire
+         * 
+         * @return {proxy}
          */
         getGroupsAndQuestions(formulaireId) {
             this.pending.groupsAndQuestions = true;
@@ -158,6 +169,8 @@ export default{
          * Récupere les stats du formulaire 
          * 
          * @param {number} formulaireId ID du formulaire
+         * 
+         * @return {proxy}
          */
         loadFormulaireStats(formulaireId) {
             this.pending.formulaireStats = true;
@@ -165,7 +178,7 @@ export default{
             console.log(formulaireId);
 
             this.$app.api.get(`v2/information-groupe/${formulaireId}/stats`, {
-                "personnel_id": this.currentPersonnel.id
+                "personnel_ids": this.currentPersonnel.id
             }).then((data) => {
                 this.stats = data;
             }).catch(this.$app.catchError).finally(() => this.pending.formulaireStats = false);
@@ -186,7 +199,7 @@ export default{
 		 * Modifie le format de la date entrée en paramètre et la retourne 
 		 * sous le format 01 févr. 2021
          * 
-		 * @param {string} date 
+		 * @param {string} el 
          * 
          * @return {string}
 		 */
@@ -194,6 +207,9 @@ export default{
 			return dateFormat(el);
 		},
 
+        /**
+         * Reset les variable et pending d'une question d'un ontrolle
+         */
         resetStats() {
             this.groupsAndQuestions = [];
             this.stats = [];
@@ -208,7 +224,7 @@ export default{
      beforeRouteUpdate(to) {
         if (to.params.id != this.personnel_id) {
             this.loadHabilitationFromPersonnel(to.params.id);
-            this.resetStats();
+            //this.resetStats();
         }
     },
 
