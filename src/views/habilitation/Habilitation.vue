@@ -4,7 +4,6 @@
         <template v-else>
             
         <h1 class="fs-3 my-3">Veille par habilitations</h1>
-        <JaugeMoyenneSami :average="average"></JaugeMoyenneSami>
             <div class="card my-2">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -57,14 +56,13 @@
 <script>
 import {mapState} from 'vuex';
 import Spinner from '../../components/pebble-ui/Spinner.vue';
-import JaugeMoyenneSami from '../../components/JaugeMoyenneSami.vue';
 
 // import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import {dateFormat} from '../../js/collecte';
 
 
 export default {
-    components: { Spinner, JaugeMoyenneSami },//AlertMessage
+    components: { Spinner,},//AlertMessage
 
     data(){
         return {

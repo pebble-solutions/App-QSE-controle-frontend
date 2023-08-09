@@ -9,7 +9,6 @@
                 <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
                 
                 <FormModuleSAMIHeader :value="value" v-if="question.type == 'sami'" />
-               <JaugeMoyenneSami class="col-12" :n1="6.8" :n2="9"/> 
             </button>
         </h3>
         
@@ -56,7 +55,6 @@ import FormModuleNumber from './FormModuleNumber.vue';
 import FormModuleSAMI from './FormModuleSAMI.vue';
 import FormModuleSAMIHeader from './FormModuleSAMIHeader.vue';
 import FormModuleText from './FormModuleText.vue';
-import JaugeMoyenneSami from '../JaugeMoyenneSami.vue';
 
 export default {
 
@@ -245,7 +243,7 @@ export default {
         this.initValues();
     },
 
-    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate, JaugeMoyenneSami }
+    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate }
 }
 
 </script>

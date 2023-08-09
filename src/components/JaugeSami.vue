@@ -1,9 +1,8 @@
 <template>
     <div class="progress-container">
         <div class="progress">
-            <!-- Boucle pour chaque élément de progressItems -->
             <div v-for="(item, index) in progressItems" :key="index" class="progress-bar" :class="item.class"
-                role="progressbar" :style="{ width: item.width }" :aria-valuenow="item.value" aria-valuemin="0"
+                role="progressbar" :style="styleProgressItems(item)" :aria-valuenow="item.value" aria-valuemin="0"
                 aria-valuemax="100">
                 {{ item.label }}
             </div>
@@ -42,7 +41,6 @@ export default {
     data() {
         return {
             progressItems: [
-
                 { label: 'S', class: 'bg-success', value: 25, width: '25%' },
                 { label: 'A', class: 'bg-primary', value: 25, width: '25%' },
                 { label: 'M', class: 'bg-warning', value: 25, width: '25%' },
@@ -54,18 +52,45 @@ export default {
 
     computed: {
         ...mapState(['formulaires']),
+        /**
+            * Calcule l'objet n1.
+            *
+            * @returns {Object} Objet contenant la valeur personnalAverage.
+            * @param {number} this.personnalAverage - La valeur de la moyenne personnelle.
+            */
         n1Obj() {
-            return { value: this.personnalAverage };
+            return this.personnalAverage;
         },
+
+        /**
+         * Calcule l'objet n2.
+         *
+         * @param {number} this.generalAverage - La valeur de la moyenne générale.
+         * 
+         * @returns {Object} Objet contenant la valeur generalAverage.
+         */
         n2Obj() {
-            return { value: this.generalAverage };
+            return this.generalAverage;
         },
-    },
-    methods: {
+        methods: {
+            /**
+             * methode pour la boucle pour l'affichage de la progress bar
+             * 
+             * @param {object} item - Objet contenant les valeurs de la progress bar
+             * 
+             * @returns {object} Objet contenant la largeur de la progress bar
+             */
+            styleProgressItems(item) {
+                return {
+                    width: item.width,
+                };
+            },
+        },
         /**
          * Calcule la position de l'indicateur en fonction de la moyenne
          * 
          * @param {object} obj - Objet contenant la valeur de la note
+         * 
          * @returns {number} Position en pourcentage de l'indicateur
          */
         calculateProgressPosition(obj) {
@@ -94,6 +119,7 @@ export default {
          * Formate la date en utilisant les options spécifiées
          * 
          * @param {Date} date - Date à formater
+         * 
          * @returns {string} Date formatée
          */
         formatDate(date) {
@@ -110,20 +136,22 @@ export default {
          * Calcule la largeur de la barre de progression en pourcentage en fonction de la note
          * 
          * @param {object} obj - Objet contenant la valeur de la note
+         * 
          * @returns {number} Largeur de la barre de progression en pourcentage
          */
         getProgressBarWidth(obj) {
-            return (obj.value / 10) * 100; // Convertir la note en pourcentage pour la barre de progression
+            return (obj / 10) * 100; // Convertir la note en pourcentage pour la barre de progression
         },
 
         /**
          * Calcule la moyenne en arrondissant à une décimale
          * 
          * @param {object} obj - Objet contenant la valeur de la note
+         * 
          * @returns {string} Moyenne arrondie à une décimale
          */
         getAverage(obj) {
-            const average = obj.value;
+            const average = obj;
             const roundedAverage = Math.round(average * 10) / 10; // Arrondir la moyenne à une décimale
 
             // Vérifier si la partie décimale est nulle
@@ -135,7 +163,7 @@ export default {
         },
     },
     components: { UserImage, },
-};
+}
 </script>
   
 
