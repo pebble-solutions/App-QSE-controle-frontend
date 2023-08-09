@@ -1,6 +1,6 @@
 <template>
     <div class="container py-2">
-        
+
         <h1 class="fs-3 my-3">Consultation des contrôles réalisés</h1>
         <div class="card my-2">
             <div class="card-body">
@@ -18,28 +18,48 @@
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
         <h3 class="fs-8 my-3 text-center">Tests : </h3>
+        <QuestionStats />
     </div>
-    
 </template>
 <style scoped>
-.progress-ht{
+.progress-ht {
     height: 30px;
 }
 </style>
 <script>
-import {mapState} from 'vuex'; 
+import { mapState } from 'vuex';
+import QuestionStats from '../components/QuestionStats.vue';
 
 
 export default {
+    // methods: {
+    //              /**
+    //              * 
+    //             * Récupere les stats du formulaire
+    //             * @param {number} formulaireId ID du formulaire
+    //              */
+
+    //     loadFormulaireStats(formulaireId) {
+
+    //         this.$app.api.get('v2/information-groupe/'+formulaireId+'/stats').then((data) => {
+    //             console.log(data);
+    //             this.stats = data;
+    //         }).catch(this.$app.catchError);
+    //     },
+    // },
+    // mounted() {
+    //     this.loadFormulaireStats(1);
+    // },
+
 
     computed: {
         ...mapState(['formulaires']),
     },
 
     components: {
-    
+        QuestionStats
     },
 }
 </script>
