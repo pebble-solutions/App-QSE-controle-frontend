@@ -24,7 +24,7 @@
                 <i class="bi bi-funnel" v-else></i>
             </button>
         </div>
-        <div v-if="currentModeLabel == 'Contrôles non-bouclés'" class="d-flex justify-content-around mt-2">
+        <div v-if="mode == 'kn_wtbcl'" class="d-flex justify-content-around mt-2">
             <div v-for="(label, index) in valueSAMI" >
                 <input type="checkbox" class="btn-check" :id="'btn-' + index" autocomplete="off" :value="label" v-model="valueSAMI[index].value">
                 <label class="btn " :class="label.style" :for="'btn-' + index" style="width:40px">{{ index }}</label><br>

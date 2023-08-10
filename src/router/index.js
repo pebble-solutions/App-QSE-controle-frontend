@@ -146,6 +146,19 @@ const routes = [
     ]
 
   },
+
+  {
+    path: '/consultation/kn_wtbcl',
+    name: 'consultationForm',
+    component: () => import("../views/Consultation.vue"),
+  },
+  {
+    path: '/consultation/kn_wtbcl/:idCollecte',
+    name: 'consultationFormList',
+    component: () => import("../views/ConsultationCollecteNew.vue"),
+
+  },
+
   {
     path: '/habilitation',
     name: 'Habilitation',

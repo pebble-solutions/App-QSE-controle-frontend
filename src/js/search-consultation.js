@@ -48,6 +48,12 @@ export function searchConsultation(searchParams, app) {
             query.df_done = searchParams.df;
             query.done = 'OUI';
         }
+        else if(searchParams.mode == 'kn_wtbcl'){
+            query.dd_done = searchParams.dd;
+            query.df_done = searchParams.df;
+            query.kns = searchParams.kns;
+            query.following_id = 0;
+        }
         else {
             query.stats_dd = searchParams.dd;
             query.stats_df = searchParams.df;
