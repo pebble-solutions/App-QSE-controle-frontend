@@ -68,7 +68,11 @@ export default {
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
 
-
+        /**
+         * Charge une collecte depuis le serveur dans le store.
+         * 
+         * @param {number} id L'ID de la collecte à charger
+         */
         loadinfosCollecte(id) {
         this.$app.apiGet('v2/collecte', {
           id: id,

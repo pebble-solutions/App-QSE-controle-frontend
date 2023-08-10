@@ -10,7 +10,11 @@ export const ROUTES_NAMES = {
 				'consultationProjet',
 				'consultationProjetList',
 				'consultationProjetCollecte',
-				'newCollecte'
+				'newCollecte',
+				'consultationKnWtBcl',
+				'consultationKnWtBclList',
+				'consultationSsOperateur',
+				'consultationSsOperateurList'
 				],
 	habilitation: ['Habilitation',
 				'HabilitationPersonnel',

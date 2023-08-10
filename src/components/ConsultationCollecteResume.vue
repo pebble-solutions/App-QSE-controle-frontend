@@ -89,7 +89,7 @@
                                     Déverrouillé
                                 </button>
                         </template>
-                        <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()" v-if="collecte.notes.length >= 1">
+                        <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()" v-if="collecte?.notes?.length >= 1">
                             Historique
                             <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
                         </button>
@@ -115,7 +115,7 @@
                 
             </div>
         </div>
-        <div v-if="collecte.documents.length && (isReadable)" class="card my-3">
+        <div v-if="collecte?.documents?.length && (isReadable)" class="card my-3">
             <div class="card-body">
                 <h5 class="mb-3"><i class="bi bi-cloud-check me-1"></i> Fichiers joints</h5>
                 <div class="list-group">

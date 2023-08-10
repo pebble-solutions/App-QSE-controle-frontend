@@ -149,13 +149,25 @@ const routes = [
 
   {
     path: '/consultation/kn_wtbcl',
-    name: 'consultationForm',
+    name: 'consultationKnWtBcl',
     component: () => import("../views/Consultation.vue"),
   },
   {
     path: '/consultation/kn_wtbcl/:idCollecte',
-    name: 'consultationFormList',
-    component: () => import("../views/ConsultationCollecteNew.vue"),
+    name: 'consultationKnWtBclList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
+    path: '/consultation/ss_operateur',
+    name: 'consultationSsOperateur',
+    component: () => import("../views/Consultation.vue"),
+  },
+  {
+    path: '/consultation/ss_operateur/:idCollecte',
+    name: 'consultationSsOperateurList',
+    component: () => import("../views/ConsultationCollecte.vue"),
 
   },
 

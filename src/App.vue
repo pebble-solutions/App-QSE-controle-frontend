@@ -75,6 +75,9 @@
 						<app-menu-item v-else-if="this.searchOptions.mode == 'kn_wtbcl'" :href="'/consultation/kn_wtbcl/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'ss_operateur'" :href="'/consultation/ss_operateur/' + res.id">
+							<collecte-item-done :collecte="res"></collecte-item-done>
+						</app-menu-item>
 					</template>
 					<alert-message className="m-1" v-if="!searchResults.length">
 						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre
