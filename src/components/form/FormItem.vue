@@ -5,17 +5,14 @@
         <h3 class="accordion-header" :id="headerId">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#'+bodyId" aria-expanded="true" :aria-controls="bodyId">
                 <span>{{question.ligne}}</span>
-                
                 <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
-                
+
                 <FormModuleSAMIHeader :value="value" v-if="question.type == 'sami'" />
             </button> 
         </h3>
-        
+
         <div :id="bodyId" class="accordion-collapse collapse show" :aria-labelledby="headerId">
             <div class="accordion-body">
-                
-                
 
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
 
