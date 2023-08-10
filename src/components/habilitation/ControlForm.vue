@@ -32,18 +32,30 @@
             <label class="btn btn-outline-danger" for="filtreRetardI">I</label>
         </div>
 
+        <div class="my-2 btn-group w-100">
+            <select class="form-select" v-model="queryParameters.characteristic_id">
+                <option v-for="habilitation in habilitationsTypes" :key="habilitation.id" :value="habilitation.id">{{
+                    habilitation.nom }}
+                </option>
+            </select>
+        </div>
+
         <div class="text-center">
             <button class="btn btn-primary bi-check" type="button" @click.prevent="emitForm()">Appliquer</button>
         </div>
     </div>
 </template>
 <script>
+
 export default {
     data() {
         return {
             queryParameters: {},
             currentGroup: "Tous",
         }
+    },
+    props: {
+        habilitationsTypes: Array,
     },
     emits: ['formSubmitted'],
     methods: {
@@ -92,6 +104,6 @@ export default {
         setMode(groupFilter) {
             this.currentGroup = groupFilter;
         },
-    }
+    },
 }
 </script>

@@ -17,7 +17,7 @@
             </button>
         </div>
         <div>
-            <ControlForm v-if="showFilterForm" @formSubmitted="recieveForm"></ControlForm>
+            <ControlForm v-if="showFilterForm" @formSubmitted="recieveForm" :habilitationsTypes="habilitationsTypes"></ControlForm>
         </div>
     </form>
 </template>
@@ -46,7 +46,7 @@ export default {
     },
 
     computed: {
-        ...mapState(['pending']),
+        ...mapState(['pending', 'habilitationsTypes']),
     },
     components: { ControlForm },
     methods: {
