@@ -172,6 +172,18 @@ const routes = [
   },
 
   {
+    path: '/consultation/ss_controleur',
+    name: 'consultationSsControleur',
+    component: () => import("../views/Consultation.vue"),
+  },
+  {
+    path: '/consultation/ss_controleur/:idCollecte',
+    name: 'consultationSsControleurList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
     path: '/habilitation',
     name: 'Habilitation',
     component: () => import("../views/habilitation/Habilitation.vue"),
