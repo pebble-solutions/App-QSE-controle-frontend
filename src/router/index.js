@@ -189,9 +189,21 @@ const routes = [
     component: () => import("../views/Consultation.vue"),
   },
   {
-    path: '/consultation/operateur/:idOperateur',
+    path: '/consultation/operateur/:idPersonnel',
     name: 'consultationOperateurList',
-    component: () => import("../views/ConsultationOperateurList.vue"),
+    component: () => import("../views/ConsultationPersonnelList.vue"),
+
+  },
+
+  {
+    path: '/consultation/controleur',
+    name: 'consultationControleur',
+    component: () => import("../views/Consultation.vue"),
+  },
+  {
+    path: '/consultation/controleur/:idPersonnel',
+    name: 'consultationControleurList',
+    component: () => import("../views/ConsultationPersonnelList.vue"),
 
   },
 

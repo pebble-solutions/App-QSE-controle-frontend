@@ -25,7 +25,7 @@
             </button>
         </div>
         <div v-if="mode == 'kn_wtbcl'" class="d-flex justify-content-around mt-2">
-            <div v-for="(label, index) in valueSAMI" >
+            <div v-for="(label, index) in valueSAMI" :key="index">
                 <input type="checkbox" class="btn-check" :id="'btn-' + index" autocomplete="off" :value="label" v-model="valueSAMI[index].value">
                 <label class="btn " :class="label.style" :for="'btn-' + index" style="width:40px">{{ index }}</label><br>
             </div>
@@ -188,7 +188,7 @@ export default {
          * Affiche la liste des contrôles programmés avec le formulaire
          * 
          * @param {object} collecte
-         */
+         */ 
 		routeToVue(mode) {
 			let route = mode === 'collecte' ? '/consultation' : '/consultation/'+mode;
             this.$router.push(route);

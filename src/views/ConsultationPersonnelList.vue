@@ -2,14 +2,14 @@
     <div class="container px-2 py-2">
         <div class="d-flex flex-wrap justify-content-between align-items-center my-2 mb-3">
             <h1 class="fs-3 m-0 me-2">{{ personnelName }}</h1> 
-            <div class="badge bg-secondary">{{collectesOperateur?.length}}</div>
+            <div class="badge bg-secondary">{{collectesPersonnel()?.length}}</div>
         </div>
     
         <spinner v-if="pending.collectes" />
         
         <div class="list-group" v-else>
             
-            <router-link :to="'/consultation/'+col.id" v-slot="{navigate,href}" custom v-for="col in collectesOperateur" :key="col.id">
+            <router-link :to="'/consultation/'+col.id" v-slot="{navigate,href}" custom v-for="col in collectesPersonnel()" :key="col.id">
                 <a :href="href" @click="navigate" class="list-group-item list-group-item-action">
                     <collecte-headband :collecte="col" :editable="false" :displayProjet="true" :displayForm="false"/>
                 </a>
@@ -54,20 +54,14 @@ export default {
         ...mapState(['personnels', 'collectes']),
 
         /**
-         * Récupere le nom de l'operateur de la collect via un id de la route
+         * Récupere le nom du personnel de la collecte via un id de la route
          * 
          * @return {string}
          */
         personnelName() {
-            let personnel = this.personnels.find(e => e.id == this.$route.params.idOperateur);
+            let personnel = this.personnels.find(e => e.id == this.$route.params.idPersonnel);
     
             return personnel?.cache_nom;
-        },
-
-        collectesOperateur(){
-            let collecteList = this.collectes.filter(e => e.cible__structure__personnel_id == this.$route.params.idOperateur);
-
-            return collecteList;
         },
 
         /**
@@ -94,18 +88,15 @@ export default {
         /**
          * Charge les collectes liées au formulaire ouvert
          * 
-         * @param  {Number} idForm
          * @param  {string} mode
          * - mode           'replace' (défaut), 'append' (ajout des données à la fin de la liste)
          * 
          */
-        loadCollectes(idForm, mode) {
+        loadCollectes( mode) {
             if (!mode) {
                 this.start = 0;
                 this.noMoreAvailable = false
             }
-
-            idForm = idForm ?? this.$route.params.idFormulaire;
 
             if (mode == 'append') {
                 this.pending.moreCollectes = true;
@@ -115,7 +106,6 @@ export default {
             }
             
             searchConsultation({
-                formulaire: idForm,
                 start: this.start,
                 limit: this.limit,
             }, this.$app)
@@ -139,6 +129,22 @@ export default {
         },
 
         /**
+         * Retourne la liste des collecte d'un controleur ou d'un operateur en fonction du nom de la route
+         */
+         collectesPersonnel() {
+            const idPersonnel = this.$route.params.idPersonnel;
+            let collecteList = [];
+
+            if (this.$route.name == "consultationOperateurList") {
+                collecteList = this.collectes.filter(e => e.cible__structure__personnel_id == idPersonnel);
+            } else if (this.$route.name == "consultationControleurList") {
+                collecteList = this.collectes.filter(e => e.enqueteur__structure__personnel_id == idPersonnel);
+            }
+
+            return collecteList;
+        },
+
+        /**
          * Charge la suite des données lorsque le nombre de résultats est > à 50
          * et divisible par 50 en nombre entier.
          */
@@ -150,12 +156,12 @@ export default {
         }
     },
 
-    beforeRouteUpdate(to, from) {
-        if (to.params.idFormulaire !== from.params.idFormulaire) {
-            this.start = 0;
-            this.loadCollectes(to.params.idFormulaire);
-        }
-    },
+    // beforeRouteUpdate(to, from) {
+    //     if (to.params.idFormulaire !== from.params.idFormulaire) {
+    //         this.start = 0;
+    //         this.loadCollectes(to.params.idFormulaire);
+    //     }
+    // },
     
     mounted() {
         this.loadCollectes();

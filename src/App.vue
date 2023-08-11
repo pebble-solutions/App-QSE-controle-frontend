@@ -84,6 +84,9 @@
 						<app-menu-item v-else-if="this.searchOptions.mode == 'operateur' && res.nb_kn" :href="'/consultation/operateur/' + res.id">
 							<PersonnelItem :personnel="res" :num="res.nb_kn"></PersonnelItem>
 						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'controleur' && res.nb_kn" :href="'/consultation/controleur/' + res.id">
+							<PersonnelItem :personnel="res" :num="res.nb_kn"></PersonnelItem>
+						</app-menu-item>
 					</template>
 					<alert-message className="m-1" v-if="!searchResults.length">
 						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre
@@ -586,6 +589,15 @@ export default {
 			});
 		},
 
+		loadPersonnels(){
+			try {
+				this.$assets.getCollection("personnels").load();
+			}
+			catch (e) {
+				this.$app.catchError(e);
+			}
+		},
+
 		/**
 		 * Charge les states de characteristic personnel par personnel
 		 */
@@ -653,6 +665,9 @@ export default {
 
 				this.initCollections();
 				this.loadCharacteristicPersonnelStats();
+
+				this.loadPersonnels();
+				this.loadCollectes();
 			}
 		});
 	}
