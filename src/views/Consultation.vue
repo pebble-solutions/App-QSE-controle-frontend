@@ -14,6 +14,10 @@
                             <li class="fs-5 mb-2">Sélectionnez un contrôle dans la liste pour le consulter</li>
                             <li class="fs-5 mb-2">Vous pouvez effectuer une recherche par date</li>
                             <li class="fs-5 mb-2">Vous pouvez grouper vos résultats par formulaire ou par projets</li>
+                            <li class="fs-5 mb-2">Vous pouvez consulter les contrôles qui ne sont pas bouclés</li>
+                            <li class="fs-5 mb-2">Vous pouvez consulter les contrôles qui ne sont pas affectés à un opérateur</li>
+                            <li class="fs-5 mb-2">Vous pouvez consulter les contrôles qui ne sont pas affectés à un controleur</li>
+                            <li class="fs-5 mb-2">Vous pouvez grouper vos résultats par operateur ou par controleur</li>
                         </ul>
                     </div>
                 </div>

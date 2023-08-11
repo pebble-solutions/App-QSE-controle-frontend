@@ -150,7 +150,7 @@ const routes = [
   {
     path: '/consultation/kn_wtbcl',
     name: 'consultationKnWtBcl',
-    component: () => import("../views/Consultation.vue"),
+    component: () => import("../views/ConsultationOptions.vue"),
   },
   {
     path: '/consultation/kn_wtbcl/:idCollecte',
@@ -162,7 +162,7 @@ const routes = [
   {
     path: '/consultation/ss_operateur',
     name: 'consultationSsOperateur',
-    component: () => import("../views/Consultation.vue"),
+    component: () => import("../views/ConsultationOptions.vue"),
   },
   {
     path: '/consultation/ss_operateur/:idCollecte',
@@ -174,7 +174,7 @@ const routes = [
   {
     path: '/consultation/ss_controleur',
     name: 'consultationSsControleur',
-    component: () => import("../views/Consultation.vue"),
+    component: () => import("../views/ConsultationOptions.vue"),
   },
   {
     path: '/consultation/ss_controleur/:idCollecte',
@@ -186,7 +186,7 @@ const routes = [
   {
     path: '/consultation/operateur',
     name: 'consultationOperateur',
-    component: () => import("../views/Consultation.vue"),
+    component: () => import("../views/ConsultationOptions.vue"),
   },
   {
     path: '/consultation/operateur/:idPersonnel',
@@ -198,7 +198,7 @@ const routes = [
   {
     path: '/consultation/controleur',
     name: 'consultationControleur',
-    component: () => import("../views/Consultation.vue"),
+    component: () => import("../views/ConsultationOptions.vue"),
   },
   {
     path: '/consultation/controleur/:idPersonnel',
