@@ -1,7 +1,7 @@
 <template>
     <div class="row">
-        <h1>Habilitations</h1>
-        <div class="col-3">
+        <h1 class="text-white text-center">Habilitations</h1>
+        <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
                     <h3 class="card-title fs-4">Habilitations contrôlées sur la période</h3>

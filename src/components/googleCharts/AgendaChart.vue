@@ -35,7 +35,7 @@ export default {
             let chartWrap = document.getElementById('agendaChart');
             let chart = new GoogleCharts.api.visualization.Calendar(chartWrap);
             let options = {
-                height: 460
+                height: 200
             };
             chart.draw(dataTable, options);
         }

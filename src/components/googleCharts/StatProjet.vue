@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <h1>Projet</h1>
+        <h1 class="text-white text-center">Projet</h1>
     <!--    <div class="col-6">
             <div class="card my-2">
                 <div class="card-body">

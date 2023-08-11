@@ -1,33 +1,29 @@
-
 <template>
-    <div class="container" v-if="!pending.load && !emptyData && !pending.stat">
-        <div class="row">
-            <div class="card my-2 overflow-auto">
-                <div class="card-body">
-                    <h3 class="card-title fs-4">Agenda</h3>
-                    <AgendaChart></AgendaChart>
-                </div>
-            </div>
+    <div class="container-fluid" v-if="!pending.load && !emptyData && !pending.stat">
+        <div class="col-md-12 my-2 bg-white rounded p-3 shadow">
+            <h3 class="fs-4">Agenda</h3>
+            <AgendaChart></AgendaChart>
         </div>
-        <div class="row">
-            <div class="card my-2">
-                <div class="card-body">
-                    <h3 class="card-title fs-4">Répartition des réponses</h3>
-                    <GlobalPieChart></GlobalPieChart>
-                </div>
-            </div>
+        <div class="col-md-12 my-2 bg-white rounded p-3 shadow">
+            <h3 class="fs-4">Répartition des réponses</h3>
+            <GlobalPieChart></GlobalPieChart>
         </div>
-        <div class="row">
-            <div class="card my-2">
-                <div class="card-body">
-                    <GlobalTable></GlobalTable>
-                </div>
-            </div>
+        <div class="col-md-12 my-2 bg-white rounded p-3 shadow">
+            <h3 class="fs-4">Global</h3>
+            <GlobalTable></GlobalTable>
         </div>
-        <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
-        <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
-        <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
-        <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
+        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
+            <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
+        </div>
+        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
+            <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
+        </div>
+        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
+            <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
+        </div>
+        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
+            <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
+        </div>
     </div>
     <div v-else-if="pending.spinner">
         <Spinner></Spinner>
@@ -85,10 +81,10 @@ export default {
                         type: 'KN',
                     });
                     this.pending.spinner = false;
-                    if(collectes.getCollection().length == 0) {
+                    if (collectes.getCollection().length == 0) {
                         this.emptyData = true;
                         window.alert("Aucune donnée pour les filtres sélectionnés");
-                    } else {this.emptyData = false;}
+                    } else { this.emptyData = false; }
                     this.pending.stat = false;
                 }
             },
