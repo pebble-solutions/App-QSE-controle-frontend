@@ -1,11 +1,14 @@
 <template>
     <div class="d-flex align-items-center justify-content-between">
-        <div class="row">
+        <div class="row d-flex align-items-center">
             <div class="me-2 col-1">
                 <i class="bi" :class="icon"></i>
             </div>
-            <UserImage :name="personnel.cache_nom" class="col-1"></UserImage>
-            <div class="col"  >
+            <div class="col-1">
+                <UserImage :name="personnel.cache_nom"></UserImage>
+            </div>
+            <div class="col-1"></div>
+            <div class="col">
                 <div class="d-flex justify-content-between align-items-center">{{personnel.cache_nom}}</div>
             </div>
         </div>
