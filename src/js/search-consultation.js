@@ -38,7 +38,7 @@ export function searchConsultation(searchParams, app) {
     }
 
     return new Promise((resolve, reject) => {
-        if (!['collecte', 'projet', 'formulaire','kn_wtbcl','ss_operateur','ss_controleur','operateur','controleur'].includes(searchParams.mode)) {
+        if (!['collecte', 'projet', 'formulaire','kn_wtbcl','ss_operateur','ss_controleur','operateur','controleur', 'kndekn'].includes(searchParams.mode)) {
             throw new Error("Erreur dans le mode d'information sélectionné.");
         }
     
@@ -51,6 +51,7 @@ export function searchConsultation(searchParams, app) {
             stats_dd: null,
             stats_df: null,
             done: null,
+            tlc: null,
             formulaire: searchParams.formulaire ?? null,
             projet_id: searchParams.projet_id ?? null,
             result_var: null
@@ -72,7 +73,12 @@ export function searchConsultation(searchParams, app) {
             query.dd_start = searchParams.dd;
             query.df_start = searchParams.df;
             filtres = query;
-        }
+        } else if (searchParams.mode == 'kndekn') {
+            query.dd_start = searchParams.dd;
+            query.df_start = searchParams.df;
+            query.tlc = "InformationLiaison";
+            query.done = 'OUI';
+        } 
         else {
             query.stats_dd = searchParams.dd;
             query.stats_df = searchParams.df;

@@ -76,7 +76,8 @@ export default {
                 ss_operateur: "Contrôles non-affectés à un opérateur",
                 ss_controleur: "Contrôles non-affectés à un contrôleur",
                 operateur: "Grouper par opérateur",
-                controleur: "Grouper par contrôleur"
+                controleur: "Grouper par contrôleur",
+                kndekn : "Contrôles de contrôle"
                 
             },
 

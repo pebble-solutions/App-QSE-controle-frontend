@@ -22,7 +22,9 @@ export const ROUTES_NAMES = {
 				'consultationControleur',
 				'consultationControleurList',
 				'consultationCollecteOptionsOperateur',
-				'consultationCollecteOptionsControleur'
+				'consultationCollecteOptionsControleur',
+				'consultationKndeKn',
+				'consultationKndeKnList'
 
 				],
 	habilitation: ['Habilitation',

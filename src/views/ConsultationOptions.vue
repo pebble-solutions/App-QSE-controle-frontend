@@ -67,6 +67,12 @@
             showSearchInfo: true,
             searchInfoText: "par nom",
           },
+          {
+            name: "consultationKndeKn",
+            strongText: "sur un contrôle",
+            subject : "contrôle",
+            message: " dans la liste de gauche pour le consulter",
+          },
         ],
       };
     },
