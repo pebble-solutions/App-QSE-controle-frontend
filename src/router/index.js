@@ -192,7 +192,13 @@ const routes = [
     path: '/consultation/operateur/:idPersonnel',
     name: 'consultationOperateurList',
     component: () => import("../views/ConsultationPersonnelList.vue"),
-
+    children: [
+      {
+        path: ':idCollecte',
+        name: 'consultationCollecteOptionsOperateur',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteOptionsPersonnel.vue')
+      }
+    ]
   },
 
   {
@@ -204,6 +210,13 @@ const routes = [
     path: '/consultation/controleur/:idPersonnel',
     name: 'consultationControleurList',
     component: () => import("../views/ConsultationPersonnelList.vue"),
+    children: [
+      {
+        path: ':idCollecte',
+        name: 'consultationCollecteOptionsControleur',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteOptionsPersonnel.vue')
+      }
+    ]
 
   },
 

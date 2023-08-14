@@ -20,7 +20,10 @@ export const ROUTES_NAMES = {
 				'consultationOperateur',
 				'consultationOperateurList',
 				'consultationControleur',
-				'consultationControleurList'
+				'consultationControleurList',
+				'consultationCollecteOptionsOperateur',
+				'consultationCollecteOptionsControleur'
+
 				],
 	habilitation: ['Habilitation',
 				'HabilitationPersonnel',

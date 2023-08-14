@@ -9,7 +9,7 @@
         
         <div class="list-group" v-else>
             
-            <router-link :to="'/consultation/'+col.id" v-slot="{navigate,href}" custom v-for="col in collectesPersonnel()" :key="col.id">
+            <router-link :to="routeTo + col.id" v-slot="{navigate,href}" custom v-for="col in collectesPersonnel()" :key="col.id">
                 <a :href="href" @click="navigate" class="list-group-item list-group-item-action">
                     <collecte-headband :collecte="col" :editable="false" :displayProjet="true" :displayForm="false"/>
                 </a>
@@ -62,6 +62,22 @@ export default {
             let personnel = this.personnels.find(e => e.id == this.$route.params.idPersonnel);
     
             return personnel?.cache_nom;
+        },
+
+        /**
+         * Retourne l'url de la destination de la consultation de la collecte
+         */
+        routeTo(){
+            const idPersonnel = this.$route.params.idPersonnel;
+            const routeName = this.$route.name;
+            if (routeName == "consultationOperateurList") {
+                return '/consultation/operateur/' + idPersonnel + '/'
+            } else if (routeName == "consultationControleurList") {
+                return '/consultation/controleur/' + idPersonnel + '/'
+            } else {
+                console.error("Nom de route invalide");
+                return '/programmation';
+            }
         },
 
         /**
