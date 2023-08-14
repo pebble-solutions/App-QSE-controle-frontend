@@ -59,7 +59,14 @@
 					<Spinner />
 				</template>
 				<template v-else>
-					<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch" v-if="this.searchOptions.mode == 'operateur' || this.searchOptions.mode == 'controleur'">
+					<input
+						type="text"
+						class="form-control my-2 px-2"
+						placeholder="Rechercher..."
+						v-model="displaySearch"
+						v-show="['operateur', 'controleur', 'collecte'].includes(searchOptions.mode)"
+					/>
+
 					<template v-for="res in listConsultation(searchResults)" :key="res.id">
 						<app-menu-item v-if="this.searchOptions.mode == 'collecte'" :href="'/consultation/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
@@ -634,12 +641,24 @@ export default {
 		 */
 		listConsultation(list) {
 			const { mode } = this.searchOptions;
-			
-			if (mode === 'operateur' || mode === 'controleur') {
+			if (mode === 'collecte') {
+				let collectesFiltred = list;
+
+				if (this.displaySearch) {
+					const searchInput = this.displaySearch.trim();
+					if (/^\d+$/.test(searchInput)) {
+						collectesFiltred = collectesFiltred.filter(item => searchInput.includes(item.id));
+					} else {
+						const searchPattern = new RegExp(searchInput, 'i');
+						collectesFiltred = collectesFiltred.filter(item => item.cible_nom?.toUpperCase().match(searchPattern));
+					}
+				}
+				return collectesFiltred;
+			} else if (mode === 'operateur' || mode === 'controleur') {
 				let personnels = list;
 				
 				if (list.length !== 0 && this.displaySearch !== '') {
-					personnels = personnels.filter(item => item.cache_nom.match(this.displaySearch));
+					personnels = personnels.filter(item => item.cache_nom.toUpperCase().match(this.displaySearch.toUpperCase()));
 				}
 				
 				return personnels;

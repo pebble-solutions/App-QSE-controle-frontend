@@ -32,7 +32,7 @@
 
 import { mapActions, mapState } from 'vuex'
 import CollecteHeadband from '../components/CollecteHeadband.vue';
-import { searchConsultation } from '../js/search-consultation';
+import { searchConsultation, returnFiltres } from '../js/search-consultation';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
@@ -129,20 +129,37 @@ export default {
         },
 
         /**
-         * Retourne la liste des collecte d'un controleur ou d'un operateur en fonction du nom de la route
+         * Retourne la liste des collectes d'un contrôleur ou d'un opérateur en fonction du nom de la route
          */
-         collectesPersonnel() {
+        collectesPersonnel() {
             const idPersonnel = this.$route.params.idPersonnel;
-            let collecteList = [];
+            const routeName = this.$route.name;
+            const filtres = returnFiltres();
 
-            if (this.$route.name == "consultationOperateurList") {
-                collecteList = this.collectes.filter(e => e.cible__structure__personnel_id == idPersonnel);
-            } else if (this.$route.name == "consultationControleurList") {
-                collecteList = this.collectes.filter(e => e.enqueteur__structure__personnel_id == idPersonnel);
+            let filteredCollecteList = [];
+
+            if (routeName == "consultationOperateurList") {
+                filteredCollecteList = this.collectes.filter(e => e.cible__structure__personnel_id == idPersonnel);
+            } else if (routeName == "consultationControleurList") {
+                filteredCollecteList = this.collectes.filter(e => e.enqueteur__structure__personnel_id == idPersonnel);
+            } else {
+                console.error("Nom de route invalide");
+                return [];
             }
 
-            return collecteList;
+            if (filtres?.dd_start) {
+                const ddStartDate = new Date(filtres.dd_start);
+                filteredCollecteList = filteredCollecteList.filter(e => new Date(e.date_start).getTime() >= ddStartDate.getTime());
+            }
+
+            if (filtres?.df_start) {
+                const dfStartDate = new Date(filtres.df_start);
+                filteredCollecteList = filteredCollecteList.filter(e => new Date(e.date_start).getTime() <= dfStartDate.getTime());
+            }
+
+            return filteredCollecteList;
         },
+
 
         /**
          * Charge la suite des données lorsque le nombre de résultats est > à 50
@@ -168,10 +185,3 @@ export default {
     }
 }
 </script>
-
-
-
-
-
-
-
