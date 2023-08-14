@@ -97,6 +97,9 @@
 						<app-menu-item v-else-if="this.searchOptions.mode == 'kndekn'" :href="'/consultation/kndekn/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'knsskn'" :href="'/consultation/knsskn/' + res.id">
+							<collecte-item-done :collecte="res"></collecte-item-done>
+						</app-menu-item>
 					</template>
 					<alert-message className="m-1" v-if="!searchResults.length">
 						Il n'y a pas de résultat pour ces critères. Utilisez les options ci-dessus pour étendre votre

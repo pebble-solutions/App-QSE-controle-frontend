@@ -233,6 +233,18 @@ const routes = [
   },
 
   {
+    path: '/consultation/knsskn',
+    name: 'consultationKnssKn',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/knsskn/:idCollecte',
+    name: 'consultationKnssKnList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
     path: '/habilitation',
     name: 'Habilitation',
     component: () => import("../views/habilitation/Habilitation.vue"),

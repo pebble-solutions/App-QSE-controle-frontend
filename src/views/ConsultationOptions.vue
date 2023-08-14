@@ -73,6 +73,12 @@
             subject : "contrôle",
             message: " dans la liste de gauche pour le consulter",
           },
+          {
+            name: "consultationKnssKn",
+            strongText: "sans contrôle",
+            subject : "contrôle",
+            message: " dans la liste de gauche pour le consulter",
+          },
         ],
       };
     },

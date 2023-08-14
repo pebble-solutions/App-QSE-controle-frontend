@@ -38,7 +38,7 @@ export function searchConsultation(searchParams, app) {
     }
 
     return new Promise((resolve, reject) => {
-        if (!['collecte', 'projet', 'formulaire','kn_wtbcl','ss_operateur','ss_controleur','operateur','controleur', 'kndekn'].includes(searchParams.mode)) {
+        if (!['collecte', 'projet', 'formulaire','kn_wtbcl','ss_operateur','ss_controleur','operateur','controleur', 'kndekn', 'knsskn'].includes(searchParams.mode)) {
             throw new Error("Erreur dans le mode d'information sélectionné.");
         }
     
@@ -69,7 +69,7 @@ export function searchConsultation(searchParams, app) {
             query.df_start = searchParams.df;
             query.result_var = searchParams.kns;
             query.following_id = 0;
-        } else if (['operateur', 'controleur', 'ss_controleur', 'ss_operateur'].includes(searchParams.mode)) {
+        } else if (['operateur', 'controleur', 'ss_controleur', 'ss_operateur','knsskn'].includes(searchParams.mode)) {
             query.dd_start = searchParams.dd;
             query.df_start = searchParams.df;
             filtres = query;
