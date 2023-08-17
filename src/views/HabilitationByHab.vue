@@ -9,6 +9,8 @@
             <vigil-control v-if="findVeilleConfig.id" :idVeille="findVeilleConfig.id" :idForm="returnFormulaireId"></vigil-control>
         </template>
         <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de veille configurée pour cette habilitation </alert-message>
+        <!-- {{ veilleConfig }} -->
+        {{ listPersonnelHabilite }}
         <router-view></router-view>
     </div>
 </template>

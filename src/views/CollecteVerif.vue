@@ -112,6 +112,7 @@ export default {
                 this.pending.validation = true;
                 this.$app.apiPost('v2/collecte/'+this.collecte.id+'/validate')
                 .then((data) => {
+                    console.log(data)
                     return this.refreshCollectes([data]);
                 })
                 .then(() => {
