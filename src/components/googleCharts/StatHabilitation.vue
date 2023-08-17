@@ -2,11 +2,9 @@
     <div class="row">
         <h1 class="text-white text-center">Habilitations</h1>
         <div class="col-12">
-            <div class="card my-2">
-                <div class="card-body">
+            <div class="my-1 bg-white rounded shadow p-3">
                     <h3 class="card-title fs-4">Habilitations contrôlées sur la période</h3>
-                    <p>{{ currentHabilitations }}</p>
-                </div>
+                    <p class="text-center mt-2 fw-bold">{{ currentHabilitations }}</p>    
             </div>
         </div>
         <!--<div class="col-6">
