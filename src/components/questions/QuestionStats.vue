@@ -1,12 +1,15 @@
 <template>
     <div class="d-flex  align-items-center" :class="className">
+        <div class="col-12" :class="{'col-md-4' : !textDisplayClass}">
+            <LastControlAndResult v-if="personnelLastResultDate && !textDisplayClass" :date="personnelLastResultDate" :value="personnelLastResult"/>
+
+            <LastControlAndTextResult v-else :date="personnelLastResultDate" :value="personnelLastResult" />
+        </div>
+
         <div class="col-12 col-md-6 my-3" v-if="personnelStatsAverage != null">
             <JaugeSami :personnalAverage="personnelStatsAverage" :name="personnelName" :generalAverage="generalStatsAverage" />
         </div>
 
-        <div class="col-12" :class="{'col-md-4' : !textDisplayClass}">
-            <LastControlAndResult :date="personnelLastResultDate" :value="personnelLastResult" :textStart="textDisplayClass" v-if="personnelLastResultDate" />
-        </div>
     </div>
 </template>
 
@@ -15,10 +18,10 @@
 import { mapState } from 'vuex';
 import JaugeSami from '../JaugeSami.vue';
 import LastControlAndResult from '../LastControlAndResult.vue';
-// import AffichageMoyenne from '../AffichageMoyenne.vue';
+import LastControlAndTextResult from '../LastControlAndTextResult.vue';
 
 export default {
-    components: { JaugeSami, LastControlAndResult },
+    components: { JaugeSami, LastControlAndResult, LastControlAndTextResult },
 
     props: {
         stats: Object
@@ -67,19 +70,23 @@ export default {
         personnelLastResultDate() {
             let date = this.stats.personnel[0].stats.lastResultDate;
 
-            console.log('data parent', this.stats);
-
             return date;
         },
 
+        /**
+         * return un nom de classe en fonction si la moyenne du personnel est renseigné ou pas
+         */
         className() {
             if (this.personnelStatsAverage == null) {
                 return 'justify-content-start';
             }
 
-            return 'justify-content-center';
+            return 'justify-content-between';
         },
 
+        /**
+         * Boolean en fonction si la reponse moyenne du personnel est null ou pas
+         */
         textDisplayClass() {
             if (this.personnelStatsAverage == null) {
                 return true;
