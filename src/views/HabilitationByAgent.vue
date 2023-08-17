@@ -26,7 +26,7 @@
                                     </span>
                                 </div>
 
-                                <ProgressBar :dd="new Date(hab.dd)" :df="new Date(hab.df)" ></ProgressBar>
+                                <ProgressBar :dd="hab.dd" :df="hab.df"></ProgressBar>
                             </a>
                         </RouterLink>
                     </div>
@@ -97,12 +97,9 @@ export default{
          */
         hasStats() {
             if (this.pending.groupsAndQuestions || this.pending.formulaireStats || !this.formulaireId) {
-                console.log('hasNotformulaireId', this.formulaireId);
-                console.log('formulaireStats', this.pending.formulaireStats);
-                console.log('groupsAndQuestions', this.pending.groupsAndQuestions)
                 return false;
             }
-
+            
             return true;
         }
     },
@@ -222,7 +219,7 @@ export default{
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
      beforeRouteUpdate(to) {
-        if (to.params.id != this.personnel_id) {
+        if (to.params.id != this.currentPersonnel.id) {
             this.loadHabilitationFromPersonnel(to.params.id);
             //this.resetStats();
         }

@@ -19,31 +19,19 @@
                 </div>
             </div>
         </div>  
-
-        <h3 class="fs-8 my-3 text-center">Test du composant JaugeMoyenneSami.vue</h3>
-
-        <JaugeMoyenneSami :n1="3.2" :n2="3.8" />
-
     </div>
     
 </template>
+
 <style scoped>
 .progress-ht{
     height: 30px;
 }
 </style>
+
 <script>
-import {mapState} from 'vuex'; 
-import JaugeMoyenneSami from '../components/JaugeMoyenneSami.vue';
 
 export default {
 
-    computed: {
-        ...mapState(['formulaires']),
-    },
-
-    components: {
-        JaugeMoyenneSami,
-    },
 }
 </script>

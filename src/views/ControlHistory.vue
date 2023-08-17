@@ -44,6 +44,8 @@ export default{
         
     },
 
+    emits: ["formulaire"],
+
     data() {
         return {
             pending: {
@@ -71,7 +73,7 @@ export default{
          * en fonction de l'id fourni
          * @param {Number} id du 
          */
-         loadCollecte(id) {
+        loadCollecte(id) {
             this.pending.control=true;
             this.$app.apiGet('data/GET/collecte', {
                 tli : id,

@@ -1,24 +1,22 @@
 <template>
-    <div class="list-group-item" v-if="bloc.id == question.information__bloc_id">
-        <div class="fst-italic">
+    <div class="list-group-item">
+        <div class="fst-italic pb-2">
             {{ question.question }}
         </div>
 
-
-        <!-- <QuestionStats :stats="questionStats"/> -->
+        <QuestionStats :stats="questionStats"/>
     </div>
 </template>
 
 <script>
-// import QuestionStats from './QuestionStats.vue';
+import QuestionStats from './QuestionStats.vue';
 
 export default {
-    // components: { QuestionStats },
+    components: { QuestionStats },
 
     props: {
-        bloc: Object,
         question: Object,
-        stats: Array
+        stats: Object
     },
 
     computed: {
@@ -28,11 +26,7 @@ export default {
          * @return {object}
          */
         questionStats() {
-            console.log(this.stats);
             let questionStats = this.stats.questions.find(qs => qs.id == this.question.id);
-
-            console.log(questionStats);
-
             return questionStats;
         }
     },

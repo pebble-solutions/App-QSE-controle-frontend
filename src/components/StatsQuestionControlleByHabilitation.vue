@@ -11,14 +11,8 @@
                 <div :id="'collapse-'+bloc.id" class="accordion-collapse collapse show" :aria-labelledby="'heading-'+bloc.id">
                     <div class="accordion-body">
                         <div class="list-group list-group-flush">
-                            <template v-for="question in questions" :key="'question-'+question.id">  
-                                <div class="list-group-item" v-if="bloc.id == question.information__bloc_id">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="fst-italic">
-                                            {{ question.question }}
-                                        </div>
-                                    </div>
-                                </div>
+                            <template v-for="question in getQuestionsFromBlocId(bloc.id)" :key="'question-'+question.id">
+                                <QuestionItems :question="question" :stats="stats"/>
                             </template>
                         </div>
                     </div>
@@ -29,11 +23,14 @@
 </template>
 
 <script>
+import QuestionItems from './questions/QuestionItems.vue'
 
 export default {
+    components: { QuestionItems },
+
     props: {
-        stats: Array,
-        groupsAndQuestions: Array
+        stats: Object,
+        groupsAndQuestions: Object
     },
 
     computed: {
@@ -53,12 +50,16 @@ export default {
     },
 
     methods: {
-
-    },
-
-    mounted() {
-        console.log('stats', this.stats);
-        console.log('list', this.groupsAndQuestions);
+        /**
+         * Retourne la collection des questions liée à un bloc
+         * 
+         * @param {number} id L'ID du bloc de référence
+         * 
+         * @return {array}
+         */
+        getQuestionsFromBlocId(id) {
+            return this.groupsAndQuestions.questions.filter(e => e.information__bloc_id == id);        
+        }
     }
 };
 </script>

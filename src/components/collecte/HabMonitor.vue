@@ -44,7 +44,7 @@
              
             </div>
             <!-- Composant ProgressBar -->
-            <ProgressBar v-if="lastControl" :dd="new Date(lastControl)" :df="delay(lastControl)"></ProgressBar>
+            <ProgressBar v-if="lastControl" :dd="lastControl" :df="delay(lastControl)"></ProgressBar>
             <AlertMessage v-else> {{ noLastControl }}</AlertMessage>
           </template>
           <div class="text-secondary d-flex align-items-center" v-else>
@@ -65,6 +65,8 @@ import ProgressBar from '../ProgressBar.vue';
 import { dateFormat, classNameFromSAMI } from '../../js/collecte';
 import { mapState } from 'vuex';
 import AlertMessage from '../pebble-ui/AlertMessage.vue';
+import { toSqlDate } from "../../js/date";
+
 export default {
   components: { ProgressBar , AlertMessage},
   props: {
@@ -136,7 +138,7 @@ export default {
 
       dd.setDate(dd.getDate()+180);
       
-      return dd
+      return toSqlDate(dd);
       
 
     },
