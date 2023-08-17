@@ -4,7 +4,7 @@
             <JaugeSami :personnalAverage="personnelStatsAverage" :name="personnelName" :generalAverage="generalStatsAverage" />
         </div>
 
-        <div class="col-12 col-md-4">
+        <div class="col-12" :class="{'col-md-4' : !textDisplayClass}">
             <LastControlAndResult :date="personnelLastResultDate" :value="personnelLastResult" :textStart="textDisplayClass" v-if="personnelLastResultDate" />
         </div>
     </div>

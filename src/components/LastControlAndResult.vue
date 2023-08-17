@@ -1,12 +1,12 @@
 <template>
 	<div class="d-flex align-items-center" :class="className">
-		<div class="d-flex justify-content-between align-items-center">
+		<div class="d-flex align-items-center">
 			<i class="bi bi-clock-history"></i>
 	
 			<div class="m-2 fs-7">{{ lastResultDate }}</div>
 		</div>
 
-		<div class="fs-6 px-2 d-flex justify-content-center align-items-center rounded btnSAMI" :class="classNameBtn">
+		<div class="fs-6 px-2 d-flex justify-content-center align-items-center rounded" :class="classNameBtn">
 			{{ value }}
 		</div>
 	</div>
@@ -38,7 +38,16 @@ export default {
          * Retourne la bonne classe en fonction de la valeur
          */
 		classNameBtn() {
-            return classNameFromSAMI(this.value);
+			let classList = '';
+
+			classList += classNameFromSAMI(this.value);
+
+			if (!this.textStart) {
+				console.log('test', this.textStart);
+				classList += ' btnSAMI';
+			}
+
+            return classList;
         },
 
 		className() {
