@@ -1,27 +1,27 @@
 <template>
     <div class="container-fluid" v-if="!pending.load && !emptyData && !pending.stat">
         <div class="col-md-12 my-2 bg-white rounded p-3 shadow">
-            <h3 class="fs-4">Agenda</h3>
+            <h3 class="fs-4 text-center">Agenda</h3>
             <AgendaChart></AgendaChart>
         </div>
         <div class="col-md-12 my-2 bg-white rounded p-3 shadow">
-            <h3 class="fs-4">Répartition des réponses</h3>
+            <h3 class="fs-4 text-center">Répartition des réponses</h3>
             <GlobalPieChart></GlobalPieChart>
         </div>
         <div class="col-md-12 my-2 bg-white rounded p-3 shadow">
-            <h3 class="fs-4">Global</h3>
+            <h3 class="fs-4 text-center">Global</h3>
             <GlobalTable></GlobalTable>
         </div>
         <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
             <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
         </div>
-        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
+        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #f78c6bde;">
             <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
         </div>
         <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
             <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
         </div>
-        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
+        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #f78c6bde;">
             <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
         </div>
     </div>
