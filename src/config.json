@@ -85,7 +85,7 @@
         },
         "dev": {
             "pas": true,
-            "authServer": "172.17.0.4:3333",
+            "authServer": "127.0.0.1:3333",
             "tls": false
         }
     },
