@@ -107,9 +107,10 @@
 				<HabilitationList />
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'operateur'">
-				<!-- <AppMenuItem href="/habilitation/Agent"> 
-					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
-				</AppMenuItem> -->
+				<AppSearchBar @search="searchFIS()" :pending="personnel" @filterShow="displayFISFilter=true" @filterHide="displayFISFilter=false">
+					<PersonnelsFilter v-if="displayFISFilter"/>
+				</AppSearchBar>
+				
 				<template v-for="agent in personnelsActifsInCurrentStructure" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
 						<FicheIndividuelleSuiviItem :agent="agent" :stats="getStatsByAgent(agent.id)"/>
@@ -165,7 +166,8 @@ import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
 import FormStatistiques from './components/FormStatistiques.vue'
-import FicheIndividuelleSuiviItem from './components/List/FicheIndividuelleSuiviItem.vue'
+import FicheIndividuelleSuiviItem from './components/List/FicheIndividuelleSuiviItem.vue';
+import PersonnelsFilter from './components/filter/PersonnelsFilter.vue';
 
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
@@ -177,6 +179,7 @@ import { searchConsultation } from './js/search-consultation'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
 import HabilitationList from './components/habilitation/List.vue';
+import AppSearchBar from './components/pebble-ui/AppSearchBar.vue'
 
 export default {
 
@@ -194,7 +197,8 @@ export default {
 				actifs: true,
 				loadMore: false,
 				habilitations: true,
-				stats: true
+				stats: true,
+				personnel: false
 			},
 			isConnectedUser: false,
 			searchOptions: {
@@ -208,7 +212,8 @@ export default {
 			options: {
 				mode: 'default'
 			},
-			characteristicPersonnelStats: []
+			characteristicPersonnelStats: [],
+			displayFISFilter: false
 
 		}
 	},
@@ -597,10 +602,14 @@ export default {
 		getStatsByAgent(agentId) {
 			let statsByAgent = this.characteristicPersonnelStats.find(e => e.personnel_id == agentId);
 			return statsByAgent;
+		},
+
+		searchFIS() {
+
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList, AppSearchBar, PersonnelsFilter },
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
