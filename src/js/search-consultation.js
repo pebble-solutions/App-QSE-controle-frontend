@@ -26,7 +26,7 @@ var filtres = {
  * - {number} limit         Retourner maximum Y résultats depuis l'enregistrement X
  * - {number} formulaire    ID d'un formulaire limitant le retour
  * - {number} projet_id     ID d'un projet limitant le retour
- * - {array}  kns           Liste des valeur SAMI des controles filtrés 
+ * - {array}  result_var           Liste des valeur SAMI des controles filtrés 
  * @param {object} app Instance de AppJS
  * 
  * @returns {Promise<array>}
@@ -46,6 +46,7 @@ export function searchConsultation(searchParams, app) {
             environnement: 'private',
             start: searchParams.start ?? 0,
             limit: searchParams.limit ?? null,
+            locked : 1,
             dd_start: null,
             df_start: null,
             stats_dd: null,
@@ -54,7 +55,7 @@ export function searchConsultation(searchParams, app) {
             tlc: null,
             formulaire: searchParams.formulaire ?? null,
             projet_id: searchParams.projet_id ?? null,
-            result_var: null
+            result_var: searchParams.result_var ?? null
         };
     
         let url = `data/GET/${searchParams.mode}`;
@@ -67,7 +68,6 @@ export function searchConsultation(searchParams, app) {
         else if(searchParams.mode == 'kn_wtbcl'){
             query.dd_start = searchParams.dd;
             query.df_start = searchParams.df;
-            query.result_var = searchParams.kns;
             query.following_id = 0;
         } else if (['operateur', 'controleur', 'ss_controleur', 'ss_operateur','knsskn'].includes(searchParams.mode)) {
             query.dd_start = searchParams.dd;

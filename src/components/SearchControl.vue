@@ -24,10 +24,14 @@
                 <i class="bi bi-funnel" v-else></i>
             </button>
         </div>
-        <div v-if="mode == 'kn_wtbcl'" class="d-flex justify-content-around mt-2">
+        <div class="d-flex justify-content-around mt-2">
             <div v-for="(label, index) in valueSAMI" :key="index">
                 <input type="checkbox" class="btn-check" :id="'btn-' + index" autocomplete="off" :value="label" v-model="valueSAMI[index].value">
                 <label class="btn " :class="label.style" :for="'btn-' + index" style="width:40px">{{ index }}</label><br>
+            </div>
+            <div>
+                <input type="checkbox" class="btn-check" id="btn-sansResultat" autocomplete="off" :value="valueNOSami.label" v-model="valueNOSami.value">
+                <label class="btn btn-outline-secondary" for="btn-sansResultat" style="width:40px">{{ valueNOSami.label }}</label><br>
             </div>
 
         </div>
@@ -83,11 +87,13 @@ export default {
             },
 
             valueSAMI: {
-                S:{ value: false, style:'btn-outline-success'},
-                A:{ value: false, style:'btn-outline-primary'},
+                S:{ value: true, style:'btn-outline-success'},
+                A:{ value: true, style:'btn-outline-primary'},
                 M:{ value: true, style:'btn-outline-warning'},
                 I:{ value: true, style:'btn-outline-danger'},
-            }
+            },
+
+            valueNOSami : { label : '?',value : false }
         }
 
     },
@@ -172,6 +178,10 @@ export default {
         search() {
             let knsFilter = Object.keys(this.valueSAMI).filter((sami) => this.valueSAMI[sami].value);
 
+            if(this.valueNOSami.value == true){
+                knsFilter.push(this.valueNOSami.label);
+            }
+
             this.updateVal('pendingSearch', true)
                       searchConsultation({
                 dd: this.searchDd,
@@ -179,7 +189,7 @@ export default {
                 mode: this.searchMode,
                 start: this.searchStart,
                 limit: this.searchLimit,
-                kns: knsFilter
+                result_var: knsFilter
             }, this.$app).then(data => {
                 this.$emit('search-result', data);
                 this.setSearchResults(data);
