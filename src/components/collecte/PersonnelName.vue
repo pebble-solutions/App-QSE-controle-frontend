@@ -1,7 +1,7 @@
 <template>
     
     <span :class="classList">
-        <strong class="fs-7 d-block d-md-inline text-secondary" v-if="displayFonction">{{ fonctionLabel }}:</strong>
+        <strong class="fs-7 text-secondary" v-if="displayFonction">{{ fonctionLabel }}:</strong>
         {{ personnelLabel }}
     </span>
 

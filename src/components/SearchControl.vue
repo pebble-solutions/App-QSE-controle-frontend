@@ -7,14 +7,17 @@
                 {{currentModeLabel}}
             </button>
             <ul class="dropdown-menu">
-                <button type="button" class="dropdown-item d-flex align-items-center justify-content-between" 
-                    @click.prevent="setModeAndSearch(index)" 
-                    v-for="(label, index) in modesDict" 
-                    :key="index">
-                    {{label}}
-                    <i class="bi bi-check text-success" v-if="index == mode"></i>
-                </button>
-            </ul>
+      <li v-for="(label, index) in modesDict" :key="index">
+        <button
+          type="button"
+          class="dropdown-item d-flex align-items-center justify-content-between"
+          @click.prevent="setModeAndSearch(index)"
+        >
+          {{ label }}
+          <i class="bi bi-check text-success" v-if="index === mode"></i>
+        </button>
+      </li>
+    </ul>
         </div>
         <div class="input-group mb-1">
             <input type="date" class="form-control" id="dateDebutDone"  v-model="searchDd">
@@ -25,16 +28,44 @@
             </button>
         </div>
         <div class="d-flex justify-content-around mt-2">
-            <div v-for="(label, index) in valueSAMI" :key="index">
-                <input type="checkbox" class="btn-check" :id="'btn-' + index" autocomplete="off" :value="label" v-model="valueSAMI[index].value">
-                <label class="btn " :class="label.style" :for="'btn-' + index" style="width:40px">{{ index }}</label><br>
-            </div>
-            <div>
-                <input type="checkbox" class="btn-check" id="btn-sansResultat" autocomplete="off" :value="valueNOSami.label" v-model="valueNOSami.value">
-                <label class="btn btn-outline-secondary" for="btn-sansResultat" style="width:40px">{{ valueNOSami.label }}</label><br>
-            </div>
-
-        </div>
+      <div v-for="(label, index) in valueSAMI" :key="index">
+        <input
+          type="checkbox"
+          class="btn-check"
+          :id="'btn-' + index"
+          autocomplete="off"
+          :value="label"
+          v-model="valueSAMI[index].value"
+        />
+        <label
+          class="btn"
+          :class="label.style"
+          :for="'btn-' + index"
+          style="width: 40px"
+        >
+          {{ index }}
+        </label>
+        <br />
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          class="btn-check"
+          id="btn-sansResultat"
+          autocomplete="off"
+          :value="valueNOSami.label"
+          v-model="valueNOSami.value"
+        />
+        <label
+          class="btn btn-outline-secondary"
+          for="btn-sansResultat"
+          style="width: 40px"
+        >
+          {{ valueNOSami.label }}
+        </label>
+        <br />
+      </div>
+    </div>
     </form>
     
 </template>
