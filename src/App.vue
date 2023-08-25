@@ -108,7 +108,10 @@
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'operateur'">
 				<AppSearchBar @search="searchFIS()" :pending="personnel" @filterShow="displayFISFilter=true" @filterHide="displayFISFilter=false">
-					<PersonnelsFilter v-if="displayFISFilter"/>
+					<PersonnelsFilter v-if="displayFISFilter" v-model:contratDd="contratDdFilter" v-model:contratDf="contratDfFilter"
+					v-model:withContrat="withContratFilter"
+					v-model:withoutContrat="withoutContratFilter"
+					v-model:ordre="ordre"/>
 				</AppSearchBar>
 				
 				<template v-for="agent in personnelsActifsInCurrentStructure" :key="agent.id">
@@ -213,7 +216,13 @@ export default {
 				mode: 'default'
 			},
 			characteristicPersonnelStats: [],
-			displayFISFilter: false
+			displayFISFilter: false,
+
+			contratDdFilter: null,
+            contratDfFilter: null,
+            withContratFilter: true,
+            withoutContratFilter: false,
+			ordre: "Croissant"
 
 		}
 	},
@@ -604,8 +613,11 @@ export default {
 			return statsByAgent;
 		},
 
+		/**
+		 * Active Le filtre sur le personnel pour retourner les données en fonction des parametre choisis dans le filtre 
+		 */
 		searchFIS() {
-
+			
 		}
 	},
 
