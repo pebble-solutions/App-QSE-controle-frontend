@@ -149,6 +149,10 @@
 .progress-ht {
 	height: 25px !important;
 }
+.list-group-item.active {
+	z-index: 2;
+	color: #fff !important;
+}
 </style>
 
 <script>
