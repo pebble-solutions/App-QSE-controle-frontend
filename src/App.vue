@@ -391,8 +391,8 @@ export default {
 			this.$assets.addCollection('habilitationsCharacteristic', collection);
 		},
 
-		/** charge l'ensemble des veilles paramétrées
-		 * 
+		/** 
+		 * charge l'ensemble des veilles paramétrées 
 		 */
 		loadVeille() {
 			this.pending.habilitations = true;

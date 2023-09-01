@@ -26,18 +26,3 @@
     </div>
     
 </template>
-<style scoped>
-.progress-ht{
-    height: 30px;
-}
-</style>
-<script>
-import {mapState} from 'vuex'; 
-
-export default {
-
-    computed: {
-        ...mapState(['formulaires']),
-    }
-}
-</script>
