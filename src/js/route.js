@@ -26,9 +26,8 @@ export const ROUTES_NAMES = {
 				'consultationKndeKn',
 				'consultationKndeKnList',
 				'consultationKnssKn',
-				'consultationKnssKnList'
-
-				],
+				'consultationKnssKnList',
+				'editCollecte'],
 	habilitation: ['Habilitation',
 				'HabilitationPersonnel',
 				'HabilitationPersonnelStatus',

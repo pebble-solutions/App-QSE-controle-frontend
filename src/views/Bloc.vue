@@ -19,7 +19,7 @@
         <form-section :questions="lignes" :collecte="collecte" />
     </div>
     <div v-else>
-        <spinner></spinner>
+        <spinner></spinner> 
     </div>
 
     <FooterToolbar v-if="bloc" wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark">
@@ -35,6 +35,7 @@ import Spinner from '../components/pebble-ui/Spinner.vue';
 import FormSection from '../components/form/FormSection.vue';
 import BlocNavigationButtons from '../components/form/BlocNavigationButtons.vue';
 import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
+import { listMissingMandatoryQuestions } from '../js/collecte';
 
 export default {
     data() {
@@ -102,6 +103,7 @@ export default {
                 this.getReponses(collecte);
             })
             .then(() => {
+                this.alertQuestionManquante();
                 if (to === 'end') {
                     this.$router.push({name: 'CollectKnEnd', params:{id:this.collecte.id}});
                 }
@@ -133,6 +135,18 @@ export default {
 
                 this.refreshResponse(itemReponse);
             })
+        },
+
+        /**
+         * Verifie si les questions obligatoires ont des réponses.
+         *  - Si aucune réponse n'est fournie, alors une alerte est envoyée
+         */
+        alertQuestionManquante(){
+            const questionsManquantes = listMissingMandatoryQuestions(this.collecte?.reponses, this.lignes)
+
+            if (questionsManquantes.length) {
+                alert("Question obligatoire non renseignée : " + questionsManquantes.join(", "));
+            }
         }
         
     },

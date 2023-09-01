@@ -2,25 +2,39 @@
 <template>
     <div class="container" v-if="!pending.load && !emptyData && !pending.stat">
         <div class="row">
-            <div class="card my-2 overflow-auto">
-                <div class="card-body">
-                    <h3 class="card-title fs-4">Agenda</h3>
-                    <AgendaChart></AgendaChart>
+            <div class="col-12">
+                <div class="card my-2 overflow-auto">
+                    <div class="card-body">
+                        <h3 class="card-title fs-4">Agenda</h3>
+                        <AgendaChart></AgendaChart>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="card my-2">
-                <div class="card-body">
-                    <h3 class="card-title fs-4">Répartition des réponses</h3>
-                    <GlobalPieChart></GlobalPieChart>
+            <div class="col-6">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h3 class="card-title fs-4">Répartition des réponses</h3>
+                        <GlobalPieChart></GlobalPieChart>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h3 class="card-title fs-4">Répartition des kn en retard</h3>
+                        <RetardKn></RetardKn>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="card my-2">
-                <div class="card-body">
-                    <GlobalTable></GlobalTable>
+            <div class="col-12">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <GlobalTable></GlobalTable>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,6 +57,7 @@ import StatHabilitation from '../components/googleCharts/StatHabilitation.vue'
 import StatProjet from '../components/googleCharts/StatProjet.vue'
 import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
+import RetardKn from '../components/googleCharts/RetardKn.vue'
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import { mapState } from 'vuex'
 
@@ -57,7 +72,7 @@ export default {
             emptyData: false,
         }
     },
-    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable, Spinner },
+    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable, RetardKn, Spinner },
     computed: {
         ...mapState(['requeteStat', 'pending']),
     },

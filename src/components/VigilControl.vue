@@ -10,7 +10,7 @@
                             <!-- - dernier contrôle le {{changeFormatDateLit(control.date_last)}}  -->
                         </div>
                         <div class="col">
-                            <progress-bar :dd="new Date(control.date_last)" :df="delay(control.date_last)"></progress-bar>
+                            <progress-bar :dd="new Date(control.date_last)" :df="delay(control.date_last)" label="contrôle"></progress-bar>
             
                         </div>
                         <div class="col-auto text-end">
@@ -51,7 +51,7 @@ export default{
         idForm: {
             type:Number,
             required: true
-        }
+        },
     },
 
     components: {ProgressBar, AlertMessage, Spinner}, //RouterLink

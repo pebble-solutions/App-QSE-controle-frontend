@@ -64,6 +64,10 @@ export function padTime(time) {
  * @returns {String}
  */
 export function sqlDateToIso(date) {
+	if (typeof date === "object") {
+		return date;
+	}
+	
     if (date) {
         date = date.replace(/(\d{4}-\d{2}-\d{2})\s/, '$1T');
         return date;
@@ -146,6 +150,48 @@ export function dateToTime(val, refVal) {
 export function dateFormat(el) {
     date.locale(fr);
     return date.format(new Date(el.replace(' ', 'T')), 'DD MMM YYYY')
+}
+
+/**
+ * Formate une date pour l'affichage.
+ * 
+ * Formatage retournée : 4 oct. 2023
+ * 
+ * @param {string|Date} val Une date au format YYYY-MM-DD HH:II:SS
+ * 
+ * @returns {string}
+ */
+export function getDisplayFormatedDate(val) {
+    if (!val) {
+        return null;
+    }
+    
+    let d = val instanceof Date ? val : getDateFromSQL(val);
+    date.locale(fr);
+    return date.format(d, 'D MMM YYYY');
+}
+
+/**
+ * Retourne un objet Date depuis une date SQL
+ * 
+ * @param {string} val Une date au format SQL
+ * 
+ * @returns {Date}
+ */
+export function getDateFromSQL(val) {
+    val = val ? val.replace(' ', 'T') : null;
+    return new Date(val);
+}
+
+/**
+ * Retourne la valeur de la date ou NULL
+ * 
+ * La fonction retourne null si la valeur entrée est null ou égale à 0000-00-00( 00:00:00)
+ * @param {string} val Une date au format SQL
+ * @returns {string}
+ */
+export function getValue(val) {
+    return val && val !== "0000-00-00 00:00:00" && val !== "0000-00-00" ? val : null;
 }
 
 Date.prototype.getYearDay = function() { //1 - 366
@@ -253,6 +299,14 @@ export function listIntervalDays(dateStart, dateEnd) {
 	return days;
 }
 
+/**
+ * Retourne la liste des semaines entre une date de début et une date de fin
+ * 
+ * @param {string} dateStart 	Date de début de l'interval
+ * @param {string} dateEnd 		Date de fin de l'interval
+ * 
+ * @returns {Array}
+ */
 export function listIntervalWeeks(dateStart, dateEnd) {
 	let weeks = [];
 
@@ -275,7 +329,8 @@ export function listIntervalWeeks(dateStart, dateEnd) {
 			weeks.push({
 				n,
 				start,
-				week: start.getWeek()
+				week: start.getWeek(),
+				year: start.getFullYear()
 			});
 
 			start = null;
@@ -289,7 +344,8 @@ export function listIntervalWeeks(dateStart, dateEnd) {
 		weeks.push({
 			n,
 			start,
-			week: start.getWeek()
+			week: start.getWeek(),
+			year: start.getFullYear()
 		});
 	}
 

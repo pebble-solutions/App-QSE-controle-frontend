@@ -1,6 +1,4 @@
 <template>
-   
-
     <div v-if="collecte">
         <div class="card my-2">
             <div class="card-header" v-if="timeline">
@@ -69,10 +67,12 @@
                         <strong class="d-block">Aucune action corrective proposée</strong>
                     </div>
                     <alert-message
-                        icon="bi-info-square-fill" 
-                        className="mt-3" 
+                        :variant="classNameFromSAMI(collecte.following_result, {s: 'success', a: 'primary', m: 'warning', i: 'danger'})" 
+                        className="mt-3 py-2 d-flex align-items-center" 
                         v-if="collecte.following_id">
-                        Bouclage #{{ collecte.following_id }}
+
+                        <sami-badge :result="collecte.following_result" />
+                        <span class="ms-2">Bouclé par le contrôle #{{ collecte.following_id }}</span>
                     </alert-message>
                 </template>
             </div>
@@ -80,19 +80,24 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <template v-if=" levelUser >= 5">
-                                <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-4">
-                                    <i class="bi bi-lock-fill"></i>
-                                    Déverrouiller
-                                </button>
-                                <button class="btn btn-sm btn-warning me-4" v-else disabled>
-                                    <i class="bi bi-unlock-fill"></i>
-                                    Déverrouillé
-                                </button>
+                            <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-4">
+                                <i class="bi bi-lock-fill"></i>
+                                Déverrouiller
+                            </button>
+                            <button class="btn btn-sm btn-warning me-4" v-else disabled>
+                                <i class="bi bi-unlock-fill"></i>
+                                Déverrouillé
+                            </button>
                         </template>
-                        <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="displayNotes()" v-if="collecte?.notes?.length >= 1">
+                        <button class="position-relative btn btn-sm btn-outline-admin" @click.prevent="$router.push($route.path + '/edit')" v-if="levelUser >= 5">
+                            <i class="bi bi-pencil-fill"></i>
+                            Modifier
+                        </button>
+                        <button class="position-relative btn btn-sm btn-outline-secondary me-4" @click.prevent="toggleNotes()" v-if="collecte.notes.length >= 1">
                             Historique
                             <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
                         </button>
+
                     </div>
                     <div>
                         <button v-if="locked && !collecte.unlocked" class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
@@ -100,17 +105,6 @@
                             Exporter
                         </button>
                     </div>
-                </div>
-                <div>
-                    <div v-if="readNotes" class="list-group col-12 col-md-6 mt-2">
-                    <div class ="list-group-item" v-for="note in collecte.notes" :key="note.id">
-                        <div class="d-flex flex-column">
-                            <span>{{changeFormatDateLit(note.date)}}</span>
-                            <span>{{note.titre }}</span>
-                            <span>{{note.note}}</span>
-                        </div>
-                    </div>
-                </div>
                 </div>
                 
             </div>
@@ -150,6 +144,7 @@
                                         <span class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
                                             {{question.ligne}}
                                         </span>
+                                        <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
                                         <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)" v-if="['sami', 'integer', 'float'].includes(question.type)">{{getQuestionReponse(question)}}</strong>
                                     </div>
 
@@ -185,6 +180,15 @@
             variant="warning" v-else>
                 Ce contrôle n'est pas consultable car il n'est pas clôturé.
         </alert-message>
+
+        <app-modal :closeBtn="true" @modal-hide="toggleNotes(false)" title="Historique des opérations" v-if="readNotes">
+            <div>
+                <div class="my-2 card card-body" v-for="note in collecte.notes" :key="note.id">
+                    <div class="text-secondary mb-2 text-center">{{changeFormatDateLit(note.date)}} <strong>{{note.titre }}</strong></div>
+                    <div class="note-content" v-html="note.note__md"></div>
+                </div>
+            </div>
+        </app-modal>
         
         <!-- <div class="text-center my-3" v-if="!readonly">
             <button type="button" class="btn btn-lg btn-outline-primary" @click="$emit('updateEdit')">
@@ -194,6 +198,14 @@
     </div>
 </template>
 
+<style lang="scss" scoped>
+.note-content {
+    p {
+        margin-bottom: 0 !important;
+    }
+}
+</style>
+
 <script>
 import {classNameFromSAMI, dateFormat} from '../js/collecte';
 import UserImage from './pebble-ui/UserImage.vue';
@@ -201,6 +213,8 @@ import FileItem from './dropzone/FileItem.vue';
 import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 import { mapActions } from 'vuex';
+import AppModal from './pebble-ui/AppModal.vue';
+import SamiBadge from './collecte/SamiBadge.vue';
 
 export default {
 
@@ -210,7 +224,7 @@ export default {
             pending: {
                 pdf: false
             },
-            locked: true
+            locked: true,
         }
     },
     props: {
@@ -230,11 +244,10 @@ export default {
     
                
     },
-   
 
     computed: {
 
-        
+
         /**
          * Racourcis vers la liste des blocs
          * @return {array}
@@ -293,10 +306,11 @@ export default {
 
         /**
          * change la valeur de readNotes permettant la visualisation ou non des notes
+         * 
+         * @param {boolean} val         Valeur à affecter. Si pas de valeur alors inversion
          */
-        displayNotes(){
-            this.readNotes =!this.readNotes
-
+        toggleNotes(val) {
+            this.readNotes = typeof val === "undefined" ? !this.readNotes : val;
         },
 
         /**
@@ -304,8 +318,7 @@ export default {
          * 
          * @param {id}  id de la collecte à déverouiller
          */
-
-         unlock(id){
+        unlock(id){
             this.pending.unlock = true
             let comment = prompt ('indiquer le motif de dévérouillage de la collecte #'+id);
             if (comment){
@@ -400,12 +413,13 @@ export default {
         /**
          * Retourne une classe CSS par rapport à une réponse S A M I
          * 
-         * @param {string} reponse S A M I
+         * @param {string} reponse      S A M I
+         * @param {object} dict         Dictionnaire des classes CSS
          * 
          * @return {string}
          */
-        classNameFromSAMI(reponse) {
-            return classNameFromSAMI(reponse);
+        classNameFromSAMI(reponse, dict) {
+            return classNameFromSAMI(reponse, dict);
         },
 
         /**
@@ -431,9 +445,9 @@ export default {
                 this.$app.apiGet('v2/controle/enquete/'+id+'/pdf')
                 .then((data) => {window.open(data.url, "_blank")})
                 .catch(this.$app.catchError).finally(() => this.pending.pdf = false);
-         }
+        },
     },
 
-    components: { UserImage, FileItem, Timeline, AlertMessage }
+    components: { UserImage, FileItem, Timeline, AlertMessage, AppModal, SamiBadge }
 }
-</script> 
+</script>
