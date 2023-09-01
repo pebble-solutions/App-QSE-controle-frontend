@@ -1,8 +1,8 @@
 <template>
+    <h2 class="text-center">Habilitations</h2>
     <div class="row">
-        <h1 class="text-white text-center">Habilitations</h1>
         <div class="col-12">
-            <div class="my-1 bg-white rounded shadow p-3">
+            <div class="card card-body">
     <h3 class="card-title fs-4 text-center">Habilitations contrôlées sur la période :</h3>
     <div class="text-center mt-2">
         <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto my-2"

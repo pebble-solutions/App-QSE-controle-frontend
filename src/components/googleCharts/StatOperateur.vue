@@ -1,6 +1,5 @@
 <template>
-    <div class="row">
-        <h1 class="text-white text-center">Opérateur</h1>
+        <h2 class="text-center">Opérateur</h2>
     <!--    <div class="col-6">
             <div class="card my-2">
                 <div class="card-body">
@@ -17,7 +16,6 @@
                 </div>
             </div>
         </div>-->
-    </div>
     <!--<div class="row">
         <div class="col-12">
             <div class="card my-2">

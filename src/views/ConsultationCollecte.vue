@@ -2,7 +2,7 @@
     <div class="container py-2 px-2">
         <spinner v-if="pending.collecte" />
         <template v-else>
-            <hab-monitor v-if="collecte.tli" :habId="collecte.tli" :collecte="collecte" :info="infosColl"></hab-monitor>
+            <hab-monitor v-if="collecte.tli && collecte.tlc == 'CharacteristicPersonnel'" :habId="collecte.tli" :collecte="collecte" :info="infosColl"></hab-monitor>
             <consultation-collecte-resume :collecte="collecte" :levelUser="login.type" :readonly="true" v-if="collecte"></consultation-collecte-resume>
             <router-view></router-view>
         </template>
@@ -68,7 +68,11 @@ export default {
             }).catch(this.$app.catchError).finally(() => this.pending.collecte = false);
         },
 
-
+        /**
+         * Charge une collecte depuis le serveur dans le store.
+         * 
+         * @param {number} id L'ID de la collecte à charger
+         */
         loadinfosCollecte(id) {
         this.$app.apiGet('v2/collecte', {
           id: id,

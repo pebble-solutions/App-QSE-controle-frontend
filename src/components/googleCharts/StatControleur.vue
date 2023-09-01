@@ -1,6 +1,6 @@
 <template>
+    <h2 class="text-center">Contrôleur</h2>
     <div class="row">
-        <h1 class="text-white text-center">Contrôleur</h1>
         <!--<div class="col-6">
             <div class="card my-2">
                 <div class="card-body">

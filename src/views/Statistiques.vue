@@ -1,28 +1,58 @@
 <template>
     <div class="container-fluid" v-if="!pending.load && !emptyData && !pending.stat">
-        <div class="col-md-12 my-2 bg-white rounded p-3 shadow">
-            <h3 class="fs-4 text-center">Agenda</h3>
-            <AgendaChart></AgendaChart>
+        <div class="row">
+            <div class="col-md-12 my-2">
+                <div class="bg-white rounded p-3 shadow">
+                    <h3 class="fs-4 text-center">Agenda</h3>
+                    <AgendaChart></AgendaChart>
+                </div>
+            </div>
         </div>
-        <div class="col-md-12 my-2 bg-white rounded p-3 shadow">
-            <h3 class="fs-4 text-center">Répartition des réponses</h3>
-            <GlobalPieChart></GlobalPieChart>
+        <div class="row">
+            <div class="col-6">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h3 class="card-title fs-4">Répartition des réponses</h3>
+                        <GlobalPieChart></GlobalPieChart>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card my-2">
+                    <div class="card-body">
+                        <h3 class="card-title fs-4">Répartition des kn en retard</h3>
+                        <RetardKn></RetardKn>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-12 my-2 bg-white rounded p-3 shadow">
-            <h3 class="fs-4 text-center">Global</h3>
-            <GlobalTable></GlobalTable>
-        </div>
-        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
-            <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
-        </div>
-        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #f78c6bde;">
-            <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
-        </div>
-        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #F78C6B;">
-            <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
-        </div>
-        <div class="col-md-12 my-3 rounded overflow-hidden p-2 shadow" style="background-color: #f78c6bde;">
-            <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
+        <div class="row">
+            <div class="col-md-12 my-3">
+                <div class="bg-white rounded p-3 shadow">
+                    <h3 class="fs-4 text-center">Global</h3>
+                    <GlobalTable></GlobalTable>
+                </div>
+            </div>
+            <div class="col-md-12 my-3">
+                <div class="rounded overflow-hidden p-2 shadow bg-white">
+                    <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
+                </div>
+            </div>
+            <div class="col-md-12 my-3">
+                <div class="rounded overflow-hidden p-2 shadow bg-white">
+                    <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
+                </div>
+            </div>
+            <div class="col-md-12 my-3">
+                <div class="rounded overflow-hidden p-2 shadow bg-white">
+                    <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
+                </div>
+            </div>
+            <div class="col-md-12 my-3">
+                <div class="rounded overflow-hidden p-2 shadow bg-white">
+                    <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
+                </div>
+            </div>
         </div>
     </div>
     <div v-else-if="pending.spinner">
@@ -41,6 +71,7 @@ import StatControleur from '../components/googleCharts/StatControleur.vue'
 import GlobalTable from '../components/googleCharts/GlobalTable.vue'
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import { mapState } from 'vuex'
+import RetardKn from '../components/googleCharts/RetardKn.vue'
 
 export default {
     data() {
@@ -53,7 +84,7 @@ export default {
             emptyData: false,
         }
     },
-    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable, Spinner },
+    components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable, Spinner, RetardKn },
     computed: {
         ...mapState(['requeteStat', 'pending']),
     },

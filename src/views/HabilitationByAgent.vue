@@ -22,8 +22,7 @@
                                         </span>
                                     </div>
                                     <ProgressBar
-                                    :dd="new Date(hab.dd)"
-                                    :df="new Date(hab.df)"
+                                    :value="hab"
                                     ></ProgressBar>
                                 </a>
                             </RouterLink>

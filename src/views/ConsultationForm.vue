@@ -10,7 +10,7 @@
                     <div class="col display-6 ">
                         <p class="fs-4 text-center">Sélectionnez un  <strong >questionnaire</strong>  dans la liste de gauche pour afficher l'ensemble des contrôles correspondants.</p>
                     </div>
-                </div>
+                </div> 
             </div>
         </div>  
     </div>
