@@ -1,13 +1,18 @@
 <template>
+    <h2 class="text-center">Habilitations</h2>
     <div class="row">
-        <h1>Habilitations</h1>
-        <div class="col-3">
-            <div class="card my-2">
-                <div class="card-body">
-                    <h3 class="card-title fs-4">Habilitations contrôlées sur la période</h3>
-                    <p>{{ currentHabilitations }}</p>
-                </div>
-            </div>
+        <div class="col-12">
+            <div class="card card-body">
+    <h3 class="card-title fs-4 text-center">Habilitations contrôlées sur la période :</h3>
+    <div class="text-center mt-2">
+        <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto my-2"
+            style="width: 60px; height: 60px; background-color: #FFD700; border: 3px solid #f6c23f;">
+            <span class="fs-3 text-white">{{ currentHabilitations }}</span>
+        </div>
+    </div>
+
+</div>
+
         </div>
         <!--<div class="col-6">
             <div class="card my-2">
@@ -32,7 +37,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <h3 class="card-title fs-4">Répartition des types d'habilitations</h3>
+                    <h3 class="card-title fs-4 text-center">Répartition des types d'habilitations</h3>
                     <HabilitationPieChart :requeteStat="requeteStat"></HabilitationPieChart>
                 </div>
             </div>
@@ -87,7 +92,7 @@ export default {
         },
     },
     components: { HabilitationPieChart, HabilitationTable },
-    mounted(){
+    mounted() {
         this.computeHabilitations();
     }
 }

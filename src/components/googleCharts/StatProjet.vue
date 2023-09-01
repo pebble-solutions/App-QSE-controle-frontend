@@ -1,6 +1,6 @@
 <template>
+    <h2 class="text-center">Projet</h2>
     <div class="row">
-        <h1>Projet</h1>
     <!--    <div class="col-6">
             <div class="card my-2">
                 <div class="card-body">
@@ -32,7 +32,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <h3 class="card-title fs-4">Nombre de KN par projet</h3>
+                    <h3 class="card-title fs-4 text-center">Nombre de KN par projet</h3>
                     <ProjectPieChart :requeteStat="requeteStat"></ProjectPieChart>
                 </div>
             </div>
