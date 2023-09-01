@@ -1,5 +1,5 @@
 <template>
-    <div class="text-nowrap badge rounded-pill border" :class="className">
+    <div class=" badge rounded-pill border" :class="className">
         <i class="bi me-1" :class="icon"></i>
         <span>{{ dateLabel }}</span>
     </div>

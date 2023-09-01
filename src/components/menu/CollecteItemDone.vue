@@ -1,20 +1,14 @@
 <template>
-
 	<div class="d-flex align-items-center justify-content-between">
-		<div class="me-2">
+		<div class="me-4">
 			<UserImage :name="collecte.cible_nom ?? '?'"></UserImage>
 		</div>
 
 		<div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100 position-relative">
 			<div class="d-flex align-items-center">
-
-				<small class="fw-lighter me-2">#{{collecte.id}}</small>
-				<date-badge :collecte="collecte" />
-				<!-- <span v-if="collecte.date_start  && !collecte.unlocked"	class="badge rounded-pill ms-1 bg-warning">
-					<i class="bi bi-lock-fill" ></i>
-				</span> -->
-				<!-- <span v-if="collecte.locked" class="badge text-bg-info ms-2"><i class="bi bi-lock-fill" ></i></span> -->
-			</div>
+    <small class="fw-lighter me-3">#{{ collecte.id }}</small> <!-- Augmentation de la marge ici -->
+    <date-badge :collecte="collecte" />
+  </div>
 
 			<personnel-name :personnel-name="collecte.cible_nom" :personnel-id="collecte.cible__structure__personnel_id" />
 
@@ -23,20 +17,19 @@
 			<projet-name :name="collecte.projet_label" v-if="collecte.projet_label" />
 		</div>
 
-		<div 
-			v-if="collecte.result_var && collecte.result_var != 'null'" 
-			class="badge fs-6 text-uppercase border border-light position-relative" 
-			:class="classNameFromSAMI(collecte.result_var)">
-
+		<button v-if="collecte.result_var && collecte.result_var != 'null'"
+			class="badge fs-6 text-uppercase border border-light position-relative square-button"
+			:class="['text-bg', classNameFromSAMI(collecte.result_var)]"
+			:style="{ 'pointer-events': 'none', 'flex': '0 0 40px' }">
 			<Bouclage :collecte="collecte" v-if="hasBouclageInfo" />
-
-			{{collecte.result_var}}
-		</div>
-	<div v-else class="badge fs-6 text-uppercase" :class="classNameFromSAMI(collecte.result_var)">?</div>
-</div>
-
-	
-		
+			{{ collecte.result_var }}
+		</button>
+		<button v-else class="badge fs-6 text-uppercase square-button"
+			:class="['text-bg', classNameFromSAMI(collecte.result_var)]"
+			:style="{ 'pointer-events': 'none', 'flex': '0 0 40px' }">
+			?
+		</button>
+	</div>
 </template>
 <script>
 import { mapState } from 'vuex';
@@ -50,12 +43,12 @@ import Bouclage from '../badges/Bouclage.vue';
 
 
 export default {
-    props: {
-        collecte: Object
-    },
+	props: {
+		collecte: Object
+	},
 
-    computed: {
-        ...mapState(['formulaires']),
+	computed: {
+		...mapState(['formulaires']),
 
 		/**
 		 * Retourne le nom du formulaire correspondant à la collecte
@@ -80,10 +73,10 @@ export default {
 
 			return false;
 		}
-    },
+	},
 
-    methods: {
-        /**
+	methods: {
+		/**
 		 * Récupere le nom du groupe d'information de la collect via un id de
 		 * 
 		 * @param {number} groupInformationId l'id du group information de la collecte
@@ -100,16 +93,16 @@ export default {
 		},
 
 		/**
-         * Retourne une classe CSS par rapport à une réponse S A M I
-         * 
-         * @param {string} reponse S A M I
-         * 
-         * @return {string}
-         */
-        classNameFromSAMI(reponse) {
+		 * Retourne une classe CSS par rapport à une réponse S A M I
+		 * 
+		 * @param {string} reponse S A M I
+		 * 
+		 * @return {string}
+		 */
+		classNameFromSAMI(reponse) {
 			return classNameFromSAMI(reponse);
-        },
-    },
+		},
+	},
 
 	components: {
 		UserImage,
@@ -123,3 +116,11 @@ export default {
 
 
 </script>
+<style scoped>
+.square-button {
+	width: 40px;
+	/* Ajustez la largeur pour rendre les boutons carrés */
+	height: 40px;
+	/* Ajustez la hauteur pour rendre les boutons carrés */
+}
+</style>

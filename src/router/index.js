@@ -151,6 +151,104 @@ const routes = [
     ]
 
   },
+
+  {
+    path: '/consultation/kn_wtbcl',
+    name: 'consultationKnWtBcl',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/kn_wtbcl/:idCollecte',
+    name: 'consultationKnWtBclList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
+    path: '/consultation/ss_operateur',
+    name: 'consultationSsOperateur',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/ss_operateur/:idCollecte',
+    name: 'consultationSsOperateurList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
+    path: '/consultation/ss_controleur',
+    name: 'consultationSsControleur',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/ss_controleur/:idCollecte',
+    name: 'consultationSsControleurList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
+    path: '/consultation/operateur',
+    name: 'consultationOperateur',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/operateur/:idPersonnel',
+    name: 'consultationOperateurList',
+    component: () => import("../views/ConsultationPersonnelList.vue"),
+    children: [
+      {
+        path: ':idCollecte',
+        name: 'consultationCollecteOptionsOperateur',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteOptionsPersonnel.vue')
+      }
+    ]
+  },
+
+  {
+    path: '/consultation/controleur',
+    name: 'consultationControleur',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/controleur/:idPersonnel',
+    name: 'consultationControleurList',
+    component: () => import("../views/ConsultationPersonnelList.vue"),
+    children: [
+      {
+        path: ':idCollecte',
+        name: 'consultationCollecteOptionsControleur',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteOptionsPersonnel.vue')
+      }
+    ]
+
+  },
+
+  {
+    path: '/consultation/kndekn',
+    name: 'consultationKndeKn',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/kndekn/:idCollecte',
+    name: 'consultationKndeKnList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
+    path: '/consultation/knsskn',
+    name: 'consultationKnssKn',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/knsskn/:idCollecte',
+    name: 'consultationKnssKnList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
   {
     path: '/habilitation',
     name: 'Habilitation',
