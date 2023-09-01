@@ -1,5 +1,5 @@
 <template>
-    <div class="text-nowrap badge rounded-pill border" :class="className">
+    <div class=" badge rounded-pill border" :class="className">
         <i class="bi me-1" :class="icon"></i>
         <span>{{ dateLabel }}</span>
     </div>
@@ -24,7 +24,7 @@ export default {
          * @return {string}
          */
         date() {
-            const date = this.collecte.date_done ?? this.collecte.date;
+            const date = this.collecte.date_start ?? this.collecte.date;
             return date && date !== 'null' && date !== 'NULL' && date !== '0000-00-00 00:00:00' ? date : null;
         },
 

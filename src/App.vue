@@ -59,8 +59,15 @@
 					<Spinner />
 				</template>
 				<template v-else>
+					<input
+						type="text"
+						class="form-control my-2 px-2"
+						placeholder="Rechercher..."
+						v-model="displaySearch"
+						v-show="['operateur', 'controleur', 'collecte'].includes(searchOptions.mode)"
+					/>
 
-					<template v-for="res in searchResults" :key="res.id">
+					<template v-for="res in listConsultation(searchResults)" :key="res.id">
 						<app-menu-item v-if="this.searchOptions.mode == 'collecte'" :href="'/consultation/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
@@ -71,6 +78,27 @@
 						<app-menu-item v-else-if="this.searchOptions.mode == 'projet' && res.nb_done != 0"
 							:href="'/consultation/projet/' + res.id">
 							<project-item-done :num="res.nb_done" :projet="res"></project-item-done>
+						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'kn_wtbcl'" :href="'/consultation/kn_wtbcl/' + res.id">
+							<collecte-item-done :collecte="res"></collecte-item-done>
+						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'ss_operateur'" :href="'/consultation/ss_operateur/' + res.id">
+							<collecte-item-done :collecte="res"></collecte-item-done>
+						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'ss_controleur'" :href="'/consultation/ss_controleur/' + res.id">
+							<collecte-item-done :collecte="res"></collecte-item-done>
+						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'operateur' && res.nb_kn" :href="'/consultation/operateur/' + res.id">
+							<PersonnelItem :personnel="res" :num="res.nb_kn"></PersonnelItem>
+						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'controleur' && res.nb_kn" :href="'/consultation/controleur/' + res.id">
+							<PersonnelItem :personnel="res" :num="res.nb_kn"></PersonnelItem>
+						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'kndekn'" :href="'/consultation/kndekn/' + res.id">
+							<collecte-item-done :collecte="res"></collecte-item-done>
+						</app-menu-item>
+						<app-menu-item v-else-if="this.searchOptions.mode == 'knsskn'" :href="'/consultation/knsskn/' + res.id">
+							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
 					</template>
 					<alert-message className="m-1" v-if="!searchResults.length">
@@ -110,12 +138,12 @@
 				<!-- <AppMenuItem href="/habilitation/Agent"> 
 					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
 				</AppMenuItem> -->
-				<template v-for="agent in listActifs" :key="agent.id">
+				<template v-for="agent in personnelsActifsInCurrentStructure" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
 						<FicheIndividuelleSuiviItem :agent="agent" :stats="getStatsByAgent(agent.id)"/>
 					</AppMenuItem>
 				</template>
-				<div class="alert alert-info m-2" v-if="!listActifs?.length">
+				<div class="alert alert-info m-2" v-if="!personnelsActifsInCurrentStructure?.length">
 					Il n'y a pas de personnels concernés
 				</div>
 			</AppMenu>
@@ -162,6 +190,7 @@ import FormStats from './components/FormStats.vue'
 import FilterFormEcheancier from './components/echeancier/FilterForm.vue'
 import CollecteItem from './components/CollecteItem.vue'
 import FormulaireItem from './components/menu/FormulaireItem.vue';
+import PersonnelItem from './components/menu/PersonnelItem.vue'
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
 import FormStatistiques from './components/FormStatistiques.vue'
@@ -177,9 +206,6 @@ import { searchConsultation } from './js/search-consultation'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
 import HabilitationList from './components/habilitation/List.vue';
-// import SearchHab from './components/menu/SearchHab.vue'
-
-
 
 export default {
 
@@ -211,7 +237,8 @@ export default {
 			options: {
 				mode: 'default'
 			},
-			characteristicPersonnelStats: []
+			characteristicPersonnelStats: [],
+			displaySearch: ''
 
 		}
 	},
@@ -251,6 +278,21 @@ export default {
 		 */
 		appMenu() {
 			return this.cfg.appMenu;
+		},
+
+		/**
+		 * Filtre la liste actif du personnel de tte les structure pour retourner que le personnel actif de la structure currente
+		 * 
+		 * @return {array}
+		 */
+		personnelsActifsInCurrentStructure() {
+			let found = [];
+
+			if (this.listActifs) {
+				found = this.listActifs.filter(e => e.structure == this.$app.active_structure_id);
+			}
+
+			return found;
 		}
 	},
 
@@ -560,6 +602,15 @@ export default {
 			});
 		},
 
+		loadPersonnels(){
+			try {
+				this.$assets.getCollection("personnels").load();
+			}
+			catch (e) {
+				this.$app.catchError(e);
+			}
+		},
+
 		/**
 		 * Charge les states de characteristic personnel par personnel
 		 */
@@ -585,10 +636,46 @@ export default {
 		getStatsByAgent(agentId) {
 			let statsByAgent = this.characteristicPersonnelStats.find(e => e.personnel_id == agentId);
 			return statsByAgent;
+		},
+
+		/**
+		 * Retourne la liste des personnels triée en fonction de la recherche 
+		 * 
+		 * @param {array} list liste à filtrer
+		 * 
+		 * @returns {array}
+		 */
+		listConsultation(list) {
+			const { mode } = this.searchOptions;
+			if (mode === 'collecte') {
+				let collectesFiltred = list;
+
+				if (this.displaySearch) {
+					const searchInput = this.displaySearch.trim();
+					if (/^\d+$/.test(searchInput)) {
+						collectesFiltred = collectesFiltred.filter(item => searchInput.includes(item.id));
+					} else {
+						const searchPattern = new RegExp(searchInput, 'i');
+						collectesFiltred = collectesFiltred.filter(item => item.cible_nom?.toUpperCase().match(searchPattern));
+					}
+				}
+				return collectesFiltred;
+			} else if (mode === 'operateur' || mode === 'controleur') {
+				let personnels = list;
+				
+				if (list.length !== 0 && this.displaySearch !== '') {
+					personnels = personnels.filter(item => item.cache_nom.toUpperCase().match(this.displaySearch.toUpperCase()));
+				}
+				
+				return personnels;
+			} else {
+				return list;
+			}
 		}
+
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList, PersonnelItem },
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
@@ -603,7 +690,9 @@ export default {
 
 				this.initCollections();
 				this.loadCharacteristicPersonnelStats();
-				//this.loadCollectesCollection();
+
+				this.loadPersonnels();
+				this.loadCollectes();
 			}
 		});
 	}

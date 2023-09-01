@@ -8,7 +8,7 @@ import { mapState } from 'vuex';
 
 export default {
     computed: {
-        ...mapState(['pending']),
+        ...mapState(['pending', 'habilitationsTypes']),
     },
     methods: {
         /**
@@ -57,12 +57,25 @@ export default {
                 this.$app.catchError(e);
             }
         },
+        /**
+         * charge les habilitations type
+         */
+        async loadHabilitationsTypes() {
+            const collection = this.$assets.getCollection("habilitationsTypes");
+            try {
+                await collection.load();
+            }
+            catch (e) {
+                this.$app.catchError(e);
+            }
+        },
     },
 
     mounted() {
         this.loadHabilitationsPersonnels();
         this.loadPersonnels();
         this.loadHabilitationsCharacteristic();
+        this.loadHabilitationsTypes();
     }
 }
 

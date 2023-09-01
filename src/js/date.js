@@ -64,6 +64,10 @@ export function padTime(time) {
  * @returns {String}
  */
 export function sqlDateToIso(date) {
+	if (typeof date === "object") {
+		return date;
+	}
+	
     if (date) {
         date = date.replace(/(\d{4}-\d{2}-\d{2})\s/, '$1T');
         return date;
@@ -146,6 +150,48 @@ export function dateToTime(val, refVal) {
 export function dateFormat(el) {
     date.locale(fr);
     return date.format(new Date(el.replace(' ', 'T')), 'DD MMM YYYY')
+}
+
+/**
+ * Formate une date pour l'affichage.
+ * 
+ * Formatage retournée : 4 oct. 2023
+ * 
+ * @param {string|Date} val Une date au format YYYY-MM-DD HH:II:SS
+ * 
+ * @returns {string}
+ */
+export function getDisplayFormatedDate(val) {
+    if (!val) {
+        return null;
+    }
+    
+    let d = val instanceof Date ? val : getDateFromSQL(val);
+    date.locale(fr);
+    return date.format(d, 'D MMM YYYY');
+}
+
+/**
+ * Retourne un objet Date depuis une date SQL
+ * 
+ * @param {string} val Une date au format SQL
+ * 
+ * @returns {Date}
+ */
+export function getDateFromSQL(val) {
+    val = val ? val.replace(' ', 'T') : null;
+    return new Date(val);
+}
+
+/**
+ * Retourne la valeur de la date ou NULL
+ * 
+ * La fonction retourne null si la valeur entrée est null ou égale à 0000-00-00( 00:00:00)
+ * @param {string} val Une date au format SQL
+ * @returns {string}
+ */
+export function getValue(val) {
+    return val && val !== "0000-00-00 00:00:00" && val !== "0000-00-00" ? val : null;
 }
 
 Date.prototype.getYearDay = function() { //1 - 366
@@ -345,4 +391,29 @@ export function listIntervalMonths(dateStart, dateEnd) {
 	}
 
 	return months;
+}
+
+
+/**
+ * Convertie un nombre de jour en Y ans M month D jours
+ * 
+ * @param {number} $nbDays 
+ * 
+ * @return {string}
+ */
+export function daysToYearMonthDay(nbDays) {
+	const DaysInOneYear = 365.25;
+	const DaysInOneMonth = 30.4167;
+
+	let years = Math.floor(nbDays / DaysInOneYear);
+	let remainingDaysAfterYears = nbDays % DaysInOneYear;
+
+	let months = Math.floor(remainingDaysAfterYears / DaysInOneMonth);
+	let days = Math.floor(remainingDaysAfterYears % DaysInOneMonth);
+
+	let yearsLabel = years + " an" + (years > 1 ? 's ' : ' ');
+	let monthsLabel = months + ' mois ';
+	let andLabel = years || months ? 'et ' : '';
+
+	return (years > 0 ? yearsLabel : '') + (months > 0 ? monthsLabel : '') + (days > 1 ? andLabel + days + ' jours' : '');
 }

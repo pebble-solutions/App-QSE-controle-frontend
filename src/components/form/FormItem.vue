@@ -8,7 +8,7 @@
                 <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
 
                 <FormModuleSAMIHeader :value="value" v-if="question.type == 'sami'" />
-            </button>
+            </button> 
         </h3>
 
         <div :id="bodyId" class="accordion-collapse collapse show" :aria-labelledby="headerId">

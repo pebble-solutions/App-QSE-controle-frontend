@@ -69,6 +69,7 @@ import ConsultationCollecteResume from '../components/ConsultationCollecteResume
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
+import { listMissingMandatoryQuestions } from '../js/collecte';
 export default {
 
     components:{ ConsultationCollecteResume, Spinner, AlertMessage,  FooterToolbar }, 
@@ -108,23 +109,25 @@ export default {
          * Envoie les données a l'api pour valider le KN
          */
         validate() {
-            if (confirm('Une fois clôturé, le contrôle ne sera plus modifiable.')){
-                this.pending.validation = true;
-                this.$app.apiPost('v2/collecte/'+this.collecte.id+'/validate')
-                .then((data) => {
-                    return this.refreshCollectes([data]);
-                })
-                .then(() => {
-                    return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
-                        environnement: 'private'
-                    });
-                })
-                .then((collecte) => {
-                    this.refreshCollecte(collecte);
-                    this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
-
-                })
-                .catch(this.$app.catchError).finally(() => this.pending.validation = false);
+            if(this.alertQuestionManquante()) {
+                if (confirm('Une fois clôturé, le contrôle ne sera plus modifiable.')){
+                    this.pending.validation = true;
+                    this.$app.apiPost('v2/collecte/'+this.collecte.id+'/validate')
+                    .then((data) => {
+                        return this.refreshCollectes([data]);
+                    })
+                    .then(() => {
+                        return this.$app.apiGet('data/GET/collecte/'+this.collecte.id, {
+                            environnement: 'private'
+                        });
+                    })
+                    .then((collecte) => {
+                        this.refreshCollecte(collecte);
+                        this.$router.push({name:'CollecteVerif', params:{id:this.collecte.id}});
+    
+                    })
+                    .catch(this.$app.catchError).finally(() => this.pending.validation = false);
+                }
             }
         },
         /**
@@ -146,8 +149,24 @@ export default {
             else return 'bg-secondary'
         },
 
+        /**
+         * Verifie si les questions obligatoires ont des réponses.
+         *  - Si aucune réponse n'est fournie, alors une alerte est envoyée
+         * 
+         * @returns {boolean}
+         */
+        alertQuestionManquante() {
+            const lignes = this.collecte.formulaire.questions;
+            const questionsManquantes = listMissingMandatoryQuestions(this.collecte?.reponses, lignes);
 
-      
+            if (questionsManquantes.length) {
+                alert("Impossible de clôturer le contrôle car toutes les questions obligatoires n'ont pas été complétées : " + questionsManquantes.join(", "));
+                return false
+            } else {
+                return true
+            }
+
+        }
       
     },
     

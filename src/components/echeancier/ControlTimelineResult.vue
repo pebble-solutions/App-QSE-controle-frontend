@@ -16,7 +16,7 @@
         class="control-result-item rounded m-1" 
         :class="[SAMIClassName]" 
         :style="{ left: leftPx }"
-        :title="control.date_done">{{ control.sami }}</div>
+        :title="'Contrôlé le '+displayDate">{{ control.sami }}</div>
 
 </template>
 
@@ -27,6 +27,7 @@
 <script>
 
 import { classNameFromSAMI } from '../../js/collecte'
+import { dateFormat } from '../../js/date';
 
 export default {
     props: {
@@ -79,6 +80,13 @@ export default {
          */
         blankWeeksLeftPx() {
             return this.number2px(this.blankWeeksLeft);
+        },
+
+        /**
+         * Retourne la date du contrôle à l'affichage
+         */
+        displayDate() {
+            return dateFormat(this.control.date_start);
         }
     },
 

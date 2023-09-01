@@ -4,7 +4,7 @@
             <UserImage :name="nomPersonnel" v-if="nomPersonnel"></UserImage>
         </div>
         <div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100">
-            <div class="d-flex align-items-center text-secondary">
+            <div class="d-flex align-items-center">
                 <span class="fw-lighter me-2">#{{ habilitationPersonnel.id }}</span>
                 <strong v-if="!pending.habilitationsCharacteristic">{{ nomHabilitationType }}</strong>
             </div>
@@ -12,12 +12,11 @@
 
             <div v-if="habilitationPersonnel.last_control_result">
                 <span class="d-flex align-items-center">
-                    <span class="badge rounded-pill" :class="SAMIClassName">{{ habilitationPersonnel.last_control_result
-                    }}</span>
+                    <span class="badge rounded-pill" :class="SAMIClassName">{{ habilitationPersonnel.last_control_result }}</span>
                     <span class="ms-2">Il y a {{ yearsMonthsDays }}</span>
                 </span>
             </div>
-            <span class="badge border border-danger text-bg-light text-danger rounded-pill ms-2" v-else>
+            <span class="badge border border-danger text-bg-light text-danger rounded-pill" v-else>
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <span class="ms-1">Non contrôlé</span>
             </span>
@@ -148,7 +147,6 @@ export default {
         buildBadgeClass() {
             const duration = Math.ceil((365 / 12) * 6); //6 mois
             const daysUntilControl = duration - this.habilitationPersonnel.last_control_days;
-            console.log(daysUntilControl);
             if (daysUntilControl > 30) {
                 this.badgeClass = 'border-success text-success';
             } else if (daysUntilControl > 15 && daysUntilControl <= 30) {
@@ -160,27 +158,39 @@ export default {
             }
             this.daysUntilControl = daysUntilControl;
         },
+
+        /**
+         * Récupère les informations liées aux collections
+         */
+        initFromCollections() {
+            this.computeStackedBar();
+
+            if (!this.pending.personnels) {
+                this.getName();
+            }
+            if (!this.pending.habilitationsCharacteristic) {
+                this.getHabilitionName();
+            }
+
+            this.buildBadgeClass();
+        }
     },
     components: {
         UserImage
     },
-    async mounted() {
+
+    mounted() {
         let personnels = this.$assets.getCollection('personnels');
         let habilitationsCharacteristic = this.$assets.getCollection('habilitationsCharacteristic');
 
         this.personnels = personnels;
         this.habilitationsCharacteristic = habilitationsCharacteristic;
 
-        this.computeStackedBar();
-
-        if (!this.pending.personnels) {
-            this.getName();
-        }
-        if (!this.pending.habilitationsCharacteristic) {
-            this.getHabilitionName();
-        }
-
-        this.buildBadgeClass();
+        this.initFromCollections();
     },
+
+    updated() {
+        this.initFromCollections();
+    }
 }
 </script>

@@ -52,7 +52,7 @@ export default{
         idForm: {
             type:Number,
             required: true
-        }
+        },
     },
 
     components: {ProgressBar, AlertMessage, Spinner}, //RouterLink
