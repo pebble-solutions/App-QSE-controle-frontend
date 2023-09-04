@@ -61,14 +61,14 @@
 				<template v-else>
 
 					<template v-for="res in searchResults" :key="res.id">
-						<app-menu-item v-if="this.searchOptions.mode == 'collecte'" :href="'/consultation/' + res.id">
+						<app-menu-item v-if="searchOptions.mode === 'collecte'" :href="'/consultation/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'formulaire' && res.nb_done != 0"
+						<app-menu-item v-else-if="searchOptions.mode === 'formulaire' && res.nb_done != 0"
 							:href="'/consultation/formulaire/' + res.id">
 							<formulaire-item :num="res.nb_done" :formulaire="res"></formulaire-item>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'projet' && res.nb_done != 0"
+						<app-menu-item v-else-if="searchOptions.mode === 'projet' && res.nb_done != 0"
 							:href="'/consultation/projet/' + res.id">
 							<project-item-done :num="res.nb_done" :projet="res"></project-item-done>
 						</app-menu-item>
@@ -88,43 +88,15 @@
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode == 'habilitation'">
-				<!-- <AppMenuItem href="/habilitation/Habilitation"> 
-					<span class="fst-italic fw-lighter">Vue modèle par habilitations</span>
-				</AppMenuItem> -->
-
-				<!--
-				<SearchHab v-model:mode=options.mode ></SearchHab> -->
-				<!-- <template v-if="options.mode == 'byAgent'" >
-					
-				</template> -->
-				<!-- <template v-if="options.mode == 'byHab'" >
-				</template> -->
-				<!-- <template v-for="veille in veilleConfig" :key="veille.id">
-					<AppMenuItem :href="'/habilitationHab/'+veille.id">
-						{{ veille.nom }}
-					</AppMenuItem>
-				</template> -->
 				<HabilitationList />
 			</AppMenu>
+
 			<AppMenu v-else-if="listMode == 'operateur'">
-				<AppSearchBar @search="searchFIS()" :pending="personnel" @filterShow="displayFISFilter=true" @filterHide="displayFISFilter=false">
-					<PersonnelsFilter v-if="displayFISFilter" v-model:contratDd="contratDdFilter" v-model:contratDf="contratDfFilter"
-					v-model:withContrat="withContratFilter"
-					v-model:withoutContrat="withoutContratFilter"
-					v-model:ordre="ordre"/>
-				</AppSearchBar>
-				
-				<template v-for="agent in personnelsActifsInCurrentStructure" :key="agent.id">
-					<AppMenuItem :href="'/operateur/' + agent.id">
-						<FicheIndividuelleSuiviItem :agent="agent" :stats="getStatsByAgent(agent.id)"/>
-					</AppMenuItem>
-				</template>
-				<div class="alert alert-info m-2" v-if="!personnelsActifsInCurrentStructure?.length">
-					Il n'y a pas de personnels concernés
-				</div>
+				<PersonnelList />
 			</AppMenu>
+
 			<AppMenu v-else-if="listMode === 'statistiques'">
-				<FormStatistiques></FormStatistiques>
+				<FormStatistiques />
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode === 'echeancier'">
@@ -169,8 +141,6 @@ import FormulaireItem from './components/menu/FormulaireItem.vue';
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
 import FormStatistiques from './components/FormStatistiques.vue'
-import FicheIndividuelleSuiviItem from './components/List/FicheIndividuelleSuiviItem.vue';
-import PersonnelsFilter from './components/filter/PersonnelsFilter.vue';
 
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
@@ -182,7 +152,7 @@ import { searchConsultation } from './js/search-consultation'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
 import HabilitationList from './components/habilitation/List.vue';
-import AppSearchBar from './components/pebble-ui/AppSearchBar.vue'
+import PersonnelList from "@/components/PersonnelList.vue";
 
 export default {
 
@@ -216,14 +186,6 @@ export default {
 				mode: 'default'
 			},
 			characteristicPersonnelStats: [],
-			displayFISFilter: false,
-
-			contratDdFilter: null,
-            contratDfFilter: null,
-            withContratFilter: true,
-            withoutContratFilter: false,
-			ordre: "Croissant"
-
 		}
 	},
 
@@ -429,6 +391,22 @@ export default {
 			}).catch(this.$app.catchError).finally(this.pending.actifs = false);
 		},
 
+		loadAgentV2() {
+			let PersonnelFISCollection = new AssetsCollection(this, {
+				assetName: 'personnelsFIS',
+				apiRoute: 'v2/personnel',
+				requestPayload: {
+					contratDdFilter: this.contratDdFilter,
+					contratDfFilter: this.contratDfFilter,
+					withContratFilter: this.withContratFilter,
+					withoutContratFilter: this.withoutContratFilter,
+					ordre: this.ordre
+				}
+			})
+
+			this.$assets.addCollection('personnelsFIS', PersonnelFISCollection);
+		},
+
 
 		/**
 		 * Teste si la variable passé en argument n'a pas de valeur (0, null, [], "")
@@ -611,17 +589,10 @@ export default {
 		getStatsByAgent(agentId) {
 			let statsByAgent = this.characteristicPersonnelStats.find(e => e.personnel_id == agentId);
 			return statsByAgent;
-		},
-
-		/**
-		 * Active Le filtre sur le personnel pour retourner les données en fonction des parametre choisis dans le filtre 
-		 */
-		searchFIS() {
-			
 		}
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList, AppSearchBar, PersonnelsFilter },
+	components: {PersonnelList, AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, HabilitationList},
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
@@ -634,6 +605,7 @@ export default {
 				this.loadHabilitation();
 				this.loadVeille();
 
+				this.loadAgentV2();
 				this.initCollections();
 				this.loadCharacteristicPersonnelStats();
 			}
