@@ -8,14 +8,14 @@
 
             <ul class="dropdown-menu w-100">
                 <li>
-                    <div class="dropdown-item" @click="searchOrdre = 'Croissant'">
+                    <div class="dropdown-item" @click="searchOrdre = 'croissant'">
                         <i class="bi bi-arrow-up"></i>
                         Croissant
                     </div>
                 </li>
 
                 <li>
-                    <div class="dropdown-item" @click="searchOrdre = 'Décroissant'">
+                    <div class="dropdown-item" @click="searchOrdre = 'décroissant'">
                         <i class="bi bi-arrow-down"></i>
                         Décroissant
                     </div>
@@ -51,22 +51,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- <div class="mb-2">
-            <h6 class="col-12 mb-2">Contact</h6>
-    
-            <div class="border-start border-secondary ms-1 ps-1">
-                <div class="input-group mb-1">
-                    <input type="number" class="form-control" placeholder="telephone">
-
-                    <input type="tex" class="btn-check" id="btn-check-with-contrat" v-model="withContrat" autocomplete="off">
-
-        
-                    <input type="checkbox" class="btn-check" id="btn-check-without-contrat" v-model="withoutContrat" autocomplete="off">
-
-                </div>
-            </div>
-        </div> -->
     </div>
 </template>
 
@@ -107,13 +91,13 @@ export default {
             searchWithContrat: true,
             searchWithoutContrat: false,
             searchAllContrat: false,
-            searchOrdre: "Croissant"
+            searchOrdre: "croissant"
         }
     },
 
     computed: {
         classIcon() {
-            if ('Croissant' == this.searchOrdre) {
+            if ('croissant' == this.searchOrdre) {
                 return 'bi-arrow-up';
             }
 

@@ -108,7 +108,6 @@ export default {
     },
 
     mounted() {
-
         if (this.stats) {
             this.nbTotalHabilitation = this.stats.total;
             this.nbExpired = this.stats.expired;

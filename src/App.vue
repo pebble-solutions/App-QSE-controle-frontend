@@ -92,8 +92,10 @@
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode == 'operateur'">
-				<PersonnelList />
-			</AppMenu>
+        <PersonnelList v-slot="PersonnelProps">
+          <FicheIndividuelleSuiviItem :agent="PersonnelProps.personnel" :stats="getStatsByAgent(PersonnelProps.personnel.id)" v-if="PersonnelProps"/>
+        </PersonnelList>
+      </AppMenu>
 
 			<AppMenu v-else-if="listMode === 'statistiques'">
 				<FormStatistiques />
@@ -153,6 +155,7 @@ import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
 import HabilitationList from './components/habilitation/List.vue';
 import PersonnelList from "@/components/PersonnelList.vue";
+import FicheIndividuelleSuiviItem from "@/components/List/FicheIndividuelleSuiviItem.vue";
 
 export default {
 
@@ -195,7 +198,7 @@ export default {
 		/**
 		 * Détermine quelle liste afficher :
 		 * collecte, programmation
-		 * 
+		 *
 		 * @return {string}
 		 */
 		listMode() {
@@ -219,7 +222,7 @@ export default {
 
 		/**
 		 * Retourne les items du menu depuis la configuration
-		 * 
+		 *
 		 * @return {array}
 		 */
 		appMenu() {
@@ -228,7 +231,7 @@ export default {
 
 		/**
 		 * Filtre la liste actif du personnel de tte les structure pour retourner que le personnel actif de la structure currente
-		 * 
+		 *
 		 * @return {array}
 		 */
 		personnelsActifsInCurrentStructure() {
@@ -248,8 +251,8 @@ export default {
 		},
 
 		/**
-		 * Analyse la liste demandée afin de charger les données sur le serveur 
-		 * 
+		 * Analyse la liste demandée afin de charger les données sur le serveur
+		 *
 		 * @param {string} val Nouvelle liste demandée
 		 */
 		listMode(val, prevVal) {
@@ -286,7 +289,7 @@ export default {
 
 		/**
 		 * Charge les collectes depuis le serveur et les stock dans le store
-		 * 
+		 *
 		 * @return {Promise<object>}
 		 */
 		loadCollectes() {
@@ -295,7 +298,7 @@ export default {
 
 		/**
 		 * Charge l'ensemble des formulaires depuis le serveur et les stock dans le store
-		 * 
+		 *
 		 * @return {Promise<object>}
 		 */
 		loadFormulaires() {
@@ -338,7 +341,7 @@ export default {
 		},
 
 		/** charge l'ensemble des veilles paramétrées
-		 * 
+		 *
 		 */
 		loadVeille() {
 			this.pending.habilitations = true;
@@ -351,10 +354,10 @@ export default {
 
 		/**
 		 * Charge une ressrouce depuis le serveur vers le store.
-		 * 
+		 *
 		 * @param {string} ressourceName 	Le nom de la ressource à charger dans le store ('collecte', 'formulaire')
 		 * @param {object} query			Paramètres passés via GET
-		 * 
+		 *
 		 * @return {Promise<object>}
 		 */
 		loadRessources(ressourceName, query) {
@@ -391,28 +394,11 @@ export default {
 			}).catch(this.$app.catchError).finally(this.pending.actifs = false);
 		},
 
-		loadAgentV2() {
-			let PersonnelFISCollection = new AssetsCollection(this, {
-				assetName: 'personnelsFIS',
-				apiRoute: 'v2/personnel',
-				requestPayload: {
-					contratDdFilter: this.contratDdFilter,
-					contratDfFilter: this.contratDfFilter,
-					withContratFilter: this.withContratFilter,
-					withoutContratFilter: this.withoutContratFilter,
-					ordre: this.ordre
-				}
-			})
-
-			this.$assets.addCollection('personnelsFIS', PersonnelFISCollection);
-		},
-
-
 		/**
 		 * Teste si la variable passé en argument n'a pas de valeur (0, null, [], "")
-		 * 
+		 *
 		 * @param {mixed} val Une valeur à tester
-		 * 
+		 *
 		 * @return {boolean}
 		 */
 		noVal(val) {
@@ -423,7 +409,7 @@ export default {
 
 		/**boucle dans la collection de formulaire pour voir s'il existe un nb.todo!=0
 		 * si tous sont nuls, retourne false
-		 * 
+		 *
 		 * @param	{array}	le tableau à parcourir
 		 */
 		exist(val) {
@@ -447,7 +433,7 @@ export default {
 
 		/**
 		 * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
-		 * 
+		 *
 		 * @param	{string}	mode 'set' par défaut: enregistre le retour de l'api et 'append' ajoute le retour de l'api aux résultats deja enregistrés
 		 */
 		loadConsultations(mode) {
@@ -499,7 +485,7 @@ export default {
 
 		/**
 		 * Affiche la liste des contrôles programmés avec le formulaire
-		 * 
+		 *
 		 * @param {object} collecte
 		 */
 		routeToVue(mode) {
@@ -509,9 +495,9 @@ export default {
 
 		/**
 		 * Retourne le nom du groupe auquel appartient la route à analyser.
-		 * 
+		 *
 		 * @param {string} routeName Nom de la route à analyser
-		 * 
+		 *
 		 * @return {string}
 		 */
 		getRouteGroupName(routeName) {
@@ -529,7 +515,6 @@ export default {
 		 * Initialise l'ensemble des collections disponibles dans l'application
 		 */
 		initCollections() {
-
 			const collections = [
 				{
 					name: "habilitationsTypes",
@@ -550,7 +535,19 @@ export default {
 					name: "habilitationsPersonnels",
 					assetName: "habilitationsPersonnels",
 					apiRoute: "v2/characteristic/personnel"
-				}
+				},
+        {
+          name: "personnelsFiltered",
+          assetName: "personnelsFiltered",
+          apiRoute: "v2/personnel",
+          requestPayload: {
+              contratDdFilter: this.contratDdFilter,
+              contratDfFilter: this.contratDfFilter,
+              withContratFilter: this.withContratFilter,
+              withoutContratFilter: this.withoutContratFilter,
+              ordre: this.ordre
+          }
+        }
 			];
 
 			collections.forEach((c) => {
@@ -564,36 +561,38 @@ export default {
 			});
 		},
 
-		/**
-		 * Charge les states de characteristic personnel par personnel
-		 */
-		loadCharacteristicPersonnelStats() {
-			this.pending.stats = true;
 
-			this.pending.actifs = true;
-			this.$app.apiGet('v2/characteristicPersonnel/stats')
-			.then((data) => {
-				this.characteristicPersonnelStats = data;
-			})
-			.catch(this.$app.catchError)
-			.finally(this.pending.stats = false);
-		},
+    /**
+     * Retourn les states du personnel qui correspond a l'agent fournis en parametre
+     *
+     * @param {integer} personnelId l'id du personnel
+     *
+     * @return {array}
+     */
+    getStatsByAgent(personnelId) {
+      let statsByAgent = this.characteristicPersonnelStats.find(e => e.personnel_id == personnelId);
+      return statsByAgent;
+    },
 
-		/**
-		 * Retourn les states du personnel qui correspond a l'agent fournis en parametre
-		 * 
-		 * @param {integer} agentId l'id de l'agent
-		 * 
-		 * @return {array}
-		 */
-		getStatsByAgent(agentId) {
-			let statsByAgent = this.characteristicPersonnelStats.find(e => e.personnel_id == agentId);
-			return statsByAgent;
-		}
-	},
+    /**
+     * Charge les states de characteristic personnel par personnel
+     */
+    loadCharacteristicPersonnelStats() {
+      this.pending.stats = true;
 
-	components: {PersonnelList, AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, HabilitationList},
-	
+      this.$app.apiGet('v2/characteristicPersonnel/stats')
+          .then((data) => {
+            this.characteristicPersonnelStats = data;
+          })
+          .catch(this.$app.catchError)
+          .finally(this.pending.stats = false);
+    },
+
+  },
+
+	components: {
+    FicheIndividuelleSuiviItem, PersonnelList, AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, HabilitationList},
+
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
 			this.$router.push('/programmation');
@@ -604,10 +603,9 @@ export default {
 				this.loadHabilitationType();
 				this.loadHabilitation();
 				this.loadVeille();
-
-				this.loadAgentV2();
+        this.loadCharacteristicPersonnelStats();
 				this.initCollections();
-				this.loadCharacteristicPersonnelStats();
+
 			}
 		});
 	}
