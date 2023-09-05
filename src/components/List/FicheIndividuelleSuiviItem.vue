@@ -50,7 +50,7 @@
 export default {
     props: {
         agent: Object,
-        stats: Array
+        stats: Object
     },
 
     data() {
