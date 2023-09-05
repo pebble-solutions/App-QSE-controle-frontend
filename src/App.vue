@@ -92,8 +92,8 @@
 			</AppMenu>
 
 			<AppMenu v-else-if="listMode == 'operateur'">
-        <PersonnelList v-slot="PersonnelProps">
-          <FicheIndividuelleSuiviItem :agent="PersonnelProps.personnel" :stats="getStatsByAgent(PersonnelProps.personnel.id)" v-if="PersonnelProps"/>
+        <PersonnelList v-slot="personnelProps">
+          <FicheIndividuelleSuiviItem :agent="personnelProps.personnel" :stats="getStatsByAgent(personnelProps.personnel.id)" v-if="personnelProps"/>
         </PersonnelList>
       </AppMenu>
 

@@ -1,52 +1,51 @@
 <template>
     <div class="container py-2 px-2">
         <Spinner v-if="pending.agent"></Spinner>
+
         <template v-else>
             <div class="d-flex align-items-baseline">
                 <span class="me-3 fw-lighter"># {{ $route.params.id }}</span>
                 <h2 class="mb-3">
-                     {{currentPersonnel.cache_nom }}
+                     {{ currentPersonnel.cache_nom }}
                 </h2>
             </div>
 
-                <div class="row">
-                    <div class="col-12 col-md-6" >
-                        <h3 class="mx-2">Liste des habilitations</h3>
-                        <div class="list-group" v-for="hab in habilitationFromPerso" :key="hab.id">
-                            <RouterLink :to="'/operateur/'+$route.params.id+'/'+hab.id" custom v-slot="{ navigate, href, isActive }">
-                                <a :href="href" @click="navigate"  class="list-group-item list-group-item-action mb-2" :class="{'active': isActive}">
-                                    <div class="d-flex justify-content-between">
-                                        <span> {{returnNameHab(hab.habilitation_type_id)}}</span>
-                                        <span>
-                                            échéance le  {{ changeFormatDateLit(hab.df) }}
-                                        </span>
-                                    </div>
-                                    <ProgressBar
-                                    :value="hab"
-                                    ></ProgressBar>
-                                </a>
-                            </RouterLink>
-                            
-                        </div>
-                    </div>
-                    <div class="col"> 
-                      <RouterView></RouterView>
+            <div class="row">
+                <div class="col-12 col-md-6" >
+                    <h3 class="mx-2">Liste des habilitations</h3>
+                    <div class="list-group" v-for="hab in habilitationFromPerso" :key="hab.id">
+                        <RouterLink :to="'/operateur/'+$route.params.id+'/'+hab.id" custom v-slot="{ navigate, href, isActive }">
+                            <a :href="href" @click="navigate"  class="list-group-item list-group-item-action mb-2" :class="{'active': isActive}">
+                                <div class="d-flex justify-content-between">
+                                    <span> {{ returnNameHab(hab.habilitation_type_id) }}</span>
+                                    <span>
+                                        échéance le  {{ changeFormatDateLit(hab.df) }}
+                                    </span>
+                                </div>
+                                <ProgressBar
+                                :value="hab"
+                                ></ProgressBar>
+                            </a>
+                        </RouterLink>
+
                     </div>
                 </div>
-                
-                <alert-message v-if="!habilitationFromPerso.length" class="m-3" variant="warning" icon="bi-exclamation-square">Cet opérateur n'a pas été habilité </alert-message>
-            </template>
-        </div>
-        
-    </template>
+                <div class="col">
+                  <RouterView></RouterView>
+                </div>
+            </div>
+
+            <alert-message v-if="!habilitationFromPerso.length" class="m-3" variant="warning" icon="bi-exclamation-square">Cet opérateur n'a pas été habilité </alert-message>
+        </template>
+    </div>
+</template>
+
 <script>
 import { mapState } from 'vuex';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import {dateFormat} from '../js/collecte';
 import ProgressBar from '../components/ProgressBar.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
-// import VigilControl from '../components/VigilControl.vue';
-
 
 export default{
     components: {Spinner, ProgressBar, AlertMessage }, //VigilControl
@@ -62,13 +61,13 @@ export default{
     },
 
     computed: {
-        ...mapState(['habilitationType', 'listActifs']),
+        ...mapState(['habilitationType', "personnelsFiltered"]),
 
         /**
          * retourne les informations du personnel depuis l'id passé dans l'url
          */
         currentPersonnel() {
-            return this.listActifs.find((e) => e.id == this.$route.params.id);
+            return this.personnelsFiltered.find((e) => e.id == this.$route.params.id);
         }
 
         

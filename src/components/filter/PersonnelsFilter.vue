@@ -133,11 +133,21 @@ export default {
         updateVal(filterLabel) {
             this[filterLabel] = !this[filterLabel];
 
-            if (filterLabel == 'searchAllContrat') {
-                this.searchWithContrat = false;
-                this.searchWithoutContrat = false;
+            if (filterLabel === 'searchAllContrat') {
+                if (this.searchAllContrat) {
+                    this.searchWithContrat = false;
+                    this.searchWithoutContrat = false;
+                } else {
+                    this.searchWithContrat = true;
+                }
             } else {
-                this.searchAllContrat = false;
+                if (this.searchWithContrat && this.searchWithoutContrat) {
+                    this.searchAllContrat = true;
+                    this.searchWithContrat = false;
+                    this.searchWithoutContrat = false;
+                } else {
+                    this.searchAllContrat = false;
+                }
             }
 
         }
