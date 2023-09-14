@@ -125,12 +125,12 @@
                                         <textarea class="form-control d-block mt-2" v-model="reponse.commentaire" placeholder="modifier le commentaire"></textarea>
                                     </div>
                                 </template>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
             
         
         <div class="d-flex align-items-center justify-content-between py-3">

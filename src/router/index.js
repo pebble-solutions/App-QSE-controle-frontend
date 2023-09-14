@@ -276,24 +276,26 @@ const routes = [
     path: '/operateur',
     name: 'Operateur',
     component: () => import("../views/Operateur.vue"),
-  },
-  {
-    path: '/operateur/:id',
-    name: 'habilitationByAgent',
-    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
     children: [
       {
-        path: ':idHab',
-        name: 'ControlHistory',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
+        path: ':id',
+        name: 'habilitationByAgent',
+        component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
         children: [
           {
-            path: ':idCollecte',
-            name: 'ControlView',
-            component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
+            path: ':idHab',
+            name: 'ControlHistory',
+            component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
+            children: [
+              {
+                path: ':idCollecte',
+                name: 'ControlView',
+                component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
+              }
+            ]
           }
         ]
-      }
+      },
     ]
   },
   {
