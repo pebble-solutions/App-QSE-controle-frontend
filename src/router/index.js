@@ -151,6 +151,104 @@ const routes = [
     ]
 
   },
+
+  {
+    path: '/consultation/kn_wtbcl',
+    name: 'consultationKnWtBcl',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/kn_wtbcl/:idCollecte',
+    name: 'consultationKnWtBclList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
+    path: '/consultation/ss_operateur',
+    name: 'consultationSsOperateur',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/ss_operateur/:idCollecte',
+    name: 'consultationSsOperateurList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
+    path: '/consultation/ss_controleur',
+    name: 'consultationSsControleur',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/ss_controleur/:idCollecte',
+    name: 'consultationSsControleurList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
+    path: '/consultation/operateur',
+    name: 'consultationOperateur',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/operateur/:idPersonnel',
+    name: 'consultationOperateurList',
+    component: () => import("../views/ConsultationPersonnelList.vue"),
+    children: [
+      {
+        path: ':idCollecte',
+        name: 'consultationCollecteOptionsOperateur',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteOptionsPersonnel.vue')
+      }
+    ]
+  },
+
+  {
+    path: '/consultation/controleur',
+    name: 'consultationControleur',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/controleur/:idPersonnel',
+    name: 'consultationControleurList',
+    component: () => import("../views/ConsultationPersonnelList.vue"),
+    children: [
+      {
+        path: ':idCollecte',
+        name: 'consultationCollecteOptionsControleur',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteOptionsPersonnel.vue')
+      }
+    ]
+
+  },
+
+  {
+    path: '/consultation/kndekn',
+    name: 'consultationKndeKn',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/kndekn/:idCollecte',
+    name: 'consultationKndeKnList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
+  {
+    path: '/consultation/knsskn',
+    name: 'consultationKnssKn',
+    component: () => import("../views/ConsultationOptions.vue"),
+  },
+  {
+    path: '/consultation/knsskn/:idCollecte',
+    name: 'consultationKnssKnList',
+    component: () => import("../views/ConsultationCollecte.vue"),
+
+  },
+
   {
     path: '/habilitation',
     name: 'Habilitation',
@@ -178,24 +276,26 @@ const routes = [
     path: '/operateur',
     name: 'Operateur',
     component: () => import("../views/Operateur.vue"),
-  },
-  {
-    path: '/operateur/:id',
-    name: 'habilitationByAgent',
-    component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
     children: [
       {
-        path: ':idHab',
-        name: 'ControlHistory',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
+        path: ':id',
+        name: 'habilitationByAgent',
+        component: () => import(/* webpackChunkName: "about" */ '../views/HabilitationByAgent.vue'),
         children: [
           {
-            path: ':idCollecte',
-            name: 'ControlView',
-            component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
+            path: ':idHab',
+            name: 'ControlHistory',
+            component: () => import(/* webpackChunkName: "about" */ '../views/ControlHistory.vue'),
+            children: [
+              {
+                path: ':idCollecte',
+                name: 'ControlView',
+                component: () => import(/* webpackChunkName: "about" */ '../views/ControlVue.vue')
+              }
+            ]
           }
         ]
-      }
+      },
     ]
   },
   {

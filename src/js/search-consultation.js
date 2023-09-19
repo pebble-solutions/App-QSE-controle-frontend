@@ -1,3 +1,18 @@
+
+var filtres = {
+    environnement: 'private',
+    start: 0,
+    limit: null,
+    dd_start: null,
+    df_start: null,
+    stats_dd: null,
+    stats_df: null,
+    done: null,
+    formulaire: null,
+    projet_id: null,
+    result_var: null
+};
+
 /**
  * Effectue une recherche sur les collectes en mode collecte, formulaire ou projet
  * 
@@ -11,6 +26,7 @@
  * - {number} limit         Retourner maximum Y résultats depuis l'enregistrement X
  * - {number} formulaire    ID d'un formulaire limitant le retour
  * - {number} projet_id     ID d'un projet limitant le retour
+ * - {array}  result_var           Liste des valeur SAMI des controles filtrés 
  * @param {object} app Instance de AppJS
  * 
  * @returns {Promise<array>}
@@ -22,7 +38,7 @@ export function searchConsultation(searchParams, app) {
     }
 
     return new Promise((resolve, reject) => {
-        if (!['collecte', 'projet', 'formulaire'].includes(searchParams.mode)) {
+        if (!['collecte', 'projet', 'formulaire','kn_wtbcl','ss_operateur','ss_controleur','operateur','controleur', 'kndekn', 'knsskn'].includes(searchParams.mode)) {
             throw new Error("Erreur dans le mode d'information sélectionné.");
         }
     
@@ -30,22 +46,39 @@ export function searchConsultation(searchParams, app) {
             environnement: 'private',
             start: searchParams.start ?? 0,
             limit: searchParams.limit ?? null,
-            dd_done: null,
-            df_done: null,
+            locked : 1,
+            dd_start: null,
+            df_start: null,
             stats_dd: null,
             stats_df: null,
             done: null,
+            tlc: null,
             formulaire: searchParams.formulaire ?? null,
-            projet_id: searchParams.projet_id ?? null
+            projet_id: searchParams.projet_id ?? null,
+            result_var: searchParams.result_var ?? null
         };
     
         let url = `data/GET/${searchParams.mode}`;
         
         if (searchParams.mode == 'collecte') {
-            query.dd_done = searchParams.dd;
-            query.df_done = searchParams.df;
+            query.dd_start = searchParams.dd;
+            query.df_start = searchParams.df;
             query.done = 'OUI';
         }
+        else if(searchParams.mode == 'kn_wtbcl'){
+            query.dd_start = searchParams.dd;
+            query.df_start = searchParams.df;
+            query.following_id = 0;
+        } else if (['operateur', 'controleur', 'ss_controleur', 'ss_operateur','knsskn'].includes(searchParams.mode)) {
+            query.dd_start = searchParams.dd;
+            query.df_start = searchParams.df;
+            filtres = query;
+        } else if (searchParams.mode == 'kndekn') {
+            query.dd_start = searchParams.dd;
+            query.df_start = searchParams.df;
+            query.tlc = "InformationLiaison";
+            query.done = 'OUI';
+        } 
         else {
             query.stats_dd = searchParams.dd;
             query.stats_df = searchParams.df;
@@ -54,5 +87,14 @@ export function searchConsultation(searchParams, app) {
         return app.apiGet(url, query).then(data => resolve(data)).catch(error => reject(error));
     });
 
+    
+}
 
+/**
+ * Retourne les valeurs de la dernière recherche
+ * 
+ * @returns {Object} filtres
+ */
+export function returnFiltres() {
+    return filtres;
 }

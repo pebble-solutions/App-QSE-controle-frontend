@@ -1,6 +1,5 @@
 <template>
-    <div class="row">
-        <h1>Opérateur</h1>
+        <h2 class="text-center">Opérateur</h2>
     <!--    <div class="col-6">
             <div class="card my-2">
                 <div class="card-body">
@@ -17,7 +16,6 @@
                 </div>
             </div>
         </div>-->
-    </div>
     <!--<div class="row">
         <div class="col-12">
             <div class="card my-2">
@@ -32,7 +30,7 @@
         <div class="col-12">
             <div class="card my-2">
                 <div class="card-body">
-                    <h3 class="card-title fs-4">Nombre de KN par opérateur</h3>
+                    <h3 class="card-title fs-4 text-center">Nombre de KN par opérateur</h3>
                     <OperatorPieChart :requeteStat="requeteStat"></OperatorPieChart>
                 </div>
             </div>

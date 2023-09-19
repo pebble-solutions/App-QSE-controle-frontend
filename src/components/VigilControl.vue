@@ -10,7 +10,7 @@
                             <!-- - dernier contrôle le {{changeFormatDateLit(control.date_last)}}  -->
                         </div>
                         <div class="col">
-                            <progress-bar :dd="new Date(control.date_last)" :df="delay(control.date_last)" label="contrôle"></progress-bar>
+                            <progress-bar :dd="control.date_last" :df="delay(control.date_last)"></progress-bar>
             
                         </div>
                         <div class="col-auto text-end">
@@ -40,6 +40,7 @@ import ProgressBar from './ProgressBar.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
 import Spinner from '../components/pebble-ui/Spinner.vue';
+import { toSqlDate } from '../js/date';
 
 
 export default{
@@ -125,7 +126,7 @@ export default{
 
             dd.setDate(dd.getDate()+180);
             
-            return dd
+            return toSqlDate(dd);
             
 
         }

@@ -80,23 +80,24 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <template v-if=" levelUser >= 5">
-                            <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-4">
+                            <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-2">
                                 <i class="bi bi-lock-fill"></i>
                                 Déverrouiller
                             </button>
-                            <button class="btn btn-sm btn-warning me-4" v-else disabled>
+                            <button class="btn btn-sm btn-warning me-2" v-else disabled>
                                 <i class="bi bi-unlock-fill"></i>
                                 Déverrouillé
                             </button>
                         </template>
-                        <button class="position-relative btn btn-sm btn-outline-secondary me-4" @click.prevent="toggleNotes()" v-if="collecte.notes.length >= 1">
+                        <button class="position-relative btn btn-sm btn-outline-admin me-2" @click.prevent="$router.push($route.path + '/edit')" v-if="levelUser >= 5">
+                            <i class="bi bi-pencil-fill"></i>
+                            Modifier
+                        </button>
+                        <button class="position-relative btn btn-sm btn-outline-secondary me-2" @click.prevent="toggleNotes()" v-if="collecte.notes.length >= 1">
                             Historique
                             <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
                         </button>
 
-                        <button class="position-relative btn btn-sm btn-outline-secondary" @click.prevent="$router.push($route.path + '/edit')" v-if="levelUser >= 5">
-                            Modifier
-                        </button>
                     </div>
                     <div>
                         <button v-if="locked && !collecte.unlocked" class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
@@ -108,7 +109,7 @@
                 
             </div>
         </div>
-        <div v-if="collecte.documents.length && (isReadable)" class="card my-3">
+        <div v-if="collecte?.documents?.length && (isReadable)" class="card my-3">
             <div class="card-body">
                 <h5 class="mb-3"><i class="bi bi-cloud-check me-1"></i> Fichiers joints</h5>
                 <div class="list-group">
@@ -140,9 +141,12 @@
                             <template v-for="question in getBlocQuestions(bloc)" :key="question.id">
                                 <div class="list-group-item" v-if="question.corbeille !== 'OUI' || getQuestionReponse(question)">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <span class="d-bloc" :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
-                                            {{question.ligne}}
-                                        </span>
+                                        <div class="d-flex align-items-center">
+                                            <span :class="{'text-secondary fw-light': getQuestionReponse(question) == null }">
+                                                {{question.ligne}}
+                                            </span>
+                                            <span v-if="question.obligatoire == 'OUI'" class="badge bg-warning mx-2 text-dark">Obligatoire</span>
+                                        </div>
                                         <strong class="badge text-uppercase ms-1 fs-6" :class="getClassNameFromQuestion(question)" v-if="['sami', 'integer', 'float'].includes(question.type)">{{getQuestionReponse(question)}}</strong>
                                     </div>
 
@@ -210,7 +214,7 @@ import UserImage from './pebble-ui/UserImage.vue';
 import FileItem from './dropzone/FileItem.vue';
 import Timeline from './collecte/Timeline.vue';
 import AlertMessage from './pebble-ui/AlertMessage.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import AppModal from './pebble-ui/AppModal.vue';
 import SamiBadge from './collecte/SamiBadge.vue';
 
@@ -223,6 +227,7 @@ export default {
                 pdf: false
             },
             locked: true,
+            levelUser: null
         }
     },
     props: {
@@ -232,7 +237,6 @@ export default {
             type: Boolean,
             default: true
         },
-        levelUser: Number,
         
         
         route: {
@@ -244,6 +248,8 @@ export default {
     },
 
     computed: {
+
+        ...mapState(['login']),
 
 
         /**
@@ -446,6 +452,10 @@ export default {
         },
     },
 
-    components: { UserImage, FileItem, Timeline, AlertMessage, AppModal, SamiBadge }
+    components: { UserImage, FileItem, Timeline, AlertMessage, AppModal, SamiBadge },
+
+    mounted() {
+        this.levelUser = this.login.type;
+    }
 }
 </script>

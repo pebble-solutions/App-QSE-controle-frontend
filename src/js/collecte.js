@@ -38,3 +38,27 @@ export function dateFormat(el) {
     date.locale(fr);
     return date.format(new Date(el.replace(' ', 'T')), 'DD MMM YYYY')
 }
+
+/**
+ * Liste les questions obligatoires non répondues
+ * 
+ * @param {Array} reponses Collection des réponses apportées à la collecte
+ * @param {Array} lignes Collection des lignes à vérifier
+ * 
+ * @returns {Array}
+ */
+export function listMissingMandatoryQuestions(reponses, lignes) {
+    const questionsManquantes = [];
+
+    if (reponses && lignes) {
+        for (const reponse of reponses) {
+            const ligneCourante = lignes.find((e) => e.id === reponse.ligne);
+
+            if (reponse.ligne && ligneCourante && ligneCourante.obligatoire === "OUI" && !reponse.data) {
+                questionsManquantes.push(ligneCourante.ligne);
+            }
+        }
+    }
+
+    return questionsManquantes;
+}
