@@ -43,7 +43,7 @@
 
 <script>
 import {mapState, mapActions} from 'vuex';
-import Intro from '../components/Intro.vue';
+import Intro from '../components/controle/Intro.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import HeaderToolbar from '../components/pebble-ui/toolbar/HeaderToolbar.vue';

@@ -145,11 +145,13 @@ export function dateToTime(val, refVal) {
 /**
  * Modifie le format de la date entrée en paramètre et la retourne 
  * sous le format 01 févr. 2021
+ * 
+ * Déprécié, utiliser plutôt getDisplayFormatedDate.
+ * 
  * @param {string} date 
  */
 export function dateFormat(el) {
-    date.locale(fr);
-    return date.format(new Date(el.replace(' ', 'T')), 'DD MMM YYYY')
+    return getDisplayFormatedDate(el);
 }
 
 /**
