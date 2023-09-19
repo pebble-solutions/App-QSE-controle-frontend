@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-6">
+            <div class="col-12 col-md-6">
                 <div class="card my-2">
                     <div class="card-body">
                         <h3 class="card-title fs-4">Répartition des réponses</h3>
@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-12 col-md-6">
                 <div class="card my-2">
                     <div class="card-body">
                         <h3 class="card-title fs-4">Répartition des kn en retard</h3>
@@ -86,7 +86,7 @@ export default {
     },
     components: { AgendaChart, GlobalPieChart, StatOperateur, StatHabilitation, StatProjet, StatControleur, GlobalTable, Spinner, RetardKn },
     computed: {
-        ...mapState(['requeteStat', 'pending']),
+        ...mapState(['requeteStat']),
     },
     methods: {
         stats() {

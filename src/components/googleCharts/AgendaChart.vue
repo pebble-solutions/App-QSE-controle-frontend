@@ -1,5 +1,7 @@
 <template v-if="!pending.fetchData">
-    <div id="agendaChart"></div>
+    <div class="overflow-x-auto overflow-y-hidden">
+        <div id="agendaChart"></div>
+    </div>
 </template>
 
 <script>
@@ -35,7 +37,9 @@ export default {
             let chartWrap = document.getElementById('agendaChart');
             let chart = new GoogleCharts.api.visualization.Calendar(chartWrap);
             // Notez que l'attribut "height" est supprimé ici
-            chart.draw(dataTable);
+            chart.draw(dataTable, {
+                width: 920
+            });
         }
     },
 
@@ -44,6 +48,8 @@ export default {
         GoogleCharts.load(this.drawChart, {
             packages: ['calendar'],
         });
+
+        window.addEventListener("resize", this.drawChart);
     }
 }
 </script>
