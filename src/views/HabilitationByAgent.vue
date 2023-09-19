@@ -219,7 +219,7 @@ export default{
     /**
      * Lorsque la route interne est mise à jour, le nouvel élément doit être chargé.
      */
-     beforeRouteUpdate(to) {
+    beforeRouteUpdate(to) {
         if (to.params.id != this.currentPersonnel.id) {
             this.loadHabilitationFromPersonnel(to.params.id);
             //this.resetStats();

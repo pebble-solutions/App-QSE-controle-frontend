@@ -73,7 +73,7 @@ export default{
          * en fonction de l'id fourni
          * @param {Number} idHabilitation de l'habilitation
          */
-        loadCollecte(idHabilitation) {
+        loadCollectes(idHabilitation) {
             this.pending.control=true;
             this.$app.apiGet('data/GET/collecte', {
                 tli : idHabilitation,
@@ -100,13 +100,18 @@ export default{
 		},
     },
 
-    
+    beforeRouteUpdate(to) {
+        if (to.params.idHab != this.$route.params.idHab) {
+            this.loadCollectes(to.params.idHab);
+        }
+    },
 
+    
     mounted () {
         /**
          * charge la liste des collectes
          */
-        this.loadCollecte(this.$route.params.idHab);
+        this.loadCollectes(this.$route.params.idHab);
     }
 
 }
