@@ -60,7 +60,9 @@ export default {
         this.fetchData();
         GoogleCharts.load(this.drawChart, {
             packages: ['corechart'],
-        })
+        });
+
+        window.addEventListener("resize", this.drawChart);
 
     },
 }
