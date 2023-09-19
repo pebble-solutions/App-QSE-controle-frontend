@@ -1,6 +1,5 @@
 <template>
     <div class="card my-2">
-        <pre>{{ groupsAndQuestions }}</pre> <pre>{{ stats }}</pre>
         <div class="accordion accordion-flush" id="formulaireStats">
             <div v-for="bloc in blocs" :key="'bloc-'+bloc.id" class="accordion-item">
                 <h2 class="accordion-header" :id="'heading-'+bloc.id">
