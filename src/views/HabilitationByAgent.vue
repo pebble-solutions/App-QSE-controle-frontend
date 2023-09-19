@@ -72,8 +72,8 @@ export default{
             },
             habilitationFromPerso: '',
             listControlDone: '',
-            stats:[],
-            groupsAndQuestions: [],
+            stats:{},
+            groupsAndQuestions: {},
             formulaireId: null
         }
     },
@@ -156,7 +156,8 @@ export default{
             this.pending.groupsAndQuestions = true;
 
             this.$app.api.get(`v2/information-groupe/${formulaireId}`, {
-                'blocsandlignes': 1
+                blocsandlignes: 1,
+                ppp: "private"
             }).then((data) => {
                 this.groupsAndQuestions = data;
             }).catch(this.$app.catchError).finally(() => this.pending.groupsAndQuestions = false);
