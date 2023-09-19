@@ -71,17 +71,21 @@ export default{
         /**
          * Envoie une requête pour charger la liste des collectes 
          * en fonction de l'id fourni
-         * @param {Number} id du 
+         * @param {Number} idHabilitation de l'habilitation
          */
-        loadCollecte(id) {
+        loadCollecte(idHabilitation) {
             this.pending.control=true;
             this.$app.apiGet('data/GET/collecte', {
-                tli : id,
-                done: 'OUI'
+                tli : idHabilitation,
+                tlc: "CharacteristicPersonnel",
+                locked: 1
             })
             .then((data) => {
                 this.listControlDone = data;
-                this.$emit('formulaire', data[0].information__groupe_id);
+
+                if (data.length) {
+                    this.$emit('formulaire', data[0].information__groupe_id);
+                }
             })
             .catch(this.$app.catchError).finally(() => this.pending.control= false);
         },
