@@ -8,14 +8,12 @@
     @updated="routeToCollecte" 
     v-if="inited"
     />
-
-
-    </template>
+</template>
 
 <script>
 
 import { mapState } from 'vuex';
-import ProgrammationCollecteModal from '../components/ProgrammationCollecteModal.vue';
+import ProgrammationCollecteModal from '../../components/ProgrammationCollecteModal.vue';
 import date from 'date-and-time';
 
 export default {
@@ -49,7 +47,7 @@ export default {
 
     components: { ProgrammationCollecteModal },
 
-    mounted() {
+    beforeMount() {
         let now = new Date();
         this.collecte.date = date.format(now, 'YYYY-MM-DD');
         this.collecte.enqueteur_personnel = this.login.primary_personnel;

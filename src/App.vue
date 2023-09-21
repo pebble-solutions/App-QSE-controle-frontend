@@ -53,20 +53,17 @@
 				</template>
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
-				<search-control v-model:dd="searchOptions.dd" v-model:df="searchOptions.df"
-					v-model:mode="searchOptions.mode" v-model:pendingSearch="pending.search"></search-control>
+				<div class="sticky-top bg-light border-bottom" style="top:47px;">
+					<search-control 
+						v-model:dd="searchOptions.dd" 
+						v-model:df="searchOptions.df"
+						v-model:mode="searchOptions.mode" 
+						v-model:pendingSearch="pending.search" />
+				</div>
 				<template v-if="pending.search">
 					<Spinner />
 				</template>
 				<template v-else>
-					<input
-						type="text"
-						class="form-control my-2 px-2"
-						placeholder="Rechercher..."
-						v-model="displaySearch"
-						v-show="['operateur', 'controleur', 'collecte'].includes(searchOptions.mode)"
-					/>
-
 					<template v-for="res in listConsultation(searchResults)" :key="res.id">
 						<app-menu-item v-if="this.searchOptions.mode == 'collecte'" :href="'/consultation/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
@@ -577,7 +574,12 @@ export default {
 				{
 					name: "personnels",
 					assetName: 'personnels',
-					apiRoute: 'v2/personnel'
+					apiRoute: 'v2/personnel',
+					requestPayload: {
+						structure: "toutes",
+						ordre: "croissant",
+						limit: "aucune"
+					}
 				},
 				{
 					name: "collectesCollection",

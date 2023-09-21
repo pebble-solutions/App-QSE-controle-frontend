@@ -1,10 +1,13 @@
 <template>
 
-    <button @click.prevent="toggleForm()" v-if="!showForm && !readonly" class="btn btn-light" :class="classList" :title="collecte.projet_label" :disabled="pending.collecte">
+    <button @click.prevent="toggleForm()" v-if="!showForm && !readonly" class="btn btn-light" :class="classList" :title="collecte.projet_label" :disabled="pending.collecte || collecte.locked">
         <i class="bi bi-boxes me-2" v-if="!pending.collecte"></i>
         <span class="spinner-border spinner-border-sm me-2" role="status" v-else></span>
         <span v-if="hasProject">{{ shortProjetLabel }}</span>
-        <span v-else>Affecter un projet</span>
+        <span v-else>
+            <template v-if="collecte.locked">Projet non-affecté</template>
+            <template v-else>Affecter un projet</template>
+        </span>
     </button>
 
     <form method="post" @submit.prevent="changeProjet()" v-if="showForm && !readonly">

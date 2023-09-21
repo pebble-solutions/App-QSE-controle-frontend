@@ -7,7 +7,7 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-md-6 col-lg-4 col-12">
-                        <img src="../assets/programmation.jpg" class="img-fluid" alt="Programmation de contrôles" />
+                        <img src="../../assets/programmation.jpg" class="img-fluid" alt="Programmation de contrôles" />
                     </div>
                     <div class="col display-6 fs-4 text-center">
                         Utilisez cet espace pour programmer vos contrôles ou modifier vos programmations existantes. Sélectionnez

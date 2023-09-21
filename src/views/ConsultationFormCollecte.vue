@@ -5,7 +5,7 @@
             size="lg"
             @modal-hide="routeToParent()"
             >
-            <ConsultationCollecteResume :collecte="collecte" :levelUser="login.type" :readonly="true" :route="nameRoute" ></ConsultationCollecteResume>
+            <ConsultationCollecteResume :collecte="collecte" :toolbar="['export']" :levelUser="login.type" :readonly="true" :route="nameRoute" ></ConsultationCollecteResume>
         </app-modal>
     </div>
 </template>

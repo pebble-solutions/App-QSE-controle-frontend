@@ -22,7 +22,12 @@
                 </div> -->
                 <Timeline :collecte="collecte" route="collecte" />
                 <template v-if="collecte.done == 'OUI'">
-                    <consultation-collecte-resume :collecte="collecte" :readonly="true" :timeline="false" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd' && $route.name !='CollecteVerif' && $route.name !='CollecteNext')"/>
+                    <consultation-collecte-resume 
+                        :collecte="collecte" 
+                        :readonly="true" 
+                        :timeline="false" 
+                        :toolbar="['export', 'history']"
+                        v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd' && $route.name !='CollecteVerif' && $route.name !='CollecteNext')" />
                 </template>
                 <template v-else>
                     <div class="card mt-3" v-if="(!$route.params.bloc && $route.name != 'CollectKnEnd' && !$route.params.bloc && $route.name !='CollecteVerif')">
@@ -43,14 +48,14 @@
 
 <script>
 import {mapState, mapActions} from 'vuex';
-import Intro from '../components/controle/Intro.vue';
-import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
-import Spinner from '../components/pebble-ui/Spinner.vue';
-import HeaderToolbar from '../components/pebble-ui/toolbar/HeaderToolbar.vue';
-import CollecteHeaderToolbar from '../components/collecte/CollecteHeaderToolbar.vue';
-import Timeline from '../components/collecte/Timeline.vue';
-import BlocNavigation from '../components/BlocNavigation.vue';
-import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
+import Intro from '../../components/controle/Intro.vue';
+import AlertMessage from '../../components/pebble-ui/AlertMessage.vue';
+import Spinner from '../../components/pebble-ui/Spinner.vue';
+import HeaderToolbar from '../../components/pebble-ui/toolbar/HeaderToolbar.vue';
+import CollecteHeaderToolbar from '../../components/collecte/CollecteHeaderToolbar.vue';
+import Timeline from '../../components/collecte/Timeline.vue';
+import BlocNavigation from '../../components/BlocNavigation.vue';
+import ConsultationCollecteResume from '../../components/ConsultationCollecteResume.vue';
 
 
 export default {

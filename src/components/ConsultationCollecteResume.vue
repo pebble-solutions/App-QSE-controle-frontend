@@ -71,15 +71,22 @@
                         className="mt-3 py-2 d-flex align-items-center" 
                         v-if="collecte.following_id">
 
-                        <sami-badge :result="collecte.following_result" />
-                        <span class="ms-2">Bouclé par le contrôle #{{ collecte.following_id }}</span>
+                        <template v-if="collecte.following_result">
+                            <sami-badge :result="collecte.following_result" />
+                            <span class="ms-2">Bouclé par le contrôle #{{ collecte.following_id }}</span>
+                        </template>
+                        <template v-else>
+                            <i class="bi bi-arrow-repeat me-2"></i>
+                            Bouclage en cours #{{ collecte.following_id }}
+                        </template>
+
                     </alert-message>
                 </template>
             </div>
-            <div v-if="readonly" class="card-footer ">
+            <div v-if="readonly && toolbar" class="card-footer ">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <template v-if=" levelUser >= 5">
+                        <template v-if=" levelUser >= 5 && toolbar.includes('admin')">
                             <button v-if="!collecte.unlocked && locked" @click.prevent="unlock(collecte.id)" class="btn btn-sm btn-outline-admin me-2">
                                 <i class="bi bi-lock-fill"></i>
                                 Déverrouiller
@@ -89,18 +96,18 @@
                                 Déverrouillé
                             </button>
                         </template>
-                        <button class="position-relative btn btn-sm btn-outline-admin me-2" @click.prevent="$router.push($route.path + '/edit')" v-if="levelUser >= 5">
+                        <button class="position-relative btn btn-sm btn-outline-admin me-2" @click.prevent="$router.push($route.path + '/edit')" v-if="levelUser >= 5  && toolbar.includes('admin')">
                             <i class="bi bi-pencil-fill"></i>
                             Modifier
                         </button>
-                        <button class="position-relative btn btn-sm btn-outline-secondary me-2" @click.prevent="toggleNotes()" v-if="collecte.notes.length >= 1">
+                        <button class="position-relative btn btn-sm btn-outline-secondary me-2" @click.prevent="toggleNotes()" v-if="collecte.notes.length >= 1 && toolbar.includes('history')">
                             Historique
                             <span class="badge position-absolute top-0 start-100 translate-middle text-bg-primary">{{ collecte.notes.length }}</span>
                         </button>
 
                     </div>
                     <div>
-                        <button v-if="locked && !collecte.unlocked" class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
+                        <button v-if="locked && !collecte.unlocked && toolbar.includes('export')" class="btn btn-sm btn-outline-primary" @click.prevent="exportToPdf(collecte.id)">
                             <i class="bi bi-cloud-download"></i>
                             Exporter
                         </button>
@@ -237,13 +244,13 @@ export default {
             type: Boolean,
             default: true
         },
-        
-        
         route: {
             type: String,
             default: 'consultation'
+        },
+        toolbar: {
+            default: ["admin", "history", "export"]
         }
-    
                
     },
 
@@ -423,6 +430,9 @@ export default {
          * @return {string}
          */
         classNameFromSAMI(reponse, dict) {
+            if (!reponse) {
+                return "secondary";
+            }
             return classNameFromSAMI(reponse, dict);
         },
 

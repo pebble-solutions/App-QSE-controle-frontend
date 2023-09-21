@@ -70,9 +70,9 @@ export default {
         routeTo(){
             const idPersonnel = this.$route.params.idPersonnel;
             const routeName = this.$route.name;
-            if (routeName == "consultationOperateurList") {
+            if (routeName == "consultationOperateurList" || routeName == "consultationCollecteOptionsOperateur") {
                 return '/consultation/operateur/' + idPersonnel + '/'
-            } else if (routeName == "consultationControleurList") {
+            } else if (routeName == "consultationControleurList" || routeName == "consultationCollecteOptionsControleur") {
                 return '/consultation/controleur/' + idPersonnel + '/'
             } else {
                 console.error("Nom de route invalide");
@@ -154,9 +154,9 @@ export default {
 
             let filteredCollecteList = [];
 
-            if (routeName == "consultationOperateurList") {
+            if (routeName == "consultationOperateurList" || routeName == "consultationCollecteOptionsOperateur") {
                 filteredCollecteList = this.collectes.filter(e => e.cible__structure__personnel_id == idPersonnel);
-            } else if (routeName == "consultationControleurList") {
+            } else if (routeName == "consultationControleurList" || routeName == "consultationCollecteOptionsControleur") {
                 filteredCollecteList = this.collectes.filter(e => e.enqueteur__structure__personnel_id == idPersonnel);
             } else {
                 console.error("Nom de route invalide");

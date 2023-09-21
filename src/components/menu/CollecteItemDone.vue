@@ -18,15 +18,13 @@
 		</div>
 
 		<button v-if="collecte.result_var && collecte.result_var != 'null'"
-			class="badge fs-6 text-uppercase border border-light position-relative square-button"
-			:class="['text-bg', classNameFromSAMI(collecte.result_var)]"
-			:style="{ 'pointer-events': 'none', 'flex': '0 0 40px' }">
+			class="badge fs-6 text-uppercase border border-light position-relative"
+			:class="['text-bg', classNameFromSAMI(collecte.result_var)]">
 			<Bouclage :collecte="collecte" v-if="hasBouclageInfo" />
 			{{ collecte.result_var }}
 		</button>
-		<button v-else class="badge fs-6 text-uppercase square-button"
-			:class="['text-bg', classNameFromSAMI(collecte.result_var)]"
-			:style="{ 'pointer-events': 'none', 'flex': '0 0 40px' }">
+		<button v-else class="badge fs-6 text-uppercase border border-light"
+			:class="['text-bg', classNameFromSAMI(collecte.result_var)]">
 			?
 		</button>
 	</div>
@@ -116,11 +114,3 @@ export default {
 
 
 </script>
-<style scoped>
-.square-button {
-	width: 40px;
-	/* Ajustez la largeur pour rendre les boutons carrés */
-	height: 40px;
-	/* Ajustez la hauteur pour rendre les boutons carrés */
-}
-</style>

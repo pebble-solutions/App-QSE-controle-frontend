@@ -17,64 +17,67 @@
             </div>
         </div>
 
-        <div v-if="!veille" class="col mb-3">
-            <label for="collecteProjet" class="form-label">Projet</label>
-            <select class="form-select" id="collecteProjet" name="projet" v-model="tmpCollecte.projet_id" :disabled="isReadonly('projet')">
-                <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label" for="collecteDate">Date programmée</label>
-            <input type="date" class="form-control" id="collecteDate" name="date" v-model="tmpCollecte.date" :disabled="isReadonly('date')">
-        </div>
-        <div class="row g-2">
-           
-            <div class="col-12 col-md-6 mb-3">
-                <label for="collecteCible" class="form-label">Opérateur </label>
-                <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.personnels">
-                    <option v-for="(agent) in sortedOperateurs" :value="agent.id" :key="'agent-'+agent.id"> {{agent.cache_nom}} </option>
-
+        <div v-if="formulaire">
+            <div v-if="!veille" class="col mb-3">
+                <label for="collecteProjet" class="form-label">Projet</label>
+                <select class="form-select" id="collecteProjet" name="projet" v-model="tmpCollecte.projet_id" :disabled="isReadonly('projet')">
+                    <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
                 </select>
-                <div class="text-secondary py-1" v-else>
-                    <span class="spinner-border spinner-border-sm"></span>
-                    Chargement...
+            </div>
+    
+            <div class="mb-3">
+                <label class="form-label" for="collecteDate">Date programmée</label>
+                <input type="date" class="form-control" id="collecteDate" name="date" v-model="tmpCollecte.date" :disabled="isReadonly('date')">
+            </div>
+            <div class="row g-2">
+               
+                <div class="col-12 col-md-6 mb-3">
+                    <label for="collecteCible" class="form-label">Opérateur </label>
+                    <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.personnels">
+                        <option v-for="(agent) in sortedOperateurs" :value="agent.id" :key="'agent-'+agent.id"> {{agent.cache_nom}} </option>
+    
+                    </select>
+                    <div class="text-secondary py-1" v-else>
+                        <span class="spinner-border spinner-border-sm"></span>
+                        Chargement...
+                    </div>
+                    <div class="text-success mt-2" v-if="formulaire && currentFormTli">
+                        <i class="bi bi-check-circle-fill"></i>
+                        La liste est restreinte aux opérateurs habilités
+                    </div>
+                    <div class="text-info mt-2" v-else>
+                        <i class="bi bi-check-circle-fill"></i>
+                        La liste des opérateurs est libre
+                    </div>
                 </div>
-                <div class="text-success mt-2" v-if="formulaire && currentFormTli">
-                    <i class="bi bi-check-circle-fill"></i>
-                    La liste est restreinte aux opérateurs habilités
-                </div>
-                <div class="text-info mt-2" v-else>
-                    <i class="bi bi-check-circle-fill"></i>
-                    La liste des opérateurs est libre
+                <div class="col-12 col-md-6 mb-3">
+                    <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
+                    <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')" v-if="!pending.personnels">
+                        <option  v-for="(controleur) in controleurs" :value="controleur.id" :key="'controleur-'+controleur.id">
+                            {{ controleur.cache_nom }}
+                        </option>
+                    </select>
+                    <div class="text-secondary py-1" v-else>
+                        <span class="spinner-border spinner-border-sm"></span>
+                        Chargement...
+                    </div>
+                    
+                    <div class="text-success mt-2" v-if="veilleControleurs && currentFormTli">
+                        <i class="bi bi-check-circle-fill"></i>
+                        La liste est restreinte aux controleurs habilités
+                    </div>
+                    <div class="text-info mt-2" v-else>
+                        <i class="bi bi-info-circle-fill"></i>
+                        La liste des contrôleurs est libre
+                    </div>
+                    <span class="text-warning mt-2" v-if="!isSelectedControleurHabilited">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        Vous n'êtes pas habilité
+                    </span>
                 </div>
             </div>
-            <div class="col-12 col-md-6 mb-3">
-                <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
-                <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')" v-if="!pending.personnels">
-                    <option  v-for="(controleur) in controleurs" :value="controleur.id" :key="'controleur-'+controleur.id">
-                        {{ controleur.cache_nom }}
-                    </option>
-                </select>
-                <div class="text-secondary py-1" v-else>
-                    <span class="spinner-border spinner-border-sm"></span>
-                    Chargement...
-                </div>
-                
-                <div class="text-success mt-2" v-if="veilleControleurs && currentFormTli">
-                    <i class="bi bi-check-circle-fill"></i>
-                    La liste est restreinte aux controleurs habilités
-                </div>
-                <div class="text-info mt-2" v-else>
-                    <i class="bi bi-info-circle-fill"></i>
-                    La liste des contrôleurs est libre
-                </div>
-                <span class="text-warning mt-2" v-if="!habControl && currentFormTli">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    Vous n'êtes pas habilité
-                </span>
-            </div>
         </div>
+
     </div>
 
 </template>
@@ -145,6 +148,18 @@ export default {
                 }
                 return 0;
             });
+        },
+
+        /**
+         * Retourne true si le contrôleur sélectionné est habilité
+         * 
+         * Un contrôleur est habilité si il pocède une habilitation en lien avec le tli du formulaire 
+         * ou si le formulaire ne nécessite pas d'habilitation
+         * 
+         * @return {bool}
+         */
+        isSelectedControleurHabilited() {
+            return this.controleurs.find(e => e.id === this.tmpCollecte.enqueteur_personnel) ? true : false;
         }
     },
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid" v-if="!pending.load && !emptyData && !pending.stat">
+    <div class="container" v-if="!pending.load && !emptyData && !pending.stat">
         <div class="row">
             <div class="col-md-12 my-2">
                 <div class="bg-white rounded p-3 shadow">

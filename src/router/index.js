@@ -15,12 +15,12 @@ const routes = [
   {
     path: '/programmation',
     name: 'Programmation',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Programmation.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/programmation/Index.vue'),
     children: [
       {
         path: 'new',
         name: 'NewCollecte',
-        component: () => import(/* webpackChunkName: "about" */ '../views/CollecteNew.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/programmation/New.vue')
       }
     ]
   },
@@ -40,12 +40,12 @@ const routes = [
   {
     path: '/collecte',
     name: 'collecte',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Collecte.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/controle/Index.vue'),
     children: [
       {
         path: 'new',
         name: 'UnexpectedCollecte',
-        component: () => import(/* webpackChunkName: "about" */ '../views/CollecteNewUnexpected.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/controle/New.vue')
       }
     ]
   },
@@ -53,7 +53,7 @@ const routes = [
   {
     path: '/collecte/:id',
     name: 'collecteKN',
-    component: () => import(/* webpackChunkName: "about" */ '../views/CollecteKN.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/controle/CollecteKN.vue'),
     children: [
       {
         path: 'bloc/:bloc',

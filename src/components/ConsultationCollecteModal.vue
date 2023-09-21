@@ -1,14 +1,11 @@
 <template>
-    <div>
+    <app-modal
+        size="lg"
+        @modal-hide="routeToParent()"
+        >
         
-        <app-modal
-            size="lg"
-            @modal-hide="routeToParent()"
-            >
-            
-            <ConsultationCollecteResume :collecte="collecte" :readonly="true" :route="nameRoute" ></ConsultationCollecteResume>
-        </app-modal>
-    </div>
+        <ConsultationCollecteResume :collecte="collecte" :toolbar="['export']" :readonly="true" :route="nameRoute" ></ConsultationCollecteResume>
+    </app-modal>
 </template>
 
 <script>

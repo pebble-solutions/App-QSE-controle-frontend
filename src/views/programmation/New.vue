@@ -1,16 +1,16 @@
 <template>
     <programmation-collecte-modal
-    :collecte="collecte"
-    :formulaires="formulaires"
-    :personnels="mergedPersonnels"
-    
-    @updated="routeToFormulaire" />
+        :collecte="collecte"
+        :formulaires="formulaires"
+        :personnels="personnels"
+        
+        @updated="routeToFormulaire" />
 </template>
 
 <script>
 
 import { mapState } from 'vuex'
-import ProgrammationCollecteModal from '../components/ProgrammationCollecteModal.vue'
+import ProgrammationCollecteModal from '../../components/ProgrammationCollecteModal.vue'
 
 export default {
 
@@ -29,23 +29,12 @@ export default {
     },
 
     computed: {
-        ...mapState(['formulaires', 'listActifs', 'personnels','habilitationType','veilleConfig']),
-
-        mergedPersonnels() {
-            let list = this.personnels;
-            this.listActifs.forEach(personnel => {
-                const found = list.find(e => e.id == personnel.id);
-                if (!found) {
-                    list.push(personnel);
-                }
-            });
-            return list;
-        }
+        ...mapState(['formulaires', 'personnels','habilitationType','veilleConfig'])
     },
 
     methods: {
         /**
-         * Affiche 
+         * Redirige vers la liste des collectes sur un formulaire donné 
          * 
          * @param {object} collecte
          */
