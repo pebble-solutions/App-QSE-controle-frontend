@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<AppSearchBar @search="search()" :pending="pending.personnelsFiltered" @filterShow="displayFilter=true" @filterHide="displayFilter=false">
+		<AppSearchBar @search="search()" :pending="pending.personnelsFiltered" @filterShow="displayFilter=true" @filterHide="displayFilter=false" v-model:search-value="nameFilter">
 			<PersonnelsFilter v-if="displayFilter" v-model:contratDd="contratDdFilter" v-model:contratDf="contratDfFilter" v-model:withContrat="withContratFilter" v-model:withoutContrat="withoutContratFilter" v-model:ordre="ordre"/>
 		</AppSearchBar>
 
@@ -36,7 +36,8 @@ export default {
 			contratDfFilter: null,
 			withContratFilter: true,
 			withoutContratFilter: false,
-			ordre: "croissant"
+			ordreFilter: "croissant",
+            nameFilter: null
 		}
 	},
 
@@ -56,7 +57,8 @@ export default {
 					contratDf: this.contratDfFilter,
 					withContrat: this.withContratFilter ? 1 : 0,
 					withoutContrat: this.withoutContratFilter ? 1 : 0,
-					ordre: this.ordre
+					ordre: this.ordreFilter,
+                    name: this.nameFilter === '' ? null : this.nameFilter
 				}
 			);
 		},
