@@ -69,9 +69,9 @@
 </template>
 <script>
 
-import { searchConsultation } from '../js/search-consultation';
+import { searchConsultation } from '../../js/search-consultation';
 import { mapActions } from 'vuex';
-import { dateFormat } from '../js/collecte';
+import { dateFormat } from '../../js/collecte';
 
 export default {
     props: {
@@ -107,8 +107,8 @@ export default {
                 formulaire: "Grouper par questionnaire",
                 projet: "Grouper par projet",
                 kn_wtbcl: "Contrôles non-bouclés",
-                ss_operateur: "Contrôles non-affectés à un opérateur",
-                ss_controleur: "Contrôles non-affectés à un contrôleur",
+                ss_operateur: "Contrôles sans opérateur",
+                ss_controleur: "Contrôles sans contrôleur",
                 operateur: "Grouper par opérateur",
                 controleur: "Grouper par contrôleur",
                 kndekn : "Contrôles de contrôle",

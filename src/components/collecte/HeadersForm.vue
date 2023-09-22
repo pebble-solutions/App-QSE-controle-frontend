@@ -1,43 +1,41 @@
 <template>
-    <div>
-        <div class="card my-2">
-            <div class="card-header container">
-                <div class="text-primary text-bg-light d-flex align-items-center row">
-                    <div class="col-2"></div>
-                    <i class="bi bi-calendar-check me-1 col-1"></i>
-                    <span class="d-none d-sm-inline col-3">Date de contrôle</span>
-                    <input type="date" class="form-control text-primary text-bg-light col" :value="collecteModif.date_start ? collecteModif.date_start.slice(0, 10) : ''" @input="updateDateStartCollecte">
-                    <div class="col-2"></div>
-                </div>
+    <div class="card my-2">
+        <div class="card-header container">
+            <div class="text-primary text-bg-light d-flex align-items-center row">
+                <div class="col-2"></div>
+                <i class="bi bi-calendar-check me-1 col-1"></i>
+                <span class="d-none d-sm-inline col-3">Date de contrôle</span>
+                <input type="date" class="form-control text-primary text-bg-light col" :value="collecteModif.date_start ? collecteModif.date_start.slice(0, 10) : ''" @input="updateDateStartCollecte">
+                <div class="col-2"></div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="mb-2 col">
-                        <div class="d-flex align-items-center">
-                            <user-image :name="collecteModif.cible_nom" />
-                            <div class="w-100 ps-2">
-                                <strong class="d-block">Opérateur :</strong>
-                                <div class="d-flex flex-row align-items-center">
-                                    <i class="bi bi-pen-fill fw-lighter me-2"></i>
-                                    <select class="form-select" v-model="collecteModif.cible__structure__personnel_id">
-                                        <option v-for="personnel in personnels" :key="personnel.id" :value="personnel.id">{{ personnel.cache_nom }}</option>
-                                    </select>
-                                </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="mb-2 col">
+                    <div class="d-flex align-items-center">
+                        <user-image :name="collecteModif.cible_nom" />
+                        <div class="w-100 ps-2">
+                            <strong class="d-block">Opérateur :</strong>
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-pen-fill fw-lighter me-2"></i>
+                                <select class="form-select" v-model="collecteModif.cible__structure__personnel_id">
+                                    <option v-for="personnel in personnels" :key="personnel.id" :value="personnel.id">{{ personnel.cache_nom }}</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="mb-2 col border-start border-dark">
-                        <div class="d-flex align-items-center">
-                            <user-image :name="collecteModif.enqueteur_nom" />
-                            <div class="w-100 ps-2">
-                                <strong class="d-block">Contrôleur :</strong>
-                                <div class="d-flex flex-row align-items-center">
-                                    <i class="bi bi-pen-fill fw-lighter me-2"></i>
-                                    <select class="form-select" v-model="collecteModif.enqueteur__structure__personnel_id">
-                                        <option v-for="personnel in personnels" :key="personnel.id" :value="personnel.id">{{ personnel.cache_nom }}</option>
-                                    </select>
-                                </div>
+                </div>
+                
+                <div class="mb-2 col border-start border-dark">
+                    <div class="d-flex align-items-center">
+                        <user-image :name="collecteModif.enqueteur_nom" />
+                        <div class="w-100 ps-2">
+                            <strong class="d-block">Contrôleur :</strong>
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-pen-fill fw-lighter me-2"></i>
+                                <select class="form-select" v-model="collecteModif.enqueteur__structure__personnel_id">
+                                    <option v-for="personnel in personnels" :key="personnel.id" :value="personnel.id">{{ personnel.cache_nom }}</option>
+                                </select>
                             </div>
                         </div>
                     </div>

@@ -2,7 +2,7 @@
     <router-link :to="'/'+route+'/'+collecte.id" v-slot="{navigate,href}" custom>
         <a :href="href"  @click="navigate" class="timeline-el link-secondary">
             <div class="timeline-label">
-                <CollecteBadge :result="collecte.result_var" /><br>
+                <ResultBadge :result="collecte.result_var" className="mb-1" /><br>
                 <span>
                     <i class="bi bi-arrow-left" v-if="direction == 'previous'"></i>
                     <span class="fw-light ms-1">#{{collecte.id}}</span>
@@ -16,7 +16,7 @@
 <script>
 
 import { RouterLink } from 'vue-router';
-import CollecteBadge from './CollecteBadge.vue';
+import ResultBadge from '../badges/Result.vue';
 
 export default {
     props: {
@@ -28,7 +28,7 @@ export default {
         direction: String
     },
 
-    components: { RouterLink, CollecteBadge }
+    components: { RouterLink, ResultBadge }
 }
 
 </script>

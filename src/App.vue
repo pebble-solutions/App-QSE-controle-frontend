@@ -54,7 +54,7 @@
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
 				<div class="sticky-top bg-light border-bottom" style="top:47px;">
-					<search-control 
+					<CollectesFilters 
 						v-model:dd="searchOptions.dd" 
 						v-model:df="searchOptions.df"
 						v-model:mode="searchOptions.mode" 
@@ -198,7 +198,7 @@ import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
 import ControleHeader from './components/headers/ControleHeader.vue'
 import Spinner from './components/pebble-ui/Spinner.vue'
 import AlertMessage from './components/pebble-ui/AlertMessage.vue'
-import SearchControl from './components/SearchControl.vue'
+import CollectesFilters from './components/collecte/Filters.vue'
 import { searchConsultation } from './js/search-consultation'
 import { AssetsCollection } from './js/app/services/AssetsCollection'
 import { ROUTES_NAMES } from './js/route';
@@ -677,7 +677,7 @@ export default {
 
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, SearchControl, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList, PersonnelItem },
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, CollectesFilters, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList, PersonnelItem },
 	
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {

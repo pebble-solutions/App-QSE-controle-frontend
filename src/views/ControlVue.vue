@@ -4,16 +4,16 @@
      size="lg"
      @modal-hide="routeToParent()"
      :pending="pending.collecte">
-        <ConsultationCollecteResume :collecte="collecte"></ConsultationCollecteResume>
+        <CollecteResume :collecte="collecte"></CollecteResume>
     </AppModal>
     
 </template>
 <script>
-import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
+import CollecteResume from '../components/collecte/Resume.vue';
 import AppModal from '../components/pebble-ui/AppModal.vue';
 
 export default {
-    components: { AppModal, ConsultationCollecteResume },
+    components: { AppModal, CollecteResume },
 
     data() {
         return {

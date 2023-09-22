@@ -216,14 +216,14 @@
 </style>
 
 <script>
-import {classNameFromSAMI, dateFormat} from '../js/collecte';
-import UserImage from './pebble-ui/UserImage.vue';
-import FileItem from './dropzone/FileItem.vue';
-import Timeline from './collecte/Timeline.vue';
-import AlertMessage from './pebble-ui/AlertMessage.vue';
+import {classNameFromSAMI, dateFormat} from '../../js/collecte';
+import UserImage from '../pebble-ui/UserImage.vue';
+import FileItem from '../dropzone/FileItem.vue';
+import Timeline from './Timeline.vue';
+import AlertMessage from '../pebble-ui/AlertMessage.vue';
 import { mapActions, mapState } from 'vuex';
-import AppModal from './pebble-ui/AppModal.vue';
-import SamiBadge from './collecte/SamiBadge.vue';
+import AppModal from '../pebble-ui/AppModal.vue';
+import SamiBadge from './SamiBadge.vue';
 
 export default {
 
@@ -289,7 +289,7 @@ export default {
          * @return {string}
          */
         controleur() {
-            return this.collecte.enqueteur_nom ?? 'Opérateur non renseigné';
+            return this.collecte.enqueteur_nom ?? 'Contrôleur non renseigné';
         },
 
         /**

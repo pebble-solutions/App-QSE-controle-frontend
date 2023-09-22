@@ -8,10 +8,10 @@
         <spinner v-if="pending.collectes"/>
 
         <div class="list-group" v-else>
-            <router-link :to="'/consultation/projet/'+this.$route.params.idProjet+'/'+col.id" v-slot="{navigate,href}" custom v-for="col in collectes" :key="col.id">
+            <router-link :to="'/consultation/projet/'+this.$route.params.idProjet+'/'+collecte.id" v-slot="{navigate,href}" custom v-for="collecte in collectes" :key="collecte.id">
                 
                 <a :href="href" @click="navigate" class="list-group-item list-group-item-action">
-                    <collecte-headband :collecte="col" :editable="false" :displayForm ="true" :displayProjet="false"/>
+                    <overview-list-item :collecte="collecte" :editable="false" :displayForm ="true" :displayProjet="false"/>
                 </a>
             </router-link>
         </div>
@@ -30,13 +30,13 @@
 <script>
 
 import { mapActions, mapState } from 'vuex'
-import CollecteHeadband from '../components/CollecteHeadband.vue';
+import OverviewListItem from '../components/collecte/OverviewListItem.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import { searchConsultation } from '../js/search-consultation';
 
 export default {
 
-    components:{CollecteHeadband,Spinner}, //
+    components:{OverviewListItem,Spinner}, //
     data(){
         return {
             pending: {

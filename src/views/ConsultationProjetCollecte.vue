@@ -5,7 +5,7 @@
             size="lg"
             @modal-hide="routeToParent()"
             >
-            <ConsultationCollecteResume :collecte="collecte" :toolbar="['export']" :levelUser="login.type"  :readonly="true" :route="nameRoute" ></ConsultationCollecteResume>
+            <CollecteResume :collecte="collecte" :toolbar="['export']" :levelUser="login.type"  :readonly="true" :route="nameRoute" ></CollecteResume>
         </app-modal>
     </div>
 </template>
@@ -14,10 +14,10 @@
 import {mapState, mapActions} from 'vuex'; //
 
 import AppModal from '../components/pebble-ui/AppModal.vue';
-import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
+import CollecteResume from '../components/collecte/Resume.vue';
 export default {
 
-    components:{AppModal,ConsultationCollecteResume}, //
+    components:{AppModal,CollecteResume}, //
 
     computed:{
         ...mapState(['collectes','collecte','login']),

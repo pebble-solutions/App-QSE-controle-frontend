@@ -3,7 +3,7 @@
         <spinner v-if="pending.collecte" />
         <template v-else>
             <hab-monitor v-if="collecte.tli && collecte.tlc == 'CharacteristicPersonnel'" :habId="collecte.tli" :collecte="collecte" :info="infosColl"></hab-monitor>
-            <consultation-collecte-resume :collecte="collecte" :readonly="true" v-if="collecte"></consultation-collecte-resume>
+            <collecte-resume :collecte="collecte" :readonly="true" v-if="collecte" />
             <router-view></router-view>
         </template>
     </div>
@@ -13,13 +13,13 @@
 
 import {mapState, mapActions} from 'vuex'; 
 
-import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
-import Spinner from '../components/pebble-ui/Spinner.vue';
-import HabMonitor from '../components/collecte/HabMonitor.vue';
+import CollecteResume from '../../components/collecte/Resume.vue';
+import Spinner from '../../components/pebble-ui/Spinner.vue';
+import HabMonitor from '../../components/collecte/HabMonitor.vue';
 
 
 export default {
-    components:{ConsultationCollecteResume, Spinner, HabMonitor}, 
+    components:{CollecteResume, Spinner, HabMonitor}, 
 
     data() {
         return {

@@ -55,7 +55,7 @@ import HeaderToolbar from '../../components/pebble-ui/toolbar/HeaderToolbar.vue'
 import CollecteHeaderToolbar from '../../components/collecte/CollecteHeaderToolbar.vue';
 import Timeline from '../../components/collecte/Timeline.vue';
 import BlocNavigation from '../../components/BlocNavigation.vue';
-import ConsultationCollecteResume from '../../components/ConsultationCollecteResume.vue';
+import ConsultationCollecteResume from '../../components/collecte/Resume.vue';
 
 
 export default {

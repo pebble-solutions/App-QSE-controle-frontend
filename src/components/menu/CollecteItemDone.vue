@@ -6,9 +6,9 @@
 
 		<div class="d-flex flex-column flexwrap align-content-start justify-content-start w-100 position-relative">
 			<div class="d-flex align-items-center">
-    <small class="fw-lighter me-3">#{{ collecte.id }}</small> <!-- Augmentation de la marge ici -->
-    <date-badge :collecte="collecte" />
-  </div>
+				<small class="fw-lighter me-3">#{{ collecte.id }}</small> <!-- Augmentation de la marge ici -->
+				<date-badge :collecte="collecte" />
+			</div>
 
 			<personnel-name :personnel-name="collecte.cible_nom" :personnel-id="collecte.cible__structure__personnel_id" />
 
@@ -17,16 +17,16 @@
 			<projet-name :name="collecte.projet_label" v-if="collecte.projet_label" />
 		</div>
 
-		<button v-if="collecte.result_var && collecte.result_var != 'null'"
-			class="badge fs-6 text-uppercase border border-light position-relative"
-			:class="['text-bg', classNameFromSAMI(collecte.result_var)]">
+		<span v-if="collecte.result_var && collecte.result_var != 'null'"
+		class="badge fs-6 text-uppercase border border-light position-relative"
+		:class="['text-bg', classNameFromSAMI(collecte.result_var)]">
 			<Bouclage :collecte="collecte" v-if="hasBouclageInfo" />
 			{{ collecte.result_var }}
-		</button>
-		<button v-else class="badge fs-6 text-uppercase border border-light"
-			:class="['text-bg', classNameFromSAMI(collecte.result_var)]">
+		</span>
+		<span v-else class="badge fs-6 text-uppercase border border-light"
+		:class="['text-bg', classNameFromSAMI(collecte.result_var)]">
 			?
-		</button>
+		</span>
 	</div>
 </template>
 <script>

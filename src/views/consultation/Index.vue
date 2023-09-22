@@ -6,7 +6,7 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-md-6 col-lg-4 col-12">
-                        <img src="../assets/consultation.jpg" class="img-fluid" alt="consultation de contrôles" />
+                        <img src="../../assets/consultation.jpg" class="img-fluid" alt="consultation de contrôles" />
                     </div>
                     <div class="col display-6 ">
                         <p class="fs-4 text-center">Utilisez cet espace pour consulter les contrôles réalisés</p>

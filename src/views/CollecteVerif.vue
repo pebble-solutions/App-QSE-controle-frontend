@@ -24,7 +24,7 @@
                
                 
             
-            <consultation-collecte-resume :collecte="collecte" :readonly="false" :timeline="false" v-if="collecte"></consultation-collecte-resume>
+            <collecte-resume :collecte="collecte" :readonly="false" :timeline="false" v-if="collecte"></collecte-resume>
             
             <FooterToolbar wrapper-class="px-2 py-1 border-top border-dark" class-name="bg-dark" v-if="collecte.done == 'NON'">
                 <div class="d-flex justify-content-between align-items-center g-4">
@@ -65,14 +65,14 @@
 
 import {mapActions, mapState} from 'vuex'; 
 
-import ConsultationCollecteResume from '../components/ConsultationCollecteResume.vue';
+import CollecteResume from '../components/collecte/Resume.vue';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 import AlertMessage from '../components/pebble-ui/AlertMessage.vue';
 import FooterToolbar from '../components/pebble-ui/toolbar/FooterToolbar.vue';
 import { listMissingMandatoryQuestions } from '../js/collecte';
 export default {
 
-    components:{ ConsultationCollecteResume, Spinner, AlertMessage,  FooterToolbar }, 
+    components:{ CollecteResume, Spinner, AlertMessage,  FooterToolbar }, 
 
     data() {
         return {

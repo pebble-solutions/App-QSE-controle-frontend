@@ -20,8 +20,8 @@
             </div>
     
             <div class="list-group" v-if="collectes">
-                <div v-for="col in collectes" :key=col.id class="list-group-item" @click="editCollecte(col.id)" type="button">
-                    <collecte-headband :collecte="col" :personnels="listActifs"/>
+                <div v-for="collecte in collectes" :key=collecte.id class="list-group-item" @click="editCollecte(collecte.id)" type="button">
+                    <OverviewListItem :collecte="collecte" :personnels="listActifs"/>
                 </div>
             </div>            
         </div>
@@ -34,11 +34,11 @@
 <script lang="js">
 
 import { mapActions, mapState } from 'vuex';
-import CollecteHeadband from '../components/CollecteHeadband.vue';
+import OverviewListItem from '../components/collecte/OverviewListItem.vue';
 import Spinner from '@/components/pebble-ui/Spinner.vue';
 
 export default {
-    components: { CollecteHeadband, Spinner },
+    components: { OverviewListItem, Spinner },
 
     data() {
         return {

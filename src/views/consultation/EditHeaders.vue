@@ -7,7 +7,7 @@
         :submitBtn="valueButton"
         :cancelBtn="true">
 
-        <FormEditCollecteAdmin :collecte="collecte" :personnels="personnels" @modification="collecteChange" @stringdate="justificationDate"></FormEditCollecteAdmin>
+        <HeadersForm :collecte="collecte" :personnels="personnels" @modification="collecteChange" @stringdate="justificationDate" />
 
         <div v-if="noteContent">
             <div class="card">
@@ -31,8 +31,8 @@
 <script>
 
 import { mapState, mapActions } from 'vuex'
-import AppModal from '../components/pebble-ui/AppModal.vue'
-import FormEditCollecteAdmin from '../components/collecte/FormEditCollecteAdmin.vue'
+import AppModal from '../../components/pebble-ui/AppModal.vue'
+import HeadersForm from '../../components/collecte/HeadersForm.vue'
 
 export default {
 
@@ -41,13 +41,12 @@ export default {
             collecteModifie: {},
             dateStartModifString: null,
             noteContent: null,
-            comment: null,
-            personnels: []
+            comment: null
         }
     },
 
     computed: {
-        ...mapState(['collecte', 'login']),
+        ...mapState(['collecte', 'login', 'personnels']),
 
         /**
          * Retourne la veleur du bouton enregistrer 
@@ -131,15 +130,6 @@ export default {
         },
 
         /**
-         * Charge tout le personnel via un appel API (sans limite)
-         */
-        getPersonnel(){
-            this.$app.apiGet('/v2/personnel',{limit:'aucune'}).then((data) => {
-                this.personnels = data;
-			}).catch(this.$app.catchError);
-        },
-
-        /**
          * Retourne a la vue précédente
          */
         routeToParent() {
@@ -147,11 +137,7 @@ export default {
         }
     },
 
-    mounted(){
-        this.getPersonnel();
-    },
-
-    components: { AppModal, FormEditCollecteAdmin }
+    components: { AppModal, HeadersForm }
 }
 
 </script>

@@ -9,9 +9,9 @@
         
         <div class="list-group" v-else>
             
-            <router-link :to="routeTo + col.id" v-slot="{navigate,href}" custom v-for="col in collectesPersonnel()" :key="col.id">
+            <router-link :to="routeTo + collecte.id" v-slot="{navigate,href}" custom v-for="collecte in collectesPersonnel()" :key="collecte.id">
                 <a :href="href" @click="navigate" class="list-group-item list-group-item-action">
-                    <collecte-headband :collecte="col" :editable="false" :displayProjet="true" :displayForm="false"/>
+                    <OverviewListItem :collecte="collecte" :editable="false" :displayProjet="true" :displayForm="false"/>
                 </a>
             </router-link>
         </div>
@@ -31,12 +31,12 @@
 <script>
 
 import { mapActions, mapState } from 'vuex'
-import CollecteHeadband from '../components/CollecteHeadband.vue';
+import OverviewListItem from '../components/collecte/OverviewListItem.vue';
 import { searchConsultation, returnFiltres } from '../js/search-consultation';
 import Spinner from '../components/pebble-ui/Spinner.vue';
 
 export default {
-    components: { CollecteHeadband, Spinner },
+    components: { OverviewListItem, Spinner },
 
     data() {
         return {

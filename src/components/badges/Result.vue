@@ -1,6 +1,6 @@
 <template>
     
-    <span class="badge rounded-pill mb-1" :class="classList">
+    <span class="badge rounded-pill" :class="classList">
         <template v-if="hasResult">{{ result }}</template>
         <i class="bi bi-question-circle" v-else></i>
     </span>

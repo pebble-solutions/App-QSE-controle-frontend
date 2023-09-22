@@ -91,13 +91,13 @@ const routes = [
   {
     path: '/consultation',
     name: 'consultation',
-    component: () => import("../views/Consultation.vue"),
+    component: () => import("../views/consultation/Index.vue"),
   },
 
   {
     path: '/consultation/:idCollecte',
     name: 'consultationCollecte',
-    component: () => import("../views/ConsultationCollecte.vue"),
+    component: () => import("../views/consultation/Collecte.vue"),
     children: [
       {
         path: 'new',
@@ -107,7 +107,7 @@ const routes = [
       {
         path: 'edit',
         name: 'editCollecte',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteEdit.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/consultation/EditHeaders.vue')
       }
     ]
   },
@@ -155,13 +155,19 @@ const routes = [
   {
     path: '/consultation/kn_wtbcl',
     name: 'consultationKnWtBcl',
-    component: () => import("../views/ConsultationOptions.vue"),
+    component: () => import("../views/ConsultationOptions.vue")
   },
   {
     path: '/consultation/kn_wtbcl/:idCollecte',
     name: 'consultationKnWtBclList',
-    component: () => import("../views/ConsultationCollecte.vue"),
-
+    component: () => import("../views/consultation/Collecte.vue"),
+    children: [
+      {
+        path: 'edit',
+        name: 'knWtbclEditCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/consultation/EditHeaders.vue')
+      }
+    ]
   },
 
   {
@@ -172,8 +178,14 @@ const routes = [
   {
     path: '/consultation/ss_operateur/:idCollecte',
     name: 'consultationSsOperateurList',
-    component: () => import("../views/ConsultationCollecte.vue"),
-
+    component: () => import("../views/consultation/Collecte.vue"),
+    children: [
+      {
+        path: 'edit',
+        name: 'consultationSsOperateurEditCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/consultation/EditHeaders.vue')
+      }
+    ]
   },
 
   {
@@ -184,8 +196,14 @@ const routes = [
   {
     path: '/consultation/ss_controleur/:idCollecte',
     name: 'consultationSsControleurList',
-    component: () => import("../views/ConsultationCollecte.vue"),
-
+    component: () => import("../views/consultation/Collecte.vue"),
+    children: [
+      {
+        path: 'edit',
+        name: 'consultationSsControleurEditCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/consultation/EditHeaders.vue')
+      }
+    ]
   },
 
   {
@@ -233,7 +251,7 @@ const routes = [
   {
     path: '/consultation/kndekn/:idCollecte',
     name: 'consultationKndeKnList',
-    component: () => import("../views/ConsultationCollecte.vue"),
+    component: () => import("../views/consultation/Collecte.vue"),
 
   },
 
@@ -245,7 +263,7 @@ const routes = [
   {
     path: '/consultation/knsskn/:idCollecte',
     name: 'consultationKnssKnList',
-    component: () => import("../views/ConsultationCollecte.vue"),
+    component: () => import("../views/consultation/Collecte.vue"),
 
   },
 
