@@ -22,7 +22,6 @@
                                     </span>
                                 </a>
                             </router-link>
-                            <!-- <small>{{control}}</small>   -->
                         </div>
                     </div>
                 </div>

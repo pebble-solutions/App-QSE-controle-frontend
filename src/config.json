@@ -43,15 +43,12 @@
                 "icon": "bi bi-hourglass-split",
                 "key": "habilitation",
                 "href": "/habilitationPersonnel"
-            },
-            {
-                "label": "Fiche individuelle de suivi",
-                "icon": "bi bi-person-check-fill",
-                "key": "operateur",
-                "href": "/operateur"
             }
+            
         ]
     },
+
+  
     "domains": {
         "prod": "pebble.solutions",
         "dev": "localhost",

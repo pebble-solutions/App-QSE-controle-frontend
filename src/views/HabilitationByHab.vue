@@ -10,7 +10,7 @@
         </template>
         <alert-message v-else class="m-3" variant="warning" icon="bi-exclamation-square">Il n'y pas de veille configurée pour cette habilitation </alert-message>
         <!-- {{ veilleConfig }} -->
-        {{ listPersonnelHabilite }}
+        <!-- {{ listPersonnelHabilite }} -->
         <router-view></router-view>
     </div>
 </template>
