@@ -16,6 +16,13 @@
 					{{ menuItem.label }}
 				</AppMenuItem>
 			</AppMenu>
+			<!-- objet à coller dans config.json pour rétablir la FIS version 22/09/2023
+			{
+				"label": "Fiche individuelle de suivi",
+				"icon": "bi bi-person-check-fill",
+				"key": "operateur",
+				"href": "/operateur"
+			} -->
 		</template>
 
 		<template v-slot:list>
@@ -135,14 +142,14 @@
 				<!-- <AppMenuItem href="/habilitation/Agent"> 
 					<span class="fst-italic fw-lighter">Vue modèle par agent</span>
 				</AppMenuItem> -->
-				<template v-for="agent in personnelsActifsInCurrentStructure" :key="agent.id">
+				<!-- <template v-for="agent in personnelsActifsInCurrentStructure" :key="agent.id">
 					<AppMenuItem :href="'/operateur/' + agent.id">
 						<FicheIndividuelleSuiviItem :agent="agent" :stats="getStatsByAgent(agent.id)"/>
 					</AppMenuItem>
 				</template>
 				<div class="alert alert-info m-2" v-if="!personnelsActifsInCurrentStructure?.length">
 					Il n'y a pas de personnels concernés
-				</div>
+				</div> -->
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'statistiques'">
 				<FormStatistiques></FormStatistiques>
@@ -191,7 +198,7 @@ import PersonnelItem from './components/menu/PersonnelItem.vue'
 import ProjectItemDone from './components/menu/ProjectItemDone.vue';
 import CollecteItemDone from './components/menu/CollecteItemDone.vue';
 import FormStatistiques from './components/FormStatistiques.vue'
-import FicheIndividuelleSuiviItem from './components/List/FicheIndividuelleSuiviItem.vue'
+// import FicheIndividuelleSuiviItem from './components/List/FicheIndividuelleSuiviItem.vue'
 
 import StatsHeader from './components/headers/StatsHeader.vue'
 import ProgrammationHeader from './components/headers/ProgrammationHeader.vue'
@@ -677,8 +684,8 @@ export default {
 
 	},
 
-	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, CollectesFilters, CollecteItemDone, ProjectItemDone, FormStatistiques, FicheIndividuelleSuiviItem, HabilitationList, PersonnelItem },
-	
+	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, CollectesFilters, CollecteItemDone, ProjectItemDone, FormStatistiques, HabilitationList, PersonnelItem },
+	// FicheIndividuelleSuiviItem
 	mounted() {
 		this.$app.addEventListener('structureChanged', () => {
 			this.$router.push('/programmation');
