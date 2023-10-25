@@ -367,9 +367,7 @@ export default {
 		 */
 		loadProjets() {
 			this.pending.projets = true;
-			// let route = 'projet/GET/list';
 			let route = 'data/GET/projet';
-			// let query = { 'in_production': true}
 
 			this.$app.apiGet(route) //query
 				.then((data) => {
