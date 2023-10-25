@@ -1,26 +1,29 @@
 <template>
-	<table class="table">
-		<thead>
-			<tr>
-				<th></th>
-				<th>KN</th>
-				<th>Habilitation contrôlées</th>
-				<th>SAMI</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr v-for="(row, rowIndex) in chartData.slice(1)" :key="rowIndex">
-				<td v-for="(value, columnIndex) in row" :key="columnIndex">
-					<template v-if="columnIndex === 3">
-						<StackedBar :bars="value" :value="true"></StackedBar>
-					</template>
-					<template v-else>
-						{{ value }}
-					</template>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="table-responsive-md">
+		<table class="table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>KN</th>
+					<th>Habilitation contrôlées</th>
+					<th>SAMI</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+				<tr v-for="(row, rowIndex) in chartData.slice(1)" :key="rowIndex">
+					<td v-for="(value, columnIndex) in row" :key="columnIndex">
+						<template v-if="columnIndex === 3">
+							<StackedBar :bars="value" :value="true"></StackedBar>
+						</template>
+						<template v-else>
+							{{ value }}
+						</template>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </template>
   
 <script>
@@ -42,12 +45,15 @@ export default {
 		}
 	},
 	methods: {
+		
+
 		fetchData() {
 			this.chartData = [];
 			let habilitationHistory = new Map();
 			const data = this.$assets.getCollection('collectesCollection').getCollection();
 			data.forEach(collecte => {
 				const id = collecte['projet_id'];
+			
 				const index = this.chartData.findIndex(projet => (projet[0] == this.getProjectIntituleById(id)));
 				if (habilitationHistory.get(id) == null) {
 					habilitationHistory.set(id, []);
@@ -124,6 +130,7 @@ export default {
 		 */
 		getProjectIntituleById(id) {
 			const projet = this.projets.find(e => e.id == id);
+			
 			return projet ? projet.intitule : 'Projet (' + id + ') non trouvé'
 		}
 	},

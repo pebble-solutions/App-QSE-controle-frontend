@@ -61,7 +61,12 @@
         "menu": true,
         "list": true,
         "core": true,
-        "header": true
+        "header": true,
+        "options": {
+            "core": {
+                "className": "overflow-auto"
+            }
+        }
     },
     "api": {
         "elements": "informationGroupe",

@@ -1,4 +1,5 @@
 <template v-if="!pending.fetchData">
+<div class="table-responsive-md">
 	<table class="table">
 		<thead>
 			<tr>
@@ -21,6 +22,7 @@
 			</tr>
 		</tbody>
 	</table>
+</div>
 </template>
   
 <script>
