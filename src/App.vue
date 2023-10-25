@@ -367,10 +367,9 @@ export default {
 		 */
 		loadProjets() {
 			this.pending.projets = true;
-			let route = 'projet/GET/list';
-			let query = { 'in_production': true }
+			let route = 'data/GET/projet';
 
-			this.$app.apiGet(route, query)
+			this.$app.apiGet(route) //query
 				.then((data) => {
 					this.refreshProjets(data);
 				}).catch(this.$app.catchError).finally(() => this.pending.projets = false);
@@ -394,6 +393,7 @@ export default {
 			});
 			this.$assets.addCollection('habilitationsCharacteristic', collection);
 		},
+		
 
 		/** 
 		 * charge l'ensemble des veilles paramétrées 
@@ -579,6 +579,11 @@ export default {
 					apiRoute: "v2/controle/habilitation/type"
 				},
 				{
+					name: "projects",
+					assetName: "projects",
+					apiRoute: "v2/projet"
+				},
+				{
 					name: "personnels",
 					assetName: 'personnels',
 					apiRoute: 'v2/personnel',
@@ -614,6 +619,15 @@ export default {
 		loadPersonnels(){
 			try {
 				this.$assets.getCollection("personnels").load();
+			}
+			catch (e) {
+				this.$app.catchError(e);
+			}
+		},
+
+		loadProjects(){
+			try {
+				this.$assets.getCollection("projects").load();
 			}
 			catch (e) {
 				this.$app.catchError(e);
@@ -696,10 +710,9 @@ export default {
 				this.loadHabilitationType();
 				this.loadHabilitation();
 				this.loadVeille();
-
 				this.initCollections();
 				this.loadCharacteristicPersonnelStats();
-
+				// this.loadProjects();
 				this.loadPersonnels();
 				this.loadCollectes();
 			}

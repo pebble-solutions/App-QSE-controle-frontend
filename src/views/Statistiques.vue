@@ -1,7 +1,7 @@
 <template>
     <div class="container" v-if="!pending.load && !emptyData && !pending.stat">
         <div class="row">
-            <div class="col-md-12 my-2">
+            <div class="col-12 my-2">
                 <div class="bg-white rounded p-3 shadow">
                     <h3 class="fs-4 text-center">Agenda</h3>
                     <AgendaChart></AgendaChart>
@@ -27,28 +27,28 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 my-3">
+            <div class="col-12 my-3">
                 <div class="bg-white rounded p-3 shadow">
                     <h3 class="fs-4 text-center">Global</h3>
                     <GlobalTable></GlobalTable>
                 </div>
             </div>
-            <div class="col-md-12 my-3">
+            <div class="col-12 my-3">
                 <div class="rounded overflow-hidden p-2 shadow bg-white">
                     <StatOperateur :requeteStat="requeteStat" v-if="!pending.stat"></StatOperateur>
                 </div>
             </div>
-            <div class="col-md-12 my-3">
+            <div class="col-12 my-3">
                 <div class="rounded overflow-hidden p-2 shadow bg-white">
                     <StatHabilitation :requeteStat="requeteStat" v-if="!pending.stat"></StatHabilitation>
                 </div>
             </div>
-            <div class="col-md-12 my-3">
+            <div class="col-12 my-3">
                 <div class="rounded overflow-hidden p-2 shadow bg-white">
                     <StatProjet :requeteStat="requeteStat" v-if="!pending.stat"></StatProjet>
                 </div>
             </div>
-            <div class="col-md-12 my-3">
+            <div class="col-12 my-3">
                 <div class="rounded overflow-hidden p-2 shadow bg-white">
                     <StatControleur :requeteStat="requeteStat" v-if="!pending.stat"></StatControleur>
                 </div>

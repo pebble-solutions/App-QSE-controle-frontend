@@ -185,7 +185,6 @@ export default {
               this.listControlToDo = data;
               if(this.listControlToDo){
                 let veille = this.listControlToDo.find((e) => e.personnel_id == this.hab.personnel_id)
-                console.log(veille , 'veille')
                 if (veille) {
                   this.lastControl = veille.date_last
                 }
