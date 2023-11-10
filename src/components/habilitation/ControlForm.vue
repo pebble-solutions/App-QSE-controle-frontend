@@ -39,25 +39,43 @@
                 </option>
             </select>
         </div>
+    </div>
+        <PersonnelsFilter 
+            v-model:contratDd="personnel.contratDdFilter" 
+            v-model:contratDf="personnel.contratDfFilter" 
+            v-model:withContrat="personnel.withContratFilter" 
+            v-model:withoutContrat="personnel.withoutContratFilter" 
+            v-model:croissant="croissant"/>
 
-        <div class="text-center">
+        <div class="text-center m-1">
             <button class="btn btn-primary bi-check" type="button" @click.prevent="emitForm()">Appliquer</button>
         </div>
-    </div>
 </template>
 <script>
+
+import PersonnelsFilter from '../filter/PersonnelFilter.vue';
 
 export default {
     data() {
         return {
             queryParameters: {},
             currentGroup: "Tous",
+            personnel: {
+                contratDdFilter: null,
+                contratDfFilter: null,
+                withContratFilter: true,
+                withoutContratFilter: false,
+            },
+            croissant : false
         }
+    },
+    components : {
+        PersonnelsFilter
     },
     props: {
         habilitationsTypes: Array,
     },
-    emits: ['formSubmitted'],
+    emits: ['formSubmitted', 'formPersonnelSubmitted'],
     methods: {
         /**
          * adapte le contenu de la requête en fonction du mode sélectionné
@@ -95,6 +113,7 @@ export default {
          */
         emitForm() {
             this.selectQueryParameter();
+            this.$emit('formPersonnelSubmitted', this.personnel);
             this.$emit('formSubmitted', this.queryParameters);
         },
         /**

@@ -17,7 +17,7 @@
             </button>
         </div>
         <div>
-            <ControlForm v-if="showFilterForm" @formSubmitted="recieveForm" :habilitationsTypes="habilitationsTypes"></ControlForm>
+            <ControlForm v-if="showFilterForm" @formPersonnelSubmitted="recieveFormPersonnel" @formSubmitted="recieveForm" :habilitationsTypes="habilitationsTypes"></ControlForm>
         </div>
     </form>
 </template>
@@ -42,6 +42,7 @@ export default {
             },
             showFilterForm: false,
             additionalParams: [],
+            personnel: {}
         }
     },
 
@@ -54,11 +55,25 @@ export default {
          * Lance la recherche
          */
         async filter() {
+            this.$assets.getCollection("personnels").reset();
+			await this.$assets.getCollection("personnels").load(
+				{
+					date_start: this.personnel.contratDdFilter,
+					date_end: this.personnel.contratDfFilter,
+					active_only: this.personnel.withContratFilter ? 1 : 0
+				}
+			);
+            
+            const idsPersonnelsFiltered = [];
+            for (let personnel of this.$assets.getCollection("personnels").getCollection()){
+                idsPersonnelsFiltered.push(personnel.id)
+            }
             const collection = this.$assets.getCollection("habilitationsPersonnels");
             collection.reset();
             collection.requestPayload = collection.requestPayload ?? {};
             collection.requestPayload.last_control_limit = this.requestPayload.last_control_limit;
             collection.requestPayload.last_control = 1;
+            collection.requestPayload.personnel_id_array = idsPersonnelsFiltered;
             for (const [key, value] of Object.entries(this.additionalParams)) {
                 collection.requestPayload[key] = value;
             }
@@ -68,6 +83,9 @@ export default {
             catch (e) {
                 this.$app.catchError(e);
             }
+
+            console.log("IDS PERSONNELS", idsPersonnelsFiltered, "IDS PERSONNELS");
+            console.log("COLLECTION",collection.getCollection(), "COLLECTION");
         },
         /**
          * Change la valeur de showFilterForm et la retourne
@@ -76,6 +94,11 @@ export default {
             this.showFilterForm = !this.showFilterForm;
             return this.showFilterForm;
         },
+
+        recieveFormPersonnel(childParams){
+            this.personnel = childParams;
+        },
+
         /**
          * Déclenché à la réception de l'évènement envoyé par le formulaire dans le composant enfant
          */
