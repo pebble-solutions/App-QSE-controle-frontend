@@ -60,8 +60,8 @@
         </div> 
     </div>
 
-
-  </template>
+    <router-view/>
+</template>
 
 <script>
 
@@ -366,12 +366,12 @@ export default {
         }
 
     },
-
-    unmounted() {
-        this.setEcheance(null)
-    },
+    // unmounted() {
+    //     this.setEcheance(null)
+    // },
 
     mounted() {
+        this.setEcheance(null)
         this.getAllHabilitations();
         this.getAllOperateurs();
     }

@@ -329,7 +329,14 @@ const routes = [
   {
     path:'/echeancier',
     name: 'Echeancier',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Echeancier.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Echeancier.vue'),
+    children: [
+      {
+        path: 'consultation/:idCollecte',
+        name: 'EcheancierConsultationCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteOptionsPersonnel.vue')
+      }
+    ]
   },
   {
     path: '/habilitationPersonnel',

@@ -25,10 +25,13 @@
         </template>
 
         <template v-for="(control, rowIndex) in controls" :key="control">
-
-            <control-timeline-result :blankWidth="getWidth(getControlBlankWeeks(rowIndex))" :control="control"
-                :left="getLeftPosition(getWeekStartInTimeline(control.date_start) + 1)"
-                :width="getWidth(getControlValidityWeeks(rowIndex, 26))" />
+            <router-link :to="'/echeancier/consultation/' + control.id" v-slot="{navigate,href}" custom>
+                <a :href="href" @click="navigate">
+                    <control-timeline-result :blankWidth="getWidth(getControlBlankWeeks(rowIndex))" :control="control"
+                        :left="getLeftPosition(getWeekStartInTimeline(control.date_start) + 1)"
+                        :width="getWidth(getControlValidityWeeks(rowIndex, 26))" />
+                </a>
+            </router-link>           
         </template>
     </div>
 </template>
