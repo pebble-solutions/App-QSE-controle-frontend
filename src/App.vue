@@ -71,6 +71,7 @@
 					<Spinner />
 				</template>
 				<template v-else>
+					<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
 					<template v-for="res in listConsultation(searchResults)" :key="res.id">
 						<app-menu-item v-if="this.searchOptions.mode == 'collecte'" :href="'/consultation/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
@@ -656,31 +657,44 @@ export default {
 		 */
 		listConsultation(list) {
 			const { mode } = this.searchOptions;
+
 			if (mode === 'collecte') {
 				let collectesFiltred = list;
 
 				if (this.displaySearch) {
 					const searchInput = this.displaySearch.trim();
+
 					if (/^\d+$/.test(searchInput)) {
 						collectesFiltred = collectesFiltred.filter(item => searchInput.includes(item.id));
-					} else {
+					} else if (/^[a-zA-Z0-9]+$/.test(searchInput)) {
 						const searchPattern = new RegExp(searchInput, 'i');
 						collectesFiltred = collectesFiltred.filter(item => item.cible_nom?.toUpperCase().match(searchPattern));
+					} else {
+						// Type de caractère non valide, ne rien faire et retourner la liste non filtrée
+						return list;
 					}
 				}
+
 				return collectesFiltred;
 			} else if (mode === 'operateur' || mode === 'controleur') {
 				let personnels = list;
-				
+
 				if (list.length !== 0 && this.displaySearch !== '') {
-					personnels = personnels.filter(item => item.cache_nom.toUpperCase().match(this.displaySearch.toUpperCase()));
+					// Vérifier si la recherche est alphanumérique ou une chaîne de caractères
+					if (/^[a-zA-Z0-9]+$/.test(this.displaySearch)) {
+						personnels = personnels.filter(item => item.cache_nom.toUpperCase().match(this.displaySearch.toUpperCase()));
+					} else {
+						// Type de caractère non valide, ne rien faire et retourner la liste non filtrée
+						return list;
+					}
 				}
-				
+
 				return personnels;
 			} else {
 				return list;
 			}
 		}
+
 
 	},
 
