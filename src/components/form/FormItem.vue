@@ -14,6 +14,14 @@
         <div :id="bodyId" class="accordion-collapse collapse show" :aria-labelledby="headerId">
             <div class="accordion-body">
 
+                <div>
+                    <h5>Informations sur cette question : </h5>
+                    <p>Note dernier controle sur la question n°{{ this.question.id }}</p>
+                    <p>Date du dernier control sur la question n°{{ this.question.id }}</p>
+                    <p class="text-danger">"Non Contrôlé"</p>
+                    <p>Barre de progression (FIS), avec la note moyenne individuelle et collective de chaque item.</p>
+                </div>
+
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
 
                 <FormModuleSAMI :question="question" v-model:value="value" v-if="question.type == 'sami'" />
