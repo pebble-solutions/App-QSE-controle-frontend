@@ -20,6 +20,7 @@
                     <p>Date du dernier control sur la question n°{{ this.question.id }}</p>
                     <p class="text-danger">"Non Contrôlé"</p>
                     <p>Barre de progression (FIS), avec la note moyenne individuelle et collective de chaque item.</p>
+                    {{ stat }}
                 </div>
 
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
@@ -65,7 +66,8 @@ export default {
 
     props: {
         question: Object,
-        collecte: Object
+        collecte: Object,
+        stat: Object
     },
 
     data() {
