@@ -16,14 +16,17 @@
 
                 <div>
                     <h5>Informations sur cette question : </h5>
-                    <div v-if="stat">
+                    <div class="d-flex align-items-center" v-if="stat">
                         <span>{{ dateStatFormat }}</span>
                         <FormModuleSAMIHeader :value="stat.data_var" />
                     </div>
                     <div v-else>
                         <p class="text-danger">"Non Contrôlé"</p>
                     </div>
-                    <p>Barre de progression (FIS), avec la note moyenne individuelle et collective de chaque item.</p>
+                    <!-- <p>Barre de progression (FIS), avec la note moyenne individuelle et collective de chaque item.</p> -->
+                    <div class="my-4">
+                        <JaugeSami :personnalAverage="75" :name="collecte.cible_nom" :generalAverage="50" />
+                    </div>
                     <!-- {{ stat }} -->
                 </div>
 
@@ -66,6 +69,7 @@ import FormModuleSAMI from './FormModuleSAMI.vue';
 import FormModuleSAMIHeader from './FormModuleSAMIHeader.vue';
 import FormModuleText from './FormModuleText.vue';
 import {dateFormat} from '../../js/date';
+import JaugeSami from '../JaugeSami.vue';
 
 export default {
 
@@ -259,7 +263,7 @@ export default {
         this.initValues();
     },
 
-    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate }
+    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate, JaugeSami }
 }
 
 </script>
