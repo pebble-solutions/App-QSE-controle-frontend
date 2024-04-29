@@ -16,11 +16,15 @@
 
                 <div>
                     <h5>Informations sur cette question : </h5>
-                    <p>Note dernier controle sur la question n°{{ this.question.id }}</p>
-                    <p>Date du dernier control sur la question n°{{ this.question.id }}</p>
-                    <p class="text-danger">"Non Contrôlé"</p>
+                    <div v-if="stat">
+                        <span>{{ dateStatFormat }}</span>
+                        <FormModuleSAMIHeader :value="stat.data_var" />
+                    </div>
+                    <div v-else>
+                        <p class="text-danger">"Non Contrôlé"</p>
+                    </div>
                     <p>Barre de progression (FIS), avec la note moyenne individuelle et collective de chaque item.</p>
-                    {{ stat }}
+                    <!-- {{ stat }} -->
                 </div>
 
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
@@ -61,6 +65,7 @@ import FormModuleNumber from './FormModuleNumber.vue';
 import FormModuleSAMI from './FormModuleSAMI.vue';
 import FormModuleSAMIHeader from './FormModuleSAMIHeader.vue';
 import FormModuleText from './FormModuleText.vue';
+import {dateFormat} from '../../js/date';
 
 export default {
 
@@ -147,6 +152,10 @@ export default {
          */
         dzUrl() {
             return this.$app.licence.apiBaseURL+'data/POST/collecte/'+this.collecte.id+'/file';
+        },
+
+        dateStatFormat() {
+            return dateFormat(this.stat.dc)
         },
 
         /**
