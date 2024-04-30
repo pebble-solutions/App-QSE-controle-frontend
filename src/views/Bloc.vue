@@ -140,9 +140,14 @@ export default {
 
         getBloc() {
 
-            let ligne_ids = this.collecte.formulaire.questions.map(question => question.id);
+            let lignes_ids = this.collecte.formulaire.questions.map(question => question.id);
 
-            this.$app.apiGet('v2/collecte/lastCollecteStat', ligne_ids)
+            let options = {
+                lignes_ids : lignes_ids,
+                cible__structure__personnel_id : this.collecte.cible__structure__personnel_id
+            }
+
+            this.$app.apiGet('v2/collecte/lastCollecteStat', options)
 			.then((data) => {
                 this.stats = data
 				console.log(data)

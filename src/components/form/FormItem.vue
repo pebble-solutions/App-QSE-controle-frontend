@@ -14,9 +14,9 @@
         <div :id="bodyId" class="accordion-collapse collapse show" :aria-labelledby="headerId">
             <div class="accordion-body">
 
-                <div>
+                <div v-if="stat">
                     <h5>Informations sur cette question : </h5>
-                    <div class="d-flex align-items-center" v-if="stat">
+                    <div class="d-flex align-items-center" v-if="stat.dc">
                         <span>{{ dateStatFormat }}</span>
                         <FormModuleSAMIHeader :value="stat.data_var" />
                     </div>
@@ -25,7 +25,7 @@
                     </div>
                     <!-- <p>Barre de progression (FIS), avec la note moyenne individuelle et collective de chaque item.</p> -->
                     <div class="my-4">
-                        <JaugeSami :personnalAverage="75" :name="collecte.cible_nom" :generalAverage="50" />
+                        <JaugeSami :personnalAverage="stat.cibleAverage" :name="collecte.cible_nom" :generalAverage="stat.globalAverage" />
                     </div>
                     <!-- {{ stat }} -->
                 </div>

@@ -23,18 +23,9 @@ export default {
     },
 
     methods: {
-        getStat(questionId){
-            if (this.stats) {
-                for(let stat of this.stats) {
-                    if (stat.id = questionId) return stat
-                }
-            }
-            return null
+        getStat(questionId) {
+            return this.stats ? this.stats.find(stat => stat.ligne === questionId) : null;
         }
-        // getStat(questionId) {
-        //     return this.stats ? this.stats.find(stat => stat.id === questionId) : null;
-        // }
-
     },
 
     components: { FormItem, AlertMessage },
