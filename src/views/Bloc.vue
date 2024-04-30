@@ -150,7 +150,6 @@ export default {
             this.$app.apiGet('v2/collecte/lastCollecteStat', options)
 			.then((data) => {
                 this.stats = data
-				console.log(data)
 			}).catch(this.$app.catchError);
         },
 

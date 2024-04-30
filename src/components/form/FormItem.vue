@@ -14,21 +14,7 @@
         <div :id="bodyId" class="accordion-collapse collapse show" :aria-labelledby="headerId">
             <div class="accordion-body">
 
-                <div v-if="stat">
-                    <h5>Informations sur cette question : </h5>
-                    <div class="d-flex align-items-center" v-if="stat.dc">
-                        <span>{{ dateStatFormat }}</span>
-                        <FormModuleSAMIHeader :value="stat.data_var" />
-                    </div>
-                    <div v-else>
-                        <p class="text-danger">"Non Contrôlé"</p>
-                    </div>
-                    <!-- <p>Barre de progression (FIS), avec la note moyenne individuelle et collective de chaque item.</p> -->
-                    <div class="my-4">
-                        <JaugeSami :personnalAverage="stat.cibleAverage" :name="collecte.cible_nom" :generalAverage="stat.globalAverage" />
-                    </div>
-                    <!-- {{ stat }} -->
-                </div>
+                <QuestionStatCollecte :stat="stat" :cible_nom="collecte.cible_nom" v-if="stat"/>
 
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
 
@@ -68,8 +54,7 @@ import FormModuleNumber from './FormModuleNumber.vue';
 import FormModuleSAMI from './FormModuleSAMI.vue';
 import FormModuleSAMIHeader from './FormModuleSAMIHeader.vue';
 import FormModuleText from './FormModuleText.vue';
-import {dateFormat} from '../../js/date';
-import JaugeSami from '../JaugeSami.vue';
+import QuestionStatCollecte from '../QuestionStatCollecte.vue';
 
 export default {
 
@@ -156,10 +141,6 @@ export default {
          */
         dzUrl() {
             return this.$app.licence.apiBaseURL+'data/POST/collecte/'+this.collecte.id+'/file';
-        },
-
-        dateStatFormat() {
-            return dateFormat(this.stat.dc)
         },
 
         /**
@@ -263,7 +244,7 @@ export default {
         this.initValues();
     },
 
-    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate, JaugeSami }
+    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate, QuestionStatCollecte }
 }
 
 </script>

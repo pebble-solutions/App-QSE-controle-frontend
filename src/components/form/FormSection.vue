@@ -24,7 +24,7 @@ export default {
 
     methods: {
         getStat(questionId) {
-            return this.stats ? this.stats.find(stat => stat.ligne === questionId) : null;
+            return this.stats ? this.stats.find(stat => stat.ligne == questionId) : null;
         }
     },
 
