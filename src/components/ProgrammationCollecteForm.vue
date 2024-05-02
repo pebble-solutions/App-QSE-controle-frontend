@@ -81,13 +81,13 @@
                 <div class="row">
                     <label class="form-label col-3 mt-1" for="collecteBouclage">Controle de Bouclage</label>
                     <div class="form-check col-1 mt-1">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" :disabled="!cible_personnel" :checked="bouclage" @change="bouclage = 'oui'">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" :disabled="!cible_personnel" :checked="bouclageBtn == true" @change="bouclage = selectFirstOption(); bouclageBtn == true">
                         <label class="form-check-label" for="flexRadioDefault1">
                             Oui
                         </label>
                     </div>
                     <div class="form-check col-1 mt-1">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" :checked="bouclage == null" @change="bouclage = null">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" :checked="bouclageBtn == false" @change="bouclage = false">
                         <label class="form-check-label" for="flexRadioDefault2">
                             Non
                         </label>
@@ -98,19 +98,19 @@
                         name="cible_personnel"
                         v-model="bouclage"
                         :disabled="!bouclage"
-                        v-if="!pending.collectes && collectes.length"
+                        ref="collecteCibleSelect"
                         >
                         <option
-                            v-for="(col, index) in collectes"
+                            v-for="col in collectes"
                             :value="col.id"
                             :key="'collecte-' + col.id"
-                            :selected="index === 0"
                         >
                             #{{ col.id }} : {{ getDisplayFormatedDate(col.date_done) }}
                         </option>
                     </select>
                 </div>
             </div>
+            <!--  -->
         </div>
 
     </div>
@@ -148,6 +148,7 @@ export default {
             veilleControleurs: false,
             habControl: true,
             bouclage: null,
+            bouclageBtn: false,
             tlc: null,
             tli: null
         }
@@ -292,7 +293,7 @@ export default {
          */
         cible_personnel(newVal) {
             if (this.inited) {
-                this.getCollectes(newVal)
+                this.getCollectes(newVal);
                 this.tmpCollecte.cible_personnel = newVal;
                 let hab = this.getHabilitationByPersonnelId(newVal);
                 this.tmpCollecte.tlc = hab ? "CharacteristicPersonnel" : null;
@@ -384,7 +385,15 @@ export default {
 
         getDisplayFormatedDate(date){
             return dateFormat(date)
-        }
+        },
+
+        selectFirstOption() {
+        this.$nextTick(() => {
+            if (this.$refs.collecteCibleSelect) {
+                this.bouclage = this.collectes[0].id;
+            }
+        });
+    }
     
     },
 
