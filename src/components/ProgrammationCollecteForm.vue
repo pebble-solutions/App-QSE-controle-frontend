@@ -81,13 +81,14 @@
                 <div class="row">
                     <label class="form-label col-3 mt-1" for="collecteBouclage">Controle de Bouclage</label>
                     <div class="form-check col-1 mt-1">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" :disabled="!cible_personnel" :checked="bouclageBtn == true" @change="bouclage = selectFirstOption(); bouclageBtn == true">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" :disabled="!cible_personnel" :checked="bouclage !== null" @change="bouclage = selectFirstOption();">
+
                         <label class="form-check-label" for="flexRadioDefault1">
                             Oui
                         </label>
                     </div>
                     <div class="form-check col-1 mt-1">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" :checked="bouclageBtn == false" @change="bouclage = false">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" :checked="bouclage == null" @change="bouclage = null">
                         <label class="form-check-label" for="flexRadioDefault2">
                             Non
                         </label>
@@ -148,7 +149,6 @@ export default {
             veilleControleurs: false,
             habControl: true,
             bouclage: null,
-            bouclageBtn: false,
             tlc: null,
             tli: null
         }
@@ -302,8 +302,9 @@ export default {
         },
 
         bouclage(newVal) {
-            if (this.inited && newVal!= 'oui' && newVal != null) {
+            if (this.inited) {
                 this.tmpCollecte.previous_id = newVal
+                console.log(this.tmpCollecte)
             }
         }
     },
