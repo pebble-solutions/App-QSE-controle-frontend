@@ -6,6 +6,8 @@
             :collecte="{id: collecte.previous_id, result_var: collecte.previous_result}" 
             direction="previous"
             v-if="collecte.previous_id" />
+        
+        <TimelineProgPreviousElement :collecte="collecte" v-else-if="this.$route.fullPath.match(/consultation/) && this.collecte.locked" />
         <div v-else></div>
 
         <div class="timeline-el link-secondary">
@@ -84,6 +86,7 @@
 import {classNameFromSAMI, dateFormat} from '../../js/collecte.js';
 import TimelineNavElement from './TimelineNavElement.vue';
 import TimelineProgElement from './TimelineProgElement.vue';
+import TimelineProgPreviousElement from './TimelineProgPreviousElement.vue';
 
 export default {
     props: {
@@ -172,7 +175,7 @@ export default {
 
     },
 
-    components: {  TimelineNavElement, TimelineProgElement},
+    components: {  TimelineNavElement, TimelineProgElement, TimelineProgPreviousElement},
     
 }
 
