@@ -14,6 +14,8 @@
         <div :id="bodyId" class="accordion-collapse collapse show" :aria-labelledby="headerId">
             <div class="accordion-body">
 
+                <QuestionStatCollecte :stat="stat" :cible_nom="collecte.cible_nom" v-if="stat"/>
+
                 <div class="fst-italic" v-if="question.indication">{{ question.indication }}</div>
 
                 <FormModuleSAMI :question="question" v-model:value="value" v-if="question.type == 'sami'" />
@@ -52,12 +54,14 @@ import FormModuleNumber from './FormModuleNumber.vue';
 import FormModuleSAMI from './FormModuleSAMI.vue';
 import FormModuleSAMIHeader from './FormModuleSAMIHeader.vue';
 import FormModuleText from './FormModuleText.vue';
+import QuestionStatCollecte from '../QuestionStatCollecte.vue';
 
 export default {
 
     props: {
         question: Object,
-        collecte: Object
+        collecte: Object,
+        stat: Object
     },
 
     data() {
@@ -240,7 +244,7 @@ export default {
         this.initValues();
     },
 
-    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate }
+    components: { FormModuleSAMI, FormModuleSAMIHeader, FormModuleNone, DropzoneComp, FormModuleText, FormModuleNumber, FormModuleDate, QuestionStatCollecte }
 }
 
 </script>
