@@ -1,7 +1,7 @@
 <template>
    <div class="container bg-light rounded-3 my-1 border" v-if="stat">
-        <h5 class="ms-1">Informations sur cette question : </h5>
-        <div class="row">
+        <h5 class="ms-1 mt-2">Informations sur cette question : </h5>
+        <div class="row my-2">
             <div class="col-1"></div>  
             <div class="col-2 d-flex align-items-center" >
                 <div v-if="stat.dc">
@@ -16,7 +16,7 @@
             <div class="col-8 my-3">
                 <JaugeSami :personnalAverage="stat.cibleAverage" :name="cible_nom" :generalAverage="stat.globalAverage" />
             </div>
-            <div class="col-1"></div>   
+            <div class="col-1"></div>
         </div>
     </div>
 </template>
