@@ -41,7 +41,6 @@
          dateClass() {
              if (!this.stat.dc) return 'text-danger';
              const weeksDiff = diffDate(new Date(this.stat.dc), new Date(), "week");
-             console.log(weeksDiff)
              if (weeksDiff >= 52) return "text-danger";
              else if (weeksDiff >= 26) return "text-warning";
              else return "text-success";
