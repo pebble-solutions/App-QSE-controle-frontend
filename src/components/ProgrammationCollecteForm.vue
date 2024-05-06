@@ -29,6 +29,7 @@
                 <label class="form-label" for="collecteDate">Date programmée</label>
                 <input type="date" class="form-control" id="collecteDate" name="date" v-model="tmpCollecte.date" :disabled="isReadonly('date')">
             </div>
+
             <div class="row g-2">
                
                 <div class="col-12 col-md-6 mb-3">
@@ -76,6 +77,40 @@
                     </span>
                 </div>
             </div>
+            <div class="mb-3 container">
+                <div class="row">
+                    <label class="form-label col-3 mt-1" for="collecteBouclage">Controle de Bouclage</label>
+                    <div class="form-check col-1 mt-1">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" :disabled="!cible_personnel" :checked="bouclage !== null" @change="bouclage = selectFirstOption();">
+
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Oui
+                        </label>
+                    </div>
+                    <div class="form-check col-1 mt-1">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" :checked="bouclage == null" @change="bouclage = null">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            Non
+                        </label>
+                    </div>
+                    <select
+                        class="form-select col w-50"
+                        id="collecteCible"
+                        name="cible_personnel"
+                        v-model="bouclage"
+                        :disabled="!bouclage"
+                        ref="collecteCibleSelect"
+                        >
+                        <option
+                            v-for="col in collectes"
+                            :value="col.id"
+                            :key="'collecte-' + col.id"
+                        >
+                            #{{ col.id }} : {{ getDisplayFormatedDate(col.date_done) }}
+                        </option>
+                    </select>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -85,6 +120,7 @@
 <script>
 import { mapState } from 'vuex';
 import { AssetsAssembler } from '../js/app/services/AssetsAssembler';
+import { dateFormat } from '../js/date';
 
 export default {
     props: {
@@ -101,14 +137,17 @@ export default {
             operateurs: [],
             controleurs: [],
             habilitations: [],
+            collectes: [],
             inited: false,
             pending: {
-                personnels: false
+                personnels: false,
+                collectes: false
             },
             formulaire: null,
             cible_personnel: null,
             veilleControleurs: false,
             habControl: true,
+            bouclage: null,
             tlc: null,
             tli: null
         }
@@ -243,7 +282,6 @@ export default {
                 this.operateurs = this.personnels;
                 this.controleurs = this.personnels;
                 this.veilleControleurs= false
-
             }
         },
 
@@ -254,10 +292,18 @@ export default {
          */
         cible_personnel(newVal) {
             if (this.inited) {
+                this.getCollectes(newVal);
                 this.tmpCollecte.cible_personnel = newVal;
                 let hab = this.getHabilitationByPersonnelId(newVal);
                 this.tmpCollecte.tlc = hab ? "CharacteristicPersonnel" : null;
                 this.tmpCollecte.tli = hab ? hab.id : null;
+            }
+        },
+
+        bouclage(newVal) {
+            if (this.inited) {
+                this.tmpCollecte.previous_id = newVal
+                console.log(this.tmpCollecte)
             }
         }
     },
@@ -303,16 +349,59 @@ export default {
          */
         getHabilitationByPersonnelId(id) {
             return this.habilitations.find(e => e.personnel_id == id);
-        }
+        },
+
+        /**
+         * Retourne la liste des collectes depuis l'ID d'un personnel
+         * 
+         * @param {number} id ID d'un personnel
+         * 
+         * @return {object}
+         */
+        async getCollectes(operateurId){
+
+            let options = {
+                personnel_id__operateur: operateurId,
+                information__groupe_id: this.formulaire,
+                sans_bouclage: true,
+                done: 'OUI'
+            }
+
+            this.pending.personnels = true;
+
+            let tmpCollectes
+
+            try {
+                tmpCollectes = await this.$app.api.get('v2/collecte', options);
+            }
+            catch (e) {
+                this.$app.catchError(e);
+            }
+            finally {
+                this.collectes = tmpCollectes.reverse()
+                this.pending.personnels = false;
+            }
+        },
+
+        getDisplayFormatedDate(date){
+            return dateFormat(date)
+        },
+
+        selectFirstOption() {
+        this.$nextTick(() => {
+            if (this.$refs.collecteCibleSelect) {
+                this.bouclage = this.collectes[0].id;
+            }
+        });
+    }
     
     },
 
     mounted() {
-        this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
-        this.formulaire = this.tmpCollecte.formulaire;
+        this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte))
+        this.formulaire = this.tmpCollecte.formulaire
         this.cible_personnel = this.tmpCollecte.cible_personnel
-        
-        
+        this.bouclage = this.tmpCollecte.previous_id
         
         if (this.tmpCollecte.date) {
             let part = this.tmpCollecte.date.split(" ");

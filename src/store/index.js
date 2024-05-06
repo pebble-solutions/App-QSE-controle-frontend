@@ -289,7 +289,7 @@ export default createStore({
 			}
 			else if (mode == 'setHeaders') {
 				const headers = ["enqueteur__structure__personnel_id", "cible__structure__personnel_id", "cible_nom", "enqueteur_nom", 
-					"date_start", "tlc", "tli"];
+					"date_start", "tlc", "tli", "previous_id", "previous_result"];
 
 				headers.forEach(header => {
 					if (typeof collecte[header] !== 'undefined') {
