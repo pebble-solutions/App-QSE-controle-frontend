@@ -7,7 +7,7 @@
             direction="previous"
             v-if="collecte.previous_id" />
         
-        <TimelineProgPreviousElement :collecte="collecte" v-else-if="this.$route.fullPath.match(/consultation/) && this.collecte.locked" />
+        <TimelineProgPreviousElement :collecte="collecte" v-else-if="this.$route.fullPath.match(/consultation/) && this.collecte.locked && !isFirst" />
         <div v-else></div>
 
         <div class="timeline-el link-secondary">
@@ -89,6 +89,11 @@ import TimelineProgElement from './TimelineProgElement.vue';
 import TimelineProgPreviousElement from './TimelineProgPreviousElement.vue';
 
 export default {
+    data() {
+        return {
+            isFirst: true,
+        }
+    },
     props: {
         collecte: Object,
         route: {
@@ -171,8 +176,24 @@ export default {
             return collecte.result_var && collecte.result_var != "null";
         },
 
-       
+        searchIsFirst() {
+            let options = {
+                personnel_id__operateur : this.collecte.cible__structure__personnel_id,
+                personnel_id__controleur : this.collecte.enqueteur__structure__personnel_id,
+                information__groupe_id : this.collecte.information__groupe_id
+            }
 
+            this.$app.apiGet('v2/collecte/', options)
+			.then((data) => {
+                if (data.length > 1) this.isFirst = false;
+                else this.isFirst = true;
+			}).catch(this.$app.catchError);
+        }
+
+    },
+
+    mounted(){
+        this.searchIsFirst()
     },
 
     components: {  TimelineNavElement, TimelineProgElement, TimelineProgPreviousElement},
