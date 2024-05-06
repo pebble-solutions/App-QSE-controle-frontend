@@ -11,6 +11,7 @@ export const ROUTES_NAMES = {
 				'consultationProjetList',
 				'consultationProjetCollecte',
 				'newCollecte',
+				'addPreviousCollecte',
 				'consultationKnWtBcl',
 				'consultationKnWtBclList',
 				'consultationSsOperateur',

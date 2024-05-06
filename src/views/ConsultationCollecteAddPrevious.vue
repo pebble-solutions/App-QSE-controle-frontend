@@ -45,6 +45,7 @@
                 name="cible_personnel"
                 v-model="previous_id"
                 ref="collecteCibleSelect"
+
                 >
                 <option
                     v-for="col in collectes"
@@ -54,6 +55,22 @@
                     #{{ col.id }} : {{ getDisplayFormatedDate(col.date_done) }}
                 </option>
             </select>
+        </div>
+    </div>
+
+    <div v-if="noteContent">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Note de la collecte #{{ $route.params.idCollecte }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Note justificative</h6>
+                <p class="card-text">{{ noteContent }}</p>
+            </div>
+        </div>
+
+        <div class="mb-3 mt-3">
+            <label for="formComment" class="form-label fs-5 ms-2">Justification</label>
+            <i class="bi bi-exclamation-triangle text-warning ms-3" v-if="!comment"></i>
+            <textarea class="form-control" id="formComment" rows="3" placeholder="Veuillez entrez une justification..." v-model="comment" required></textarea>
         </div>
     </div>
 
@@ -71,31 +88,58 @@ export default {
 
     data() {
         return {
-            collecteModifie: {},
-            previous_id: null
+            collectes : [],
+            previous_id: null,
+            noteContent: null,
+            comment: null
+        }
+    },
+
+    watch: {
+        previous_id(){
+            this.createNote()
         }
     },
 
     computed: {
-        ...mapState(['collecte'])
+        ...mapState(['collecte', 'login']),
+
+         /**
+         * Retourne la veleur du bouton enregistrer 
+         *  - true si une valeur à été modifié
+         *  - false sinon
+         */
+         valueButton() {
+            if(this.noteContent){
+                return true;
+            } else {
+                return false
+            }
+        }
     },
 
     methods: {
 
         ...mapActions(['setCollecteHeaders', 'updateSearchResults']),
+
+         /**
+         * Modifie la valeur de la note à afficher
+         */
+         createNote() {
+            this.noteContent = null;
+            this.noteContent = this.login.login + " à modifié le contrôle : Ajout d'un kn bouclé avec celui-ci -- #" + this.previous_id + " -> #" + this.$route.params.idCollecte;
+        },
+
         /**
          * Met a jour les valeurs des données de la collecte et créer les notes associées aux modifications
          */
         saveCollecte() {
             this.$app.api.patch('v2/collecte/'+ this.$route.params.idCollecte +'/headers', {
                 comment : this.comment,
-                enqueteur__structure__personnel_id : this.collecteModifie.enqueteur__structure__personnel_id,
-                enqueteur_nom : this.collecteModifie.enqueteur_nom,
-                cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
-                cible_nom : this.collecteModifie.cible_nom,
-                date_start : this.collecteModifie.date_start
+                previous_id : this.previous_id
             })
             .then((data) =>{
+                console.log(data)
                 this.setCollecteHeaders(data);
                 this.updateSearchResults([data]);
             })
