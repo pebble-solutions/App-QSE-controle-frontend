@@ -303,7 +303,6 @@ export default {
         bouclage(newVal) {
             if (this.inited) {
                 this.tmpCollecte.previous_id = newVal
-                console.log(this.tmpCollecte)
             }
         }
     },

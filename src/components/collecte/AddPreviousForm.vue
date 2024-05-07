@@ -92,7 +92,6 @@ export default {
 
     mounted() {
         this.previous_id = this.parentPreviousId;
-        console.log(this.parentPreviousId)
     },
 
     components: { UserImage }

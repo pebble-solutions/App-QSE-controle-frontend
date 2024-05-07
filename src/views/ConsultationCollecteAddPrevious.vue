@@ -86,7 +86,6 @@ export default {
                 previous_id : this.previous_id
             })
             .then((data) =>{
-                console.log(data)
                 this.setCollecteHeaders(data);
                 this.updateSearchResults([data]);
             })
