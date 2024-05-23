@@ -2,7 +2,7 @@
     <programmation-collecte-modal
     :collecte="collecte"
     :formulaires="formulaires"
-    :personnels="listActifs"
+    :personnels="personnels"
     :readonly="['enqueteur_personnel']"
     
     @updated="routeToCollecte" 
@@ -32,7 +32,7 @@ export default {
     },
     
     computed: {
-        ...mapState(['formulaires', 'listActifs','collectes', 'login'])
+        ...mapState(['formulaires', 'listActifs', 'personnels','collectes', 'login'])
     },
 
     methods: {
