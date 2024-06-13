@@ -303,6 +303,7 @@ export default {
          */
         cible_personnel(newVal) {
             if (this.inited) {
+                this;this.bouclage = null;
                 this.getCollectes(newVal);
                 this.tmpCollecte.cible_personnel = newVal;
                 let hab = this.getHabilitationByPersonnelId(newVal);
