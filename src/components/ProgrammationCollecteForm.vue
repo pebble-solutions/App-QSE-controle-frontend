@@ -77,11 +77,12 @@
                     </span>
                 </div>
             </div>
-            <div class="mb-3 container">
+            <!-- TODO : Enleer le v-if si dessous -->
+            <div class="mb-3 container" v-if="this.collectes[0]">
                 <div class="row">
                     <label class="form-label col-3 mt-1" for="collecteBouclage">Controle de Bouclage</label>
                     <div class="form-check col-1 mt-1">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" :disabled="!cible_personnel" :checked="bouclage !== null" @change="bouclage = selectFirstOption();">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" :disabled="!cible_personnel && this.collectes[0]" :checked="bouclage !== null" @change="bouclage = selectFirstOption();">
 
                         <label class="form-check-label" for="flexRadioDefault1">
                             Oui
@@ -389,7 +390,9 @@ export default {
         selectFirstOption() {
         this.$nextTick(() => {
             if (this.$refs.collecteCibleSelect) {
-                this.bouclage = this.collectes[0].id;
+                if (this.collectes[0]) {
+                    this.bouclage = this.collectes[0].id;
+                }
             }
         });
     }
