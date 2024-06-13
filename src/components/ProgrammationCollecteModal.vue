@@ -98,11 +98,8 @@ export default {
             this.pending.collecte = true;
             this.tmpCollecte.environnement = 'private';
 
-            console.log(this.tmpCollecte)
-            
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte)
             .then(data => {
-                console.log(data)
                 this.addCollectes([data]);
                 this.refreshCollectes([data]);
                 this.refreshNbTodoFormulaires(data.information__groupe_id);
