@@ -77,7 +77,7 @@
                     </span>
                 </div>
             </div>
-            <!-- TODO : Enleer le v-if si dessous -->
+            <!-- TODO : Enlever le v-if si dessous -->
             <div class="mb-3 container" v-if="this.collectes[0]">
                 <div class="row">
                     <label class="form-label col-3 mt-1" for="collecteBouclage">Controle de Bouclage</label>
