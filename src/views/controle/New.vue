@@ -2,7 +2,7 @@
     <!-- <programmation-collecte-modal
     :collecte="collecte"
     :formulaires="formulaires"
-    :personnels="listActifs"
+    :personnels="personnels"
     :readonly="['enqueteur_personnel']"
     
     @updated="routeToCollecte" 
