@@ -338,7 +338,6 @@ export default {
         getFormulaireById(id) {
             return this.formulaires.find(e => e.id == id);
         },
-       
     
         /**
          * Retourne les informations d'une habilitation depuis l'ID d'un personnel
