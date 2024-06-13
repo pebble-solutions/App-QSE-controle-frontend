@@ -41,9 +41,7 @@ export default {
     },
     
     computed: {
-
         ...mapState(['formulaires', 'listActifs','collectes', 'login', 'personnels'])
-
     },
 
     methods: {

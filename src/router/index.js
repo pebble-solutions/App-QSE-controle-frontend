@@ -105,6 +105,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteNew.vue')
       },
       {
+        path: 'addPrevious',
+        name: 'addPreviousCollecte',
+        component: () => import(/* webpackChunkName: "about" */ '../views/ConsultationCollecteAddPrevious.vue')
+      },
+      {
         path: 'edit',
         name: 'editCollecte',
         component: () => import(/* webpackChunkName: "about" */ '../views/consultation/EditHeaders.vue')

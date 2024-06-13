@@ -27,7 +27,7 @@
 
 <script>
 
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import AppModal from './pebble-ui/AppModal.vue';
 import FormCollecte from './ProgrammationCollecteForm.vue';
 
@@ -68,7 +68,7 @@ export default {
 
     methods: {
 
-        ...mapActions(['refreshCollectes', 'removeCollecte', 'refreshNbTodoFormulaires']),
+        ...mapActions(['addCollectes','refreshCollectes', 'removeCollecte', 'refreshNbTodoFormulaires']),
 
         /**
          * Met à jour les informations d'une collecte
@@ -97,9 +97,10 @@ export default {
         record() {
             this.pending.collecte = true;
             this.tmpCollecte.environnement = 'private';
-            
+
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte)
             .then(data => {
+                this.addCollectes([data]);
                 this.refreshCollectes([data]);
                 this.refreshNbTodoFormulaires(data.information__groupe_id);
                 this.$emit('updated', data);

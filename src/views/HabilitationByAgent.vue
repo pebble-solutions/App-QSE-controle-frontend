@@ -173,7 +173,7 @@ export default{
         loadFormulaireStats(formulaireId) {
             this.pending.formulaireStats = true;
 
-            console.log(formulaireId);
+            // console.log(formulaireId);
 
             this.$app.api.get(`v2/information-groupe/${formulaireId}/stats`, {
                 "personnel_ids": this.currentPersonnel.id

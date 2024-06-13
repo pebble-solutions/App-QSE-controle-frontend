@@ -16,7 +16,7 @@
                 Questions :  {{nbAnswers}} / {{lignes?.length}}
             </div>
         </div>
-        <form-section :questions="lignes" :collecte="collecte" />
+        <form-section :questions="lignes" :collecte="collecte" :stats="stats" />
     </div>
     <div v-else>
         <spinner></spinner> 
@@ -42,6 +42,7 @@ export default {
         return {
             bloc_id: null,
             comment: null,
+            stats: null,
             pending: {
                 bloc: false
             }
@@ -137,6 +138,21 @@ export default {
             })
         },
 
+        getBloc() {
+
+            let lignes_ids = this.collecte.formulaire.questions.map(question => question.id);
+
+            let options = {
+                lignes_ids : lignes_ids,
+                cible__structure__personnel_id : this.collecte.cible__structure__personnel_id
+            }
+
+            this.$app.apiGet('v2/collecte/lastCollecteStat', options)
+			.then((data) => {
+                this.stats = data
+			}).catch(this.$app.catchError);
+        },
+
         /**
          * Verifie si les questions obligatoires ont des réponses.
          *  - Si aucune réponse n'est fournie, alors une alerte est envoyée
@@ -158,6 +174,7 @@ export default {
     mounted() {
         this.bloc_id = this.$route.params.bloc;
         this.getReponses();
+        this.getBloc();
     }
 }
 </script>
