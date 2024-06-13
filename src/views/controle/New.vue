@@ -1,4 +1,13 @@
 <template>
+    <!-- <programmation-collecte-modal
+    :collecte="collecte"
+    :formulaires="formulaires"
+    :personnels="personnels"
+    :readonly="['enqueteur_personnel']"
+    
+    @updated="routeToCollecte" 
+    v-if="inited"
+    /> -->
     <programmation-collecte-modal
     :collecte="collecte"
     :formulaires="formulaires"
@@ -32,7 +41,9 @@ export default {
     },
     
     computed: {
-        ...mapState(['formulaires', 'listActifs', 'personnels','collectes', 'login'])
+
+        ...mapState(['formulaires', 'listActifs','collectes', 'login', 'personnels'])
+
     },
 
     methods: {
