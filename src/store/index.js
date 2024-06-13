@@ -505,6 +505,7 @@ export default createStore({
 		 * @param {array} collectes Une liste de collectes
 		 */
 		refreshCollectes(context, collectes) {
+			console.log(collectes)
 			context.commit('collectes', {
 				collectes,
 				action: 'refresh'

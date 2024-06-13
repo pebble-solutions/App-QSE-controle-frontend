@@ -68,7 +68,7 @@ export default {
 
     methods: {
 
-        ...mapActions(['refreshCollectes', 'removeCollecte', 'refreshNbTodoFormulaires']),
+        ...mapActions(['addCollectes','refreshCollectes', 'removeCollecte', 'refreshNbTodoFormulaires']),
 
         /**
          * Met à jour les informations d'une collecte
@@ -100,7 +100,8 @@ export default {
             
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte)
             .then(data => {
-                this.refreshCollectes([data]);
+                this.addCollectes([data]);
+                // this.refreshCollectes([data]);
                 this.refreshNbTodoFormulaires(data.information__groupe_id);
                 this.$emit('updated', data);
             })
