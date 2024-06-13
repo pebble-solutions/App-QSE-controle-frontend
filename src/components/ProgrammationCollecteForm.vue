@@ -54,7 +54,7 @@
                 <div class="col-12 col-md-6 mb-3">
                     <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
                     <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')" v-if="!pending.personnels">
-                        <option  v-for="(controleur) in controleurs" :value="controleur.id" :key="'controleur-'+controleur.id">
+                        <option  v-for="(controleur) in tmpControleurs" :value="controleur.id" :key="'controleur-'+controleur.id">
                             {{ controleur.cache_nom }}
                         </option>
                     </select>
@@ -137,6 +137,8 @@ export default {
             tmpCollecte: null,
             operateurs: [],
             controleurs: [],
+            tmpOperateurs: [],
+            tmpControleurs: [],
             habilitations: [],
             collectes: [],
             inited: false,
@@ -170,7 +172,15 @@ export default {
         sortedOperateurs() {
             let list = [];
 
-            this.operateurs.forEach(e => {
+            // this.operateurs.forEach(e => {
+            //     if (typeof e === 'object' && e)  {
+            //         const found = list.find(o => o.id == e.id);
+            //         if (!found) {
+            //             list.push(e);
+            //         }
+            //     }
+            // });
+            this.tmpOperateurs.forEach(e => {
                 if (typeof e === 'object' && e)  {
                     const found = list.find(o => o.id == e.id);
                     if (!found) {
@@ -293,6 +303,7 @@ export default {
          */
         cible_personnel(newVal) {
             if (this.inited) {
+                this;this.bouclage = null;
                 this.getCollectes(newVal);
                 this.tmpCollecte.cible_personnel = newVal;
                 let hab = this.getHabilitationByPersonnelId(newVal);
@@ -408,6 +419,10 @@ export default {
             let part = this.tmpCollecte.date.split(" ");
             this.tmpCollecte.date = part[0];
         }
+
+        this.tmpOperateurs = this.personnels;
+        this.tmpControleurs = this.personnels;
+
         this.inited = true;
     },
 }
