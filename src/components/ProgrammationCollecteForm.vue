@@ -1,19 +1,16 @@
 <template>
-
     <div v-if="tmpCollecte">
         <div class="row g-2">
             <div v-if="!veille" class="col mb-3">
-                
                 <label for="collecteFormulaire" class="form-label">Type de contrôle</label>
                 <select class="form-select" id="collecteFormulaire" name="formulaire" v-model="formulaire" required :disabled="isReadonly('formulaire')">
-                    <option v-for="(form) in formulaires" :value="form.id" :key="form.id" >{{form.groupe}}</option>
+                    <option v-for="(form) in formulaires" :value="form.id" :key="form.id">{{form.groupe}}</option>
                 </select>
                 <div class="text-danger mt-2" v-if="!currentFormTli && formulaire">
                     <i class="bi bi-exclamation-triangle-fill"></i>
                     Aucune habilitation n'est liée à ce type de contrôle. Les fonctions de veille 
                     ne seront pas disponibles.
                 </div>
-                
             </div>
         </div>
 
@@ -21,7 +18,7 @@
             <div v-if="!veille" class="col mb-3">
                 <label for="collecteProjet" class="form-label">Projet</label>
                 <select class="form-select" id="collecteProjet" name="projet" v-model="tmpCollecte.projet_id" :disabled="isReadonly('projet')">
-                    <option  v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
+                    <option v-for="(projet) in projets" :value="projet.id" :key="projet.id">{{projet.intitule}}</option>
                 </select>
             </div>
     
@@ -31,12 +28,10 @@
             </div>
 
             <div class="row g-2">
-               
                 <div class="col-12 col-md-6 mb-3">
                     <label for="collecteCible" class="form-label">Opérateur </label>
                     <select class="form-select" id="collecteCible" name="cible_personnel" v-model="cible_personnel" :disabled="isReadonly('cible_personnel')" v-if="!pending.personnels">
                         <option v-for="(agent) in sortedOperateurs" :value="agent.id" :key="'agent-'+agent.id"> {{agent.cache_nom}} </option>
-    
                     </select>
                     <div class="text-secondary py-1" v-else>
                         <span class="spinner-border spinner-border-sm"></span>
@@ -54,7 +49,7 @@
                 <div class="col-12 col-md-6 mb-3">
                     <label for="collecteEnqueteur" class="form-label">Nom du contrôleur</label>
                     <select class="form-select" id="collecteEnqueteur" name="enqueteur_personnel" v-model="tmpCollecte.enqueteur_personnel" :disabled="isReadonly('enqueteur_personnel')" v-if="!pending.personnels">
-                        <option  v-for="(controleur) in tmpControleurs" :value="controleur.id" :key="'controleur-'+controleur.id">
+                        <option v-for="(controleur) in tmpControleurs" :value="controleur.id" :key="'controleur-'+controleur.id">
                             {{ controleur.cache_nom }}
                         </option>
                     </select>
@@ -113,9 +108,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </template>
 
 <script>
@@ -164,22 +157,9 @@ export default {
             return formulaire?.tli;
         },
 
-        /**
-         * Retourne la liste des opérateurs par ordre alphabétique
-         * 
-         * @return {array}
-         */
         sortedOperateurs() {
             let list = [];
 
-            // this.operateurs.forEach(e => {
-            //     if (typeof e === 'object' && e)  {
-            //         const found = list.find(o => o.id == e.id);
-            //         if (!found) {
-            //             list.push(e);
-            //         }
-            //     }
-            // });
             this.tmpOperateurs.forEach(e => {
                 if (typeof e === 'object' && e)  {
                     const found = list.find(o => o.id == e.id);
@@ -189,38 +169,21 @@ export default {
                 }
             });
 
-            return list.sort(function (a, b) {
-                if (a.cache_nom < b.cache_nom) {
-                    return -1;
-                }
-                if (a.cache_nom > b.cache_nom) {
-                    return 1;
-                }
+            return list.sort((a, b) => {
+                if (a.cache_nom < b.cache_nom) return -1;
+                if (a.cache_nom > b.cache_nom) return 1;
                 return 0;
             });
         },
 
-        /**
-         * Retourne true si le contrôleur sélectionné est habilité
-         * 
-         * Un contrôleur est habilité si il pocède une habilitation en lien avec le tli du formulaire 
-         * ou si le formulaire ne nécessite pas d'habilitation
-         * 
-         * @return {bool}
-         */
         isSelectedControleurHabilited() {
             return this.controleurs.find(e => e.id === this.tmpCollecte.enqueteur_personnel) ? true : false;
         }
     },
 
-    emits:['delete-collecte', 'update-collecte'],
+    emits: ['delete-collecte', 'update-collecte'],
 
     watch: {
-        /**
-         * Mise à jour de la collecte
-         * 
-         * @param {object} newVal Les nouvelles valeurs de la collecte
-         */
         tmpCollecte: {
             handler(newVal) {
                 this.$emit('update-collecte', newVal);
@@ -228,11 +191,6 @@ export default {
             deep: true
         },
 
-        /**
-         * Modifie le formulaire sélectionné sur tmpCollecte
-         * 
-         * @param {number} newVal Formulaire sélectionné
-         */
         async formulaire(newVal) {
             if (this.inited) {
                 this.tmpCollecte.formulaire = newVal;
@@ -265,13 +223,11 @@ export default {
                                 id: control.personnel_ids.join(',')
                             });
                             this.controleurs = personnelsCollection.getCollection().filter(e => control.personnel_ids.includes(e.id));
-                            this.veilleControleurs = true
-                        }
-                        else {
-                            this.controleurs = this.personnels
-                            this.veilleControleurs= false
-                            this.habControl=true
-                            
+                            this.veilleControleurs = true;
+                        } else {
+                            this.controleurs = this.personnels;
+                            this.veilleControleurs = false;
+                            this.habControl = true;
                         }
                     }
                     catch (e) {
@@ -280,30 +236,21 @@ export default {
                     finally {
                         this.pending.personnels = false;
                     }
-
-                }
-                else {
+                } else {
                     this.operateurs = this.personnels;
                     this.controleurs = this.personnels;
-                    this.veilleControleurs= false
-
+                    this.veilleControleurs = false;
                 }
-            }
-            else {
+            } else {
                 this.operateurs = this.personnels;
                 this.controleurs = this.personnels;
-                this.veilleControleurs= false
+                this.veilleControleurs = false;
             }
         },
 
-        /**
-         * Modifie le personnel cible sélectionné et synchronise tmpCollecte
-         * 
-         * @param {number} newVal Nouveau personnel cible sélectionné
-         */
         cible_personnel(newVal) {
             if (this.inited) {
-                this;this.bouclage = null;
+                this.bouclage = null;
                 this.getCollectes(newVal);
                 this.tmpCollecte.cible_personnel = newVal;
                 let hab = this.getHabilitationByPersonnelId(newVal);
@@ -314,106 +261,69 @@ export default {
 
         bouclage(newVal) {
             if (this.inited) {
-                this.tmpCollecte.previous_id = newVal
+                this.tmpCollecte.previous_id = newVal;
             }
         }
     },
     
     methods: {
-        
-        /**
-         * Envoie un événement de suppression de la collecte
-         */
         deleteCollecte() {
             this.$emit('delecte-collecte', this.collecte);
         },
 
-        /**
-         * Retourne true si le champ testé fait partie du tableau readonly
-         * 
-         * @param {string} field Le nom du champ à tester
-         * 
-         * @return {boolean}
-         */
         isReadonly(field) {
             return this.readonly?.includes(field);
         },
 
-        /**
-         * Retourne un formulaire depuis son ID
-         * 
-         * @param {number} id L'ID du formulaire
-         * 
-         * @return {object}
-         */
         getFormulaireById(id) {
             return this.formulaires.find(e => e.id == id);
         },
     
-        /**
-         * Retourne les informations d'une habilitation depuis l'ID d'un personnel
-         * 
-         * @param {number} id ID d'un personnel
-         * 
-         * @return {object}
-         */
         getHabilitationByPersonnelId(id) {
             return this.habilitations.find(e => e.personnel_id == id);
         },
 
-        /**
-         * Retourne la liste des collectes depuis l'ID d'un personnel
-         * 
-         * @param {number} id ID d'un personnel
-         * 
-         * @return {object}
-         */
-        async getCollectes(operateurId){
-
+        async getCollectes(operateurId) {
             let options = {
                 personnel_id__operateur: operateurId,
                 information__groupe_id: this.formulaire,
                 sans_bouclage: true,
                 done: 'OUI'
-            }
+            };
 
             this.pending.personnels = true;
-
-            let tmpCollectes
+            let tmpCollectes;
 
             try {
                 tmpCollectes = await this.$app.api.get('v2/collecte', options);
-            }
-            catch (e) {
+            } catch (e) {
                 this.$app.catchError(e);
-            }
-            finally {
-                this.collectes = tmpCollectes.reverse()
+            } finally {
+                this.collectes = tmpCollectes ? tmpCollectes.reverse() : [];
                 this.pending.personnels = false;
             }
         },
 
-        getDisplayFormatedDate(date){
-            return dateFormat(date)
+        getDisplayFormatedDate(date) {
+            return dateFormat(date);
         },
 
         selectFirstOption() {
-        this.$nextTick(() => {
-            if (this.$refs.collecteCibleSelect) {
-                if (this.collectes[0]) {
-                    this.bouclage = this.collectes[0].id;
+            this.$nextTick(() => {
+                if (this.$refs.collecteCibleSelect) {
+                    if (this.collectes[0]) {
+                        this.bouclage = this.collectes[0].id;
+                    }
                 }
-            }
-        });
-    }
-    
+            });
+        }
     },
 
     mounted() {
-        this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte))
-        this.formulaire = this.tmpCollecte.formulaire
-        this.cible_personnel = this.tmpCollecte.cible_personnel
-        this.bouclage = this.tmpCollecte.previous_id
+        this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
+        this.formulaire = this.tmpCollecte.formulaire;
+        this.cible_personnel = this.tmpCollecte.cible_personnel;
+        this.bouclage = this.tmpCollecte.previous_id;
         
         if (this.tmpCollecte.date) {
             let part = this.tmpCollecte.date.split(" ");
@@ -424,7 +334,6 @@ export default {
         this.tmpControleurs = this.personnels;
 
         this.inited = true;
-    },
+    }
 }
-
 </script>

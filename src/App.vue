@@ -61,17 +61,15 @@
 			</AppMenu>
 			<AppMenu v-else-if="listMode === 'consultation'">
 				<div class="sticky-top bg-light border-bottom" style="top:47px;">
-					<CollectesFilters 
-						v-model:dd="searchOptions.dd" 
-						v-model:df="searchOptions.df"
-						v-model:mode="searchOptions.mode" 
-						v-model:pendingSearch="pending.search" />
+					<CollectesFilters v-model:dd="searchOptions.dd" v-model:df="searchOptions.df"
+						v-model:mode="searchOptions.mode" v-model:pendingSearch="pending.search" />
 				</div>
 				<template v-if="pending.search">
 					<Spinner />
 				</template>
 				<template v-else>
-					<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..." v-model="displaySearch">
+					<input type="text" class="form-control my-2 px-2" placeholder="Rechercher..."
+						v-model="displaySearch">
 					<template v-for="res in listConsultation(searchResults)" :key="res.id">
 						<app-menu-item v-if="this.searchOptions.mode == 'collecte'" :href="'/consultation/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
@@ -84,25 +82,32 @@
 							:href="'/consultation/projet/' + res.id">
 							<project-item-done :num="res.nb_done" :projet="res"></project-item-done>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'kn_wtbcl'" :href="'/consultation/kn_wtbcl/' + res.id">
+						<app-menu-item v-else-if="this.searchOptions.mode == 'kn_wtbcl'"
+							:href="'/consultation/kn_wtbcl/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'ss_operateur'" :href="'/consultation/ss_operateur/' + res.id">
+						<app-menu-item v-else-if="this.searchOptions.mode == 'ss_operateur'"
+							:href="'/consultation/ss_operateur/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'ss_controleur'" :href="'/consultation/ss_controleur/' + res.id">
+						<app-menu-item v-else-if="this.searchOptions.mode == 'ss_controleur'"
+							:href="'/consultation/ss_controleur/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'operateur' && res.nb_kn" :href="'/consultation/operateur/' + res.id">
+						<app-menu-item v-else-if="this.searchOptions.mode == 'operateur' && res.nb_kn"
+							:href="'/consultation/operateur/' + res.id">
 							<PersonnelItem :personnel="res" :num="res.nb_kn"></PersonnelItem>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'controleur' && res.nb_kn" :href="'/consultation/controleur/' + res.id">
+						<app-menu-item v-else-if="this.searchOptions.mode == 'controleur' && res.nb_kn"
+							:href="'/consultation/controleur/' + res.id">
 							<PersonnelItem :personnel="res" :num="res.nb_kn"></PersonnelItem>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'kndekn'" :href="'/consultation/kndekn/' + res.id">
+						<app-menu-item v-else-if="this.searchOptions.mode == 'kndekn'"
+							:href="'/consultation/kndekn/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
-						<app-menu-item v-else-if="this.searchOptions.mode == 'knsskn'" :href="'/consultation/knsskn/' + res.id">
+						<app-menu-item v-else-if="this.searchOptions.mode == 'knsskn'"
+							:href="'/consultation/knsskn/' + res.id">
 							<collecte-item-done :collecte="res"></collecte-item-done>
 						</app-menu-item>
 					</template>
@@ -112,7 +117,8 @@
 					</alert-message>
 
 					<div class="d-grid my-2" v-if="isMoreAvailable && searchOptions.mode === 'collecte'">
-						<button class="btn btn-outline-secondary" @click.prevent="loadMore()" :disabled="pending.loadMore">
+						<button class="btn btn-outline-secondary" @click.prevent="loadMore()"
+							:disabled="pending.loadMore">
 							<span class="spinner-border spinner-border-sm" v-if="pending.loadMore"></span>
 							Charger +
 						</button>
@@ -383,9 +389,9 @@ export default {
 		loadHabilitationType() {
 			this.pending.habilitations = true;
 			this.$app.apiGet('v2/controle/habilitation/type')
-			.then((data) => {
-				this.refreshHabilitationType(data);
-			}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
+				.then((data) => {
+					this.refreshHabilitationType(data);
+				}).catch(this.$app.catchError).finally(() => this.pending.habilitations = false);
 		},
 
 		loadHabilitation() {
@@ -464,29 +470,34 @@ export default {
 			return false;
 		},
 
-		/**boucle dans la collection de formulaire pour voir s'il existe un nb.todo!=0
-		 * si tous sont nuls, retourne false
-		 * 
-		 * @param	{array}	le tableau à parcourir
-		 */
+		/**
+	 * Boucle dans la collection de formulaire pour voir s'il existe un nb.todo != 0
+	 * Si tous sont nuls, retourne false
+	 * 
+	 * @param {array} val Le tableau à parcourir
+	 * @return {boolean} True si un nb.todo n'est pas 0, sinon False
+	 */
 		exist(val) {
+			if (!Array.isArray(val)) {
+				console.error('La valeur passée n\'est pas une liste:', val);
+				return false;
+			}
+
 			let liste = val;
-			let compteur = 0
+			let compteur = 0;
 
 			for (let form of liste) {
 				let result = form.nb_todo;
 				if (result === 0) {
-					compteur += 0
+					compteur += 0;
+				} else {
+					compteur += 1;
 				}
-				else compteur += 1;
-			}
-			if (compteur > 0) {
-				return true;
-			} else {
-				return false;
 			}
 
+			return compteur > 0;
 		},
+
 
 		/**
 		 * Lance une recherche sur les consultations et les stock dans le store sur la collection des résultats de recherche.
@@ -612,7 +623,7 @@ export default {
 			});
 		},
 
-		loadPersonnels(){
+		loadPersonnels() {
 			try {
 				this.$assets.getCollection("personnels").load();
 			}
@@ -629,11 +640,11 @@ export default {
 
 			this.pending.actifs = true;
 			this.$app.apiGet('v2/characteristicPersonnel/stats')
-			.then((data) => {
-				this.characteristicPersonnelStats = data;
-			})
-			.catch(this.$app.catchError)
-			.finally(this.pending.stats = false);
+				.then((data) => {
+					this.characteristicPersonnelStats = data;
+				})
+				.catch(this.$app.catchError)
+				.finally(this.pending.stats = false);
 		},
 
 		/**
