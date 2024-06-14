@@ -27,7 +27,7 @@
 
 <script>
 
-import { mapActions, mapState } from 'vuex';
+import { mapActions } from 'vuex';
 import AppModal from './pebble-ui/AppModal.vue';
 import FormCollecte from './ProgrammationCollecteForm.vue';
 
