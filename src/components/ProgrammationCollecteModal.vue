@@ -24,6 +24,7 @@
 </template>
 
 <script>
+
 import { mapActions } from 'vuex';
 import AppModal from './pebble-ui/AppModal.vue';
 import FormCollecte from './ProgrammationCollecteForm.vue';
