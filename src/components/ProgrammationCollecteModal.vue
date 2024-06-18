@@ -4,10 +4,9 @@
     @submit="record()"  
     @modal-hide="routeToParent()" 
     @delete="deleteCollecte()"
-    
     :submit-btn="true" 
     :cancel-btn="true" 
-    :delete-btn="collecte.id ? true : false"
+    :delete-btn="collecte?.id ? true : false"
     :pending="pending.collecte"
     :pending-delete="pending.delete">
     
@@ -22,7 +21,6 @@
         v-if="collecte" />
     
     </AppModal>
-
 </template>
 
 <script>
@@ -32,25 +30,37 @@ import AppModal from './pebble-ui/AppModal.vue';
 import FormCollecte from './ProgrammationCollecteForm.vue';
 
 export default {
-
     props: {
-        collecte: Object,
-        personnels: Array,
-        formulaires: Array,
-        readonly: Array,
-        veille: Boolean,
+        collecte: {
+            type: Object,
+            default: () => ({})
+        },
+        personnels: {
+            type: Array,
+            default: () => []
+        },
+        formulaires: {
+            type: Array,
+            default: () => []
+        },
+        readonly: {
+            type: Array,
+            default: () => []
+        },
+        veille: {
+            type: Boolean,
+            default: false
+        }
     },
 
     data() {
-        
         return {
             pending: {
-                collecte : false,
+                collecte: false,
                 delete: false
             },
             tmpCollecte: null
         }
-        
     },
 
     computed: {
@@ -60,15 +70,14 @@ export default {
          * @return {string}
          */
         title() {
-            return this.collecte.id ? "Modifier un contrôle programmé": "Programmation d'un contrôle";
+            return this.collecte.id ? "Modifier un contrôle programmé" : "Programmation d'un contrôle";
         }
     },
 
     emits: ['deleted', 'updated'],
 
     methods: {
-
-        ...mapActions(['addCollectes','refreshCollectes', 'removeCollecte', 'refreshNbTodoFormulaires']),
+        ...mapActions(['addCollectes', 'refreshCollectes', 'removeCollecte', 'refreshNbTodoFormulaires']),
 
         /**
          * Met à jour les informations d'une collecte
@@ -77,15 +86,16 @@ export default {
          */
         updateCollecte(val) {
             this.tmpCollecte = val;
-            
         },
 
         /**
          * Supprime la collecte sur le serveur
          */
         deleteCollecte() {
+            if (!this.collecte?.id) return;
+
             this.pending.delete = true;
-            this.$app.apiPost('data/DELETE/collecte/'+this.collecte.id).then(() => {
+            this.$app.apiPost('data/DELETE/collecte/' + this.collecte.id).then(() => {
                 this.removeCollecte(this.collecte);
                 this.$emit("deleted", this.collecte);
             }).finally(() => this.pending.delete = false);
@@ -95,17 +105,20 @@ export default {
          * Enregistre les modifications de la programmation
          */
         record() {
+            if (!this.tmpCollecte) return;
+
             this.pending.collecte = true;
             this.tmpCollecte.environnement = 'private';
 
             this.$app.apiPost('data/POST/collecte', this.tmpCollecte)
-            .then(data => {
-                this.addCollectes([data]);
-                this.refreshCollectes([data]);
-                this.refreshNbTodoFormulaires(data.information__groupe_id);
-                this.$emit('updated', data);
-            })
-            .catch(this.$app.catchError).finally(() => this.pending.collecte = false);
+                .then(data => {
+                    this.addCollectes([data]);
+                    this.refreshCollectes([data]);
+                    this.refreshNbTodoFormulaires(data.information__groupe_id);
+                    this.$emit('updated', data);
+                })
+                .catch(this.$app.catchError)
+                .finally(() => this.pending.collecte = false);
         },
 
         /**
@@ -116,17 +129,10 @@ export default {
         }
     },
 
-    components:{AppModal, FormCollecte},
+    components: { AppModal, FormCollecte },
 
     mounted() {
         this.tmpCollecte = JSON.parse(JSON.stringify(this.collecte));
-        
-
     }
-
-
 }
 </script>
-
-
-
