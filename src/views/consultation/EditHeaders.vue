@@ -100,7 +100,7 @@ export default {
                 enqueteur_nom : this.collecteModifie.enqueteur_nom,
                 cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
                 cible_nom : this.collecteModifie.cible_nom,
-                date_start : this.collecteModifie.date_start
+                date_done : this.collecteModifie.date_start
             })
             .then((data) =>{
                 this.setCollecteHeaders(data);
