@@ -1,0 +1,28 @@
+{
+   "env" : "devonline",
+   "api": {
+       "dev": {
+           "pas": true,
+           "authServer": "172.17.0.4:3333",
+           "tls": false
+       },
+       "devonline": {
+           "pas": true,
+           "authServer": "authenticatorlocalonline-utuvyi37ea-ew.a.run.app",
+           "tls": true
+       }
+   },
+    "firebaseConfig": {
+       "devonline": {
+           "apiKey": "AIzaSyAzwQE4rI03KgtFYEN2zkXhqUA1-agVQsA",
+           "authDomain": "pebble-test.firebaseapp.com",
+           "projectId": "pebble-test",
+           "storageBucket": "pebble-test.appspot.com",
+           "messagingSenderId": "985626064716",
+           "appId": "1:985626064716:web:bf84170ea960953e97c1e9"
+       }
+   },
+    "domains": {
+       "devonline": "localhost"
+   }
+}
