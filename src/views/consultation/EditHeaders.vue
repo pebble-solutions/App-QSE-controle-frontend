@@ -7,9 +7,10 @@
         :submitBtn="valueButton"
         :cancelBtn="true">
 
-        <HeadersForm :collecte="collecte" :personnels="personnels" @modification="collecteChange" @stringdate="justificationDate" />
+        <HeadersForm :collecte="collecte" :personnels="personnels" :habilitationType="habilitationType" @modification="collecteChange" @stringdate="justificationDate" />
 
         <div v-if="noteContent">
+            <hr>
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Note de la collecte #{{ $route.params.idCollecte }}</h5>
@@ -39,9 +40,10 @@ export default {
     data() {
         return {
             collecteModifie: {},
-            dateStartModifString: null,
+            dateDoneModifString: null,
             noteContent: null,
-            comment: null
+            comment: null,
+            habilitationType : []
         }
     },
 
@@ -79,8 +81,11 @@ export default {
             if (this.collecte.cible__structure__personnel_id != this.collecteModifie.cible__structure__personnel_id){
                 modification.push(" Changement d'opérateur de " + this.collecte.cible_nom + " vers " + this.collecteModifie.cible_nom)
             }
-            if (this.dateStartModifString){
-                modification.push(this.dateStartModifString)
+            if (this.collecte.tli != this.collecteModifie.tli){
+                modification.push(" Rattachement de la collecte " + this.collecte.id + " a l'habilitation N°" + this.collecteModifie.tli)
+            }
+            if (this.dateDoneModifString){
+                modification.push(this.dateDoneModifString)
             }
 
             if(modification.length){
@@ -100,7 +105,9 @@ export default {
                 enqueteur_nom : this.collecteModifie.enqueteur_nom,
                 cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
                 cible_nom : this.collecteModifie.cible_nom,
-                date_done : this.collecteModifie.date_start
+                date_done : this.collecteModifie.date_done,
+                tlc : this.collecteModifie.tlc,
+                tli : this.collecteModifie.tli
             })
             .then((data) =>{
                 this.setCollecteHeaders(data);
@@ -125,8 +132,28 @@ export default {
          * @param {Object} payload 
          */
         justificationDate(payload) {
-            this.dateStartModifString = payload;
+            this.dateDoneModifString = payload;
             this.createNote()
+        },
+
+        /**
+         * Retourne la liste des types d'habilitation
+         * 
+         * @return {object}
+         */
+         async getHabilitations(){
+
+            let tmpHabilitationType;
+
+            try {
+                tmpHabilitationType = await this.$app.api.get('v2/characteristic');
+            }
+            catch (e) {
+                this.$app.catchError(e);
+            }
+            finally {
+                this.habilitationType = tmpHabilitationType;
+            }
         },
 
         /**
@@ -135,6 +162,10 @@ export default {
         routeToParent() {
             this.$router.back()
         }
+    },
+
+    mounted() { 
+        this.getHabilitations()
     },
 
     components: { AppModal, HeadersForm }
