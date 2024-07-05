@@ -81,7 +81,7 @@ export default {
             if (this.collecte.cible__structure__personnel_id != this.collecteModifie.cible__structure__personnel_id){
                 modification.push(" Changement d'opérateur de " + this.collecte.cible_nom + " vers " + this.collecteModifie.cible_nom)
             }
-            if (this.collecte.tli != this.collecteModifie.tli){
+            if (!this.collecte.tli && this.collecteModifie.tli || this.collecte.tli != this.collecteModifie.tli){
                 modification.push(" Rattachement de la collecte " + this.collecte.id + " a l'habilitation N°" + this.collecteModifie.tli)
             }
             if (this.dateDoneModifString){

@@ -50,7 +50,7 @@
         <div class="w-100 ps-2">
             <strong class="d-block">Habilitation :</strong>
             <div class="d-flex flex-row align-items-center">
-            <select class="form-select" :v-model="collecteModif?.tli || 0">
+            <select class="form-select" v-model="collecteModif.tli">
                 <option v-for="hab in habilitationPersonnel" :key="hab.id" :value="hab.id">
                 #{{ hab.id }} : {{ hab.labelType }}
                 </option>

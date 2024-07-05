@@ -660,53 +660,109 @@ export default {
 		},
 
 		/**
-		 * Retourne la liste des personnels triée en fonction de la recherche 
+		 * Retourne la liste des éléments triée en fonction de la recherche 
 		 * 
 		 * @param {array} list liste à filtrer
-		 * 
 		 * @returns {array}
 		 */
 		listConsultation(list) {
 			const { mode } = this.searchOptions;
+			const searchInput = this.displaySearch?.trim().toUpperCase() || '';
 
-			if (mode === 'collecte') {
-				let collectesFiltred = list;
+			if (!searchInput) return list;
 
-				if (this.displaySearch) {
-					const searchInput = this.displaySearch.trim();
+			const isNumeric = /^\d+$/.test(searchInput);
+			const isAlphanumeric = /^[a-zA-Z0-9]+$/.test(searchInput);
 
-					if (/^\d+$/.test(searchInput)) {
-						collectesFiltred = collectesFiltred.filter(item => searchInput.includes(item.id));
-					} else if (/^[a-zA-Z0-9]+$/.test(searchInput)) {
-						const searchPattern = new RegExp(searchInput, 'i');
-						collectesFiltred = collectesFiltred.filter(item => item.cible_nom?.toUpperCase().match(searchPattern));
-					} else {
-						// Type de caractère non valide, ne rien faire et retourner la liste non filtrée
-						return list;
-					}
-				}
+			if (!isNumeric && !isAlphanumeric) return list;
 
-				return collectesFiltred;
-			} else if (mode === 'operateur' || mode === 'controleur') {
-				let personnels = list;
+			const searchPattern = new RegExp(searchInput, 'i');
 
-				if (list.length !== 0 && this.displaySearch !== '') {
-					// Vérifier si la recherche est alphanumérique ou une chaîne de caractères
-					if (/^[a-zA-Z0-9]+$/.test(this.displaySearch)) {
-						personnels = personnels.filter(item => item.cache_nom.toUpperCase().match(this.displaySearch.toUpperCase()));
-					} else {
-						// Type de caractère non valide, ne rien faire et retourner la liste non filtrée
-						return list;
-					}
-				}
+			switch (mode) {
+				case 'collecte':
+					return list.filter(item => 
+						(isNumeric && searchInput.includes(item.id)) ||
+						(isAlphanumeric && item.cible_nom?.toUpperCase().match(searchPattern))
+					);
 
-				return personnels;
-			} else {
-				return list;
+				case 'projet':
+					return list.filter(item =>
+						(isNumeric && searchInput.includes(item.id)) ||
+						(isAlphanumeric && item.intitule.toUpperCase().match(searchPattern))
+					);
+
+				case 'operateur':
+				case 'controleur':
+					return isAlphanumeric ? list.filter(item => item.cache_nom.toUpperCase().match(searchPattern)) : list;
+
+				default:
+					return list;
 			}
-		}
+		},
 
+	// 	/**
+	// 	 * Retourne la liste des personnels triée en fonction de la recherche 
+	// 	 * 
+	// 	 * @param {array} list liste à filtrer
+	// 	 * 
+	// 	 * @returns {array}
+	// 	 */
+	// 	listConsultation(list) {
+	// 		const { mode } = this.searchOptions;
 
+	// 		if (mode === 'collecte') {
+	// 			let collectesFiltred = list;
+
+	// 			if (this.displaySearch) {
+	// 				const searchInput = this.displaySearch.trim();
+
+	// 				if (/^\d+$/.test(searchInput)) {
+	// 					collectesFiltred = collectesFiltred.filter(item => searchInput.includes(item.id));
+	// 				} else if (/^[a-zA-Z0-9]+$/.test(searchInput)) {
+	// 					const searchPattern = new RegExp(searchInput, 'i');
+	// 					collectesFiltred = collectesFiltred.filter(item => item.cible_nom?.toUpperCase().match(searchPattern));
+	// 				} else {
+	// 					// Type de caractère non valide, ne rien faire et retourner la liste non filtrée
+	// 					return list;
+	// 				}
+	// 			}
+
+	// 			return collectesFiltred;
+	// 		} else if (mode === 'projet') {
+	// 			let projets = list;
+
+	// 			if (list.length !== 0 && this.displaySearch !== '') {
+	// 				// Vérifier si la recherche est alphanumérique ou une chaîne de caractères
+	// 				if (/^[0-9]+$/.test(this.displaySearch)) {
+	// 					projets = projets.filter(item => item.id.toUpperCase().match(this.displaySearch.toUpperCase()));
+	// 				}
+	// 				if (/^[a-zA-Z0-9]+$/.test(this.displaySearch)) {
+	// 					projets = projets.filter(item => item.intitule.toUpperCase().match(this.displaySearch.toUpperCase()));
+	// 				} else {
+	// 					// Type de caractère non valide, ne rien faire et retourner la liste non filtrée
+	// 					return list;
+	// 				}
+	// 			}
+
+	// 			return projets;
+	// 		} else if (mode === 'operateur' || mode === 'controleur') {
+	// 			let personnels = list;
+
+	// 			if (list.length !== 0 && this.displaySearch !== '') {
+	// 				// Vérifier si la recherche est alphanumérique ou une chaîne de caractères
+	// 				if (/^[a-zA-Z0-9]+$/.test(this.displaySearch)) {
+	// 					personnels = personnels.filter(item => item.cache_nom.toUpperCase().match(this.displaySearch.toUpperCase()));
+	// 				} else {
+	// 					// Type de caractère non valide, ne rien faire et retourner la liste non filtrée
+	// 					return list;
+	// 				}
+	// 			}
+
+	// 			return personnels;
+	// 		} else {
+	// 			return list;
+	// 		}
+	// 	}
 	},
 
 	components: { AppWrapper, AppMenu, AppMenuItem, FormStats, FilterFormEcheancier, CollecteItem, AlertMessage, StatsHeader, ProgrammationHeader, FormulaireItem, ControleHeader, Spinner, CollectesFilters, CollecteItemDone, ProjectItemDone, FormStatistiques, HabilitationList, PersonnelItem },
