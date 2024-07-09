@@ -105,6 +105,7 @@ export default {
                 enqueteur_nom : this.collecteModifie.enqueteur_nom,
                 cible__structure__personnel_id : this.collecteModifie.cible__structure__personnel_id,
                 cible_nom : this.collecteModifie.cible_nom,
+                date_start : this.collecte.data_done,
                 date_done : this.collecteModifie.date_done,
                 tlc : this.collecteModifie.tlc,
                 tli : this.collecteModifie.tli
